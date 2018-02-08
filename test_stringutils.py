@@ -1,8 +1,17 @@
 # encoding: utf-8
-from StringUtils import TibStringUtil
+from StringUtils import TibStringChunk, PyBoChunk
 
 # uses py.test
-tib_string = TibStringUtil(' བཀྲ་ཤིས་  tr བདེ་ལེགས།')
+
+
+def test_pybo_chunk():
+    pybo_string = PyBoChunk(' བཀྲ་ཤིས་  tr བདེ་ལེགས།')
+    found = pybo_string.chunk(indices=False)
+    assert found == [('space', ' '), ('syl', 'བཀྲ་'), ('syl', 'ཤིས་'), ('space', '  '), ('non-bo', 'tr'),
+                     ('space', ' '), ('syl', 'བདེ་'), ('syl', 'ལེགས'), ('punct', '།')]
+
+
+tib_string = TibStringChunk(' བཀྲ་ཤིས་  tr བདེ་ལེགས།')
 
 
 def test_bo():

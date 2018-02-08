@@ -1,6 +1,18 @@
 class TibString:
+    """
+    Basic Class for Tibetan Strings.
+    Leverages the intuitive groups of Tibetan characters in the Unicode
+    tables to meaningfully chunk a given input string.
+
+    Contains:
+             - self.string: the input string
+             - self.base_structure: a dict of the following structure:
+                    key: char index in self.string
+                    value: a dict (to allow further insertion of information):
+                                key: BASE (a simple constant)
+                                value: CHAR_GROUP
+    """
     def __init__(self, string):
-        # basic types
         self.BASE = 0
         self.CONS = 1
         self.SUB_CONS = 2
@@ -27,7 +39,11 @@ class TibString:
 
     def __attribute_basic_types(self):
         """
-        the whole Tibetan Unicode Table was organized in meaningful lists
+        Attributes a group to every character.
+        Finer the groups, greater the fine-grained chunking capacities of TibStringUtil
+
+        note: the strings below attempt to regroup the Tibetan Unicode Table meaningfully.
+              adapt it to your needs.
         """
         cons = "ཀཁགངཅཆཇཉཏཐདནཔཕབམཙཚཛཝཞཟའཡརལཤསཧཨཪ"
         sub_cons = "ྐྑྒྔྕྖྗྙྟྠྡྣྤྥྦྨྩྪྫྭྮྯྰྱྲླྴྶྷྸྺྻྼཱ"
@@ -75,9 +91,19 @@ class TibString:
                 self.base_structure[i] = {self.BASE: self.OTHER}
 
 
-class TibStringUtil(TibString):
+class TibStringChunk(TibString):
     """
+    Generates chunks by using the group attributed to every char by TibString
+    Piped-chunking enables to easily use complex chunking criteria. (see test file)
 
+    chunking functions output:
+                    [(string chunk_marker, int start_index, int length), ...]
+    get_chunked output:
+                    [( string chunk_marker, string substring), ...]
+
+    Adapting to specific needs is straightforward:
+        - copy/adapt a test method ('__is_...()' )
+        - copy/adapt a chunking method ('chunk_...()')
     """
     def __init__(self, string):
         TibString.__init__(self, string)
@@ -123,6 +149,12 @@ class TibStringUtil(TibString):
         return [(yes, i[1], i[2]) for i in indices if not i[0]]
 
     def get_chunked(self, indices, gen=False):
+        """
+
+        :param indices: the chunk indices (the output of chunking methods)
+        :param gen: a generator of the output
+        :return: the marker/substring pairs in a list
+        """
         if gen:
             return ((t, self.string[start:start + length]) for t, start, length in indices)
         return [(t, self.string[start:start + length]) for t, start, length in indices]
@@ -148,12 +180,12 @@ class TibStringUtil(TibString):
     @staticmethod
     def pipe_chunk(indices, piped_chunk, to_chunk, yes):
         """
+        re-chunks in place the chunk indices produced by a previous chunk method.
 
-        :param indices:
-        :param piped_chunk:
-        :param to_chunk:
-        :param yes:
-        :return:
+        :param list indices: the chunk indices from a previous chunking method
+        :param method piped_chunk: chunk method to apply
+        :param string to_chunk: chunk-marker to find chunks to be re-chunked
+        :param string yes: marker to be used for matching chunks (no marker left to default)
         """
         for i, chunk in enumerate(indices):
             if chunk[0] == to_chunk:
@@ -169,11 +201,13 @@ class TibStringUtil(TibString):
     @staticmethod
     def __chunk(start_idx, end_idx, condition):
         """
+        Creates groups of characters satisfying the condition (test method) and
+        not satisfying it from the given range within the input string
 
-        :param start_idx:
-        :param end_idx:
-        :param condition:
-        :return:
+        :param start_idx: first char of the range to be chunked
+        :param end_idx: last char
+        :param condition: test method
+        :return: the chunk indices with True/False instead of the chunk markers
         """
         chunked = []
         start = start_idx
@@ -199,3 +233,20 @@ class TibStringUtil(TibString):
                     length += 1
             chunked.append((prev_state, start, length))
         return chunked
+
+
+class PyBoChunk(TibStringChunk):
+    """
+    Produces bo, non-bo, spaces, punct and syl chunks
+    """
+    def __init__(self, string):
+        TibStringChunk.__init__(self, string)
+
+    def chunk(self, indices=True, gen=False):
+        chunks = self.chunk_tib_chars(yes='bo')
+        self.pipe_chunk(chunks, self.chunk_spaces, to_chunk='bo', yes='space')
+        self.pipe_chunk(chunks, self.chunk_punct, to_chunk='bo', yes='punct')
+        self.pipe_chunk(chunks, self.syllabify, to_chunk='bo', yes='syl')
+        if not indices:
+            return self.get_chunked(chunks, gen=gen)
+        return chunks
