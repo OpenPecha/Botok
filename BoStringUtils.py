@@ -46,11 +46,11 @@ class BoString:
               adapt it to your needs.
         """
         cons = "ཀཁགངཅཆཇཉཏཐདནཔཕབམཙཚཛཝཞཟའཡརལཤསཧཨཪ"
-        sub_cons = "ྐྑྒྔྕྖྗྙྟྠྡྣྤྥྦྨྩྪྫྭྮྯྰྱྲླྴྶྷྸྺྻྼཱ"
+        sub_cons = "ྐྒྔྕྗྙྟྡྣྤྦྨྩྫྭྱྲླྷ"
         vow = "ིེོུ"
         tsek = "་༌"
         skrt_cons = "གྷཊཋཌཌྷཎདྷབྷཛྷཥཀྵ྅"
-        skrt_sub_cons = "ྒྷྚྛྜྜྷྞྡྷྦྷྫྷྵྐྵ"
+        skrt_sub_cons = "ྑྖྠྥྪྮྯྰྴྶྸྺྻྼཱྒྷྚྛྜྜྷྞྡྷྦྷྫྷྵྐྵ"
         skrt_vow = "ཱཱིུྲྀཷླྀཹ྄ཱཻཽྀྀྂྃ྆ཿ"
         normal_punct = "༄༅༆༈།༎༏༐༑༔༴༼༽"
         numerals = "༠༡༢༣༤༥༦༧༨༩"
