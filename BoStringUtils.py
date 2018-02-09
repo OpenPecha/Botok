@@ -172,6 +172,11 @@ class BoChunk(BoString):
         return [(t, self.string[start:start + length]) for t, start, length in indices]
 
     def get_markers(self, indices):
+        """
+
+        :param indices: indices containing ints as markers
+        :return: same indices with the corresponding marker strings
+        """
         return [tuple([self.markers[i[0]]] + list(i[1:])) for i in indices]
 
     def __is_punct(self, char_idx):
