@@ -276,7 +276,7 @@ class PyBoChunk(BoChunk):
         :param indices: contains space-only chunks
         """
         for num, i in enumerate(indices):
-            if num - 1 >= 0 and self.__only_contains_spaces(i[1], i[1]+i[2]):
+            if num - 1 >= 0 and self.__only_contains_spaces(i[1], i[1] + i[2]):
                 indices[num - 1] = (indices[num - 1][0], indices[num - 1][1], indices[num - 1][2] + i[2])
                 indices[num] = False
 
@@ -290,7 +290,7 @@ class PyBoChunk(BoChunk):
     def __only_contains_spaces(self, start, end):
         spaces_count = 0
         i = start
-        while i < end and spaces_count <= end-start:
+        while i < end:
             if self.base_structure[i] == self.SPACE:
                 spaces_count += 1
             i += 1
