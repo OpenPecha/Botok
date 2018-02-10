@@ -5,11 +5,11 @@ from BoStringUtils import BoChunk, PyBoChunk
 
 
 def test_pybo_chunk():
-    pybo_string = PyBoChunk(' བཀྲ་ཤིས་  tr བདེ་ལེགས།')
+    pybo_string = PyBoChunk(' བཀྲ་ཤིས་  tr བདེ་ལེ གས། ')
     found = pybo_string.chunk(indices=False)
     found = pybo_string.get_markers(found)
-    assert found == [('space', ' '), ('syl', 'བཀྲ་'), ('syl', 'ཤིས་'), ('space', '  '), ('non-bo', 'tr'),
-                     ('space', ' '), ('syl', 'བདེ་'), ('syl', 'ལེགས'), ('punct', '།')]
+    assert found == [('syl', ' བཀྲ་'), ('syl', 'ཤིས་  '), ('non-bo', 'tr'), ('syl', ' བདེ་'), ('syl', 'ལེ གས'),
+                     ('punct', '། ')]
 
 
 bo_string = BoChunk(' བཀྲ་ཤིས་  tr བདེ་ལེགས།')
