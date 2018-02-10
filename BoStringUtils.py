@@ -279,7 +279,10 @@ class BoChunk(BoString):
 
 class PyBoChunk(BoChunk):
     """
-    Produces bo, non-bo, spaces, punct and syl chunks
+    Produces bo, non-bo, punct and syl chunks
+
+    note: Following Tibetan usage, it does not consider space as a punctuation mark.
+    Spaces get attached to the chunk preceding them.
     """
     def __init__(self, string):
         BoChunk.__init__(self, string)
