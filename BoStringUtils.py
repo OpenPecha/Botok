@@ -179,23 +179,6 @@ class BoChunk(BoString):
         """
         return [tuple([self.markers[i[0]]] + list(i[1:])) for i in indices]
 
-    def attach_space_chunks(self, indices):
-        """
-        Deletes space-only chunks and puts their content in the previous chunk
-        :param indices: contains space-only chunks
-        """
-        for num, i in enumerate(indices):
-            if num - 1 >= 0 and self.__only_contains_spaces(i[1], i[1]+i[2]):
-                indices[num - 1] = (indices[num - 1][0], indices[num - 1][1], indices[num - 1][2] + i[2])
-                indices[num] = False
-
-        c = 0
-        while c < len(indices):
-            if not indices[c]:
-                del indices[c]
-            else:
-                c += 1
-
     def __is_punct(self, char_idx):
         return self.base_structure[char_idx] == self.PUNCT or \
                self.base_structure[char_idx] == self.SPECIAL_PUNCT or \
@@ -209,15 +192,6 @@ class BoChunk(BoString):
 
     def __is_space(self, char_idx):
         return self.base_structure[char_idx] == self.SPACE
-
-    def __only_contains_spaces(self, start, end):
-        spaces_count = 0
-        i = start
-        while i < end and spaces_count <= end-start:
-            if self.base_structure[i] == self.SPACE:
-                spaces_count += 1
-            i += 1
-        return spaces_count == end - start
 
     @staticmethod
     def pipe_chunk(indices, piped_chunk, to_chunk: int, yes: int):
@@ -291,7 +265,33 @@ class PyBoChunk(BoChunk):
         chunks = self.chunk_bo_chars()
         self.pipe_chunk(chunks, self.chunk_punct, to_chunk=self.BO_MARKER, yes=self.PUNCT_MARKER)
         self.pipe_chunk(chunks, self.syllabify, to_chunk=self.BO_MARKER, yes=self.SYL_MARKER)
-        self.attach_space_chunks(chunks)
+        self.__attach_space_chunks(chunks)
         if not indices:
             return self.get_chunked(chunks, gen=gen)
         return chunks
+
+    def __attach_space_chunks(self, indices):
+        """
+        Deletes space-only chunks and puts their content in the previous chunk
+        :param indices: contains space-only chunks
+        """
+        for num, i in enumerate(indices):
+            if num - 1 >= 0 and self.__only_contains_spaces(i[1], i[1]+i[2]):
+                indices[num - 1] = (indices[num - 1][0], indices[num - 1][1], indices[num - 1][2] + i[2])
+                indices[num] = False
+
+        c = 0
+        while c < len(indices):
+            if not indices[c]:
+                del indices[c]
+            else:
+                c += 1
+
+    def __only_contains_spaces(self, start, end):
+        spaces_count = 0
+        i = start
+        while i < end and spaces_count <= end-start:
+            if self.base_structure[i] == self.SPACE:
+                spaces_count += 1
+            i += 1
+        return spaces_count == end - start
