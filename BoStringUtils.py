@@ -157,9 +157,8 @@ class BoChunk(BoString):
         for num, i in enumerate(indices):
             if i[0] and num - 1 >= 0 and not indices[num - 1][0]:
                 indices[num - 1] = (indices[num - 1][0], indices[num - 1][1], indices[num - 1][2] + i[2])
-        indices = [i for i in indices if not i[0]]
 
-        return [(yes, i[1], i[2]) for i in indices]
+        return [(yes, i[1], i[2]) for i in indices if not i[0]]
 
     def get_chunked(self, indices, gen=False):
         """
@@ -180,7 +179,7 @@ class BoChunk(BoString):
         """
         return [tuple([self.markers[i[0]]] + list(i[1:])) for i in indices]
 
-    def attach_space_syls(self, indices):
+    def attach_space_chunks(self, indices):
         """
         Deletes space-only chunks and puts their content in the previous chunk
         :param indices: contains space-only chunks
@@ -214,7 +213,7 @@ class BoChunk(BoString):
     def __only_contains_spaces(self, start, end):
         spaces_count = 0
         i = start
-        while i < end:
+        while i < end and spaces_count <= end-start:
             if self.base_structure[i] == self.SPACE:
                 spaces_count += 1
             i += 1
@@ -289,7 +288,7 @@ class PyBoChunk(BoChunk):
         chunks = self.chunk_bo_chars()
         self.pipe_chunk(chunks, self.chunk_punct, to_chunk=self.BO_MARKER, yes=self.PUNCT_MARKER)
         self.pipe_chunk(chunks, self.syllabify, to_chunk=self.BO_MARKER, yes=self.SYL_MARKER)
-        self.attach_space_syls(chunks)
+        self.attach_space_chunks(chunks)
         if not indices:
             return self.get_chunked(chunks, gen=gen)
         return chunks
