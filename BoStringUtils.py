@@ -168,8 +168,8 @@ class BoChunk(BoString):
         :return: the marker/substring pairs in a list
         """
         if gen:
-            return ((t, self.string[start:start + length]) for t, start, length in indices)
-        return [(t, self.string[start:start + length]) for t, start, length in indices]
+            return ((i, self.string[start:start + length]) for i, start, length in indices)
+        return [(i, self.string[start:start + length]) for i, start, length in indices]
 
     def get_markers(self, indices):
         """
@@ -295,3 +295,49 @@ class PyBoChunk(BoChunk):
                 spaces_count += 1
             i += 1
         return spaces_count == end - start
+
+
+class PyBoTextIterator(PyBoChunk):
+    """
+    Serves content to BoTrie
+    """
+    def __init__(self, string):
+        PyBoChunk.__init__(self, string)
+
+    def serve_syls_to_trie(self):
+        chunks = self.chunk()
+        for chunk in chunks:
+            if chunk[0] == self.SYL_MARKER:
+                text_chars = self._get_text_chars(chunk[1], chunk[1]+chunk[2])
+                yield text_chars, chunk
+            else:
+                yield None, chunk
+
+    def _get_text_chars(self, start_idx, end_idx):
+        """
+        Gives the list of the indexes of text chars in the given span.
+        """
+        return [self.string[i] for i in range(start_idx, end_idx) if self.__is_syl_text(i)]
+
+    def __is_syl_text(self, char_idx):
+        return self.base_structure[char_idx] != self.TSEK and \
+               self.base_structure[char_idx] != self.SPACE
+
+
+if __name__ == '__main__':
+    input_string = ' བཀྲ་ཤིས་  tr བདེ་་ལེ གས། '
+    pybo_string = PyBoTextIterator(input_string)
+    truc = pybo_string.serve_syls_to_trie()
+    for t in truc:
+        if t[0]:             # there is a syllable
+            t[0].append('་')
+            print(t[0], ''.join(t[0]))
+        else:                # it not a syllable chunk
+            print('non-syl')
+    # Output:
+    # ['བ', 'ཀ', 'ྲ', '་'] བཀྲ་
+    # ['ཤ', 'ི', 'ས', '་'] ཤིས་
+    # non - syl
+    # ['བ', 'ད', 'ེ', '་'] བདེ་
+    # ['ལ', 'ེ', 'ག', 'ས', '་'] ལེགས་
+    # non - syl
