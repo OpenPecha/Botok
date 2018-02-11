@@ -315,7 +315,7 @@ class PyBoTextIterator(PyBoChunk):
 
     def _get_text_chars(self, start_idx, end_idx):
         """
-        Gives the list of the indexes of text chars in the given span.
+        Gives the list of the text chars in the given span.
         """
         return [self.string[i] for i in range(start_idx, end_idx) if self.__is_syl_text(i)]
 
