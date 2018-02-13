@@ -70,3 +70,30 @@ for word in words:
             print(''.join([input_string[i] for i in syl]), end=' ')
         print()
     print()
+
+# Output:
+# type: non-word
+# start: 0
+# len: 4
+# char indices: [[1, 2]]
+# ཤི
+#
+# type: word
+# start: 4
+# len: 9
+# char indices: [[4, 5, 6], [8, 9, 10]]
+# བཀྲ ཤིས
+#
+# type: non-bo
+# start: 14
+# len: 2
+#
+# type: word
+# start: 16
+# len: 10
+# char indices: [[17, 18, 19], [22, 23, 25, 26]]
+# བདེ ལེགས
+#
+# type: punct
+# start: 27
+# len: 2
