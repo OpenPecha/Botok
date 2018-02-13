@@ -315,29 +315,10 @@ class PyBoTextIterator(PyBoChunk):
 
     def _get_text_chars(self, start_idx, end_idx):
         """
-        Gives the list of the text chars in the given span.
+        Gives the list of indices of the text chars in the given span.
         """
-        return [self.string[i] for i in range(start_idx, end_idx) if self.__is_syl_text(i)]
+        return [i for i in range(start_idx, end_idx) if self.__is_syl_text(i)]
 
     def __is_syl_text(self, char_idx):
         return self.base_structure[char_idx] != self.TSEK and \
                self.base_structure[char_idx] != self.SPACE
-
-
-if __name__ == '__main__':
-    input_string = ' བཀྲ་ཤིས་  tr བདེ་་ལེ གས། '
-    pybo_string = PyBoTextIterator(input_string)
-    truc = pybo_string.serve_syls_to_trie()
-    for t in truc:
-        if t[0]:             # there is a syllable
-            t[0].append('་')
-            print(t[0], ''.join(t[0]))
-        else:                # it not a syllable chunk
-            print('non-syl')
-    # Output:
-    # ['བ', 'ཀ', 'ྲ', '་'] བཀྲ་
-    # ['ཤ', 'ི', 'ས', '་'] ཤིས་
-    # non - syl
-    # ['བ', 'ད', 'ེ', '་'] བདེ་
-    # ['ལ', 'ེ', 'ག', 'ས', '་'] ལེགས་
-    # non - syl
