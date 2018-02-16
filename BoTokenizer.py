@@ -170,24 +170,19 @@ if __name__ == '__main__':
     for t in tokens:
         print(t.to_string)
     # content: " ཤི་"
-    # char
-    # types: | space | cons | vow | tsek |
-    # type: non - word
+    # char types: |space|cons|vow|tsek|
+    # type: non-word
     # start in input: 0
     # length: 4
-    # syl
-    # chars in content(ཤི): [[1, 2]]
+    # syl chars in content(ཤི): [[1, 2]]
     # POS: non - word
     #
     # content: "བཀྲ་ཤིས་  "
-    # char
-    # types: | cons | cons | sub - cons | tsek | cons | vow | cons | tsek | space | space |
+    # char types: |cons|cons|sub-cons|tsek|cons|vow|cons|tsek|space|space|
     # type: word
     # start in input: 4
     # length: 10
-    # syl
-    # chars in content(བཀྲ
-    # ཤིས): [[0, 1, 2], [4, 5, 6]]
+    # syl chars in content(བཀྲ ཤིས): [[0, 1, 2], [4, 5, 6]]
     # POS: NOUN
     #
     # (...)
