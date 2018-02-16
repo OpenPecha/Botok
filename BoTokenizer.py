@@ -1,5 +1,5 @@
 from BoStringUtils import PyBoTextIterator
-from BoTrie import BoTrie
+from BoTrie import Trie
 import csv
 import os
 
@@ -72,7 +72,7 @@ class Tokenizer:
 
     @staticmethod
     def __load_trie_from_csv(folder):
-        trie = BoTrie()
+        trie = Trie()
         for f in os.listdir(folder):
             full_path = '{}/{}'.format(folder, f)
             with open(full_path, newline='') as csvfile:
