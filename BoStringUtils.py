@@ -29,6 +29,23 @@ class BoString:
         self.OTHER = 14
         self.SPACE = 15
         self.UNDERSCORE = 16  # used to mark spaces in input when segmented by pytib
+        self.char_markers = {self.CONS: 'cons',
+                             self.SUB_CONS: 'sub-cons',
+                             self.VOW: 'vow',
+                             self.TSEK: 'tsek',
+                             self.SKRT_CONS: 'skrt-cons',
+                             self.SKRT_SUB_CONS: 'skrt-sub-cons',
+                             self.SKRT_VOW: 'skrt-vow',
+                             self.PUNCT: 'punct',
+                             self.NUM: 'num',
+                             self.IN_SYL_MARK: 'in-syl-mark',
+                             self.SPECIAL_PUNCT: 'special-punct',
+                             self.SYMBOLS: 'symbol',
+                             self.NON_BO_NON_SKRT: 'no-bo-no-skrt',
+                             self.OTHER: 'other',
+                             self.SPACE: 'space',
+                             self.UNDERSCORE: 'underscore'}
+
         # all spaces from the unicode tables
         self.spaces = [" ", " ", "᠎", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", "​", " ", " ", "　", "﻿"]
 
@@ -93,6 +110,15 @@ class BoString:
             else:
                 self.base_structure[i] = self.OTHER
 
+    def export_groups(self, start_idx, end_idx, for_substring=True):
+        """
+        export the base groups for a slice of the input string
+        """
+        if for_substring:
+            return {n: self.base_structure[i] for n, i in enumerate(range(start_idx, start_idx + end_idx))}
+        else:
+            return {i: self.base_structure[i] for i in range(start_idx, start_idx+end_idx)}
+
 
 class BoChunk(BoString):
     """
@@ -117,13 +143,13 @@ class BoChunk(BoString):
         self.SPACE_MARKER = 104
         self.NON_SPACE_MARKER = 105
         self.SYL_MARKER = 106
-        self.markers = {self.BO_MARKER: 'bo',
-                        self.NON_BO_MARKER: 'non-bo',
-                        self.PUNCT_MARKER: 'punct',
-                        self.NON_PUNCT_MARKER: 'non-punct',
-                        self.SPACE_MARKER: 'space',
-                        self.NON_SPACE_MARKER: 'non-space',
-                        self.SYL_MARKER: 'syl'}
+        self.chunk_markers = {self.BO_MARKER: 'bo',
+                              self.NON_BO_MARKER: 'non-bo',
+                              self.PUNCT_MARKER: 'punct',
+                              self.NON_PUNCT_MARKER: 'non-punct',
+                              self.SPACE_MARKER: 'space',
+                              self.NON_SPACE_MARKER: 'non-space',
+                              self.SYL_MARKER: 'syl'}
 
     def chunk_bo_chars(self, start=None, end=None, yes=100, no=101):
         if not start and not end:
@@ -177,7 +203,7 @@ class BoChunk(BoString):
         :param indices: indices containing ints as markers
         :return: same indices with the corresponding marker strings
         """
-        return [tuple([self.markers[i[0]]] + list(i[1:])) for i in indices]
+        return [tuple([self.chunk_markers[i[0]]] + list(i[1:])) for i in indices]
 
     def __is_punct(self, char_idx):
         return self.base_structure[char_idx] == self.PUNCT or \
@@ -303,17 +329,18 @@ class PyBoTextIterator(PyBoChunk):
     """
     def __init__(self, string):
         PyBoChunk.__init__(self, string)
+        self.chunks = self.serve_syls_to_trie()
 
     def serve_syls_to_trie(self):
         chunks = self.chunk()
         for chunk in chunks:
             if chunk[0] == self.SYL_MARKER:
-                text_chars = self._get_text_chars(chunk[1], chunk[1]+chunk[2])
+                text_chars = self.__get_text_chars(chunk[1], chunk[1]+chunk[2])
                 yield text_chars, chunk
             else:
                 yield None, chunk
 
-    def _get_text_chars(self, start_idx, end_idx):
+    def __get_text_chars(self, start_idx, end_idx):
         """
         Gives the list of indices of the text chars in the given span.
         """
