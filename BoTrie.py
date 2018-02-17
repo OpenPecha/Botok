@@ -1,3 +1,6 @@
+from BoSylUtils import BoSyl
+import time
+
 # inspired from https://gist.github.com/nickstanisha/733c134a0171a00f66d4
 # and https://github.com/eroux/tibetan-phonetics-py
 
@@ -30,6 +33,7 @@ class Trie:
         current_node = self.head
         word_finished = True
 
+        i = 0
         for i in range(len(word)):
             if word[i] in current_node.children:
                 current_node = current_node.children[word[i]]
@@ -61,7 +65,7 @@ class Trie:
     def has_word(self, word):
         if word == '':
             return False
-        if word == None:
+        elif not word:
             raise ValueError('Trie.has_word requires a not-Null string')
 
         # Start at the top
@@ -79,14 +83,114 @@ class Trie:
         if exists:
             if not current_node.leaf:
                 exists = False
+        if exists:
+            return {'exists': exists, 'data': current_node.data}
+        else:
+            return {'exists': exists}
 
-        return exists
+
+class PyBoTrie(Trie):
+    def __init__(self, profile='pytib'):
+        Trie.__init__(self)
+        self.bt = BoSyl()
+        self.build_trie(profile)
+
+    def build_trie(self, profile):
+        """
+        TODO: choose which file to add,
+        :param profile:
+        :return:
+        """
+        files = {1: 'ancient.txt',
+                 2: 'exceptions.txt',
+                 3: 'uncompound_lexicon.txt',
+                 4: 'Tibetan.DICT',
+                 5: 'tsikchen.txt',
+                 6: 'oral_corpus_0.txt',
+                 7: 'oral_corpus_1.txt',
+                 8: 'oral_corpus_2.txt',
+                 9: 'oral_corpus_3.txt',
+                 10: 'recordings_4.txt'}
+        profiles = {
+                    'pytib': [files[1], files[2], files[3], files[5], 'particles.txt'],
+                    'POS': [files[1], files[2], files[3], files[5], 'particles.txt', files[4]]
+                    }
+
+        print('Building the Trie...')
+        start = time.time()
+        for f in profiles[profile]:
+            full_path = '{}/{}/{}'.format('resources', 'trie', f)
+            self.__add_one_file(full_path)
+        end = time.time()
+        print('Time:', end-start)
+
+    def __add_one_file(self, folder):
+        def find_sep(l):
+            s = None
+            if ',' in l:
+                s = ','
+            if '\t' in l:
+                s = '\t'
+            return s
+
+        def clean(l):
+            if '#' in l:
+                start = l.index('#')
+                if start:
+                    return l[:start].strip()
+            else:
+                return l.strip()
+
+        with open(folder, 'r') as g:
+            content = g.read().split('\n')
+            content = [c for c in content if not c.startswith('#')]
+
+            sep = find_sep(content[0])
+            for line in content:
+                line = clean(line)
+                if line:
+                    if sep:
+                        word, pos = line.split(sep)
+                    else:
+                        word, pos = line, 'XXX'
+
+                    if not word.endswith('་'):
+                        word += '་'
+                    self.add(word, pos)
+                    self.add_affixed(word[:-1], pos)
+
+    def add_affixed(self, word, pos):
+        """
+        Add to the trie all the affixed versions of the word
+        :param word: a word without ending tsek
+        :param pos: initial POS
+        """
+        beginning, last_syl = self.split_at_last_syl(word)
+
+        if self.bt.is_affixable(last_syl):
+            affixed = self.bt.get_all_affixed(last_syl)
+            for a in affixed:
+                data = '{}_{}_{}_{}'.format(pos, a[1]['POS'], a[1]['len'], a[1]['aa'])
+                self.add(beginning+a[0]+'་', data)
+
+    @staticmethod
+    def split_at_last_syl(word):
+        if word.count('་') >= 1:
+            tsek_idx = word.rindex('་')
+            return word[:tsek_idx+1], word[tsek_idx+1:]
+        else:
+            return '', word
 
 
 if __name__ == '__main__':
     """ Example use """
+    bt = PyBoTrie('POS')
+    print('གྲུབ་མཐའ་', bt.has_word('གྲུབ་མཐའ་'))
+    print('གྲུབ་མཐའི་', bt.has_word('གྲུབ་མཐའི་'))
+    print('ཟས་', bt.has_word('ཟས་'))
+
     trie = Trie()
     words = 'hello goo good goodbye help gerald gold tea ted team to too tom stan standard money'
-    for word in words.split():
-        trie.add(word)
-    print("'goodbye' in trie: ", trie.has_word('goodbye'))
+    for w in words.split():
+        trie.add(w)
+    print("'goodbye':", trie.has_word('goodbye'))

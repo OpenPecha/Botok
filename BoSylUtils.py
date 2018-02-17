@@ -160,34 +160,50 @@ class SylComponents:
             else:
                 return syl
 
-    def is_thame(self, word):
-        if '་' in word:
-            last_syl = word.split('་')[-1]
-        else:
-            last_syl = word
-        return self.get_info(last_syl) == 'thame'
+    def is_thame(self, syl):
+        """
+        :param syl: a string without tsek or other punct
+        :return: True if the syllabe is affixable or is already affixed, False otherwise
+        """
+        return self.get_info(syl) == 'thame'
 
 
-class BoAffixify(SylComponents):
+class BoSyl(SylComponents):
     def __init__(self):
         SylComponents.__init__(self)
+        self.affixes = {'ར': {'len': 1, 'POS': 'la'},
+                        'ས': {'len': 1, 'POS': 'gis'},
+                        'འི': {'len': 2, 'POS': 'gi'},
+                        'འམ': {'len': 2, 'POS': 'am'},
+                        'འང': {'len': 2, 'POS': 'ang'},
+                        'འོ': {'len': 2, 'POS': 'o'},
+                        'འིའོ': {'len': 4, 'POS': 'gi+o'}
+                        }
 
     def is_affixable(self, syl):
         """expects a clean syllable without ending tsek"""
         regex = r'(ར|ས|འི|འམ|འང|འོ)$'
-        return self.get_info(syl) == 'thame' and re.findall(regex, syl) == []
+        return self.is_thame(syl) and re.findall(regex, syl) == []
 
-    def affix(self, syl):
-        affixes = ['ར', 'ས', 'འི', 'འམ', 'འང', 'འོ', 'འིའོ']
+    def get_all_affixed(self, syl):
+        """
+
+        :param syl: syl to be affixed
+        :return: if affixable: list of (<syl+affixed>, {'len': int, 'POS': str, 'aa': bool})
+                 otherwise   : <syl>
+        """
         if self.is_affixable(syl):
             affixed = []
-            aa = False
+            aa = ''
             if syl.endswith('འ'):
-                aa = True
+                aa = 'aa'
                 syl = syl[:-1]
 
-            for a in affixes:
-                affixed.append((syl+a, a, aa))
+            for a in self.affixes.keys():
+                metadata = self.affixes[a]
+
+                metadata.update({'aa': aa})
+                affixed.append((syl+a, metadata))
             return affixed
         else:
             return syl
@@ -195,11 +211,11 @@ class BoAffixify(SylComponents):
 
 if __name__ == '__main__':
     """ example of use """
-    af = BoAffixify()
+    bs = BoSyl()
     test = 'བཀྲིས'
-    for syl in ['བཀྲིས', 'བཀའ', 'བཀྲི', 'དེའོ', 'དེའིའོ', 'དགས']:
-        print(syl, 'can be affixed:', af.is_affixable(syl))
-        if af.is_affixable(syl):
-            print(af.affix(syl))
+    for syl in ['བཀྲིས', 'བཀའ', 'བཀྲི', 'དེའོ', 'དེའིའོ', 'དགས', 'ལེགས']:
+        print(syl, 'can be affixed:', bs.is_affixable(syl))
+        if bs.is_affixable(syl):
+            print(bs.get_all_affixed(syl))
             # [('བཀར', 'ར', True), ('བཀས', 'ས', True), ('བཀའི', 'འི', True), ('བཀའམ', 'འམ', True), ('བཀའང', 'འང', True),
             # ('བཀའོ', 'འོ', True), ('བཀའིའོ', 'འིའོ', True)]
