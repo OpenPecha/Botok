@@ -1,5 +1,6 @@
 from BoSylUtils import BoSyl
 import time
+import os
 
 # inspired from https://gist.github.com/nickstanisha/733c134a0171a00f66d4
 # and https://github.com/eroux/tibetan-phonetics-py
@@ -93,11 +94,13 @@ class PyBoTrie(Trie):
     def __init__(self, profile='pytib'):
         Trie.__init__(self)
         self.bt = BoSyl()
+        self.TSEK = '་'
+        self.COMMENT = '#'
         self.build_trie(profile)
 
     def build_trie(self, profile):
         """
-        TODO: choose which file to add,
+
         :param profile:
         :return:
         """
@@ -111,72 +114,78 @@ class PyBoTrie(Trie):
                  8: 'oral_corpus_2.txt',
                  9: 'oral_corpus_3.txt',
                  10: 'recordings_4.txt'}
+        tests = {1: 'test.txt'}
         profiles = {
                     'pytib': [files[1], files[2], files[3], files[5], 'particles.txt'],
-                    'POS': [files[1], files[2], files[3], files[5], 'particles.txt', files[4]]
+                    'POS': [files[1], files[2], files[3], files[5], 'particles.txt', files[4]],
+                    'empty': [],
+                    'test': [tests[1]]
                     }
+
+        if profile == 'test':
+            for f in profiles[profile]:
+                full_path = os.path.join(os.path.split(__file__)[0], 'resources', 'tests', f)
+                self.__add_one_file(full_path)
+            return
 
         print('Building the Trie...')
         start = time.time()
         for f in profiles[profile]:
-            full_path = '{}/{}/{}'.format('resources', 'trie', f)
+            full_path = os.path.join(os.path.split(__file__)[0], 'resources', 'trie', f)
             self.__add_one_file(full_path)
         end = time.time()
         print('Time:', end-start)
 
     def __add_one_file(self, folder):
-        def find_sep(l):
-            s = None
-            if ',' in l:
-                s = ','
-            if '\t' in l:
-                s = '\t'
-            return s
-
-        def clean(l):
-            if '#' in l:
-                start = l.index('#')
-                if start:
-                    return l[:start].strip()
-            else:
-                return l.strip()
-
+        """
+        files can have comments starting with #
+        spaces and empty lines are trimmed
+        a single space(breaks if more than one), a comma or a tab can be used as separators
+        :param folder:
+        """
         with open(folder, 'r') as g:
-            content = g.read().split('\n')
-            content = [c for c in content if not c.startswith('#')]
+            for line in g.read().split('\n'):
+                if self.COMMENT in line:
+                    comment_idx = line.index(self.COMMENT)
+                    line = line[:comment_idx]
 
-            sep = find_sep(content[0])
-            for line in content:
-                line = clean(line)
+                line = line.strip()
+
                 if line:
-                    if sep:
-                        word, pos = line.split(sep)
+                    if '\t' in line:
+                        word, pos = line.split('\t')
+                    elif ',' in line:
+                        word, pos = line.split(',')
+                    elif ' ' in line:
+                        if line.count(' ') > 1:
+                            break
+                        word, pos = line.split(' ')
                     else:
                         word, pos = line, 'XXX'
 
-                    if not word.endswith('་'):
-                        word += '་'
-                    self.add(word, pos)
-                    self.add_affixed(word[:-1], pos)
+                    self.inflect_n_add(word[:-1], pos)
 
-    def add_affixed(self, word, pos):
+    def inflect_n_add(self, word, pos):
         """
         Add to the trie all the affixed versions of the word
         :param word: a word without ending tsek
         :param pos: initial POS
         """
+        if word.endswith(self.TSEK):
+            word = word[:-1]
+
         beginning, last_syl = self.split_at_last_syl(word)
 
         if self.bt.is_affixable(last_syl):
             affixed = self.bt.get_all_affixed(last_syl)
             for a in affixed:
                 data = '{}_{}_{}_{}'.format(pos, a[1]['POS'], a[1]['len'], a[1]['aa'])
-                self.add(beginning+a[0]+'་', data)
+                self.add(beginning+a[0]+self.TSEK, data)
+        self.add(word+self.TSEK, '{}___'.format(pos))
 
-    @staticmethod
-    def split_at_last_syl(word):
-        if word.count('་') >= 1:
-            tsek_idx = word.rindex('་')
+    def split_at_last_syl(self, word):
+        if word.count(self.TSEK) >= 1:
+            tsek_idx = word.rindex(self.TSEK)
             return word[:tsek_idx+1], word[tsek_idx+1:]
         else:
             return '', word

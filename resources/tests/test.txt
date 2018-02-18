@@ -1,0 +1,10 @@
+# this is a test line, followed by an empty line, that should be ignored
+
+བཀྲ་,NOUN # lines can have either a comma
+ཤིས་ NOUN # a space
+བཀྲ་ཤིས་	NOUN # or a tab as separator
+བདེ་,NOUN
+  # this line, being empty after removing the comment, should be ignored
+ལེགས་,ADJ # a comment preceded by a space
+བདེ་ལེགས་,NOUN
+བཀྲ་ཤིས་བདེ་ལེགས་,EXCLS # Not so sure about this POS.
