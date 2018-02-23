@@ -20,11 +20,9 @@ class Node:
         else:
             self.children[key.leaf] = key
 
-    @property
     def can_walk(self):
-        return self.children
+        return self.children != dict()
 
-    @property
     def is_match(self):
         return self.leaf
 

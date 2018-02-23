@@ -97,21 +97,22 @@ class Tokenizer:
                         # begining of current word
                         if not current_node:
                             current_node = self.trie.walk(syl[s_idx], self.trie.head)
-                            if current_node and current_node.is_match:
+                            if current_node and current_node.is_match():
                                 match_idx = c_idx
+                            syls = []
 
                         # walking resumed after previous syllable
                         else:
                             current_node = self.trie.walk(syl[s_idx], current_node)
-                            if current_node and current_node.is_match:
+                            if current_node and current_node.is_match():
                                 match_idx = c_idx
                         s_idx += 1
 
                     # continuing to walk
-                    elif current_node and current_node.can_walk:
+                    elif current_node and current_node.can_walk():
                         self.debug(debug, syl[s_idx])
                         current_node = self.trie.walk(syl[s_idx], current_node)
-                        if current_node and current_node.is_match:
+                        if current_node and current_node.is_match():
                             match_idx = c_idx
                 # <<<<<<<<<<<<<<<<<<<<<<<<
 
@@ -148,7 +149,7 @@ class Tokenizer:
                 # Finished looping over current syl.
                 if is_non_word:
                     # non-word syls are turned into independant tokens
-                    non_word = syl
+                    non_word = [syl]
                     tokens.append(non_word)
 
                 else:
@@ -158,8 +159,7 @@ class Tokenizer:
                             c_idx -= 1
 
                         else:
-                            c_idx = self.there_are_syls_process(c_idx, match_idx, syls, tokens)
-                            syls = []
+                            c_idx, syls = self.there_are_syls_process(c_idx, match_idx, syls, tokens)
                         went_to_max = False
 
                     else:
@@ -169,8 +169,7 @@ class Tokenizer:
             else:
                 # if there is a word that was not added
                 if syls:
-                    c_idx = self.there_are_syls_process(c_idx, match_idx, syls, tokens)
-                    syls = []
+                    c_idx, syls = self.there_are_syls_process(c_idx, match_idx, syls, tokens)
                     current_node = None
 
                 token = [[self.pre_processed.string[idx] for idx in range(chunk[1][1], chunk[1][1]+chunk[1][2])]]
@@ -187,9 +186,11 @@ class Tokenizer:
     @staticmethod
     def there_are_syls_process(c_idx, match_idx, syls, tokens):
         # there is a match
-        if match_idx == c_idx:
+        if match_idx == c_idx - 1:  # c_idx has incremented once more before reaching here
+            # Todo: test if the condition holds in all contexts
             word = syls
             tokens.append(word)
+            syls = []
         else:
             # add first syl in syls as non-word
             tokens.append(syls[0])
@@ -198,7 +199,7 @@ class Tokenizer:
             # decrement chunk-idx for a new attempt to find a match
             if syls:
                 c_idx -= len(syls) - 1
-        return c_idx
+        return c_idx, syls
 
     def create_token(self, ttype, start, length, syls, pos=None):
         token = Word()
