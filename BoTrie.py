@@ -20,9 +20,11 @@ class Node:
         else:
             self.children[key.leaf] = key
 
-    def can_continue(self):
+    @property
+    def can_walk(self):
         return self.children
 
+    @property
     def is_match(self):
         return self.leaf
 
@@ -114,7 +116,7 @@ class PyBoTrie(Trie):
             self.load_trie()
 
     def load_trie(self):
-        print('loading Trie...')
+        print('Loading Trie...')
         start = time.time()
         with open(self.pickled_file, 'rb') as f:
             self.head = pickle.load(f)
@@ -127,9 +129,6 @@ class PyBoTrie(Trie):
 
     def build_trie(self):
         """
-
-        :param profile:
-        :return:
         """
         print('building Trie...', end=' ')
         start = time.time()

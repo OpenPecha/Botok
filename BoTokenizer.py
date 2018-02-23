@@ -67,20 +67,10 @@ class Tokenizer:
         self.WORD = 1000
         self.NON_WORD = 1001
 
-        # these variables are here so they can be updated
-        # by add_non_word(), ...
-        self.tokens = []
-
-        self.word = []
-        # self.word_start = -1
-        # self.word_len = -1
-
-        self.non_word = []
-        # self.non_word_start = -1
-        # self.non_word_len = -1
-
     def tokenize(self):
         tokens = []
+        word = []
+
         current_node = None
         went_to_max = False
 
@@ -92,7 +82,6 @@ class Tokenizer:
             if chunk[0]:  # chunk is a syllable
 
                 syl = [self.pre_processed.string[idx] for idx in chunk[0]] + ['་']
-                print(''.join(syl))
 
                 s_idx = 0
                 while s_idx <= len(syl)-1:
@@ -104,11 +93,11 @@ class Tokenizer:
                             current_node = self.trie.walk(syl[s_idx], current_node)
                         s_idx += 1
 
-                    elif current_node and current_node.can_continue():
+                    elif current_node and current_node.can_walk:
                         char = syl[s_idx]
                         current_node = self.trie.walk(syl[s_idx], current_node)
 
-                        if not current_node and self.word:
+                        if not current_node and word:
                             if not has_decremented:
                                 c_idx -= 1
                                 has_decremented = True
@@ -117,7 +106,7 @@ class Tokenizer:
 
                     else:
                         # we couldn't go until the end of the syl
-                        if self.word:
+                        if word:
                             if went_to_max:
                                 s_idx += 1
                                 continue
@@ -132,64 +121,56 @@ class Tokenizer:
                         s_idx += 1
 
                 if is_non_word:
+                    # non-words are left as syllables
                     non_word = syl
                     tokens.append(non_word)
 
                 else:
                     if went_to_max:
-                        if self.word and not has_decremented:
+                        if word and not has_decremented:
                             c_idx -= 1
 
                         else:
-                            tokens.append(self.word)
-                            self.word = []
+                            tokens.append(word)
+                            word = []
                         went_to_max = False
 
                     else:
-                        self.word.append(syl)
-
-                    # we have reached the end of the syl
-                    if current_node and current_node.is_match():
-                        # self.non_max_match = self.word
-
-                        # restart non_word at current position
-                        self.non_word = []
+                        word.append(syl)
 
             else:
                 # if there is a word that was not added
-                if self.word:
-                    tokens.append(self.word)
-                    self.word = []
-                    # self.non_max_match = []
+                if word:
+                    tokens.append(word)
+                    word = []
                     current_node = None
 
                 # is non-bo, add it to tokens as a Word
                 token = [[self.pre_processed.string[idx] for idx in range(chunk[1][1], chunk[1][1]+chunk[1][2])]]
                 tokens.append(token)
-                # tokens.append(self.create_token(chunk[1][0], chunk[1][1], chunk[1][2], [chunk[0]]))
 
             c_idx += 1
 
-        if self.word:
+        if word:
             tokens.append(self.word)
 
         self.reinitialize_vars()
         return tokens
 
-    def create_token(self, type, start, length, syls, POS=None):
+    def create_token(self, ttype, start, length, syls, pos=None):
         token = Word()
         token.content = self.string[start:start+length]
-        token.chunk_type = type
+        token.chunk_type = ttype
         token.start_in_input = start
         token.length = length
         if syls != [None]:
             token.syls = []
             for syl in syls:
                 token.syls.append([i-start for i in syl])
-        if not POS:
-            token.partOfSpeech = token.chunk_markers[type]
+        if not pos:
+            token.partOfSpeech = token.chunk_markers[ttype]
         else:
-            token.partOfSpeech = POS
+            token.partOfSpeech = pos
         token.char_groups = self.pre_processed.export_groups(start, length, for_substring=True)
         return token
 
@@ -210,6 +191,6 @@ if __name__ == '__main__':
 
     tok = Tokenizer(test)
     words = tok.tokenize()
-    for word in words:
-        print(''.join([''.join(a) for a in word]), end=' ')
+    for w in words:
+        print(''.join([''.join(a) for a in w]), end=' ')
 
