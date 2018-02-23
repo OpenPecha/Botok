@@ -1,4 +1,4 @@
-from BoStringUtils import PyBoTextIterator
+from BoStringUtils import PyBoTextChunks
 from BoTrie import PyBoTrie
 
 
@@ -62,73 +62,118 @@ class Tokenizer:
     """
     def __init__(self, string):
         self.string = string  # another copy of string lives in pre_process
-        self.pre_process = PyBoTextIterator(string)
-        self.trie = PyBoTrie()
+        self.pre_processed = PyBoTextChunks(string)
+        self.trie = PyBoTrie('POS')
         self.WORD = 1000
         self.NON_WORD = 1001
 
+        # these variables are here so they can be updated
+        # by add_non_word(), ...
+        self.tokens = []
+
+        self.word = []
+        # self.word_start = -1
+        # self.word_len = -1
+
+        self.non_word = []
+        # self.non_word_start = -1
+        # self.non_word_len = -1
+
     def tokenize(self):
         tokens = []
-        syls = []
-        word_start = -1
-        word_len = -1
         current_node = None
-        longest_match = None
+        went_to_max = False
 
-        for chunk in self.pre_process.chunks:
+        c_idx = 0
+        while c_idx < len(self.pre_processed.chunks):
+            has_decremented = False
+            is_non_word = False
+            chunk = self.pre_processed.chunks[c_idx]
             if chunk[0]:  # chunk is a syllable
-                if word_start == -1:
-                    word_start = chunk[1][1]
-                syl = [self.pre_process.string[idx] for idx in chunk[0]] + ['་']
+
+                syl = [self.pre_processed.string[idx] for idx in chunk[0]] + ['་']
                 print(''.join(syl))
 
-                i = 0
-                while i <= len(syl):
-                    if current_node and current_node.children:
-                        current_node = self.trie.walk(syl[i], current_node)
-                    else:
-                        current_node = self.trie.walk(syl[i], self.trie.head)
-
-                    if current_node and current_node.leaf:
-                        syls.append(chunk[0])
-                        word_len += chunk[1][2]
-                        longest_match = self.create_token(self.WORD, word_start,
-                                                          word_len + 1, syls, current_node.data)
-                        i += 1
-
-                    elif current_node and not current_node.leaf:
-                        i = 0
-                        current_node = None
-
-                    else:
+                s_idx = 0
+                while s_idx <= len(syl)-1:
+                    if s_idx == 0:
+                        char = syl[s_idx]
                         if not current_node:
-                            if longest_match:
-                                tokens.append(longest_match)
-                                longest_match = None
-                            else:
-                                tokens.append(self.create_token(self.NON_WORD, chunk[1][1],
-                                                                chunk[1][2], [chunk[0]]))
-                            syls = []
-                            word_start = -1
-                            word_len = -1
-                            current_node = None
-                        i += 1
+                            current_node = self.trie.walk(syl[s_idx], self.trie.head)
+                        else:
+                            current_node = self.trie.walk(syl[s_idx], current_node)
+                        s_idx += 1
+
+                    elif current_node and current_node.can_continue():
+                        char = syl[s_idx]
+                        current_node = self.trie.walk(syl[s_idx], current_node)
+
+                        if not current_node and self.word:
+                            if not has_decremented:
+                                c_idx -= 1
+                                has_decremented = True
+                            went_to_max = True
+                        s_idx += 1
+
+                    else:
+                        # we couldn't go until the end of the syl
+                        if self.word:
+                            if went_to_max:
+                                s_idx += 1
+                                continue
+
+                            if not has_decremented:
+                                c_idx -= 1
+                                has_decremented = True
+                            went_to_max = True
+                        else:
+                            # there is only a non-word
+                            is_non_word = True
+                        s_idx += 1
+
+                if is_non_word:
+                    non_word = syl
+                    tokens.append(non_word)
+
+                else:
+                    if went_to_max:
+                        if self.word and not has_decremented:
+                            c_idx -= 1
+
+                        else:
+                            tokens.append(self.word)
+                            self.word = []
+                        went_to_max = False
+
+                    else:
+                        self.word.append(syl)
+
+                    # we have reached the end of the syl
+                    if current_node and current_node.is_match():
+                        # self.non_max_match = self.word
+
+                        # restart non_word at current position
+                        self.non_word = []
 
             else:
-                # add found word
-                if longest_match:
-                    tokens.append(longest_match)
-                    longest_match = None
+                # if there is a word that was not added
+                if self.word:
+                    tokens.append(self.word)
+                    self.word = []
+                    # self.non_max_match = []
+                    current_node = None
 
-                tokens.append(self.create_token(chunk[1][0], chunk[1][1], chunk[1][2], [chunk[0]]))
-                syls = []
-                word_start = -1
-                word_len = -1
-                current_node = None
+                # is non-bo, add it to tokens as a Word
+                token = [[self.pre_processed.string[idx] for idx in range(chunk[1][1], chunk[1][1]+chunk[1][2])]]
+                tokens.append(token)
+                # tokens.append(self.create_token(chunk[1][0], chunk[1][1], chunk[1][2], [chunk[0]]))
 
-        if longest_match:
-            tokens.append(longest_match)
+            c_idx += 1
 
+        if self.word:
+            tokens.append(self.word)
+
+        self.reinitialize_vars()
         return tokens
 
     def create_token(self, type, start, length, syls, POS=None):
@@ -145,38 +190,26 @@ class Tokenizer:
             token.partOfSpeech = token.chunk_markers[type]
         else:
             token.partOfSpeech = POS
-        token.char_groups = self.pre_process.export_groups(start, length, for_substring=True)
+        token.char_groups = self.pre_processed.export_groups(start, length, for_substring=True)
         return token
+
+    def reinitialize_vars(self):
+        self.tokens = []
+        self.word = []
+        # self.word_start = -1
+        # self.word_len = -1
+        self.non_word = []
+        # self.non_word_start = -1
+        # self.non_word_len = -1
 
 
 if __name__ == '__main__':
     """example use"""
-    input_string = ' ཤི་བཀྲ་ཤིས་  tr བདེ་་ལེ གས། བཀྲ་ཤིས་བདེ་ལེགས'
-    test = 'སྙན་ངག་མེ་ལོང་མ་བོད་བསྒྱུར་མ་བྱས་པའི་སྔོན་དུ་བོད་ལ་སྙན་ངག་མེད་པ་བཤད་པ་ནི། དེའི་གོང་དུ་བོད་ལ་སྙན་ངག་གི་གཞུང་མེད་པ་ལ་དགོངས་པ་ཡིན་གྱི། སྙན་ངག་མེད་པ་མིན་ཏེ། སྙན་ངག་ནི་མིའི་སྤྱི་ཚོགས་འཚོ་བའི་ནང་དགའ་སྐྱོ་ཁྲོ་ཆགས་ཀྱི་འགྱུར་འགྲོས་གང་ཞིག་ལ་བརྟེན་ནས་བསམ་བློའི་འཕོ་འགྱུར་དེ་ཉིད་ངག་ཐོག་ནས་ཐོན་པའི་སྒྱུ་རྩལ་ཞིག་ཡིན་པས། དེ་ནི་འགྲོ་བ་མིའི་འཕེལ་རིམ་དང་དཔུང་པ་མཉམ་གཤིབ་ཀྱིས་བྱུང་བ་ལས་གློ་བུར་ཐོལ་བྱུང་གིས་ཡོང་ཐབས་ག་ལ་ཡོད། དེས་ན་གོང་དུ་བགྲང་པ་ལྟར་མེ་ལོང་མ་བོད་བསྒྱུར་མ་བྱས་པའི་སྔོན་ནས་བོད་ལ་བོད་རང་གི་སྤྱི་ཚོགས་འཚོ་བའི་ཁྲོད་ཀྱི་དགའ་སྡུག་ཁྲོ་ཆགས་ཀྱི་བསམ་བློ་དང་རྣམ་པ་མཚོན་པའི་གདོད་མའི་སྙན་ཚིག་ཇི་ཙམ་ཞིག་དར་ཁྱབ་ཟིན་པ་གོང་དུ་བཤད་པས་ཤེས་ནུས་སྙམ།'
+    input_string = ' ཤི་བཀྲ་ཤིས་  tr བདེ་་ལེ གས། བཀྲ་ཤིས་བདེ་ལེགས་ཀཀ'
+    test = 'ཀཀ་ཀཀ་ཞེས་བྱ་བ། ངེད་རྣམས་ནི་མཐོ་གོ་གནས་དང་། འབྱོར་ལྡན། མིང་གྲགས་ཡོད་མཁན་དེ་འདྲ་ནམ་ཡང་མིན་ལ། ཅི་ཞིག་ཤེས་ཁུལ་གྱིས་ཚོགས་པ་འདི་གཉེར་བ་ཞིག་ཀྱང་གཏན་ནས་མིན། ཚན་རྩལ་གྱི་རྦ་རླབས་དྲག་ཏུ་འཕྱོ་ལྡིང་བྱེད་པའི་དུས་སྐབས་འདིར་ང་ཚོས་སྔ་ས་ནས་རང་གི་སྐད་ཡིག་དང་རིག་གཞུང་ལ་དུང་བ་ཞིག་ན་གཞོན་ཚོར་བསྐྲུན་མ་ཐུབ་པ་དང་། བདག་གཅེས་ལ་འབད་མ་ནུས་ཚེ་ཡོད་ཚད་མིང་ཙམ་ཞིག་ཏུ་གྱུར་ཚར་རྗེས་ངལ་བ་ཇི་ཙམ་བརྟེན་ཡང་སྙིང་པོ་ལོན་རྒྱུ་དཀའ་བས་ད་ལྟ་མ་སྔ་མ་ཕྱིས་བའི་དུས་ཚིགས་གལ་ཆེན་ཞིག་ཏུ་བརྩིས་ནས་ང་ཚོས་འདི་ལྟར་རང་ནུས་ལ་དཔགས་པའི་སྐད་ཡིག་རིག་གཞུང་དང་འབྲེལ་བའི་བྱེད་སྒོ་སྤེལ་མུས་ཡིན།'
 
     tok = Tokenizer(test)
     words = tok.tokenize()
+    for word in words:
+        print(''.join([''.join(a) for a in word]), end=' ')
 
-    pos_tagged = ['{}/{}'.format(w.content.replace(' ', '_'), w.partOfSpeech) for w in words]
-    print(' '.join(pos_tagged))
-    # _ཤི་/non-word བཀྲ་ཤིས་__/NOUN tr/non-bo _བདེ་་ལེ_གས/NOUN །/punct _བཀྲ་ཤིས་བདེ་ལེགས/EXCLS
-
-    for w in words:
-        print(w.to_string)
-    # content: " ཤི་"
-    # char types: |space|cons|vow|tsek|
-    # type: non-word
-    # start in input: 0
-    # length: 4
-    # syl chars in content(ཤི): [[1, 2]]
-    # POS: non - word
-    #
-    # content: "བཀྲ་ཤིས་  "
-    # char types: |cons|cons|sub-cons|tsek|cons|vow|cons|tsek|space|space|
-    # type: word
-    # start in input: 4
-    # length: 10
-    # syl chars in content(བཀྲ ཤིས): [[0, 1, 2], [4, 5, 6]]
-    # POS: NOUN
-    #
-    # (...)

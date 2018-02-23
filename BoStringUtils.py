@@ -323,7 +323,7 @@ class PyBoChunk(BoChunk):
         return spaces_count == end - start
 
 
-class PyBoTextIterator(PyBoChunk):
+class PyBoTextChunks(PyBoChunk):
     """
     Serves content to BoTrie
     """
@@ -332,13 +332,14 @@ class PyBoTextIterator(PyBoChunk):
         self.chunks = self.serve_syls_to_trie()
 
     def serve_syls_to_trie(self):
-        chunks = self.chunk()
-        for chunk in chunks:
+        chunks = []
+        for chunk in self.chunk():
             if chunk[0] == self.SYL_MARKER:
                 text_chars = self.__get_text_chars(chunk[1], chunk[1]+chunk[2])
-                yield text_chars, chunk
+                chunks.append((text_chars, chunk))
             else:
-                yield None, chunk
+                chunks.append((None, chunk))
+        return chunks
 
     def __get_text_chars(self, start_idx, end_idx):
         """

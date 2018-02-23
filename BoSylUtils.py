@@ -212,6 +212,7 @@ class BoSyl(SylComponents):
 if __name__ == '__main__':
     """ example of use """
     bs = BoSyl()
+    print(bs.is_affixable('དྭོགས'))
     test = 'བཀྲིས'
     for syl in ['བཀྲིས', 'བཀའ', 'བཀྲི', 'དེའོ', 'དེའིའོ', 'དགས', 'ལེགས']:
         print(syl, 'can be affixed:', bs.is_affixable(syl))

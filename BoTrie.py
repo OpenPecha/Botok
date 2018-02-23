@@ -1,6 +1,7 @@
 from BoSylUtils import BoSyl
 import time
 import os
+import pickle
 
 # inspired from https://gist.github.com/nickstanisha/733c134a0171a00f66d4
 # and https://github.com/eroux/tibetan-phonetics-py
@@ -18,6 +19,12 @@ class Node:
             self.children[key] = Node(key, leaf)
         else:
             self.children[key.leaf] = key
+
+    def can_continue(self):
+        return self.children
+
+    def is_match(self):
+        return self.leaf
 
     def __getitem__(self, key):
         return self.children[key]
@@ -96,14 +103,36 @@ class PyBoTrie(Trie):
         self.bt = BoSyl()
         self.TSEK = '་'
         self.COMMENT = '#'
-        self.build_trie(profile)
+        self.profile = profile
+        self.pickled_file = profile + '_trie.pickled'
+        self.load_or_build_trie()
 
-    def build_trie(self, profile):
+    def load_or_build_trie(self):
+        if not os.path.exists(self.pickled_file):
+            self.build_trie()
+        else:
+            self.load_trie()
+
+    def load_trie(self):
+        print('loading Trie...')
+        start = time.time()
+        with open(self.pickled_file, 'rb') as f:
+            self.head = pickle.load(f)
+        end = time.time()
+        print('Time:', end - start)
+
+    def rebuild_trie(self):
+        self.head = Node()
+        self.build_trie()
+
+    def build_trie(self):
         """
 
         :param profile:
         :return:
         """
+        print('building Trie...', end=' ')
+        start = time.time()
         files = {1: 'ancient.txt',
                  2: 'exceptions.txt',
                  3: 'uncompound_lexicon.txt',
@@ -122,19 +151,20 @@ class PyBoTrie(Trie):
                     'test': [tests[1]]
                     }
 
-        if profile == 'test':
-            for f in profiles[profile]:
+        if self.profile == 'test':
+            for f in profiles[self.profile]:
                 full_path = os.path.join(os.path.split(__file__)[0], 'resources', 'tests', f)
                 self.__add_one_file(full_path)
             return
 
-        print('Building the Trie...')
-        start = time.time()
-        for f in profiles[profile]:
+        for f in profiles[self.profile]:
             full_path = os.path.join(os.path.split(__file__)[0], 'resources', 'trie', f)
             self.__add_one_file(full_path)
+
+        with open(self.pickled_file, 'wb') as f:
+            pickle.dump(self.head, f, pickle.HIGHEST_PROTOCOL)
         end = time.time()
-        print('Time:', end-start)
+        print('Time:', end - start)
 
     def __add_one_file(self, folder):
         """
@@ -163,7 +193,7 @@ class PyBoTrie(Trie):
                     else:
                         word, pos = line, 'XXX'
 
-                    self.inflect_n_add(word[:-1], pos)
+                    self.inflect_n_add(word, pos)
 
     def inflect_n_add(self, word, pos):
         """

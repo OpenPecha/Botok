@@ -555,4 +555,7 @@ paket-files/
 
 default.profile
 
+# pybo
+*.pickled
+
 # End of https://www.gitignore.io/api/macos,pydev,python,eclipse,pycharm+all,visualstudio,visualstudiocode
