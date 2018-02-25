@@ -21,7 +21,7 @@ class Word:
 
     @property
     def to_string(self):
-        out = '\ncontent: "'+self.content+'"'
+        out = 'content: "'+self.content+'"'
         out += '\nchar types: '
         out += '|'+'|'.join([self.char_markers[self.char_groups[idx]]
                             for idx in sorted(self.char_groups.keys())])+'|'
@@ -70,10 +70,10 @@ class Tokenizer:
     def tokenize(self, debug=False):
         tokens = []
         syls = []
+        match_data = {}  # keys: c_idx, values: trie data (for last and second-last matches)
 
         current_node = None
         went_to_max = False
-        match_idx = -1
 
         c_idx = 0
         while c_idx < len(self.pre_processed.chunks):
@@ -98,14 +98,14 @@ class Tokenizer:
                         if not current_node:
                             current_node = self.trie.walk(syl[s_idx], self.trie.head)
                             if current_node and current_node.is_match():
-                                match_idx = c_idx
+                                match_data[c_idx] = current_node.data
                             syls = []
 
                         # walking resumed after previous syllable
                         else:
                             current_node = self.trie.walk(syl[s_idx], current_node)
                             if current_node and current_node.is_match():
-                                match_idx = c_idx
+                                match_data[c_idx] = current_node.data
                         s_idx += 1
 
                     # continuing to walk
@@ -113,7 +113,7 @@ class Tokenizer:
                         self.debug(debug, syl[s_idx])
                         current_node = self.trie.walk(syl[s_idx], current_node)
                         if current_node and current_node.is_match():
-                            match_idx = c_idx
+                            match_data[c_idx] = current_node.data
                 # <<<<<<<<<<<<<<<<<<<<<<<<
 
                         if not current_node and syls:
@@ -146,11 +146,12 @@ class Tokenizer:
                             is_non_word = True
                         s_idx += 1
 
-                # Finished looping over current syl.
+                # FINISHED LOOPING OVER CURRENT SYL
                 if is_non_word:
                     # non-word syls are turned into independant tokens
-                    non_word = [syl]
-                    tokens.append(non_word)
+                    non_word = [c_idx]
+                    tokens.append(self.chunks_to_token(non_word, self.NON_WORD))
+                    match_data = {}
 
                 else:
 
@@ -159,49 +160,80 @@ class Tokenizer:
                             c_idx -= 1
 
                         else:
-                            c_idx, syls = self.there_are_syls_process(c_idx, match_idx, syls, tokens)
+                            c_idx = self.add_found_word_or_non_word(c_idx, match_data, syls, tokens)
+                            match_data = {}
                         went_to_max = False
 
                     else:
-                        syls.append(syl)
+                        syls.append(c_idx)
 
             # 2. CHUNK IS NON-SYLLABLE
             else:
                 # if there is a word that was not added
                 if syls:
-                    c_idx, syls = self.there_are_syls_process(c_idx, match_idx, syls, tokens)
+                    c_idx = self.add_found_word_or_non_word(c_idx - 1, match_data, syls, tokens) + 1
+                    match_data = {}
                     current_node = None
 
-                token = [[self.pre_processed.string[idx] for idx in range(chunk[1][1], chunk[1][1]+chunk[1][2])]]
-                tokens.append(token)
+                tokens.append(self.chunks_to_token([c_idx]))
 
             c_idx += 1
 
         # a potential token was left
         if syls:
-            self.there_are_syls_process(c_idx, match_idx, syls, tokens)
+            self.add_found_word_or_non_word(c_idx, match_data, syls, tokens)
 
         return tokens
 
-    @staticmethod
-    def there_are_syls_process(c_idx, match_idx, syls, tokens):
+    def add_found_word_or_non_word(self, c_idx, match_data, syls, tokens):
         # there is a match
-        if match_idx == c_idx - 1:  # c_idx has incremented once more before reaching here
-            # Todo: test if the condition holds in all contexts
-            word = syls
-            tokens.append(word)
-            syls = []
+        if c_idx in match_data.keys():
+            tokens.append(self.chunks_to_token(syls, pos=match_data[c_idx]))
         else:
             # add first syl in syls as non-word
-            tokens.append(syls[0])
-            del syls[0]
+            tokens.append(self.chunks_to_token([syls[0]], self.NON_WORD))
 
             # decrement chunk-idx for a new attempt to find a match
             if syls:
-                c_idx -= len(syls) - 1
-        return c_idx, syls
+                c_idx -= len(syls[1:]) - 1
+        return c_idx
+
+    def chunks_to_token(self, syls, pos=None, ttype=None):
+        if len(syls) == 1:
+            # chunk format: ([char_idx1, char_idx2, ...], (type, start_idx, len_idx))
+            token_syls  = [self.pre_processed.chunks[syls[0]][0]]
+            token_type   = self.pre_processed.chunks[syls[0]][1][0]
+            token_start  = self.pre_processed.chunks[syls[0]][1][1]
+            token_length = self.pre_processed.chunks[syls[0]][1][2]
+            if ttype:
+                token_type = ttype
+
+            return self.create_token(token_type, token_start, token_length, token_syls, pos)
+        elif len(syls) > 1:
+            token_syls = [self.pre_processed.chunks[idx][0] for idx in syls]
+            token_type = self.pre_processed.chunks[syls[-1]][1][0]
+            token_start = self.pre_processed.chunks[syls[0]][1][1]
+            token_length = 0
+            for i in syls:
+                token_length += self.pre_processed.chunks[i][1][2]
+            if ttype:
+                token_type = ttype
+
+            return self.create_token(token_type, token_start, token_length, token_syls, pos)
+        else:
+            return None  # should raise an error instead?
 
     def create_token(self, ttype, start, length, syls, pos=None):
+        """
+
+        :param ttype: token type
+        :param start: start index in input string
+        :param length: length of the substring from the input string corresponding to this token
+        :param syls: syl representation coming from PyBoTextChunks.
+                        the indices are modified to be usable on the substring corresponding to this token
+        :param pos: the POS retrieved from the chunk or from the trie
+        :return: a Word object with all the above information
+        """
         token = Word()
         token.content = self.string[start:start+length]
         token.chunk_type = ttype
@@ -214,7 +246,10 @@ class Tokenizer:
         if not pos:
             token.partOfSpeech = token.chunk_markers[ttype]
         else:
-            token.partOfSpeech = pos
+            if type(pos) == int:
+                token.partOfSpeech = token.chunk_markers[pos]
+            else:
+                token.partOfSpeech = pos
         token.char_groups = self.pre_processed.export_groups(start, length, for_substring=True)
         return token
 
@@ -237,4 +272,5 @@ if __name__ == '__main__':
     tok = Tokenizer(test)
     words = tok.tokenize()
     for w in words:
-        print(''.join([''.join(a) for a in w]), end=' ')
+        print(w.to_string)
+        print()
