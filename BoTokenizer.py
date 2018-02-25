@@ -60,14 +60,14 @@ class Tokenizer:
 
     Leverages BoStringUtils as pre-processing, BoTrie as
     """
-    def __init__(self, string):
-        self.string = string  # another copy of string lives in pre_process
-        self.pre_processed = PyBoTextChunks(string)
+    def __init__(self):
+        self.pre_processed = None
         self.trie = PyBoTrie('POS')
         self.WORD = 1000
         self.NON_WORD = 1001
 
-    def tokenize(self, debug=False):
+    def tokenize(self, string, debug=False):
+        self.pre_processed = PyBoTextChunks(string)
         tokens = []
         syls = []
         match_data = {}  # keys: c_idx, values: trie data (for last and second-last matches)
@@ -186,6 +186,7 @@ class Tokenizer:
         if syls:
             self.add_found_word_or_non_word(c_idx, match_data, syls, tokens)
 
+        self.pre_processed = None
         return tokens
 
     def add_found_word_or_non_word(self, c_idx, match_data, syls, tokens):
@@ -238,7 +239,7 @@ class Tokenizer:
         :return: a Word object with all the above information
         """
         token = Word()
-        token.content = self.string[start:start+length]
+        token.content = self.pre_processed.string[start:start+length]
         token.chunk_type = ttype
         token.start_in_input = start
         token.length = length
@@ -272,8 +273,8 @@ if __name__ == '__main__':
            'ལྟ་མ་སྔ་མ་ཕྱིས་བའི་དུས་ཚིགས་གལ་ཆེན་ཞིག་ཏུ་བརྩིས་ནས་ང་ཚོས་འདི་ལྟར་རང་ནུས་ལ་དཔགས་པའི་སྐད་ཡིག་རིག་གཞུང་དང་' \
            'འབྲེལ་བའི་བྱེད་སྒོ་སྤེལ་མུས་ཡིན།'
 
-    tok = Tokenizer(test)
-    words = tok.tokenize()
+    tok = Tokenizer()
+    words = tok.tokenize(test)
     for w in words:
         print(w.to_string)
         print()
