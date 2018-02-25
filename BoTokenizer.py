@@ -99,7 +99,6 @@ class Tokenizer:
                             current_node = self.trie.walk(syl[s_idx], self.trie.head)
                             if current_node and current_node.is_match():
                                 match_data[c_idx] = current_node.data
-                            syls = []
 
                         # walking resumed after previous syllable
                         else:
@@ -152,6 +151,7 @@ class Tokenizer:
                     non_word = [c_idx]
                     tokens.append(self.chunks_to_token(non_word, self.NON_WORD))
                     match_data = {}
+                    syls = []
 
                 else:
 
@@ -162,6 +162,7 @@ class Tokenizer:
                         else:
                             c_idx = self.add_found_word_or_non_word(c_idx, match_data, syls, tokens)
                             match_data = {}
+                            syls = []
                         went_to_max = False
 
                     else:
@@ -171,8 +172,10 @@ class Tokenizer:
             else:
                 # if there is a word that was not added
                 if syls:
+                    # the word to add ends at c_idx - 1 since we reached the non-syllable chunk
                     c_idx = self.add_found_word_or_non_word(c_idx - 1, match_data, syls, tokens) + 1
                     match_data = {}
+                    syls = []
                     current_node = None
 
                 tokens.append(self.chunks_to_token([c_idx]))
@@ -274,3 +277,6 @@ if __name__ == '__main__':
     for w in words:
         print(w.to_string)
         print()
+
+    tagged = ['{}/{}'.format(w.content, w.partOfSpeech) for w in words]
+    print(' '.join(tagged))
