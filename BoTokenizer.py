@@ -60,9 +60,9 @@ class Tokenizer:
 
     Leverages BoStringUtils as pre-processing, BoTrie as
     """
-    def __init__(self):
+    def __init__(self, profile='POS'):
         self.pre_processed = None
-        self.trie = PyBoTrie('POS')
+        self.trie = PyBoTrie(profile)
         self.WORD = 1000
         self.NON_WORD = 1001
 
@@ -193,6 +193,14 @@ class Tokenizer:
         # there is a match
         if c_idx in match_data.keys():
             tokens.append(self.chunks_to_token(syls, pos=match_data[c_idx]))
+        elif c_idx:
+            non_max_idx = sorted(match_data.keys())[-1]
+            non_max_syls = []
+            for syl in syls:
+                if syl <= non_max_idx:
+                    non_max_syls.append(syl)
+            tokens.append(self.chunks_to_token(non_max_syls, pos=match_data[non_max_idx]))
+            c_idx = non_max_idx
         else:
             # add first syl in syls as non-word
             tokens.append(self.chunks_to_token([syls[0]], self.NON_WORD))
@@ -215,7 +223,7 @@ class Tokenizer:
             return self.create_token(token_type, token_start, token_length, token_syls, pos)
         elif len(syls) > 1:
             token_syls = [self.pre_processed.chunks[idx][0] for idx in syls]
-            token_type = self.pre_processed.chunks[syls[-1]][1][0]
+            token_type  = self.pre_processed.chunks[syls[-1]][1][0]
             token_start = self.pre_processed.chunks[syls[0]][1][1]
             token_length = 0
             for i in syls:
