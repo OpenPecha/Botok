@@ -211,6 +211,9 @@ class BoSyl(SylComponents):
 
 if __name__ == '__main__':
     """ example of use """
+    sc = SylComponents()
+    assert sc.get_parts('བཀྲིས') == ('བཀྲ', 'ིས')
+
     bs = BoSyl()
     print(bs.is_affixable('དྭོགས'))
     test = 'བཀྲིས'
