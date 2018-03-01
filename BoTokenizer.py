@@ -180,6 +180,13 @@ class Tokenizer:
 
                 tokens.append(self.chunks_to_token([c_idx]))
 
+            # END OF INPUT
+            # if we reached end of input and there is a non-max-match
+            if len(self.pre_processed.chunks) - 1 == c_idx:
+                if match_data and current_node and not current_node.leaf:
+                    c_idx = self.add_found_word_or_non_word(c_idx, match_data, syls, tokens)
+                    syls = []
+                    current_node = None
             c_idx += 1
 
         # a potential token was left
@@ -193,7 +200,7 @@ class Tokenizer:
         # there is a match
         if c_idx in match_data.keys():
             tokens.append(self.chunks_to_token(syls, pos=match_data[c_idx]))
-        elif c_idx:
+        elif match_data:
             non_max_idx = sorted(match_data.keys())[-1]
             non_max_syls = []
             for syl in syls:
@@ -274,15 +281,20 @@ class Tokenizer:
 if __name__ == '__main__':
     """example use"""
     input_string = ' ཤི་བཀྲ་ཤིས་  tr བདེ་་ལེ གས། བཀྲ་ཤིས་བདེ་ལེགས་ཀཀ'
+    test2 = 'བཀྲ་ཤིས་'
+    t = 'དཀོན་མཆོག་'
     test = 'ཀཀ་ཀཀ་ཞེས་བྱ་བ། ངེད་རྣམས་ནི་མཐོ་གོ་གནས་དང་། འབྱོར་ལྡན། མིང་གྲགས་ཡོད་མཁན་དེ་འདྲ་ནམ་ཡང་མིན་ལ། ' \
            'ཅི་ཞིག་ཤེས་ཁུལ་གྱིས་ཚོགས་པ་འདི་གཉེར་བ་ཞིག་ཀྱང་གཏན་ནས་མིན། ཚན་རྩལ་གྱི་རྦ་རླབས་དྲག་ཏུ་འཕྱོ་ལྡིང་བྱེད་' \
            'པའི་དུས་སྐབས་འདིར་ང་ཚོས་སྔ་ས་ནས་རང་གི་སྐད་ཡིག་དང་རིག་གཞུང་ལ་དུང་བ་ཞིག་ན་གཞོན་ཚོར་བསྐྲུན་མ་ཐུབ་པ་དང་། ' \
            'བདག་གཅེས་ལ་འབད་མ་ནུས་ཚེ་ཡོད་ཚད་མིང་ཙམ་ཞིག་ཏུ་གྱུར་ཚར་རྗེས་ངལ་བ་ཇི་ཙམ་བརྟེན་ཡང་སྙིང་པོ་ལོན་རྒྱུ་དཀའ་བས་ད་' \
            'ལྟ་མ་སྔ་མ་ཕྱིས་བའི་དུས་ཚིགས་གལ་ཆེན་ཞིག་ཏུ་བརྩིས་ནས་ང་ཚོས་འདི་ལྟར་རང་ནུས་ལ་དཔགས་པའི་སྐད་ཡིག་རིག་གཞུང་དང་' \
            'འབྲེལ་བའི་བྱེད་སྒོ་སྤེལ་མུས་ཡིན།'
-
+    import time
     tok = Tokenizer()
-    words = tok.tokenize(test)
+    start = time.time()
+    words = tok.tokenize(test2)
+    end = time.time()
+    print(end-start)
     for w in words:
         print(w.to_string)
         print()
