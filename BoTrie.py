@@ -97,6 +97,11 @@ class Trie:
             return {'exists': exists}
 
     def deactivate_words(self, word_list):
+        """
+        if the word is not in the trie, it will silently loop over the letters
+        and move on to the next word.
+        :param word_list: list of words to deactivate
+        """
         for word in word_list:
             current_node = self.head
             for letter in word:
