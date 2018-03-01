@@ -39,3 +39,11 @@ def test_non_max_end_of_string():
     assert tokens[0].content == 'བཀྲ་ཤིས་'
     assert tokens[1].content == 'བདེ་'
 
+
+def test_deactivate_trie_entries():
+    tok = Tokenizer('empty')
+    word = 'བཀྲ་ཤིས་'
+    tok.trie.add(word)
+    assert tok.trie.has_word(word)
+    tok.trie.deactivate_words([word])
+    assert tok.trie.has_word(word) == {'exists': False}

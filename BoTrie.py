@@ -96,6 +96,19 @@ class Trie:
         else:
             return {'exists': exists}
 
+    def deactivate_words(self, word_list):
+        for word in word_list:
+            current_node = self.head
+            for letter in word:
+                if letter in current_node.children:
+                    current_node = current_node.children[letter]
+                else:
+                    current_node = None
+                    # and pass the remaining letters to move on to next word
+
+            if current_node:
+                current_node.leaf = False
+
 
 class PyBoTrie(Trie):
     def __init__(self, profile='pytib'):
