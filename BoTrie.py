@@ -105,7 +105,7 @@ class Trie:
         for word in word_list:
             current_node = self.head
             for letter in word:
-                if letter in current_node.children:
+                if current_node and letter in current_node.children:
                     current_node = current_node.children[letter]
                 else:
                     current_node = None
