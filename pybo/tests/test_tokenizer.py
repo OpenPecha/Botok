@@ -1,49 +1,40 @@
-from pybo.BoTokenizer import Tokenizer
+from pybo import *
 
 
 def test_token_to_string():
-    tok = Tokenizer('empty')
+    tok = Tokenizer(PyBoTrie(BoSyl(), 'empty'))
     tok.trie.add('བཀྲ་ཤིས་', data='NOUN')
-    tokens = tok.tokenize('བཀྲ་ཤིས།')
+    tokens = tok.tokenize(PyBoTextChunks('བཀྲ་ཤིས།'))
     expected = """content: "བཀྲ་ཤིས"
 char types: |cons|cons|sub-cons|tsek|cons|vow|cons|
 type: syl
 start in input: 0
 length: 7
 syl chars in content(བཀྲ ཤིས): [[0, 1, 2], [4, 5, 6]]
-POS: NOUN"""
+tag: NOUN"""
     assert tokens[0].to_string == expected
     assert tokens[1].content == '།'
     assert tokens[1].chunk_markers[tokens[1].chunk_type] == 'punct'
-    assert tokens[1].partOfSpeech == 'punct'
+    assert tokens[1].tag == 'punct'
 
 
 def test_non_max2():
-    tok = Tokenizer('empty')
+    tok = Tokenizer(PyBoTrie(BoSyl(), 'empty'))
     tok.trie.add('བཀྲ་ཤིས་', data='NOUN')
     tok.trie.add('བཀྲ་ཤིས་བདེ་ལེགས།', data='EXCL')
-    tokens = tok.tokenize('བཀྲ་ཤིས་བདེ་བཀྲ་')
+    tokens = tok.tokenize(PyBoTextChunks('བཀྲ་ཤིས་བདེ་བཀྲ་'))
     assert tokens[0].content == 'བཀྲ་ཤིས་'
-    assert tokens[0].partOfSpeech == 'NOUN'
+    assert tokens[0].tag == 'NOUN'
     assert tokens[1].content == 'བདེ་'
-    assert tokens[1].partOfSpeech == 'non-word'
+    assert tokens[1].tag == 'non-word'
     assert tokens[2].content == 'བཀྲ་'
-    assert tokens[2].partOfSpeech == 'non-word'
+    assert tokens[2].tag == 'non-word'
 
 
 def test_non_max_end_of_string():
-    tok = Tokenizer('empty')
+    tok = Tokenizer(PyBoTrie(BoSyl(), 'empty'))
     tok.trie.add('བཀྲ་ཤིས་')
     tok.trie.add('བཀྲ་ཤིས་བདེ་ལེགས།')
-    tokens = tok.tokenize('བཀྲ་ཤིས་བདེ་')
+    tokens = tok.tokenize(PyBoTextChunks('བཀྲ་ཤིས་བདེ་'))
     assert tokens[0].content == 'བཀྲ་ཤིས་'
     assert tokens[1].content == 'བདེ་'
-
-
-def test_deactivate_trie_entries():
-    tok = Tokenizer('empty')
-    word = 'བཀྲ་ཤིས་'
-    tok.trie.add(word)
-    assert tok.trie.has_word(word)
-    tok.trie.deactivate_words([word])
-    assert tok.trie.has_word(word) == {'exists': False}

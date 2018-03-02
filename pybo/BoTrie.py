@@ -1,4 +1,3 @@
-from pybo.BoSylUtils import BoSyl
 import time
 import os
 import pickle
@@ -116,18 +115,18 @@ class Trie:
 
 
 class PyBoTrie(Trie):
-    def __init__(self, profile='pytib'):
+    def __init__(self, bosyl, profile='pytib', build=False, affix_sep='-'):
         Trie.__init__(self)
-        self.bt = BoSyl()
+        self.bosyl = bosyl
         self.TSEK = '་'
         self.COMMENT = '#'
-        self.POS_SEP = '—'
+        self.AFFIX_SEP = affix_sep
         self.profile = profile
         self.pickled_file = profile + '_trie.pickled'
-        self.load_or_build_trie()
+        self.load_or_build_trie(build)
 
-    def load_or_build_trie(self):
-        if not os.path.exists(self.pickled_file):
+    def load_or_build_trie(self, build):
+        if build or not os.path.exists(self.pickled_file):
             self.build_trie()
         else:
             self.load_trie()
@@ -222,15 +221,15 @@ class PyBoTrie(Trie):
 
         beginning, last_syl = self.split_at_last_syl(word)
 
-        if self.bt.is_affixable(last_syl):
-            affixed = self.bt.get_all_affixed(last_syl)
+        if self.bosyl.is_affixable(last_syl):
+            affixed = self.bosyl.get_all_affixed(last_syl)
             for a in affixed:
-                data = '{}{}{}{}{}{}{}'.format(pos, self.POS_SEP,
-                                               a[1]['POS'], self.POS_SEP,
-                                               a[1]['len'], self.POS_SEP,
+                data = '{}{}{}{}{}{}{}'.format(pos, self.AFFIX_SEP,
+                                               a[1]['POS'], self.AFFIX_SEP,
+                                               a[1]['len'], self.AFFIX_SEP,
                                                a[1]['aa'])
                 self.add(beginning+a[0]+self.TSEK, data)
-        self.add(word+self.TSEK, '{}{}{}{}'.format(pos, self.POS_SEP, self.POS_SEP, self.POS_SEP))
+        self.add(word + self.TSEK, '{}{}{}{}'.format(pos, self.AFFIX_SEP, self.AFFIX_SEP, self.AFFIX_SEP))
 
     def split_at_last_syl(self, word):
         if word.count(self.TSEK) >= 1:

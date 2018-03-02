@@ -38,3 +38,12 @@ def test_building_trie():
     bt = PyBoTrie('test')
     assert bt.has_word('བཀྲ་ཤིས་') == {'data': 'NOUN———', 'exists': True}
     assert bt.has_word('ཤིས་') == {'data': 'NOUN———', 'exists': True}
+
+
+def test_deactivate_trie_entries():
+    trie = PyBoTrie('empty')
+    word = 'བཀྲ་ཤིས་'
+    trie.add(word)
+    assert trie.has_word(word)
+    trie.deactivate_words([word])
+    assert trie.has_word(word) == {'exists': False}

@@ -1,8 +1,5 @@
-from pybo.BoStringUtils import PyBoTextChunks
-from pybo.BoTrie import PyBoTrie
 
-
-class Word:
+class Token:
     def __init__(self):
         self.content = None
         self.chunk_type = None
@@ -10,9 +7,7 @@ class Word:
         self.start_in_input = 0
         self.length = None
         self.syls = None
-        self.partOfSpeech = None
-        self.tagIsOn = False
-        self.level = 0
+        self.tag = None
         self.char_markers = {1: 'cons', 2: 'sub-cons', 3: 'vow', 4: 'tsek', 5: 'skrt-cons', 6: 'skrt-sub-cons',
                              7: 'skrt-vow', 8: 'punct', 9: 'num', 10: 'in-syl-mark', 11: 'special-punct', 12: 'symbol',
                              13: 'no-bo-no-skrt', 14: 'other', 15: 'space', 16: 'underscore'}
@@ -34,40 +29,31 @@ class Word:
         else:
             out += ': '
         out += str(self.syls)
-        out += '\nPOS: ' + self.partOfSpeech
+        if self.tag:
+            out += '\ntag: ' + self.tag
+        else:
+            out += '\ntag: None'
         return out
-
-    @property
-    def cleaned_content(self):
-        return ''
-
-    @property
-    def end(self):
-        return self.start_in_input + len(self.content)
-
-    @property
-    def partOfSpeechEnd(self):
-        return self.end + self.partOfSpeechLen
-
-    @property
-    def partOfSpeechLen(self):
-        return len(self.partOfSpeech) + 1  # plus one for '/'
 
 
 class Tokenizer:
     """
-    Tokenizes Tibetan text.
-
-    Leverages BoStringUtils as pre-processing, BoTrie as
+    Expects a PyBoTrie instance as trie
     """
-    def __init__(self, profile='POS'):
+    def __init__(self, trie):
         self.pre_processed = None
-        self.trie = PyBoTrie(profile)
+        self.trie = trie
         self.WORD = 1000
         self.NON_WORD = 1001
 
-    def tokenize(self, string, debug=False):
-        self.pre_processed = PyBoTextChunks(string)
+    def tokenize(self, pre_processed, debug=False):
+        """
+
+        :param pre_processed: PyBoTextChunks of the text to be tokenized
+        :param debug: prints debug info in True
+        :return: a list of Token objects
+        """
+        self.pre_processed = pre_processed
         tokens = []
         syls = []
         match_data = {}  # keys: c_idx, values: trie data (for last and second-last matches)
@@ -199,14 +185,14 @@ class Tokenizer:
     def add_found_word_or_non_word(self, c_idx, match_data, syls, tokens):
         # there is a match
         if c_idx in match_data.keys():
-            tokens.append(self.chunks_to_token(syls, pos=match_data[c_idx]))
+            tokens.append(self.chunks_to_token(syls, tag=match_data[c_idx]))
         elif match_data:
             non_max_idx = sorted(match_data.keys())[-1]
             non_max_syls = []
             for syl in syls:
                 if syl <= non_max_idx:
                     non_max_syls.append(syl)
-            tokens.append(self.chunks_to_token(non_max_syls, pos=match_data[non_max_idx]))
+            tokens.append(self.chunks_to_token(non_max_syls, tag=match_data[non_max_idx]))
             c_idx = non_max_idx
         else:
             # add first syl in syls as non-word
@@ -217,7 +203,7 @@ class Tokenizer:
                 c_idx -= len(syls[1:]) - 1
         return c_idx
 
-    def chunks_to_token(self, syls, pos=None, ttype=None):
+    def chunks_to_token(self, syls, tag=None, ttype=None):
         if len(syls) == 1:
             # chunk format: ([char_idx1, char_idx2, ...], (type, start_idx, len_idx))
             token_syls  = [self.pre_processed.chunks[syls[0]][0]]
@@ -227,7 +213,7 @@ class Tokenizer:
             if ttype:
                 token_type = ttype
 
-            return self.create_token(token_type, token_start, token_length, token_syls, pos)
+            return self.create_token(token_type, token_start, token_length, token_syls, tag)
         elif len(syls) > 1:
             token_syls = [self.pre_processed.chunks[idx][0] for idx in syls]
             token_type  = self.pre_processed.chunks[syls[-1]][1][0]
@@ -238,11 +224,11 @@ class Tokenizer:
             if ttype:
                 token_type = ttype
 
-            return self.create_token(token_type, token_start, token_length, token_syls, pos)
+            return self.create_token(token_type, token_start, token_length, token_syls, tag)
         else:
             return None  # should raise an error instead?
 
-    def create_token(self, ttype, start, length, syls, pos=None):
+    def create_token(self, ttype, start, length, syls, tag=None):
         """
 
         :param ttype: token type
@@ -250,10 +236,10 @@ class Tokenizer:
         :param length: length of the substring from the input string corresponding to this token
         :param syls: syl representation coming from PyBoTextChunks.
                         the indices are modified to be usable on the substring corresponding to this token
-        :param pos: the POS retrieved from the chunk or from the trie
+        :param tag: the POS retrieved from the chunk or from the trie
         :return: a Word object with all the above information
         """
-        token = Word()
+        token = Token()
         token.content = self.pre_processed.string[start:start+length]
         token.chunk_type = ttype
         token.start_in_input = start
@@ -262,13 +248,13 @@ class Tokenizer:
             token.syls = []
             for syl in syls:
                 token.syls.append([i-start for i in syl])
-        if not pos:
-            token.partOfSpeech = token.chunk_markers[ttype]
+        if not tag:
+            token.tag = token.chunk_markers[ttype]
         else:
-            if type(pos) == int:
-                token.partOfSpeech = token.chunk_markers[pos]
+            if type(tag) == int:
+                token.tag = token.chunk_markers[tag]
             else:
-                token.partOfSpeech = pos
+                token.tag = tag
         token.char_groups = self.pre_processed.export_groups(start, length, for_substring=True)
         return token
 
@@ -276,28 +262,3 @@ class Tokenizer:
     def debug(debug, to_print):
         if debug:
             print(to_print)
-
-
-if __name__ == '__main__':
-    """example use"""
-    input_string = ' ཤི་བཀྲ་ཤིས་  tr བདེ་་ལེ གས། བཀྲ་ཤིས་བདེ་ལེགས་ཀཀ'
-    test2 = 'བཀྲ་ཤིས་'
-    t = 'དཀོན་མཆོག་'
-    test = 'ཀཀ་ཀཀ་ཞེས་བྱ་བ། ངེད་རྣམས་ནི་མཐོ་གོ་གནས་དང་། འབྱོར་ལྡན། མིང་གྲགས་ཡོད་མཁན་དེ་འདྲ་ནམ་ཡང་མིན་ལ། ' \
-           'ཅི་ཞིག་ཤེས་ཁུལ་གྱིས་ཚོགས་པ་འདི་གཉེར་བ་ཞིག་ཀྱང་གཏན་ནས་མིན། ཚན་རྩལ་གྱི་རྦ་རླབས་དྲག་ཏུ་འཕྱོ་ལྡིང་བྱེད་' \
-           'པའི་དུས་སྐབས་འདིར་ང་ཚོས་སྔ་ས་ནས་རང་གི་སྐད་ཡིག་དང་རིག་གཞུང་ལ་དུང་བ་ཞིག་ན་གཞོན་ཚོར་བསྐྲུན་མ་ཐུབ་པ་དང་། ' \
-           'བདག་གཅེས་ལ་འབད་མ་ནུས་ཚེ་ཡོད་ཚད་མིང་ཙམ་ཞིག་ཏུ་གྱུར་ཚར་རྗེས་ངལ་བ་ཇི་ཙམ་བརྟེན་ཡང་སྙིང་པོ་ལོན་རྒྱུ་དཀའ་བས་ད་' \
-           'ལྟ་མ་སྔ་མ་ཕྱིས་བའི་དུས་ཚིགས་གལ་ཆེན་ཞིག་ཏུ་བརྩིས་ནས་ང་ཚོས་འདི་ལྟར་རང་ནུས་ལ་དཔགས་པའི་སྐད་ཡིག་རིག་གཞུང་དང་' \
-           'འབྲེལ་བའི་བྱེད་སྒོ་སྤེལ་མུས་ཡིན།'
-    import time
-    tok = Tokenizer()
-    start = time.time()
-    words = tok.tokenize(test2)
-    end = time.time()
-    print(end-start)
-    for w in words:
-        print(w.to_string)
-        print()
-
-    tagged = ['{}/{}'.format(w.content, w.partOfSpeech) for w in words]
-    print(' '.join(tagged))
