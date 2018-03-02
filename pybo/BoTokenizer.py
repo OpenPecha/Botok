@@ -1,18 +1,38 @@
 
-class Token:
+class Word:
     def __init__(self):
         self.content = None
         self.chunk_type = None
         self.char_groups = None
-        self.start_in_input = 0
+        self.start = 0
         self.length = None
         self.syls = None
         self.tag = None
+        self.tagIsOn = False
         self.char_markers = {1: 'cons', 2: 'sub-cons', 3: 'vow', 4: 'tsek', 5: 'skrt-cons', 6: 'skrt-sub-cons',
                              7: 'skrt-vow', 8: 'punct', 9: 'num', 10: 'in-syl-mark', 11: 'special-punct', 12: 'symbol',
                              13: 'no-bo-no-skrt', 14: 'other', 15: 'space', 16: 'underscore'}
         self.chunk_markers = {100: 'bo', 101: 'non-bo', 102: 'punct', 103: 'non-punct', 104: 'space', 105: 'non-space',
                               106: 'syl', 1000: 'word', 1001: 'non-word'}
+
+    @property
+    def end(self):
+        return self.start + len(self.content)
+
+    @property
+    def partOfSpeech(self):
+        AFFIX_SEP = '-'
+        if AFFIX_SEP in self.tag:
+            return self.tag.split(AFFIX_SEP)[0]
+        return self.tag
+
+    @property
+    def partOfSpeechEnd(self):
+        return self.end + self.partOfSpeechLen
+
+    @property
+    def partOfSpeechLen(self):
+        return len(self.partOfSpeech) + 1  # plus one for '/'
 
     @property
     def to_string(self):
@@ -21,7 +41,7 @@ class Token:
         out += '|'+'|'.join([self.char_markers[self.char_groups[idx]]
                             for idx in sorted(self.char_groups.keys())])+'|'
         out += '\ntype: ' + self.chunk_markers[self.chunk_type]
-        out += '\nstart in input: ' + str(self.start_in_input)
+        out += '\nstart in input: ' + str(self.start)
         out += '\nlength: ' + str(self.length)
         out += '\nsyl chars in content'
         if self.syls:
@@ -29,10 +49,7 @@ class Token:
         else:
             out += ': '
         out += str(self.syls)
-        if self.tag:
-            out += '\ntag: ' + self.tag
-        else:
-            out += '\ntag: None'
+        out += '\ntag: ' + self.tag
         return out
 
 
@@ -239,10 +256,10 @@ class Tokenizer:
         :param tag: the POS retrieved from the chunk or from the trie
         :return: a Word object with all the above information
         """
-        token = Token()
+        token = Word()
         token.content = self.pre_processed.string[start:start+length]
         token.chunk_type = ttype
-        token.start_in_input = start
+        token.start = start
         token.length = length
         if syls != [None]:
             token.syls = []
