@@ -1,5 +1,5 @@
-from BoStringUtils import PyBoTextChunks
-from BoTrie import PyBoTrie
+from pybo.BoStringUtils import PyBoTextChunks
+from pybo.BoTrie import PyBoTrie
 
 
 class Word:

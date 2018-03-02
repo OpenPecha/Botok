@@ -1,4 +1,4 @@
-from BoTokenizer import Tokenizer
+from pybo.BoTokenizer import Tokenizer
 
 
 def test_token_to_string():

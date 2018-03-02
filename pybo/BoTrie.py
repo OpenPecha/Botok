@@ -1,4 +1,4 @@
-from BoSylUtils import BoSyl
+from pybo.BoSylUtils import BoSyl
 import time
 import os
 import pickle
@@ -121,6 +121,7 @@ class PyBoTrie(Trie):
         self.bt = BoSyl()
         self.TSEK = '་'
         self.COMMENT = '#'
+        self.POS_SEP = '—'
         self.profile = profile
         self.pickled_file = profile + '_trie.pickled'
         self.load_or_build_trie()
@@ -224,9 +225,12 @@ class PyBoTrie(Trie):
         if self.bt.is_affixable(last_syl):
             affixed = self.bt.get_all_affixed(last_syl)
             for a in affixed:
-                data = '{}_{}_{}_{}'.format(pos, a[1]['POS'], a[1]['len'], a[1]['aa'])
+                data = '{}{}{}{}{}{}{}'.format(pos, self.POS_SEP,
+                                               a[1]['POS'], self.POS_SEP,
+                                               a[1]['len'], self.POS_SEP,
+                                               a[1]['aa'])
                 self.add(beginning+a[0]+self.TSEK, data)
-        self.add(word+self.TSEK, '{}___'.format(pos))
+        self.add(word+self.TSEK, '{}{}{}{}'.format(pos, self.POS_SEP, self.POS_SEP, self.POS_SEP))
 
     def split_at_last_syl(self, word):
         if word.count(self.TSEK) >= 1:

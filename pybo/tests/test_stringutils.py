@@ -1,5 +1,5 @@
 # encoding: utf-8
-from BoStringUtils import BoChunk, PyBoChunk
+from pybo.BoStringUtils import BoChunk, PyBoChunk
 
 # uses py.test
 
