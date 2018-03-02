@@ -50,6 +50,7 @@ class Word:
             out += ': '
         out += str(self.syls)
         out += '\ntag: ' + self.tag
+        out += '\nPOS: ' + self.partOfSpeech
         return out
 
 

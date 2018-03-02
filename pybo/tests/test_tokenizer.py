@@ -11,7 +11,8 @@ type: syl
 start in input: 0
 length: 7
 syl chars in content(བཀྲ ཤིས): [[0, 1, 2], [4, 5, 6]]
-tag: NOUN"""
+tag: NOUN
+POS: NOUN"""
     assert tokens[0].to_string == expected
     assert tokens[1].content == '།'
     assert tokens[1].chunk_markers[tokens[1].chunk_type] == 'punct'
