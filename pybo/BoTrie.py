@@ -168,7 +168,7 @@ class PyBoTrie(Trie):
 
         if self.profile == 'test':
             for f in profiles[self.profile]:
-                full_path = os.path.join(os.path.split(__file__)[0], 'resources', 'tests', f)
+                full_path = os.path.join(os.path.split(__file__)[0], 'tests', 'resources', f)
                 self.__add_one_file(full_path)
             return
 
