@@ -152,25 +152,24 @@ class BoChunk(BoString):
                               self.SYL_MARKER: 'syl'}
 
     def chunk_bo_chars(self, start=None, end=None, yes=100, no=101):
-        if not start and not end:
-            start, end = 0, self.len
+        return self.__chunk_using(self.__is_bo_unicode, start, end, yes, no)
 
-        indices = self.__chunk(start, end, self.__is_bo_unicode)
-        return [(yes, i[1], i[2]) if i[0] else (no, i[1], i[2]) for i in indices]
+    def __is_bo_unicode(self, char_idx):
+        return self.base_structure[char_idx] != self.OTHER
 
     def chunk_punct(self, start=None, end=None, yes=102, no=103):
-        if not start and not end:
-            start, end = 0, self.len
+        return self.__chunk_using(self.__is_punct, start, end, yes, no)
 
-        indices = self.__chunk(start, end, self.__is_punct)
-        return [(yes, i[1], i[2]) if i[0] else (no, i[1], i[2]) for i in indices]
+    def __is_punct(self, char_idx):
+        return self.base_structure[char_idx] == self.PUNCT or \
+               self.base_structure[char_idx] == self.SPECIAL_PUNCT or \
+               self.base_structure[char_idx] == self.UNDERSCORE
 
     def chunk_spaces(self, start=None, end=None, yes=104, no=105):
-        if not start and not end:
-            start, end = 0, self.len
+        return self.__chunk_using(self.__is_space, start, end, yes, no)
 
-        indices = self.__chunk(start, end, self.__is_space)
-        return [(yes, i[1], i[2]) if i[0] else (no, i[1], i[2]) for i in indices]
+    def __is_space(self, char_idx):
+        return self.base_structure[char_idx] == self.SPACE
 
     def syllabify(self, start=None, end=None, yes=106):
         """
@@ -185,6 +184,9 @@ class BoChunk(BoString):
                 indices[num - 1] = (indices[num - 1][0], indices[num - 1][1], indices[num - 1][2] + i[2])
 
         return [(yes, i[1], i[2]) for i in indices if not i[0]]
+
+    def __is_tsek(self, char_idx):
+        return self.base_structure[char_idx] == self.TSEK
 
     def get_chunked(self, indices, gen=False):
         """
@@ -204,20 +206,6 @@ class BoChunk(BoString):
         :return: same indices with the corresponding marker strings
         """
         return [tuple([self.chunk_markers[i[0]]] + list(i[1:])) for i in indices]
-
-    def __is_punct(self, char_idx):
-        return self.base_structure[char_idx] == self.PUNCT or \
-               self.base_structure[char_idx] == self.SPECIAL_PUNCT or \
-               self.base_structure[char_idx] == self.UNDERSCORE
-
-    def __is_tsek(self, char_idx):
-        return self.base_structure[char_idx] == self.TSEK
-
-    def __is_bo_unicode(self, char_idx):
-        return self.base_structure[char_idx] != self.OTHER
-
-    def __is_space(self, char_idx):
-        return self.base_structure[char_idx] == self.SPACE
 
     @staticmethod
     def pipe_chunk(indices, piped_chunk, to_chunk: int, yes: int):
@@ -239,6 +227,13 @@ class BoChunk(BoString):
                             indices.insert(i+j, (chunk[0], n_chunk[1], n_chunk[2]))
                         else:
                             indices.insert(i+j, n_chunk)
+
+    def __chunk_using(self, condition, start, end, yes, no):
+        if not start and not end:
+            start, end = 0, self.len
+
+        indices = self.__chunk(start, end, condition)
+        return [(yes, i[1], i[2]) if i[0] else (no, i[1], i[2]) for i in indices]
 
     @staticmethod
     def __chunk(start_idx, end_idx, condition):
