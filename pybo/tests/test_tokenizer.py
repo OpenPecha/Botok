@@ -39,3 +39,16 @@ def test_non_max_end_of_string():
     tokens = tok.tokenize(PyBoTextChunks('བཀྲ་ཤིས་བདེ་'))
     assert tokens[0].content == 'བཀྲ་ཤིས་'
     assert tokens[1].content == 'བདེ་'
+
+
+def test_split_token():
+    trie = PyBoTrie(BoSyl(), 'empty')
+    trie.inflect_n_add('བདེ་བ་', 'NOUN')
+    trie.add('གཏན་', 'NOUN')
+    trie.add('གྱི་', data='PART')
+    tok = Tokenizer(trie)
+    tokens = tok.tokenize(PyBoTextChunks('གཏན་གྱི་བདེ་བའི་རྒྱུ།'))
+    tok_utils = TokenSplit(tokens)
+    tok_utils.split_affixed_particles()
+    for t in tokens:
+        print(t)
