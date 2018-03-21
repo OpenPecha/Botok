@@ -10,7 +10,7 @@ class TokenSplit:
         self.matcher = BoMatcher()
 
     def split_affixed_particles(self):
-        self.__split(self.tokens, self.matcher.match_affixed)
+        self.__split(self.tokens, self.matcher)
 
     @staticmethod
     def __split(tokens, matcher):
@@ -37,51 +37,122 @@ class TokenSplit:
 
 
 class BoMatcher:
-    """
-    Matchers for a list of tokens produced by BoTokenizer
-
-    A matcher is composed of:
-        - a method calling __match_using()
-
-        - a "__has_(...)" or "__is_(...)" method that decides whether
-            the match will return True or False
-
-        - a "__get_(...)_idx" method that implements the strategy
-            to get the index where splitting will happen
-
-    Is meant to be CQL compliant.
-    """
-
-    def __init__(self):
-        pass
-
-    def parse(self, query):
-        conditions = query.split(' ')
-        return True
-
-    def match_affixed(self, tokens, current_idx):
-        return self.__match_using(self.__has_affix, self.__get_affixed_idx, tokens, current_idx )
-
-    @staticmethod
-    def __has_affix(tokens, current_idx):
+    def __init__(self, query):
         """
-        Checks whether the given token contains an affixed particle
+
+        :param query: subset of CQL (see parse() for the supported format)
+
         """
-        AFFIX_SEP = 'ᛃ'
-        return AFFIX_SEP in tokens[current_idx].tag and \
-            AFFIX_SEP * 3 not in tokens[current_idx].tag
+        self.parsed_query = self.parse(query)
+
+    def match(self, tokens):
+        """
+
+        :param tokens:  list of token objects.
+                        tokens can be of any type as long as they allow to access
+                        the attributes with a dict-like syntax: token['attr']
+        :return:
+        """
+
+        matching_indices = []
+        for token_count in range(len(tokens) - 1):
+            if self.match_slice(tokens[token_count:len(self.parsed_query)]):
+                matching_indices.append(token_count)
+        return matching_indices
+
+    def match_slice(self, slice_of_tokens):
+        """
+        tests the query in self.parsed_query on a given slice of the token list
+
+        :param slice_of_tokens: a sublist of tokens to be tested
+        :return: True if the tests for all the attributes pass, False otherwise
+        """
+        # sanity check
+        if len(self.parsed_query) == len(slice_of_tokens):
+
+            match = []
+            for slot_count in range(len(self.parsed_query)):
+
+                slot_match = []
+                for to_check in self.parsed_query[slot_count]:
+
+                    attr, op, value = to_check
+                    if attr in slice_of_tokens[slot_count]:
+                        if op == '=' and slice_of_tokens[slot_count][attr] == value:
+                                slot_match.append(True)
+                        elif op == '!=' and slice_of_tokens[slot_count][attr] != value:
+                            slot_match.append(True)
+                        else:
+                            slot_match.append(False)
+                    else:
+                        slot_match.append(False)  # attr was not in current token
+
+                if False in slot_match:
+                    match.append(False)
+                else:
+                    match.append(True)
+
+            return False not in match
+        else:
+            return False  # slice of tokens was not the right size
 
     @staticmethod
-    def __get_affixed_idx(token):
-        AFFIX_SEP = 'ᛃ'
-        return token.length - int(token.tag.split(AFFIX_SEP)[2])
+    def parse(query):
+        """
+        Parses a query using a subset of CQL into a Python structure.
 
-    @staticmethod
-    def __match_using(condition, get_idx, tokens, current_idx):
-        contains = condition(tokens, current_idx)
+        Tries to be as effective as possible by splitting on unambiguous
+        parts of the query.
 
-        idx = -1
-        if contains:
-            idx = get_idx(tokens[current_idx])
+        :param query:
+                    formatted in the following way:
+                        - ' ': tokens
+                        - ' & ': token attributes
+                        - 'xxx': attribute key
+                        - '=' or '!=': attribute operator
+                        - '"yyy"': attribute value.
+        :return:
+                    '[text="abc" & pos="NOUN"] [pos!="ADJ"]'
+                    yields: [[("text", "=", "abc"),
+                              ("pos", "=", "NOUN")],
 
-        return contains, idx
+                             [("pos", "!=", "ADJ")]]
+        """
+        parsed_query = []
+        token_slots = [a.replace('[', '').replace(']', '') for a in query.split('] [')]
+        for slot in token_slots:
+            parsed_slot = []
+            attributes = slot.split(' & ')
+            for a in attributes:
+                if '!=' in a:
+                    attr, value = a.split('!=')
+                    value = value[1:-1]
+                    parsed_slot.append((attr, '!=', value))
+                else:
+                    attr, value = a.split('=')
+                    value = value[1:-1]
+                    parsed_slot.append((attr, '=', value))
+            parsed_query.append(parsed_slot)
+        return parsed_query
+
+
+if __name__ == '__main__':
+    test = [{'word': 'This',
+             'lemma': 'this',
+             'tag': 'Det'},
+            {'word': 'is',
+             'lemma': 'be',
+             'tag': 'Verb'},
+            {'word': 'it',
+             'lemma': 'it',
+             'tag': 'Pron'},
+            {'word': '.',
+             'lemma': '.',
+             'tag': 'Punct'},
+            {''}]
+    q = '[lemma="this" & tag="Det"] [tag!="ADJ"]'
+
+    matcher = BoMatcher(q)
+    parsed = matcher.parse(q)
+    print(parsed)
+    print(matcher.match(test))
