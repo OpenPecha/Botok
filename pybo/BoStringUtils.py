@@ -6,21 +6,19 @@ Pre-processing tools for Tibetan language, both efficient and extensible.
 
 
 
-PyBoChunk:  Chunks a string in units corresponding to the characteristics
-            of Tibetan language.
-            Produced chunk types: bo, non-bo, punct or syl
-            (subclass of BoChunk)
+PyBoTextChunks: Produces chunks and exposes cleaned Tibetan syllables
+                (subclass and extension of ``PyBoChunk``)
 
-BoChunk:    Produces chunks/groups of characters sharing similar properties.
-            (subclass of BoString)
+PyBoChunk:      Chunks a string in units corresponding to the characteristics
+                of Tibetan language.
+                Produced chunk types: bo, non-bo, punct or syl
+                (subclass of BoChunk)
 
-BoString:   Character-based analysis of a string from the point of view
-            of Tibetan Language.
+BoChunk:        Produces chunks/groups of characters sharing similar properties.
+                (subclass of BoString)
 
-
-
-PyBoTextChunks: Facility class to produce a list of chunks to be used
-                as input for ``BoTokenizer``.
+BoString:       Character-based analysis of a string from the point of view
+                of Tibetan Language.
 """
 
 
@@ -513,9 +511,19 @@ class BoChunk(BoString):
 
 class PyBoChunk(BoChunk):
     """
-    Produces bo, non-bo, punct and syl chunks
+    Produces chunks of the following types: bo, non-bo, punct and syl chunks
 
-    note: Following Tibetan usage, it does not consider space as a punctuation mark.
+    Implements the following chunking pipeline:
+            chunk "input_str" into "bo"/"non-bo"
+            | chunk "bo" into "punct"/"bo"
+            | chunk "bo" into syllables
+            | delete chunks containing spaces and transfer their content to the previous chunk
+
+    :Example:
+
+    >>>
+
+    .. note:: Following Tibetan usage, it does not consider space as a punctuation mark.
     Spaces get attached to the chunk preceding them.
     """
     def __init__(self, string):
@@ -533,7 +541,9 @@ class PyBoChunk(BoChunk):
     def __attach_space_chunks(self, indices):
         """
         Deletes space-only chunks and puts their content in the previous chunk
-        :param indices: contains space-only chunks
+
+        :param indices: output from a previous chunking method containing space-only chunks
+        :type indices: list of tuples containing each 3 ints
         """
         for num, i in enumerate(indices):
             if num - 1 >= 0 and self.__only_contains_spaces(i[1], i[1] + i[2]):
@@ -548,6 +558,9 @@ class PyBoChunk(BoChunk):
                 c += 1
 
     def __only_contains_spaces(self, start, end):
+        """
+        Tests whether the character group of all the chars in the range between start and end is SPACE.
+        """
         spaces_count = 0
         i = start
         while i < end:
@@ -559,7 +572,19 @@ class PyBoChunk(BoChunk):
 
 class PyBoTextChunks(PyBoChunk):
     """
-    Serves content to BoTrie
+    This class uses the chunks produced by ``PyBoChunk`` to identify Tibetan syllables and clean them.
+    Thus produces pre-processed Tibetan text that can be further processed.
+
+    Every chunk produced by ``PyBoChunk`` is wrapped into a tuple containing:
+            - either None or a list containing the cleaned syllable
+              (the indices to every non-space and non-tsek char in every syllable chunk)
+            - the chunk itself
+    The former is fed to the Trie implemented in ``BoTokenizer``, the latter is used to populate the Token objects.
+
+    :Example:
+
+    >>>
+
     """
     def __init__(self, string):
         PyBoChunk.__init__(self, string)
@@ -577,10 +602,20 @@ class PyBoTextChunks(PyBoChunk):
 
     def __get_text_chars(self, start_idx, end_idx):
         """
-        Gives the list of indices of the text chars in the given span.
+        Removes all the spaces and tseks from a given syllable by only keeping the characters that
+        pass ``__is_syl_text()``.
+
+        :param start_idx: starting index of the syllable-chunk to clean
+        :param end_idx: its ending index
+        :type start_idx: int
+        :type end_idx: int
+        :return: a list of indices corresponding to the chars of the cleaned syllable
         """
         return [i for i in range(start_idx, end_idx) if self.__is_syl_text(i)]
 
     def __is_syl_text(self, char_idx):
+        """
+        Tests whether the character at the given index is part of the cleaned syllable or not.
+        """
         return self.base_structure[char_idx] != self.TSEK and \
                self.base_structure[char_idx] != self.SPACE
