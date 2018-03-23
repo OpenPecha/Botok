@@ -1,16 +1,62 @@
+"""
+``BoStringUtils``
+=================
+
+Pre-processing tools for Tibetan language, both efficient and extensible.
+
+
+
+PyBoChunk:  Chunks a string in units corresponding to the characteristics
+            of Tibetan language.
+            Produced chunk types: bo, non-bo, punct or syl
+            (subclass of BoChunk)
+
+BoChunk:    Produces chunks/groups of characters sharing similar properties.
+            (subclass of BoString)
+
+BoString:   Character-based analysis of a string from the point of view
+            of Tibetan Language.
+
+
+
+PyBoTextChunks: Facility class to produce a list of chunks to be used
+                as input for ``BoTokenizer``.
+"""
+
+
 class BoString:
     """
-    Basic Class for Tibetan Strings.
-    Leverages the intuitive groups of Tibetan characters in the Unicode
-    tables to meaningfully chunk a given input string.
+    This class is the foundational building block of pre-processing.
 
-    Contains:
-             - self.string: the input string
-             - self.base_structure: a dict of the following structure:
-                    key: char index in self.string
-                    value: a dict (to allow further insertion of information):
-                                key: BASE (a simple constant)
-                                value: CHAR_GROUP
+    It implements the natural groups of characters a user makes when looking at
+    a string of text in his native language.
+
+    Implementation:
+    ---------------
+
+        - all the characters in the Unicode Tables for Tibetan are organized in lists
+            hard-coded as string variables in ``__attribute_basic_types()``.
+        - upon instanciation, __init__().base_structure is populated with the indices of every
+            char in the input string(key) and the group constant to which it belongs(values)
+        - human-readable description of the group constant can be accessed in __init__().char_markers
+
+    :Example:
+
+    >>> from pybo.BoStringUtils import BoString
+    >>> bo_str = ' བཀྲ་ཤིས་  tr བདེ་ལེགས།'
+    >>> bs = BoString(bo_str)
+    >>> bs.base_structure  # key: character index, value: character group
+    {0: 15, 1: 1, 2: 1, 3: 2, 4: 4, 5: 1, 6: 3, 7: 1, 8: 4, 9: 15, 10: 15, 11: 14,
+    12: 14, 13: 15, 14: 1, 15: 1, 16: 3, 17: 4, 18: 1, 19: 3, 20: 1, 21: 1, 22: 8}
+    >>> {k: bs.char_markers[v] for k, v in bs.base_structure.items()}
+    {0: 'space', 1: 'cons', 2: 'cons', 3: 'sub-cons', 4: 'tsek', 5: 'cons', 6: 'vow',
+    7: 'cons', 8: 'tsek', 9: 'space', 10: 'space', 11: 'other', 12: 'other',
+    13: 'space', 14: 'cons', 15: 'cons', 16: 'vow', 17: 'tsek', 18: 'cons', 19: 'vow',
+    20: 'cons', 21: 'cons', 22: 'punct'}
+
+    .. note:: You may want to refine the groups that are implemented to have a finer analysis.
+                Be sure to create the corresponding constants in __init__() and the corresponding
+                entries in __init__().char_markers.
     """
     def __init__(self, string):
         self.CONS = 1
@@ -56,11 +102,7 @@ class BoString:
 
     def __attribute_basic_types(self):
         """
-        Attributes a group to every character.
-        Finer the groups, greater the fine-grained chunking capacities of TibStringUtil
-
-        note: the strings below attempt to regroup the Tibetan Unicode Table meaningfully.
-              adapt it to your needs.
+        Populates self.base_structure.
         """
         cons = "ཀཁགངཅཆཇཉཏཐདནཔཕབམཙཚཛཝཞཟའཡརལཤསཧཨཪ"
         sub_cons = "ྐྒྔྕྗྙྟྡྣྤྦྨྩྫྭྱྲླྷ"
@@ -110,14 +152,35 @@ class BoString:
             else:
                 self.base_structure[i] = self.OTHER
 
-    def export_groups(self, start_idx, end_idx, for_substring=True):
+    def export_groups(self, start_idx, slice_len, for_substring=True):
         """
-        export the base groups for a slice of the input string
+        Export the base groups for a slice of the input string
+
+        :param start_idx:
+                        starting index of the slice
+        :param slice_len:
+                        length of the slice we want to export
+        :param for_substring:
+                        if True, indices start at 0, Else the indices
+                        of the original string are kept.
+        :type start_idx: int
+        :type slice_len: int
+        :return: the slice of __init__().base_structure described in the params
+        :rtype: dict
+
+        :Example:
+
+        # reuses the variables declared in the Class docstring
+        >>> bs.export_groups(2, 5)
+        {0: 1, 1: 2, 2: 4, 3: 1, 4: 3}
+        >>> bs.export_groups(2, 5, for_substring=False)
+        {2: 1, 3: 2, 4: 4, 5: 1, 6: 3}
+
         """
         if for_substring:
-            return {n: self.base_structure[i] for n, i in enumerate(range(start_idx, start_idx + end_idx))}
+            return {n: self.base_structure[i] for n, i in enumerate(range(start_idx, start_idx + slice_len))}
         else:
-            return {i: self.base_structure[i] for i in range(start_idx, start_idx+end_idx)}
+            return {i: self.base_structure[i] for i in range(start_idx, start_idx + slice_len)}
 
 
 class BoChunk(BoString):
