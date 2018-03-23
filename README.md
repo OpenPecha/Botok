@@ -1,8 +1,13 @@
 # pybo
-A Python toolbox to process Tibetan.
 
+Pybo is a python tokenizer for Tibetan built as a tokenizer plugin for spaCy and the Tibetan editor. It takes in a string of raw tibetan text and spits out a list of Token objects.
 
+## Normalisation
 
+## Word Segmentation
+
+## Pattern Matchers
+Pattern matchers or simply "Matchers" are used to match patterns expressed in a syntax combining regex, token and token attributes.
 
 ## Licence
 
