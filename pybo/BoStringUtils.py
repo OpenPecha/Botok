@@ -414,12 +414,14 @@ class BoChunk(BoString):
 
     def get_chunked(self, indices, gen=False):
         """
-
+        Replaces the indices in every chunk tuple with the corresponding substring.
 
         :param indices: the output of a previous chunking method
-        :param gen: a generator of the output
-        :type indices:
+        :param gen: if True, returns a generator with the chunks, a list otherwise
+        :type indices: list of tuples each containing 3 ints
+        :type gen: bool
         :return: the marker/substring pairs in a list
+        :rtype: list of tuples each containing: a chunk-mark(int or str), a substring
         """
         if gen:
             return ((i, self.string[start:start + length]) for i, start, length in indices)
@@ -427,24 +429,28 @@ class BoChunk(BoString):
 
     def get_markers(self, indices):
         """
+        Replaces the int representation of the chunk-mark by its str counterpart.
 
         :param indices: indices containing ints as markers
-        :return: same indices with the corresponding marker strings
+        :type indices: list of tuples containing each an int and the indices or the substring
+        :return: the chunks where the chunk-mark is the human-readable description
+        :rtype: list of tuples containing each a str and the indices or the substring
         """
         return [tuple([self.chunk_markers[i[0]]] + list(i[1:])) for i in indices]
 
     @staticmethod
     def pipe_chunk(indices, piped_chunk, to_chunk: int, yes: int):
         """
-        re-chunks in place the chunk indices produced by a previous chunk method.
+        Re-chunks in place the chunks produced by a previous chunking method.
 
-        :param indices: the chunk indices from a previous chunking method
-        :param piped_chunk: chunk method to apply
-        :param to_chunk: chunk-marker to find chunks to be re-chunked
-        :param yes: marker to be used for matching chunks (no marker left to default)
-        :type indices: list
-        :type piped_chunk: function
-        :type yes: string
+        :param indices: the chunks from a previous chunking method
+        :param piped_chunk: new chunking method to apply
+        :param to_chunk: chunk-mark to identify which chunks will be re-chunked
+        :param yes: new chunk-mark to be used for matching chunks (leave empty to use default value)
+                    The new chunks not passing the internal test will keep the previous chunk-mark.
+        :type indices: list of tuples containing each 3 ints
+        :type piped_chunk: callable
+        :type yes: int
         """
         for i, chunk in enumerate(indices):
             if chunk[0] == to_chunk:
@@ -467,13 +473,17 @@ class BoChunk(BoString):
     @staticmethod
     def __chunk(start_idx, end_idx, condition):
         """
-        Creates groups of characters satisfying the condition (test method) and
-        not satisfying it from the given range within the input string
+        The method that actually creates groups of characters satisfying the test method
+        and not satisfying it from the given range within the input string.
 
         :param start_idx: first char of the range to be chunked
         :param end_idx: last char
         :param condition: test method
+        :type start_idx: int
+        :type end_idx: int
+        :type condition: callable
         :return: the chunk indices with True/False instead of the chunk markers
+        :rtype: list of tuples containing each: a bool (matched/not the test method) and the indices
         """
         chunked = []
         start = start_idx
