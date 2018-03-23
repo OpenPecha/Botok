@@ -176,6 +176,7 @@ class BoString:
         # reuses the variables declared in the Class docstring
         >>> bs.export_groups(2, 5)
         {0: 1, 1: 2, 2: 4, 3: 1, 4: 3}
+
         >>> bs.export_groups(2, 5, for_substring=False)
         {2: 1, 3: 2, 4: 4, 5: 1, 6: 3}
 
@@ -188,17 +189,131 @@ class BoString:
 
 class BoChunk(BoString):
     """
-    Generates chunks by using the group attributed to every char by TibString
-    Piped-chunking enables to easily use complex chunking criteria. (see test file)
+    This class is a framework to split a given string into chunks of characters sharing similar properties.
+    Fine chunking is possible by piping any number of chunking methods as desired.
 
-    chunking functions output:
-                    [(string chunk_marker, int start_index, int length), ...]
-    get_chunked output:
-                    [( string chunk_marker, string substring), ...]
+    Building on top of ``BoString`` that acts as the provider of the group to which each character belongs,
+    this class manipulates these groups in order to produce chunks.
+    Thus, the finer the groups of characters encoded in BoString, the greater the capacities of this class
+    to produce refined chunking.
 
-    Adapting to specific needs is straightforward:
-        - copy/adapt a test method ('__is_...()' )
-        - copy/adapt a chunking method ('chunk_...()')
+    By default, this classes provides methods that should cater standard chunking needs for Tibetan language.
+
+    :Example:
+
+    >>> from pybo.BoStringUtils import BoChunk
+
+    >>> bo_str = ' བཀྲ་ཤིས་  tr བདེ་ལེགས།'
+    >>> bc = BoChunk(bo_str)
+
+    # 1. Initial chunking
+    >>> chunks = bc.chunk_bo_chars()  # uses default chunk-marks here, but override them in the pipeline
+
+    >>> chunks  # actual chunks. each chunk is tuple containing: (chunk-marker, starting_index, chunk_length)
+    [(100, 0, 11), (101, 11, 2), (100, 13, 10)]
+    >>> bc.get_markers(chunks)  # shows the human-readable description of the constant
+    [('bo', 0, 11), ('non-bo', 11, 2), ('bo', 13, 10)]
+    >>> bc.get_chunked(chunks)  # shows the substring for each chunk
+    [(100, ' བཀྲ་ཤིས་  '), (101, 'tr'), (100, ' བདེ་ལེགས།')]
+
+    # 2. First piped chunking: re-chunks tibetan chunks into tibetan text and tibetan punctuation.
+    >>> bc.pipe_chunk(chunks, bc.chunk_punct, to_chunk=bc.BO_MARKER, yes=bc.PUNCT_MARKER)
+
+    >>> chunks
+    [(100, 0, 11), (101, 11, 2), (100, 13, 9), (102, 22, 1)]
+    >>> bc.get_markers(chunks)
+    [('bo', 0, 11), ('non-bo', 11, 2), ('bo', 13, 9), ('punct', 22, 1)]
+    >>> bc.get_chunked(chunks)
+    [(100, ' བཀྲ་ཤིས་  '), (101, 'tr'), (100, ' བདེ་ལེགས'), (102, '།')]
+
+    # 3. Second piped chunking: re-chunks tibetan text into syllables, keeping the same chunk-marker.
+    >>> bc.pipe_chunk(chunks, bc.syllabify, to_chunk=bc.BO_MARKER, yes=bc.BO_MARKER)
+
+    >>> chunks
+    [(100, 0, 5), (100, 5, 4), (100, 9, 2), (101, 11, 2), (100, 13, 5), (100, 18, 4), (102, 22, 1)]
+    >>> bc.get_markers(chunks)
+    [('bo', 0, 5), ('bo', 5, 4), ('bo', 9, 2), ('non-bo', 11, 2), ('bo', 13, 5), ('bo', 18, 4), ('punct', 22, 1)]
+    >>> bc.get_chunked(chunks)
+    [(100, ' བཀྲ་'), (100, 'ཤིས་'), (100, '  '), (101, 'tr'), (100, ' བདེ་'), (100, 'ལེགས'), (102, '།')]
+
+    # 4. Formatting the resultant chunks into an easily usable structure
+    >>> chunks = bc.get_markers(chunks)         # exchange the constants for the human-readable description
+    >>> final_result = bc.get_chunked(chunks)   # exchange the indices for the substrings of each chunk
+    >>> final_result
+    [('bo', ' བཀྲ་'), ('bo', 'ཤིས་'), ('bo', '  '), ('non-bo', 'tr'), ('bo', ' བདེ་'), ('bo', 'ལེགས'), ('punct', '།')]
+
+
+
+    The Framework
+    =============
+    This class is meant to be extended as easily as it gets by creating custom chunking components.
+    A "chunking kit" comprises:
+                        - a chunking method
+                        - a test method
+                        - marker constants (if the existing one can't be used)
+                        - a human-friendly description of the chunk type in the form of
+                          an entry in ``__init__().chunk_markers``(in case a new constant was created).
+
+
+    Chunking Methods (exposed)
+    --------------------------
+    A chunking method parses the characters in the slice of the input string as described
+    in its arguments("start" and "end"). It produces consecutive groups of characters that
+    pass the test that is used internally and that don't pass it.
+
+    It is expected that they all share the same syntax except for the test method it calls
+    internally.
+
+
+    Test methods (hidden)
+    -----------------------
+    A test method contains the logic behind a chunking method.
+    It leverages the character groups provided by ``BoString`` to encode the semantic properties the chunks
+    are expected to possess.
+
+    For example, ``__is_bo_unicode()`` passes for every character within the Tibetan Unicode Table.
+    It does so by checking that the group of the character at the given index is not OTHER.
+
+
+    Piped Chunking
+    --------------
+    Finely chunking a string is possible by piping as many chunking methods as necessary in a specific order.
+
+    This is done by using ``pipe_chunk()`` that takes as arguments:
+            - the output of a previous chunking method,
+            - a new chunking method and
+            - a chunk-marker to identify on which chunks the new method should be applied.
+    It will replace in place every chunk matching the chunk-marker with the results of the new chunking method.
+
+    For example, a standard pipeline for Tibetan would be:
+            chunk "input_str" into "bo"/"non-bo" | chunk "bo" into "punct"/"bo-text" | chunk "bo-text" into "syllables"
+
+    The result would be a succession of chunks that are either tibetan syllables with their punctuation,
+    non-syllabic punctuation or non-Tibetan characters.
+
+
+    Custom Chunking Methods
+    -----------------------
+    - signature: ``chunk_xxxx(start=None, end=None, yes=<int>, no=<int>)``
+                 where the ints in "yes" and "no" are the hard-coded values of the chunk's types.
+    - body: ``return self.__chunk_using(self.<private_test_method>, start, end, yes, no)``
+             where "private_test_method" is the custom test method where the chunking logic is encoded.
+
+
+    Custom Test Methods
+    -------------------
+    - signature: ``__is_xxx(char_idx)``
+
+    - body: ``return <conditions>``
+            where each condition follows this pattern:
+            ``self.base_structure[char_idx] <equals or not> <character group>``
+
+
+    Naming conventions
+    ------------------
+    - chunking methods start with "chunk_xxx".
+    - test methods start with "__is_xxx".
+    - chunk type constants end in "_MARKER" to be differenciated from ``BoString`` constants
     """
     def __init__(self, string):
         BoString.__init__(self, string)
@@ -218,28 +333,67 @@ class BoChunk(BoString):
                               self.SYL_MARKER: 'syl'}
 
     def chunk_bo_chars(self, start=None, end=None, yes=100, no=101):
+        """
+        Chunks input into Tibetan valid characters("bo") or something else("non-bo").
+
+        :param start: starting index in ``__init__().string``
+        :param end: ending index in ``__init__().string``
+        :param yes: chunk-mark to apply to chunks passing the test
+        :param no: chunk-mark to apply those not passing the test
+        :type start: int
+        :type end: int
+        :type yes: int (hard-coded value of BO_MARKER)
+        :type no: int (hard-coded value of NON_BO_MARKER)
+        :return: the resulting chunks
+        :rtype: list of tuples containing each 3 ints: chunk-mark, starting_index, chunk_length
+        """
         return self.__chunk_using(self.__is_bo_unicode, start, end, yes, no)
 
     def __is_bo_unicode(self, char_idx):
+        """
+        Tests whether the character at the given index is found within the Tibetan Unicode Table.
+
+        :param char_idx: index of the character to test
+        :type char_idx: int
+        """
         return self.base_structure[char_idx] != self.OTHER
 
     def chunk_punct(self, start=None, end=None, yes=102, no=103):
+        """
+        Chunks input into Tibetan text("punct") or non-Tibetan("non-punct").
+
+        :type yes: int (hard-coded value of PUNCT_MARKER)
+        :type no: int (hard-coded value of NON_PUNCT_MARKER)
+        """
         return self.__chunk_using(self.__is_punct, start, end, yes, no)
 
     def __is_punct(self, char_idx):
+        """
+        Tests whether the character at the given index is a Tibetan punctuation or not.
+        """
         return self.base_structure[char_idx] == self.PUNCT or \
-               self.base_structure[char_idx] == self.SPECIAL_PUNCT or \
-               self.base_structure[char_idx] == self.UNDERSCORE
+            self.base_structure[char_idx] == self.SPECIAL_PUNCT
 
     def chunk_spaces(self, start=None, end=None, yes=104, no=105):
+        """
+        Chunks input into any valid Unicode spaces("space") or something else("non-space").
+
+        :type yes: int (hard-coded value of SPACE_MARKER)
+        :type no: int (hard-coded value of NON_SPACE_MARKER)
+        """
         return self.__chunk_using(self.__is_space, start, end, yes, no)
 
     def __is_space(self, char_idx):
+        """
+        Tests whether the character at the given index is a valid Unicode space or not.
+        """
         return self.base_structure[char_idx] == self.SPACE
 
     def syllabify(self, start=None, end=None, yes=106):
         """
-        expects only valid Tibetan strings
+        Chunks valid Tibetan text(expected input) into syllables(tsek is included if present).
+
+        :type yes: int (hard-coded value of SYL_MARKER)
         """
         if not start and not end:
             start, end = 0, self.len
@@ -252,13 +406,19 @@ class BoChunk(BoString):
         return [(yes, i[1], i[2]) for i in indices if not i[0]]
 
     def __is_tsek(self, char_idx):
+        """
+        Tests whether the character at the given index in a tsek or not.
+        Used as test to find syllable boundaries by ``syllabify()``.
+        """
         return self.base_structure[char_idx] == self.TSEK
 
     def get_chunked(self, indices, gen=False):
         """
 
-        :param indices: the chunk indices (the output of chunking methods)
+
+        :param indices: the output of a previous chunking method
         :param gen: a generator of the output
+        :type indices:
         :return: the marker/substring pairs in a list
         """
         if gen:
@@ -278,10 +438,13 @@ class BoChunk(BoString):
         """
         re-chunks in place the chunk indices produced by a previous chunk method.
 
-        :param list indices: the chunk indices from a previous chunking method
-        :param method piped_chunk: chunk method to apply
-        :param string to_chunk: chunk-marker to find chunks to be re-chunked
-        :param string yes: marker to be used for matching chunks (no marker left to default)
+        :param indices: the chunk indices from a previous chunking method
+        :param piped_chunk: chunk method to apply
+        :param to_chunk: chunk-marker to find chunks to be re-chunked
+        :param yes: marker to be used for matching chunks (no marker left to default)
+        :type indices: list
+        :type piped_chunk: function
+        :type yes: string
         """
         for i, chunk in enumerate(indices):
             if chunk[0] == to_chunk:
