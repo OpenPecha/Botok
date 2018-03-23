@@ -51,7 +51,6 @@ class BoMatcher:
         :param tokens:  list of token objects.
                         tokens can be of any type as long as they allow to access
                         the attributes with a dict-like syntax: token['attr']
-        :return:
         """
 
         matching_indices = []
@@ -70,10 +69,10 @@ class BoMatcher:
         # sanity check
         if len(self.parsed_query) == len(slice_of_tokens):
 
-            match = []
+            match = []  # content: boolean. each is the final result for one token slot
             for slot_count in range(len(self.parsed_query)):
 
-                slot_match = []
+                slot_match = []  # content: boolean. one per attribute within one slot
                 for to_check in self.parsed_query[slot_count]:
 
                     attr, op, value = to_check
