@@ -15,18 +15,19 @@ for usage examples (and other test files for how the different components of pyb
 
 Pattern matchers or simply "Matchers" are used to match patterns expressed in a syntax combining regex, token and token attributes.
 
-As for now, [a basic mather](https://github.com/Esukhia/pybo/blob/master/pybo/BoTokenUtils.py#L39) has been implemented.
+As for now, [a basic matcher](https://github.com/Esukhia/pybo/blob/master/pybo/BoTokenUtils.py#L39) has been implemented.
 It should be replaced by the cql parser in `thirt-party/cql.py`.
 
-Todo:
-    - implement a splitter of Token objects (an unfinished attempt is [here](https://github.com/Esukhia/pybo/blob/master/pybo/BoTokenUtils.py#L1))
-    - implement a merger of Token objects
-    - implement a function/class that attempts to match the query at every index in the list of Tokens,
-        if it matches, replaces the content of a given attribute.
-        The relative index of the attribute should be passed as argument and the new content also.
+### Todo:
+- implement a splitter of Token objects, for reference see an unfinished attempt [here](https://github.com/Esukhia/pybo/blob/master/pybo/BoTokenUtils.py#L1)
 
-Once that is done, BoTokenizer will be used to produce Token objects, and the tokens containing affixed particles will be split.
-At that moment, pytib will be completely replaced.
+- implement a merger of Token objects
+
+- implement a function/class that attempts to match the query at every index in the list of Tokens,
+  - if it matches, replaces the content of a given attribute.
+  - The relative index of the attribute should be passed as argument and the new content also.
+
+Once that is done, BoTokenizer will be used to produce Token objects, and the tokens containing affixed particles will be split. **At that moment, pytib will be completely replaced.**
 
 ## Licence
 
