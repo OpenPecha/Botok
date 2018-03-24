@@ -1,10 +1,7 @@
 """
 ``BoStringUtils``
 =================
-
 Pre-processing tools for Tibetan language, both efficient and extensible.
-
-
 
 PyBoTextChunks: Produces chunks and exposes cleaned Tibetan syllables
                 (subclass and extension of ``PyBoChunk``)
@@ -27,16 +24,16 @@ class BoString:
     This class is the foundational building block of pre-processing.
 
     It implements the natural groups of characters a user makes when looking at
-    a string of text in his native language.
+    a text in his native language.
 
     Implementation:
     ---------------
 
         - all the characters in the Unicode Tables for Tibetan are organized in lists
             hard-coded as string variables in ``__attribute_basic_types()``.
-        - upon instanciation, __init__().base_structure is populated with the indices of every
+        - upon instanciation, ``__init__().base_structure`` is populated with the indices of every
             char in the input string(key) and the group constant to which it belongs(values)
-        - human-readable description of the group constant can be accessed in __init__().char_markers
+        - human-readable description of the group constant can be accessed in ``__init__().char_markers``
 
     :Example:
 
@@ -56,8 +53,8 @@ class BoString:
     20: 'cons', 21: 'cons', 22: 'punct'}
 
     .. note:: You may want to refine the groups that are implemented to have a finer analysis.
-                Be sure to create the corresponding constants in __init__() and the corresponding
-                entries in __init__().char_markers.
+                Be sure to create the corresponding constants in ``__init__()`` and the corresponding
+                entries in ``__init__().char_markers``.
     """
     def __init__(self, string):
         self.CONS = 1
@@ -103,7 +100,7 @@ class BoString:
 
     def __attribute_basic_types(self):
         """
-        Populates self.base_structure.
+        Populates ``__init__().base_structure``.
         """
         cons = "ཀཁགངཅཆཇཉཏཐདནཔཕབམཙཚཛཝཞཟའཡརལཤསཧཨཪ"
         sub_cons = "ྐྒྔྕྗྙྟྡྣྤྦྨྩྫྭྱྲླྷ"
@@ -157,16 +154,12 @@ class BoString:
         """
         Export the base groups for a slice of the input string
 
-        :param start_idx:
-                        starting index of the slice
-        :param slice_len:
-                        length of the slice we want to export
-        :param for_substring:
-                        if True, indices start at 0, Else the indices
-                        of the original string are kept.
+        :param start_idx: starting index of the slice
+        :param slice_len: length of the slice we want to export
+        :param for_substring: if True, indices start at 0, Else the indices of the original string are kept.
         :type start_idx: int
         :type slice_len: int
-        :return: the slice of __init__().base_structure described in the params
+        :return: the slice of ``__init__().base_structure`` described in the parameters
         :rtype: dict
 
         :Example:
@@ -579,7 +572,6 @@ class PyBoTextChunks(PyBoChunk):
             - either None or a list containing the cleaned syllable
               (the indices to every non-space and non-tsek char in every syllable chunk)
             - the chunk itself
-    The former is fed to the Trie implemented in ``BoTokenizer``, the latter is used to populate the Token objects.
 
     :Example:
 
