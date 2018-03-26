@@ -15,7 +15,7 @@ for usage examples (and other test files for how the different components of pyb
 
 Pattern matchers or simply "Matchers" are used to match patterns expressed in a syntax combining regex, token and token attributes.
 
-As for now, [a basic matcher](https://github.com/Esukhia/pybo/blob/master/pybo/BoTokenUtils.py#L39) has been implemented.
+As for now, [a basic matcher](https://github.com/Esukhia/pybo/blob/develop/pybo/BoTokenUtils.py#L39) has been implemented.
 It should be replaced by the cql parser in `thirt-party/cql.py`.
 
 Todo:
