@@ -21,7 +21,7 @@ class Word:
 
     @property
     def partOfSpeech(self):
-        AFFIX_SEP = '-'
+        AFFIX_SEP = 'ᛃ'
         if AFFIX_SEP in self.tag:
             return self.tag.split(AFFIX_SEP)[0]
         return self.tag
