@@ -120,7 +120,7 @@ class PyBoTrie(Trie):
         self.bosyl = bosyl
         self.TSEK = '་'
         self.COMMENT = '#'
-        self.AFFIX_SEP = 'ᛃ'  # in case the value is changed, also change it in BoTokenizer.Word()
+        self.AFFIX_SEP = 'ᛃ'  # in case the value is changed, also change it in BoTokenizer.Token()
         self.profile = profile
         self.pickled_file = profile + '_trie.pickled'
         self.load_or_build_trie(build)

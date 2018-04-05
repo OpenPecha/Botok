@@ -48,7 +48,7 @@ Strategy:
 
 Todo:
 
- - rename Word object into Token
+ - rename Token object into Token
  - remove tibetaneditor specific attributes and properties + find a way of reimplementing them within tibetaneditor
  - implement SplitAffixed:
      - check in Token.tag if there is an affixed particle

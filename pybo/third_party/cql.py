@@ -15,7 +15,7 @@
 
 from __future__ import print_function, unicode_literals, division, absolute_import
 
-from pynlpl.fsa import State, NFA
+from .fsa import State, NFA
 import re
 import sys
 

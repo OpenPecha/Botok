@@ -1,5 +1,5 @@
 
-class Word:
+class Token:
     def __init__(self):
         self.content = None
         self.chunk_type = None
@@ -15,27 +15,27 @@ class Word:
         self.chunk_markers = {100: 'bo', 101: 'non-bo', 102: 'punct', 103: 'non-punct', 104: 'space', 105: 'non-space',
                               106: 'syl', 1000: 'word', 1001: 'non-word'}
 
-    @property
-    def end(self):
-        return self.start + len(self.content)
+    def __getitem__(self, item):
+        mapping = {'content': self.content,
+                   'chunk_type': self.chunk_type,
+                   'start': self.start,
+                   'length': self.length,
+                   'syls': self.syls,
+                   'tag': self.tag,
+                   'pos': self.pos}
+        if item in mapping:
+            return mapping[item]
+        else:
+            return None
 
     @property
-    def partOfSpeech(self):
-        AFFIX_SEP = '-'
-        if AFFIX_SEP in self.tag:
-            return self.tag.split(AFFIX_SEP)[0]
+    def pos(self):
+        affix_sep = 'ᛃ'
+        if affix_sep in self.tag:
+            return self.tag.split(affix_sep)[0]
         return self.tag
 
-    @property
-    def partOfSpeechEnd(self):
-        return self.end + self.partOfSpeechLen
-
-    @property
-    def partOfSpeechLen(self):
-        return len(self.partOfSpeech) + 1  # plus one for '/'
-
-    @property
-    def to_string(self):
+    def __repr__(self):
         out = 'content: "'+self.content+'"'
         out += '\nchar types: '
         out += '|'+'|'.join([self.char_markers[self.char_groups[idx]]
@@ -50,7 +50,7 @@ class Word:
             out += ': '
         out += str(self.syls)
         out += '\ntag: ' + self.tag
-        out += '\nPOS: ' + self.partOfSpeech
+        out += '\nPOS: ' + self.pos
         return out
 
 
@@ -224,9 +224,9 @@ class Tokenizer:
     def chunks_to_token(self, syls, tag=None, ttype=None):
         if len(syls) == 1:
             # chunk format: ([char_idx1, char_idx2, ...], (type, start_idx, len_idx))
-            token_syls  = [self.pre_processed.chunks[syls[0]][0]]
-            token_type   = self.pre_processed.chunks[syls[0]][1][0]
-            token_start  = self.pre_processed.chunks[syls[0]][1][1]
+            token_syls = [self.pre_processed.chunks[syls[0]][0]]
+            token_type = self.pre_processed.chunks[syls[0]][1][0]
+            token_start = self.pre_processed.chunks[syls[0]][1][1]
             token_length = self.pre_processed.chunks[syls[0]][1][2]
             if ttype:
                 token_type = ttype
@@ -234,7 +234,7 @@ class Tokenizer:
             return self.create_token(token_type, token_start, token_length, token_syls, tag)
         elif len(syls) > 1:
             token_syls = [self.pre_processed.chunks[idx][0] for idx in syls]
-            token_type  = self.pre_processed.chunks[syls[-1]][1][0]
+            token_type = self.pre_processed.chunks[syls[-1]][1][0]
             token_start = self.pre_processed.chunks[syls[0]][1][1]
             token_length = 0
             for i in syls:
@@ -255,9 +255,9 @@ class Tokenizer:
         :param syls: syl representation coming from PyBoTextChunks.
                         the indices are modified to be usable on the substring corresponding to this token
         :param tag: the POS retrieved from the chunk or from the trie
-        :return: a Word object with all the above information
+        :return: a Token object with all the above information
         """
-        token = Word()
+        token = Token()
         token.content = self.pre_processed.string[start:start+length]
         token.chunk_type = ttype
         token.start = start
