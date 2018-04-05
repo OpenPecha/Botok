@@ -36,7 +36,7 @@ def match(query, tokens_list):
 def test_cql():
     input_str = ' ཤི་བཀྲ་ཤིས་  tr བདེ་་ལེ གས། བཀྲ་ཤིས་བདེ་ལེགས་ཀཀ'
     tokens = get_token_list(input_str)
-    query = '[pos="NOUN"] [content!=""]'
+    query = '[pos="NOUN" & content!=""] []'
     slices = match(query, tokens)
     slice_strings = [tuple([tokens[i].content for i in range(start, end + 1)]) for start, end in slices]
     assert slices == [(1, 2), (3, 4), (5, 6), (6, 7)]
