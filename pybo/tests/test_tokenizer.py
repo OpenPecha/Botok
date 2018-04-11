@@ -13,7 +13,7 @@ length: 7
 syl chars in content(བཀྲ ཤིས): [[0, 1, 2], [4, 5, 6]]
 tag: NOUN
 POS: NOUN"""
-    assert tokens[0].to_string == expected
+    assert tokens[0].__repr__() == expected
     assert tokens[1].content == '།'
     assert tokens[1].chunk_markers[tokens[1].chunk_type] == 'punct'
     assert tokens[1].tag == 'punct'
@@ -48,7 +48,9 @@ def test_split_token():
     trie.add('གྱི་', data='PART')
     tok = Tokenizer(trie)
     tokens = tok.tokenize(PyBoTextChunks('གཏན་གྱི་བདེ་བའི་རྒྱུ།'))
-    tok_utils = TokenSplit(tokens)
-    tok_utils.split_affixed_particles()
-    for t in tokens:
-        print(t)
+    assert len(tokens) == 5
+    assert tokens[2].content == 'བདེ་བའི་'
+    SplitAffixed().split(tokens)
+    assert len(tokens) == 6
+    assert tokens[2].content == 'བདེ་བ'
+    assert tokens[3].content == 'འི་'

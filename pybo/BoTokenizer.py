@@ -8,7 +8,6 @@ class Token:
         self.length = None
         self.syls = None
         self.tag = None
-        self.tagIsOn = False
         self.char_markers = {1: 'cons', 2: 'sub-cons', 3: 'vow', 4: 'tsek', 5: 'skrt-cons', 6: 'skrt-sub-cons',
                              7: 'skrt-vow', 8: 'punct', 9: 'num', 10: 'in-syl-mark', 11: 'special-punct', 12: 'symbol',
                              13: 'no-bo-no-skrt', 14: 'other', 15: 'space', 16: 'underscore'}

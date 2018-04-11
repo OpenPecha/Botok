@@ -1,138 +1,132 @@
-class TokenSplit:
+from pybo import *
+
+
+class SplitAffixed:
     """
-    A class to split Token objects produced by Tokenizer
+    A class to split Token objects produced by BoTokenizer.Tokenizer
+    if they contain affixed particles
 
 
     """
 
-    def __init__(self, tokens):
-        self.tokens = tokens
-        self.matcher = BoMatcher()
+    def __init__(self):
+        self.tag_sep = 'ᛃ'
 
-    def split_affixed_particles(self):
-        self.__split(self.tokens, self.matcher)
+    def split(self, tokens):
+        """
+        Splits in place the tokens containing affixed particles
 
-    @staticmethod
-    def __split(tokens, matcher):
-        def split_token(token, idx):
-            """
-            :param token: Token to split
-            :param split_idx: index at which the token should be split
-            :return: the two new tokens
-            """
-            return 'new1', 'new2'
+        :param tokens: list of Token objects
+        """
+        def affixed_matcher(token):
+            return self.tag_sep in token.tag and self.tag_sep * 3 not in token.tag
 
         t = 0
         while t <= len(tokens) - 1:
-            fulfilled, split_idx = matcher(tokens, t)
-            if fulfilled:
-                # split at split_idx
-                new1, new2 = split_token(tokens[t], split_idx)
+            if affixed_matcher(tokens[t]):
+                # split token containing the affixed particle
+                token1, token2 = self.split_token(tokens[t])
 
                 # replace the original token with the two new ones
-                tokens[t:t + 1] = [new1, new2]
-
+                tokens[t: t + 1] = [token1, token2]
                 t += 1  # increment once more to account for the newly split token
             t += 1
+
+    def split_token(self, token):
+        def split_contents(content, split_idx):
+            return content[:split_idx], content[split_idx:]
+
+        def split_char_groups(char_groups, split_idx):
+            token_groups, affix_groups = {}, {}
+            for idx, group in sorted(char_groups.items()):
+                if idx < split_idx:
+                    token_groups[idx] = group
+                else:
+                    affix_groups[idx] = group
+            return token_groups, affix_groups
+
+        def split_lengths(length, split_idx):
+            return split_index, length - split_idx
+
+        def split_syls(syls, split_idx):
+            t_syls, a_syls = [], []
+            for syl in syls:
+                if syl[-1] <= split_idx:
+                    t_syls.append(syl)
+                else:
+                    token_part, affix_part = [], []
+                    for i in syl:
+                        if i < split_idx:
+                            token_part.append(i)
+                        else:
+                            affix_part.append(i - split_index)
+                    t_syls.append(token_part)
+                    a_syls.append(affix_part)
+            return t_syls, a_syls
+
+        pos, split_index, affix_type, aa = self.get_affix_info(token)
+        token_content, affix_content = split_contents(token.content, split_index)
+        token_char_groups, affix_char_groups = split_char_groups(token.char_groups, split_index)
+        token_length, affix_length = split_lengths(token.length, split_index)
+        token_tag, affix_tag = '{}{}{}'.format(pos, self.tag_sep, self.tag_sep), \
+                               '{}{}{}{}{}'.format('PART', self.tag_sep, affix_type, self.tag_sep, aa)
+        token_start, affix_start = token.start, token.start + token_length
+        token_syls, affix_syls = split_syls(token.syls, split_index)
+
+        # un-affixed token object
+        t = Token()
+        t.content = token_content
+        t.chunk_type = token.chunk_type
+        t.start = token_start
+        t.length = token_length
+        t.syls = token_syls
+        t.tag = token_tag
+        t.char_groups = token_char_groups
+
+        # affix token object
+        a = Token()
+        a.content = affix_content
+        a.chunk_type = token.chunk_type
+        a.start = affix_start
+        a.length = affix_length
+        a.syls = affix_syls
+        a.tag = affix_tag
+        a.char_groups = affix_char_groups
+
+        return t, a
+
+    def get_affix_info(self, token):
+        pos, affix_type, affix_len, aa = token.tag.split(self.tag_sep)
+        start_index = len(token.content) - 1 - int(affix_len)
+        return pos, start_index, affix_type, aa
 
 
 class BoMatcher:
     def __init__(self, query):
         """
+        Creates a matcher object to be later executed against a list of tokens with BoMatcher.match()
 
-        :param query: subset of CQL (see parse() for the supported format)
+        :param query: CQL compliant query string
+        :type query: string
 
         """
-        self.parsed_query = self.parse(query)
+        self.query = Query(query)
 
-    def match(self, tokens):
+    def match(self, tokens_list):
         """
+        Runs cql.Query on a slice of the list of tokens for every index in the list.
 
-        :param tokens:  list of token objects.
-                        tokens can be of any type as long as they allow to access
-                        the attributes with a dict-like syntax: token['attr']
+        :param tokens_list: output of BoTokenizer
+        :type tokens_list: list of Token objects
+        :return: a list of matching slices of tokens_list
+        :rtype: list of tuples with each two values: beginning and end indices
         """
-
-        matching_indices = []
-        for token_count in range(len(tokens) - 1):
-            if self.match_slice(tokens[token_count:len(self.parsed_query)]):
-                matching_indices.append(token_count)
-        return matching_indices
-
-    def match_slice(self, slice_of_tokens):
-        """
-        tests the query in self.parsed_query on a given slice of the token list
-
-        :param slice_of_tokens: a sublist of tokens to be tested
-        :return: True if the tests for all the attributes pass, False otherwise
-        """
-        # sanity check
-        if len(self.parsed_query) == len(slice_of_tokens):
-
-            match = []  # content: boolean. each is the final result for one token slot
-            for slot_count in range(len(self.parsed_query)):
-
-                slot_match = []  # content: boolean. one per attribute within one slot
-                for to_check in self.parsed_query[slot_count]:
-
-                    attr, op, value = to_check
-                    if attr in slice_of_tokens[slot_count]:
-                        if op == '=' and slice_of_tokens[slot_count][attr] == value:
-                                slot_match.append(True)
-                        elif op == '!=' and slice_of_tokens[slot_count][attr] != value:
-                            slot_match.append(True)
-                        else:
-                            slot_match.append(False)
-                    else:
-                        slot_match.append(False)  # attr was not in current token
-
-                if False in slot_match:
-                    match.append(False)
-                else:
-                    match.append(True)
-
-            return False not in match
-        else:
-            return False  # slice of tokens was not the right size
-
-    @staticmethod
-    def parse(query):
-        """
-        Parses a query using a subset of CQL into a Python structure.
-
-        Tries to be as effective as possible by splitting on unambiguous
-        parts of the query.
-
-        :param query:
-                    formatted in the following way:
-                        - ' ': tokens
-                        - ' & ': token attributes
-                        - 'xxx': attribute key
-                        - '=' or '!=': attribute operator
-                        - '"yyy"': attribute value.
-        :return:
-                    '[text="abc" & pos="NOUN"] [pos!="ADJ"]'
-                    yields: [[("text", "=", "abc"),
-                              ("pos", "=", "NOUN")],
-
-                             [("pos", "!=", "ADJ")]]
-        """
-        parsed_query = []
-        token_slots = [a.replace('[', '').replace(']', '') for a in query.split('] [')]
-        for slot in token_slots:
-            parsed_slot = []
-            attributes = slot.split(' & ')
-            for a in attributes:
-                if '!=' in a:
-                    attr, value = a.split('!=')
-                    value = value[1:-1]
-                    parsed_slot.append((attr, '!=', value))
-                else:
-                    attr, value = a.split('=')
-                    value = value[1:-1]
-                    parsed_slot.append((attr, '=', value))
-            parsed_query.append(parsed_slot)
-        return parsed_query
+        slice_len = len(self.query.tokenexprs) - 1
+        matches = []
+        for i in range(len(tokens_list) - 1):
+            if i + slice_len <= len(tokens_list) and self.query(tokens_list[i:i + slice_len + 1]):
+                matches.append((i, i + slice_len))
+        return matches != [], matches
 
 
 if __name__ == '__main__':
@@ -147,11 +141,9 @@ if __name__ == '__main__':
              'tag': 'Pron'},
             {'word': '.',
              'lemma': '.',
-             'tag': 'Punct'},
-            {''}]
+             'tag': 'Punct'}]
     q = '[lemma="this" & tag="Det"] [tag!="ADJ"]'
 
     matcher = BoMatcher(q)
-    parsed = matcher.parse(q)
-    print(parsed)
-    print(matcher.match(test))
+    matches = matcher.match(test)
+    print(matches)
