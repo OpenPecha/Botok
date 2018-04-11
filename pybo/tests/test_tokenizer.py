@@ -47,10 +47,11 @@ def test_split_token():
     trie.add('གཏན་', 'NOUN')
     trie.add('གྱི་', data='PART')
     tok = Tokenizer(trie)
-    tokens = tok.tokenize(PyBoTextChunks('གཏན་གྱི་བདེ་བའི་རྒྱུ།'))
+    tokens = tok.tokenize(PyBoTextChunks('གཏན་གྱི་བདེ་བའི་རྒྱུ།'), split_affixes=False)
     assert len(tokens) == 5
     assert tokens[2].content == 'བདེ་བའི་'
-    SplitAffixed().split(tokens)
+
+    tokens = tok.tokenize(PyBoTextChunks('གཏན་གྱི་བདེ་བའི་རྒྱུ།'))
     assert len(tokens) == 6
     assert tokens[2].content == 'བདེ་བ'
     assert tokens[3].content == 'འི་'
