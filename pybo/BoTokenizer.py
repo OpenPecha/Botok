@@ -8,6 +8,7 @@ class Token:
         self.length = None
         self.syls = None
         self.tag = None
+        self.pos = None
         self.char_markers = {1: 'cons', 2: 'sub-cons', 3: 'vow', 4: 'tsek', 5: 'skrt-cons', 6: 'skrt-sub-cons',
                              7: 'skrt-vow', 8: 'punct', 9: 'num', 10: 'in-syl-mark', 11: 'special-punct', 12: 'symbol',
                              13: 'no-bo-no-skrt', 14: 'other', 15: 'space', 16: 'underscore'}
@@ -27,12 +28,12 @@ class Token:
         else:
             return None
 
-    @property
-    def pos(self):
+    def get_pos(self):
         affix_sep = 'ᛃ'
         if affix_sep in self.tag:
-            return self.tag.split(affix_sep)[0]
-        return self.tag
+            self.pos = self.tag.split(affix_sep)[0]
+        else:
+            self.pos = self.tag
 
     def __repr__(self):
         out = 'content: "'+self.content+'"'
@@ -111,7 +112,7 @@ class SplitAffixed:
                         if i < split_idx:
                             token_part.append(i)
                         else:
-                            affix_part.append(i - split_index)
+                            affix_part.append(i - split_idx)
                     t_syls.append(token_part)
                     a_syls.append(affix_part)
             return t_syls, a_syls
@@ -377,6 +378,8 @@ class Tokenizer:
                 token.tag = token.chunk_markers[tag]
             else:
                 token.tag = tag
+        if token.tag:
+            token.get_pos()
         token.char_groups = self.pre_processed.export_groups(start, length, for_substring=True)
         return token
 

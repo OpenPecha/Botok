@@ -2,7 +2,6 @@ from .BoTrie import PyBoTrie
 from .BoStringUtils import PyBoTextChunks
 from .BoTokenizer import Tokenizer
 from .BoSylUtils import BoSyl
-from .BoTokenUtils import BoMatcher, TokenSplit
-from .third_party.cql import Query
+from .BoTokenUtils import BoMatcher, TokenSplit, MatchSplit
 
-__all__ = ['PyBoTextChunks', 'PyBoTrie', 'Tokenizer', 'BoSyl', 'BoMatcher', 'TokenSplit', 'Query']
+__all__ = ['PyBoTextChunks', 'PyBoTrie', 'Tokenizer', 'BoSyl', 'BoMatcher', 'TokenSplit', 'MatchSplit']

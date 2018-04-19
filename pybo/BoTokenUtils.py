@@ -1,5 +1,5 @@
-from pybo import *
 import copy
+from .third_party import Query
 
 
 class BoMatcher:
@@ -32,28 +32,41 @@ class BoMatcher:
 
 class TokenSplit:
     """
-    Takes a token object and devide it into two.
+    Takes a token object and divide it into two using an index of the content.
 
-    By default, makes a clone of the object, then applies any modification
-    as defined in the replacement command
+    The affected attributes are:
+        - token.content     : the string is split at the index
+        - token.char_groups : the dict items are redistributed
+        - token.start       : second token only. now equals "start + index"
+        - token.length      : length of new content
+        - token.syls        : syls are redistributed and split if necessary
+
     """
-    def __init__(self, token, split_idx):
+    def __init__(self, token, split_idx, token1_changes=None, token2_changes=None):
         self.first = copy.deepcopy(token)
         self.second = copy.deepcopy(token)
+        self.token1_changes = token1_changes
+        self.token2_changes = token2_changes
         self.idx = split_idx
 
     def split(self):
-        self.split_contents()
-        self.split_char_groups()
+        self.split_on_idx()
+        self.replace_attrs()
 
         return self.first, self.second
 
-    def split_contents(self):
+    def split_on_idx(self):
+        self.__split_contents()
+        self.__split_char_groups()
+        self.__split_indices()
+        self.__split_syls()
+
+    def __split_contents(self):
         content = self.first.content
         self.first.content = content[0:self.idx]
         self.second.content = content[self.idx:]
 
-    def split_char_groups(self):
+    def __split_char_groups(self):
         # split in two
         c_g_1, c_g_2 = {}, {}
         for idx, group in self.first.char_groups.items():
@@ -67,6 +80,73 @@ class TokenSplit:
 
         self.first.char_groups = c_g_1
         self.second.char_groups = c_g_2
+
+    def __split_indices(self):
+        self.first.length = len(self.first.content)
+        self.second.length = len(self.second.content)
+        self.second.start = self.second.start + self.idx
+
+    def __split_syls(self):
+        syls = self.first.syls
+        # empty syls
+        self.first.syls = []
+        self.second.syls = []
+
+        for syl in syls:
+            if syl[-1] <= self.idx:
+                self.first.syls.append(syl)
+
+            else:
+                # separate the syl in two
+                part1, part2 = [], []
+                for i in syl:
+                    if i < self.idx:
+                        part1.append(i)
+                    else:
+                        part2.append(i - self.idx)
+
+                # add them if non-empty
+                if part1:
+                    self.first.syls.append(part1)
+                if part2:
+                    self.second.syls.append(part2)
+
+    def replace_attrs(self):
+        def cql2dict(query):
+            """
+            Expects the following syntax:
+                '[attribute1="value1" & attribute2="value2" (& ...)]'
+            """
+            changes = {}
+            for t_exprs in query.tokenexprs:
+                for a_exprs in t_exprs:
+                    key = a_exprs.attribute
+                    value = a_exprs.valueexpr[0]
+                    changes[key] = value
+            return changes
+
+        if self.token1_changes:
+            changes1 = cql2dict(Query(self.token1_changes))
+            for attr, value in changes1.items():
+                setattr(self.first, attr, value)
+
+        if self.token2_changes:
+            changes2 = cql2dict(Query(self.token2_changes))
+            for attr, value in changes2.items():
+                setattr(self.second, attr, value)
+
+
+class MatchSplit:
+    def __init__(self, match_query, token_list):
+        self.match_query = match_query
+        self.token_list = token_list
+        self.matcher = BoMatcher(match_query)
+        self.token_split = TokenSplit
+
+    def main(self):
+        matches = self.matcher.match(self.token_list)
+        for m in matches:
+            print(m)
 
 
 if __name__ == '__main__':
@@ -85,5 +165,5 @@ if __name__ == '__main__':
     q = '[lemma="this" & tag="Det"] [tag!="ADJ"]'
 
     matcher = BoMatcher(q)
-    matches = matcher.match(test)
-    print(matches)
+    matched = matcher.match(test)
+    print(matched)
