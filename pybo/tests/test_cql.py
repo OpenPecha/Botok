@@ -13,31 +13,14 @@ def get_token_list(in_str):
     return tok.tokenize(pre_processed)
 
 
-def match(query, tokens_list):
-    """
-    Runs cql.Query on a slice of the list of tokens for every index in the list.
-
-    :param query: CQL compliant query string
-    :param tokens_list: output of BoTokenizer
-    :type query: string
-    :type tokens_list: list of Token objects
-    :return: a list of matching slices of tokens_list
-    :rtype: list of tuples with each two values: beginning and end indices
-    """
-    q = Query(query)
-    slice_len = len(q.tokenexprs) - 1
-    matches = []
-    for i in range(len(tokens_list) - 1):
-        if i + slice_len <= len(tokens_list) and q(tokens_list[i:i + slice_len + 1]):
-            matches.append((i, i + slice_len))
-    return matches
-
-
 def test_cql():
     input_str = ' ཤི་བཀྲ་ཤིས་  tr བདེ་་ལེ གས། བཀྲ་ཤིས་བདེ་ལེགས་ཀཀ'
     tokens = get_token_list(input_str)
     query = '[pos="NOUN" & content!=""] []'
-    slices = match(query, tokens)
+    split = TokenSplit(tokens[0], 1)
+    first, second = split.split()
+    matcher = BoMatcher(query)
+    slices = matcher.match(tokens)
     slice_strings = [tuple([tokens[i].content for i in range(start, end + 1)]) for start, end in slices]
     assert slices == [(1, 2), (3, 4), (5, 6), (6, 7)]
     assert slice_strings == [('བཀྲ་ཤིས་  ', 'tr'), (' བདེ་་ལེ གས', '།'), (' བཀྲ་ཤིས་', 'བདེ་ལེགས་'), ('བདེ་ལེགས་', 'ཀཀ')]
