@@ -137,16 +137,24 @@ class TokenSplit:
 
 
 class MatchSplit:
-    def __init__(self, match_query, token_list):
-        self.match_query = match_query
+    def __init__(self, match_query, replace_idx, token_list):
         self.token_list = token_list
         self.matcher = BoMatcher(match_query)
         self.token_split = TokenSplit
 
-    def main(self):
+        self.match_query = match_query
+        self.replace_idx = replace_idx - 1
+
+    def main(self, split_idx, token1_changes=None, token2_changes=None):
         matches = self.matcher.match(self.token_list)
         for m in matches:
-            print(m)
+            idx = m[self.replace_idx]
+            token = self.token_list[idx]
+            ts = TokenSplit(token, split_idx, token1_changes, token2_changes)
+            first, second = ts.split()
+
+            self.token_list[idx:idx+1] = [first, second]
+
 
 
 if __name__ == '__main__':

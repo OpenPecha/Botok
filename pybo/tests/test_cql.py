@@ -32,11 +32,13 @@ def test_token_split():
     assert first
     assert second
 
+
 def test_match_split():
     input_str = ' ཤི་བཀྲ་ཤིས་  tr བདེ་་ལེ གས། བཀྲ་ཤིས་བདེ་ལེགས་ཀཀ'
     match_query = '[pos="NOUN" & content!=""] []'
+    replace_idx = 1
     replace = '[tag="XXX" & pos="xxx"]'
     tokens = get_token_list(input_str)
 
-    ms = MatchSplit(match_query, tokens)
-    ms.main()
+    ms = MatchSplit(match_query, replace_idx, tokens)
+    ms.main(1, replace)
