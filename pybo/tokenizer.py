@@ -42,7 +42,10 @@ class Token:
         Warning: Since it is unaware (at the moment) of syllables that have been
         separated from their affixed particles, it will add a tsek in the middle
         """
-        return ''.join([''.join([self.content[idx] for idx in syl] + ['་']) for syl in self.syls])
+        if self.syls:
+            return ''.join([''.join([self.content[idx] for idx in syl] + ['་']) for syl in self.syls])
+        else:
+            return None
 
     def __repr__(self):
         out = 'content: "'+self.content+'"'
