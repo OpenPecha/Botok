@@ -1,8 +1,9 @@
 from pybo import *
 
+tok = BoTokenizer('POS')
 
 input_str = ' ཤི་བཀྲ་ཤིས་  tr བདེ་་ལེ གས། བཀྲ་ཤིས་བདེ་ལེགས་ཀཀ'
-tokens = bo_tokenizer(input_str)
+tokens = tok.tokenize(input_str)
 
 tagged = ['"{}"/{}'.format(w.content, w.pos) for w in tokens]
 print(', '.join(tagged))
