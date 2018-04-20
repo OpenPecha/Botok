@@ -2,7 +2,7 @@ from .trie import PyBoTrie
 from .stringutils import PyBoTextChunks
 from .tokenizer import Tokenizer
 from .syllableutils import BoSyl
-from .tokenutils import BoMatcher, TokenSplit, MatchSplit
+from .tokenutils import BoMatcher, TokenSplit, SplittingMatcher
 
 
 class BoTokenizer:
@@ -27,4 +27,4 @@ class BoTokenizer:
 
 
 __all__ = ['BoTokenizer', 'PyBoTextChunks', 'PyBoTrie', 'Tokenizer',
-           'BoSyl', 'BoMatcher', 'TokenSplit', 'MatchSplit']
+           'BoSyl', 'BoMatcher', 'TokenSplit', 'SplittingMatcher']
