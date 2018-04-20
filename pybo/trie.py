@@ -115,12 +115,12 @@ class Trie:
 
 
 class PyBoTrie(Trie):
-    def __init__(self, bosyl, profile='pytib', build=False, affix_sep='-'):
+    def __init__(self, bosyl, profile='pytib', build=False, affix_sep='ᛃ'):
         Trie.__init__(self)
         self.bosyl = bosyl
         self.TSEK = '་'
         self.COMMENT = '#'
-        self.AFFIX_SEP = 'ᛃ'  # in case the value is changed, also change it in BoTokenizer.Token()
+        self.AFFIX_SEP = affix_sep  # in case the value is changed, also change it in tokenizer.Token()
         self.profile = profile
         self.pickled_file = profile + '_trie.pickled'
         self.load_or_build_trie(build)

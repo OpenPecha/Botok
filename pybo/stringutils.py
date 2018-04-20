@@ -37,7 +37,7 @@ class BoString:
 
     :Example:
 
-    >>> from pybo.BoStringUtils import BoString
+    >>> from pybo.stringutils import BoString
 
     >>> bo_str = ' བཀྲ་ཤིས་  tr བདེ་ལེགས།'
     >>> bs = BoString(bo_str)
@@ -192,7 +192,7 @@ class BoChunk(BoString):
 
     :Example:
 
-    >>> from pybo.BoStringUtils import BoChunk
+    >>> from pybo.stringutils import BoChunk
 
     >>> bo_str = ' བཀྲ་ཤིས་  tr བདེ་ལེགས།'
     >>> bc = BoChunk(bo_str)
