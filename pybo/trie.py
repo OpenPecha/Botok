@@ -1,6 +1,7 @@
 import time
 import os
 import pickle
+from .helpers import open_file
 
 # inspired from https://gist.github.com/nickstanisha/733c134a0171a00f66d4
 # and https://github.com/eroux/tibetan-phonetics-py
@@ -181,34 +182,33 @@ class PyBoTrie(Trie):
         end = time.time()
         print('Time:', end - start)
 
-    def __add_one_file(self, folder):
+    def __add_one_file(self, in_file):
         """
         files can have comments starting with #
         spaces and empty lines are trimmed
         a single space(breaks if more than one), a comma or a tab can be used as separators
-        :param folder:
+        :param f: file to be processed
         """
-        with open(folder, 'r') as g:
-            for line in g.read().split('\n'):
-                if self.COMMENT in line:
-                    comment_idx = line.index(self.COMMENT)
-                    line = line[:comment_idx]
+        for line in open_file(in_file).split('\n'):
+            if self.COMMENT in line:
+                comment_idx = line.index(self.COMMENT)
+                line = line[:comment_idx]
 
-                line = line.strip()
+            line = line.strip()
 
-                if line:
-                    if '\t' in line:
-                        word, pos = line.split('\t')
-                    elif ',' in line:
-                        word, pos = line.split(',')
-                    elif ' ' in line:
-                        if line.count(' ') > 1:
-                            break
-                        word, pos = line.split(' ')
-                    else:
-                        word, pos = line, 'XXX'
+            if line:
+                if '\t' in line:
+                    word, pos = line.split('\t')
+                elif ',' in line:
+                    word, pos = line.split(',')
+                elif ' ' in line:
+                    if line.count(' ') > 1:
+                        break
+                    word, pos = line.split(' ')
+                else:
+                    word, pos = line, 'XXX'
 
-                    self.inflect_n_add(word, pos)
+                self.inflect_n_add(word, pos)
 
     def inflect_n_add(self, word, pos):
         """
