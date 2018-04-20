@@ -35,6 +35,15 @@ class Token:
         else:
             self.pos = self.tag
 
+    @property
+    def cleaned_content(self):
+        """
+        Will add a tsek at every syllable.
+        Warning: Since it is unaware (at the moment) of syllables that have been
+        separated from their affixed particles, it will add a tsek in the middle
+        """
+        return ''.join([''.join([self.content[idx] for idx in syl] + ['་']) for syl in self.syls])
+
     def __repr__(self):
         out = 'content: "'+self.content+'"'
         out += '\nchar types: '
