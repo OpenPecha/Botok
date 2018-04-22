@@ -1,3 +1,6 @@
+#
+# Original copyright notice:
+#
 #---------------------------------------------------------------
 # PyNLPl - Corpus Query Language (CQL)
 #   by Maarten van Gompel
@@ -12,6 +15,9 @@
 #   Licensed under GPLv3
 #
 #----------------------------------------------------------------
+#
+# This file is modified and reditstributed here under APL2 with
+# with written permission from the original author
 
 from __future__ import print_function, unicode_literals, division, absolute_import
 

@@ -70,8 +70,6 @@ class SplitAffixed:
     """
     A class to split Token objects produced by BoTokenizer.Tokenizer
     if they contain affixed particles
-
-
     """
 
     def __init__(self):
