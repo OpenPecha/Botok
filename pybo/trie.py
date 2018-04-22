@@ -96,6 +96,31 @@ class Trie:
         else:
             return {'exists': exists}
 
+    def add_data_to_word(self, word, data, overwrite=False):
+        """ Adds data to a word, returns True if the data was added, False otherwise """
+        if not word or word == '':
+            return False
+
+        current_node = self.head
+        for letter in word:
+            if letter in current_node.children:
+                current_node = current_node.children[letter]
+            else:
+                return False
+
+        if not current_node.leaf:
+            return False
+
+        if current_node.data:
+            if overwrite:
+                current_node.data = data
+                return True
+            else:
+                return False
+        else:
+            current_node.data = data
+            return True
+
     def deactivate_words(self, word_list):
         """
         if the word is not in the trie, it will silently loop over the letters
@@ -152,7 +177,6 @@ class PyBoTrie(Trie):
         files = {1: 'ancient.txt',
                  2: 'exceptions.txt',
                  3: 'uncompound_lexicon.txt',
-                 4: 'Tibetan.DICT',
                  5: 'tsikchen.txt',
                  6: 'oral_corpus_0.txt',
                  7: 'oral_corpus_1.txt',
@@ -162,7 +186,7 @@ class PyBoTrie(Trie):
         tests = {1: 'test.txt'}
         profiles = {
                     'pytib': [files[1], files[2], files[3], files[5], 'particles.txt'],
-                    'POS': [files[1], files[2], files[3], files[5], 'particles.txt', files[4]],
+                    'POS': [files[1], files[2], files[3], files[5], 'particles.txt'],
                     'empty': [],
                     'test': [tests[1]]
                     }
@@ -177,12 +201,16 @@ class PyBoTrie(Trie):
             full_path = os.path.join(os.path.split(__file__)[0], 'resources', 'trie', f)
             self.__add_one_file(full_path)
 
+        if self.profile == 'POS':
+            full_path_pos = os.path.join(os.path.split(__file__)[0], 'resources', 'trie', "Tibetan.DICT")
+            self.__add_one_file(full_path_pos, data_only=True)
+
         with open(self.pickled_file, 'wb') as f:
             pickle.dump(self.head, f, pickle.HIGHEST_PROTOCOL)
         end = time.time()
         print('Time:', end - start)
 
-    def __add_one_file(self, in_file):
+    def __add_one_file(self, in_file, data_only=False):
         """
         files can have comments starting with #
         spaces and empty lines are trimmed
@@ -208,9 +236,9 @@ class PyBoTrie(Trie):
                 else:
                     word, pos = line, 'XXX'
 
-                self.inflect_n_add(word, pos)
+                self.inflect_n_add(word, pos, data_only)
 
-    def inflect_n_add(self, word, pos):
+    def inflect_n_add(self, word, pos, data_only=False):
         """
         Add to the trie all the affixed versions of the word
         :param word: a word without ending tsek
@@ -228,8 +256,14 @@ class PyBoTrie(Trie):
                                                a[1]['POS'], self.AFFIX_SEP,
                                                a[1]['len'], self.AFFIX_SEP,
                                                a[1]['aa'])
-                self.add(beginning+a[0]+self.TSEK, data)
-        self.add(word + self.TSEK, '{}{}{}{}'.format(pos, self.AFFIX_SEP, self.AFFIX_SEP, self.AFFIX_SEP))
+                self.add_to_trie(beginning+a[0]+self.TSEK, data, data_only)
+        self.add_to_trie(word + self.TSEK, '{}{}{}{}'.format(pos, self.AFFIX_SEP, self.AFFIX_SEP, self.AFFIX_SEP), data_only)
+
+    def add_to_trie(self, word, data, data_only=False):
+        if not data_only:
+            self.add(word, data)
+        else:
+            self.add_data_to_word(word, data)
 
     def split_at_last_syl(self, word):
         if word.count(self.TSEK) >= 1:
