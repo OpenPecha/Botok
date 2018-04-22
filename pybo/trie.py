@@ -121,24 +121,19 @@ class Trie:
             current_node.data = data
             return True
 
-    def deactivate_words(self, word_list):
+    def remove_word(self, word):
         """
-        if the word is not in the trie, it will silently loop over the letters
-        and move on to the next word.
-        :param word_list: list of words to deactivate
+        removes the word, returns True if the word was present, False otherwise
         """
-        for word in word_list:
-            current_node = self.head
-            for letter in word:
-                if current_node and letter in current_node.children:
-                    current_node = current_node.children[letter]
-                else:
-                    current_node = None
-                    # and pass the remaining letters to move on to next word
-
-            if current_node:
-                current_node.leaf = False
-
+        current_node = self.head
+        for letter in word:
+            if letter in current_node.children:
+                current_node = current_node.children[letter]
+            else:
+                return False
+        current_node.leaf = False
+        current_node.data = None
+        return True
 
 class PyBoTrie(Trie):
     def __init__(self, bosyl, profile='pytib', build=False, affix_sep='ᛃ'):

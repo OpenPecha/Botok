@@ -46,5 +46,5 @@ def test_deactivate_trie_entries():
     word = 'བཀྲ་ཤིས་'
     trie.add(word)
     assert trie.has_word(word)
-    trie.deactivate_words([word])
+    trie.remove_word(word)
     assert trie.has_word(word) == {'exists': False}
