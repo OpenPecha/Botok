@@ -26,5 +26,7 @@ class BoTokenizer:
         return self.tok.tokenize(preprocessed, split_affixes=split_affixes)
 
 
+VERSION = "0.1.0"
+
 __all__ = ['BoTokenizer', 'PyBoTextChunks', 'PyBoTrie', 'Tokenizer',
            'BoSyl', 'BoMatcher', 'TokenSplit', 'SplittingMatcher']
