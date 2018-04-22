@@ -136,7 +136,7 @@ class Trie:
         return True
 
 class PyBoTrie(Trie):
-    def __init__(self, bosyl, profile='pytib', build=False, affix_sep='ᛃ'):
+    def __init__(self, bosyl, profile='pytib', build=False, affix_sep='ᛃ', user_word_list=[]):
         Trie.__init__(self)
         self.bosyl = bosyl
         self.TSEK = '་'
@@ -144,6 +144,7 @@ class PyBoTrie(Trie):
         self.AFFIX_SEP = affix_sep  # in case the value is changed, also change it in tokenizer.Token()
         self.profile = profile
         self.pickled_file = profile + '_trie.pickled'
+        self.user_word_list = user_word_list
         self.load_or_build_trie(build)
 
     def load_or_build_trie(self, build):
@@ -196,6 +197,9 @@ class PyBoTrie(Trie):
             full_path = os.path.join(os.path.split(__file__)[0], 'resources', 'trie', f)
             self.__add_one_file(full_path)
 
+        for f in self.user_word_list:
+            self.__add_one_file(f)
+
         if self.profile == 'POS':
             full_path_pos = os.path.join(os.path.split(__file__)[0], 'resources', 'trie', "Tibetan.DICT")
             self.__add_one_file(full_path_pos, data_only=True)
@@ -231,9 +235,14 @@ class PyBoTrie(Trie):
                 else:
                     word, pos = line, 'XXX'
 
-                self.inflect_n_add(word, pos, data_only)
+                remove_word = False
+                if word[0] == '-':
+                    word = word[1:]
+                    remove_word = True
 
-    def inflect_n_add(self, word, pos, data_only=False):
+                self.inflect_n_add(word, pos, data_only, remove_word)
+
+    def inflect_n_add(self, word, pos, data_only=False, remove_word=False):
         """
         Add to the trie all the affixed versions of the word
         :param word: a word without ending tsek
@@ -251,11 +260,15 @@ class PyBoTrie(Trie):
                                                a[1]['POS'], self.AFFIX_SEP,
                                                a[1]['len'], self.AFFIX_SEP,
                                                a[1]['aa'])
-                self.add_to_trie(beginning+a[0]+self.TSEK, data, data_only)
-        self.add_to_trie(word + self.TSEK, '{}{}{}{}'.format(pos, self.AFFIX_SEP, self.AFFIX_SEP, self.AFFIX_SEP), data_only)
+                self.modify_tree(beginning+a[0]+self.TSEK, data, data_only, remove_word)
+        self.modify_tree(word + self.TSEK, '{}{}{}{}'.format(pos, self.AFFIX_SEP, self.AFFIX_SEP, self.AFFIX_SEP), data_only, remove_word)
 
-    def add_to_trie(self, word, data, data_only=False):
-        if not data_only:
+    def modify_tree(self, word, data, data_only=False, remove_word=False):
+        if remove_word and data_only:
+            self.add_data_to_word(word, None)
+        elif remove_word:
+            self.remove_word(word)
+        elif not data_only:
             self.add(word, data)
         else:
             self.add_data_to_word(word, data)

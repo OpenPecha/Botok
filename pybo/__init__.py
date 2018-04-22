@@ -10,11 +10,11 @@ class BoTokenizer:
     Convenience class to tokenize a given string.
 
     """
-    def __init__(self, profile):
+    def __init__(self, profile, user_word_list=[]):
         """
         :param profile: profile for building the trie. (see config.yaml)
         """
-        self.tok = Tokenizer(PyBoTrie(BoSyl(), profile=profile))
+        self.tok = Tokenizer(PyBoTrie(BoSyl(), profile=profile, user_word_list=user_word_list))
 
     def tokenize(self, string, split_affixes=True):
         """
