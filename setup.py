@@ -34,9 +34,8 @@ setup(
         "Intended Audience :: Developers",
         "Intended Audience :: Science/Research",
         "License :: OSI Approved :: Apache Software License",
-        "Natural Language :: Tibetan"
+        #    "Natural Language :: Tibetan"
     ],
-    include_package_data=True,
     package_data = {'pybo': ['resources/*'] },
     python_requires='>=3',
 )
