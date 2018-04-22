@@ -16,7 +16,6 @@ Using pybo, one should be able to:
 Status: Done.
 
 Strategy:
-
  - BoString attributes a type to every char in the input string.
  - BoChunk creates chunks of similar chars. (subclass of BoString)
  - PyBoChunk creates meaningful chunks for Tibetan language: syl / (other)bo / punct / non-bo. (subclass of BoChunk)

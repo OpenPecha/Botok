@@ -40,7 +40,6 @@ def test_non_max_end_of_string():
     assert tokens[0].content == 'བཀྲ་ཤིས་'
     assert tokens[1].content == 'བདེ་'
 
-
 def test_split_token():
     trie = PyBoTrie(BoSyl(), 'empty')
     trie.inflect_n_add('བདེ་བ་', 'NOUN')
@@ -50,7 +49,6 @@ def test_split_token():
     tokens = tok.tokenize(PyBoTextChunks('གཏན་གྱི་བདེ་བའི་རྒྱུ།'), split_affixes=False)
     assert len(tokens) == 5
     assert tokens[2].content == 'བདེ་བའི་'
-
     tokens = tok.tokenize(PyBoTextChunks('གཏན་གྱི་བདེ་བའི་རྒྱུ།'))
     assert len(tokens) == 6
     assert tokens[2].content == 'བདེ་བ'
