@@ -14,15 +14,15 @@ def read(fname):
 
 setup(
     name="pybo",
-    version="0.1.0",  #edit version in __init__.py
+    version="0.1.2",  #edit version in __init__.py
     author="Esukhia development team",
     author_email="esukhiadev@gmail.com",
     description="Python utils for processing Tibetan",
     license="Apache2",
     keywords="nlp computational_linguistics search ngrams language_models linguistics toolkit tibetan",
     url="https://github.com/Esukhia/pybo",
-    packages=['pybo'],
-    long_description=read('README.md'),
+    packages=find_packages(),
+    long_description=read('README'),
     long_description_content_type="text/markdown",
     project_urls={
         'Source': 'https://github.com/Esukhia/pybo',

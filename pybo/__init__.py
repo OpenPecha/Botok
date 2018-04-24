@@ -10,17 +10,18 @@ from .pybotrie import PyBoTrie
 from .splitaffixed import SplitAffixed
 from .splittingmatcher import SplittingMatcher
 from .sylcomponents import SylComponents
+from .third_party import Query
 from .token import Token
 from .tokenizer import Tokenizer
 from .tokensplit import TokenSplit
 
 
-VERSION = "0.1.0"
+VERSION = "0.1.2"
 
 
 __all__ = ['BasicTrie', 'BoChunk', 'BoString', 'BoTokenizer', 'BoSyl', 'CQLMatcher',
            'PyBoChunk', 'PyBoTextChunks', 'PyBoTrie', 'SplitAffixed', 'SplittingMatcher',
-           'SylComponents', 'Token', 'Tokenizer', 'TokenSplit']
+           'SylComponents', 'Query', 'Token', 'Tokenizer', 'TokenSplit']
 
 
 class BoTokenizer:
