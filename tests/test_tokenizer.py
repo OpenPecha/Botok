@@ -40,6 +40,7 @@ def test_non_max_end_of_string():
     assert tokens[0].content == 'བཀྲ་ཤིས་'
     assert tokens[1].content == 'བདེ་'
 
+
 def test_split_token():
     trie = PyBoTrie(BoSyl(), 'empty')
     trie.inflect_n_add('བདེ་བ་', 'NOUN')

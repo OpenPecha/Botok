@@ -1,8 +1,26 @@
-from .trie import PyBoTrie
-from .stringutils import PyBoTextChunks
+# coding: utf-8
+from .basictrie import BasicTrie
+from .bochunk import BoChunk
+from .bostring import BoString
+from .bosyl import BoSyl
+from .cqlmatcher import CQLMatcher
+from .pybochunk import PyBoChunk
+from .pybotextchunks import PyBoTextChunks
+from .pybotrie import PyBoTrie
+from .splitaffixed import SplitAffixed
+from .splittingmatcher import SplittingMatcher
+from .sylcomponents import SylComponents
+from .token import Token
 from .tokenizer import Tokenizer
-from .syllableutils import BoSyl
-from .tokenutils import BoMatcher, TokenSplit, SplittingMatcher
+from .tokensplit import TokenSplit
+
+
+VERSION = "0.1.0"
+
+
+__all__ = ['BasicTrie', 'BoChunk', 'BoString', 'BoTokenizer', 'BoSyl', 'CQLMatcher',
+           'PyBoChunk', 'PyBoTextChunks', 'PyBoTrie', 'SplitAffixed', 'SplittingMatcher',
+           'SylComponents', 'Token', 'Tokenizer', 'TokenSplit']
 
 
 class BoTokenizer:
@@ -24,9 +42,3 @@ class BoTokenizer:
         """
         preprocessed = PyBoTextChunks(string)
         return self.tok.tokenize(preprocessed, split_affixes=split_affixes)
-
-
-VERSION = "0.1.0"
-
-__all__ = ['BoTokenizer', 'PyBoTextChunks', 'PyBoTrie', 'Tokenizer',
-           'BoSyl', 'BoMatcher', 'TokenSplit', 'SplittingMatcher']

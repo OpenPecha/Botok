@@ -1,33 +1,6 @@
+# coding: utf-8
 import copy
-from .third_party import Query
-
-
-class BoMatcher:
-    def __init__(self, query):
-        """
-        Creates a matcher object to be later executed against a list of tokens with BoMatcher.match()
-
-        :param query: CQL compliant query string
-        :type query: string
-
-        """
-        self.query = Query(query)
-
-    def match(self, tokens_list):
-        """
-        Runs cql.Query on a slice of the list of tokens for every index in the list.
-
-        :param tokens_list: output of BoTokenizer
-        :type tokens_list: list of Token objects
-        :return: a list of matching slices of tokens_list
-        :rtype: list of tuples with each two values: beginning and end indices
-        """
-        slice_len = len(self.query.tokenexprs) - 1
-        matches = []
-        for i in range(len(tokens_list) - 1):
-            if i + slice_len <= len(tokens_list) and self.query(tokens_list[i:i + slice_len + 1]):
-                matches.append((i, i + slice_len))
-        return matches
+from .third_party.cql import Query
 
 
 class TokenSplit:
@@ -141,62 +114,3 @@ class TokenSplit:
                         self.first.syls.append(part1)
                     if part2:
                         self.second.syls.append(part2)
-
-
-class SplittingMatcher:
-    def __init__(self, query, replace_idx, split_idx, token_list, token_changes=None):
-        self.query = Query(query)
-        self.span = len(self.query.tokenexprs) - 1
-        self.token_list = token_list
-
-        self.replace_idx = replace_idx - 1
-        self.split_idx = split_idx
-        self.token_changes = token_changes
-
-    def split_on_matches(self):
-        split_list = []
-
-        for i in range(len(self.token_list) - 1):
-            if self.__matches(i):
-                # find the index of the token to split
-                idx = i + self.replace_idx
-
-                # add new tokens that precede the one to split
-                for r in range(i, idx):
-                    split_list.append(self.token_list[r])
-
-                # split the token and add them to the new list
-                split_list.extend(self.__split(self.token_list[idx]))
-
-            else:
-                split_list.append(self.token_list[i])
-
-        return split_list
-
-    def __matches(self, i):
-        return i + self.span <= len(self.token_list) and \
-               self.query(self.token_list[i:i + self.span + 1])
-
-    def __split(self, token):
-        ts = TokenSplit(token, self.split_idx, self.token_changes)
-        return ts.split()
-
-
-if __name__ == '__main__':
-    test = [{'word': 'This',
-             'lemma': 'this',
-             'tag': 'Det'},
-            {'word': 'is',
-             'lemma': 'be',
-             'tag': 'Verb'},
-            {'word': 'it',
-             'lemma': 'it',
-             'tag': 'Pron'},
-            {'word': '.',
-             'lemma': '.',
-             'tag': 'Punct'}]
-    q = '[lemma="this" & tag="Det"] [tag!="ADJ"]'
-
-    matcher = BoMatcher(q)
-    matched = matcher.match(test)
-    print(matched)
