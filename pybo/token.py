@@ -49,7 +49,7 @@ class Token:
         """
         if self.syls:
             cleaned = '་'.join([''.join([self.content[idx] for idx in syl]) for syl in self.syls])
-            if self.affixed:
+            if self.affixed and not self.affix:
                 return cleaned
             else:
                 return cleaned + '་'

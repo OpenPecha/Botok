@@ -5,8 +5,8 @@ from .tokensplit import TokenSplit
 
 class SplittingMatcher:
     def __init__(self, query, replace_idx, split_idx, token_list, token_changes=None):
-        self.query = Query(query)
-        self.span = len(self.query.tokenexprs) - 1
+        self.matcher = Query(query)
+        self.span = len(self.matcher.tokenexprs) - 1
         self.token_list = token_list
 
         self.replace_idx = replace_idx - 1
@@ -35,7 +35,7 @@ class SplittingMatcher:
 
     def __matches(self, i):
         return i + self.span <= len(self.token_list) and \
-               self.query(self.token_list[i:i + self.span + 1])
+               self.matcher(self.token_list[i:i + self.span + 1])
 
     def __split(self, token):
         ts = TokenSplit(token, self.split_idx, self.token_changes)

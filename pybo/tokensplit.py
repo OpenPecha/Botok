@@ -1,6 +1,6 @@
 # coding: utf-8
 import copy
-from .third_party.cql import Query
+from .third_party import parse_cql_query
 
 
 class TokenSplit:
@@ -18,7 +18,7 @@ class TokenSplit:
     def __init__(self, token, split_idx, token_changes=None):
         self.first = copy.deepcopy(token)
         self.second = copy.deepcopy(token)
-        self.token1_changes, self.token2_changes = self.__parse_query(token_changes)
+        self.token1_changes, self.token2_changes = parse_cql_query(token_changes)
         self.idx = split_idx
 
     def split(self):
@@ -26,12 +26,6 @@ class TokenSplit:
         self.replace_attrs()
 
         return self.first, self.second
-
-    def split_on_idx(self):
-        self.__split_contents()
-        self.__split_char_groups()
-        self.__split_indices()
-        self.__split_syls()
 
     def replace_attrs(self):
 
@@ -43,26 +37,11 @@ class TokenSplit:
             for attr, value in self.token2_changes.items():
                 setattr(self.second, attr, value)
 
-    @staticmethod
-    def __parse_query(query):
-        def cql2dict(tokenexpr):
-            """
-            Expects the following syntax:
-                '[attribute1="value1" & attribute2="value2" (& ...)]'
-            """
-            changes = {}
-            for attrexprs in tokenexpr:
-                key = attrexprs.attribute
-                value = attrexprs.valueexpr[0]
-                changes[key] = value
-            return changes
-
-        if query:
-            parsed = Query(query)
-            assert len(parsed.tokenexprs) == 2
-            return cql2dict(parsed.tokenexprs[0]), cql2dict(parsed.tokenexprs[1])
-        else:
-            return None, None
+    def split_on_idx(self):
+        self.__split_contents()
+        self.__split_char_groups()
+        self.__split_indices()
+        self.__split_syls()
 
     def __split_contents(self):
         content = self.first.content
