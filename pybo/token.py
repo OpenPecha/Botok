@@ -11,11 +11,14 @@ class Token:
         self.syls = None
         self.tag = None
         self.pos = None
+        self.affix = False
+        self.affixed = False
         self.char_markers = {1: 'cons', 2: 'sub-cons', 3: 'vow', 4: 'tsek', 5: 'skrt-cons', 6: 'skrt-sub-cons',
                              7: 'skrt-vow', 8: 'punct', 9: 'num', 10: 'in-syl-mark', 11: 'special-punct', 12: 'symbol',
                              13: 'no-bo-no-skrt', 14: 'other', 15: 'space', 16: 'underscore'}
         self.chunk_markers = {100: 'bo', 101: 'non-bo', 102: 'punct', 103: 'non-punct', 104: 'space', 105: 'non-space',
                               106: 'syl', 1000: 'word', 1001: 'non-word'}
+        self._ = {}  # dict for any user specific data
 
     def __getitem__(self, item):
         mapping = {'content': self.content,
@@ -40,12 +43,16 @@ class Token:
     @property
     def cleaned_content(self):
         """
-        Will add a tsek at every syllable.
-        Warning: Since it is unaware (at the moment) of syllables that have been
-        separated from their affixed particles, it will add a tsek in the middle
+        Will append a tsek to every syllable except syllables that host
+        an affix.
+
         """
         if self.syls:
-            return ''.join([''.join([self.content[idx] for idx in syl] + ['་']) for syl in self.syls])
+            cleaned = '་'.join([''.join([self.content[idx] for idx in syl]) for syl in self.syls])
+            if self.affixed:
+                return cleaned
+            else:
+                return cleaned + '་'
         else:
             return None
 
