@@ -63,6 +63,11 @@ class Token:
         else:
             out += ': '
         out += str(self.syls)
-        out += '\ntag: ' + self.tag
-        out += '\nPOS: ' + self.pos
+        out += '\ntag: '
+        if self.tag:
+            out += self.tag
+        out += '\nPOS: '
+        if self.pos:
+            out += self.pos
+        out += '\n'
         return out
