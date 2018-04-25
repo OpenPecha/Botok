@@ -1,6 +1,7 @@
 # coding: utf-8
 from .token import Token
 from .splitaffixed import SplitAffixed
+from .helpers import AFFIX_SEP
 
 
 class Tokenizer:
@@ -229,6 +230,9 @@ class Tokenizer:
                 token.tag = tag
         if token.tag:
             token.get_pos_n_aa()
+        if AFFIX_SEP in token.tag and not AFFIX_SEP * 3 in token.tag:
+            token.affix = True
+            token.affixed = True
         token.char_groups = self.pre_processed.export_groups(start, length, for_substring=True)
         return token
 

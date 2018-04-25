@@ -1,18 +1,19 @@
 # coding: utf-8
+from .helpers import AFFIX_SEP
 
 
 class Token:
     def __init__(self):
-        self.content = None
-        self.aa = None
-        self.lemma = None
+        self.content = ''
+        self.aa_word = None
+        self.lemma = ''
         self.chunk_type = None
         self.char_groups = None
         self.start = 0
         self.length = None
         self.syls = None
-        self.tag = None
-        self.pos = None
+        self.tag = ''
+        self.pos = ''
         self.affix = False
         self.affixed = False
         self.char_markers = {1: 'cons', 2: 'sub-cons', 3: 'vow', 4: 'tsek', 5: 'skrt-cons', 6: 'skrt-sub-cons',
@@ -24,26 +25,32 @@ class Token:
 
     def __getitem__(self, item):
         mapping = {'content': self.content,
+                   'aa_word': self.aa_word,
+                   'lemma': self.lemma,
                    'chunk_type': self.chunk_type,
+                   'char_groups': self.char_groups,
                    'start': self.start,
                    'length': self.length,
                    'syls': self.syls,
                    'tag': self.tag,
-                   'pos': self.pos}
+                   'pos': self.pos,
+                   'affix': self.affix,
+                   'affixed': self.affixed,
+                   'cleaned_content': self.cleaned_content,
+                   'unaffixed_word': self.unaffixed_word}
         if item in mapping:
             return mapping[item]
         else:
             return None
 
     def get_pos_n_aa(self):
-        affix_sep = 'ᛃ'
-        if affix_sep in self.tag:
-            parts = self.tag.split(affix_sep)
+        if AFFIX_SEP in self.tag:
+            parts = self.tag.split(AFFIX_SEP)
             self.pos = parts[0]
             if parts[-1] == 'aa':
-                self.aa = True
+                self.aa_word = True
             elif parts[-1] == '':
-                self.aa = False
+                self.aa_word = False
         else:
             self.pos = self.tag
 
@@ -65,7 +72,7 @@ class Token:
 
     @property
     def unaffixed_word(self):
-        if self.aa:
+        if self.aa_word and (not self.affix and self.affixed):
             if self.cleaned_content.endswith('་'):
                 return self.cleaned_content[:-1] + 'འ་'
             else:

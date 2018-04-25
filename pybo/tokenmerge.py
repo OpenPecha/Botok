@@ -18,7 +18,7 @@ class TokenMerge:
     def merge(self):
         self.merge_attrs()
         self.replace_attrs()
-
+        self.merged.get_pos_n_aa()
         return self.merged
 
     def replace_attrs(self):
@@ -58,8 +58,8 @@ class TokenMerge:
             new_syl = [i + self.token1.length for i in syl]
 
             # token1 is a host syllable and token2 its affixed syllable
-            if num == 0 and (self.token1.affixed == True and self.token1.affix == False) and \
-                    (self.token2.affixed == False and self.token2.affix == True):
+            if num == 0 and (self.token1.affixed and not self.token1.affix) and \
+                    (not self.token2.affixed and self.token2.affix):
                 self.merged.syls[-1] += new_syl
                 self.merged.affix = True
             else:

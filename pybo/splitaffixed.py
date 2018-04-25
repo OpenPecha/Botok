@@ -1,4 +1,5 @@
 from .token import Token
+from .helpers import AFFIX_SEP
 
 
 class SplitAffixed:
@@ -8,7 +9,7 @@ class SplitAffixed:
     """
 
     def __init__(self):
-        self.tag_sep = 'ᛃ'
+        pass
 
     def split(self, tokens):
         """
@@ -17,7 +18,7 @@ class SplitAffixed:
         :param tokens: list of Token objects
         """
         def affixed_matcher(token):
-            return self.tag_sep in token.tag and self.tag_sep * 3 not in token.tag
+            return AFFIX_SEP in token.tag and AFFIX_SEP * 3 not in token.tag
 
         t = 0
         while t <= len(tokens) - 1:
@@ -66,8 +67,8 @@ class SplitAffixed:
         token_content, affix_content = split_contents(token.content, split_index)
         token_char_groups, affix_char_groups = split_char_groups(token.char_groups, split_index)
         token_length, affix_length = split_lengths(token.length, split_index)
-        token_tag, affix_tag = '{}{}{}'.format(pos, self.tag_sep, self.tag_sep), \
-                               '{}{}{}{}{}'.format('PART', self.tag_sep, affix_type, self.tag_sep, aa)
+        token_tag, affix_tag = '{}{}{}'.format(pos, AFFIX_SEP, AFFIX_SEP), \
+                               '{}{}{}{}{}'.format('PART', AFFIX_SEP, affix_type, AFFIX_SEP, aa)
         token_start, affix_start = token.start, token.start + token_length
         token_syls, affix_syls = split_syls(token.syls, split_index)
 
@@ -80,9 +81,11 @@ class SplitAffixed:
         t.syls = token_syls
         t.tag = token_tag
         t.char_groups = token_char_groups
+        t.affix = False
         t.affixed = True
         if aa:
-            t.aa = True
+            t.aa_word = True
+        t.get_pos_n_aa()
 
         # affix token object
         a = Token()
@@ -94,10 +97,12 @@ class SplitAffixed:
         a.tag = affix_tag
         a.char_groups = affix_char_groups
         a.affix = True
+        a.affixed = False
+        t.get_pos_n_aa()
 
         return t, a
 
     def get_affix_info(self, token):
-        pos, affix_type, affix_len, aa = token.tag.split(self.tag_sep)
+        pos, affix_type, affix_len, aa = token.tag.split(AFFIX_SEP)
         start_index = token.syls[-1][-int(affix_len)]
         return pos, start_index, affix_type, aa

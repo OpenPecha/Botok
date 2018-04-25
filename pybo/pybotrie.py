@@ -3,16 +3,15 @@ import time
 import os
 import pickle
 from .basictrie import BasicTrie, Node
-from .helpers import open_file
+from .helpers import open_file, AFFIX_SEP
 
 
 class PyBoTrie(BasicTrie):
-    def __init__(self, bosyl, profile='pytib', build=False, affix_sep='ᛃ', user_word_list=[]):
+    def __init__(self, bosyl, profile='pytib', build=False, user_word_list=[]):
         BasicTrie.__init__(self)
         self.bosyl = bosyl
         self.TSEK = '་'
         self.COMMENT = '#'
-        self.AFFIX_SEP = affix_sep  # in case the value is changed, also change it in tokenizer.Token()
         self.profile = profile
         self.pickled_file = profile + '_trie.pickled'
         self.user_word_list = user_word_list
@@ -85,7 +84,9 @@ class PyBoTrie(BasicTrie):
         files can have comments starting with #
         spaces and empty lines are trimmed
         a single space(breaks if more than one), a comma or a tab can be used as separators
-        :param f: file to be processed
+
+        :param in_file: file to be processed
+        :param data_only:
         """
         for line in open_file(in_file).split('\n'):
             if self.COMMENT in line:
@@ -127,12 +128,12 @@ class PyBoTrie(BasicTrie):
         if self.bosyl.is_affixable(last_syl):
             affixed = self.bosyl.get_all_affixed(last_syl)
             for a in affixed:
-                data = '{}{}{}{}{}{}{}'.format(pos, self.AFFIX_SEP,
-                                               a[1]['POS'], self.AFFIX_SEP,
-                                               a[1]['len'], self.AFFIX_SEP,
+                data = '{}{}{}{}{}{}{}'.format(pos, AFFIX_SEP,
+                                               a[1]['POS'], AFFIX_SEP,
+                                               a[1]['len'], AFFIX_SEP,
                                                a[1]['aa'])
                 self.modify_tree(beginning+a[0]+self.TSEK, data, data_only, remove_word)
-        self.modify_tree(word + self.TSEK, '{}{}{}{}'.format(pos, self.AFFIX_SEP, self.AFFIX_SEP, self.AFFIX_SEP), data_only, remove_word)
+        self.modify_tree(word + self.TSEK, '{}{}{}{}'.format(pos, AFFIX_SEP, AFFIX_SEP, AFFIX_SEP), data_only, remove_word)
 
     def modify_tree(self, word, data, data_only=False, remove_word=False):
         if remove_word and data_only:
