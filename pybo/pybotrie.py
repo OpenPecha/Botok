@@ -142,7 +142,7 @@ class PyBoTrie(BasicTrie):
         elif not data_only:
             self.add(word, data)
         else:
-            self.add_data_to_word(word, data)
+            self.add_data_to_word(word, data, data_only)
 
     def split_at_last_syl(self, word):
         if word.count(self.TSEK) >= 1:

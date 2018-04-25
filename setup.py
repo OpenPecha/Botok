@@ -9,13 +9,14 @@ from setuptools import setup, find_packages
 
 
 def read(fname):
-    if os.path.exists(fname.replace('.md', '.rst')):
-        return open(os.path.join(os.path.dirname(__file__), fname.replace('.md', '.rst'))).read()
+    fname_rst = fname.replace('.md', '.rst')
+    if os.path.exists(fname_rst):
+        return open(os.path.join(os.path.dirname(__file__), fname_rst)).read()
     else:
         try:
             import pypandoc
             rst = pypandoc.convert(os.path.join(os.path.dirname(__file__), fname), 'rst')
-            with open('README.rst', 'w') as f:
+            with open(fname_rst, 'w') as f:
                 f.write(rst)
             return rst
         except (IOError, ImportError):
