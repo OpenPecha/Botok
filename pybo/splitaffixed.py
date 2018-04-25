@@ -80,6 +80,7 @@ class SplitAffixed:
         t.syls = token_syls
         t.tag = token_tag
         t.char_groups = token_char_groups
+        t.affixed = True
 
         # affix token object
         a = Token()
@@ -90,6 +91,7 @@ class SplitAffixed:
         a.syls = affix_syls
         a.tag = affix_tag
         a.char_groups = affix_char_groups
+        a.affix = True
 
         return t, a
 
