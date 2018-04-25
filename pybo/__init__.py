@@ -16,7 +16,7 @@ from .tokenizer import Tokenizer
 from .tokensplit import TokenSplit
 
 
-VERSION = "0.1.2"
+VERSION = "0.1.3"
 
 
 __all__ = ['BasicTrie', 'BoChunk', 'BoString', 'BoTokenizer', 'BoSyl', 'CQLMatcher',
