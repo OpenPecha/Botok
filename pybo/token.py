@@ -4,6 +4,8 @@
 class Token:
     def __init__(self):
         self.content = None
+        self.aa = None
+        self.lemma = None
         self.chunk_type = None
         self.char_groups = None
         self.start = 0
@@ -33,10 +35,15 @@ class Token:
         else:
             return None
 
-    def get_pos(self):
+    def get_pos_n_aa(self):
         affix_sep = 'ᛃ'
         if affix_sep in self.tag:
-            self.pos = self.tag.split(affix_sep)[0]
+            parts = self.tag.split(affix_sep)
+            self.pos = parts[0]
+            if parts[-1] == 'aa':
+                self.aa = True
+            elif parts[-1] == '':
+                self.aa = False
         else:
             self.pos = self.tag
 
@@ -55,6 +62,16 @@ class Token:
                 return cleaned + '་'
         else:
             return None
+
+    @property
+    def unaffixed_word(self):
+        if self.aa:
+            if self.cleaned_content.endswith('་'):
+                return self.cleaned_content[:-1] + 'འ་'
+            else:
+                return self.cleaned_content + 'འ'
+        else:
+            return self.cleaned_content
 
     def __repr__(self):
         out = 'content: "'+self.content+'"'

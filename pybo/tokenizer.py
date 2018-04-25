@@ -228,7 +228,7 @@ class Tokenizer:
             else:
                 token.tag = tag
         if token.tag:
-            token.get_pos()
+            token.get_pos_n_aa()
         token.char_groups = self.pre_processed.export_groups(start, length, for_substring=True)
         return token
 

@@ -51,7 +51,8 @@ class TokenMerge:
     def __merge_syls(self):
         """
         Updates indices and add the syls to the merged object
-        Re-joins the host-syllable and affixed particle syllables into a single one
+        Re-joins the host-syllable and affixed particle syllables into a single one;
+        then, affix is True and affixed also, so cleaned_content gets its tsek.
         """
         for num, syl in enumerate(self.token2.syls):
             new_syl = [i + self.token1.length for i in syl]
@@ -60,5 +61,6 @@ class TokenMerge:
             if num == 0 and (self.token1.affixed == True and self.token1.affix == False) and \
                     (self.token2.affixed == False and self.token2.affix == True):
                 self.merged.syls[-1] += new_syl
+                self.merged.affix = True
             else:
                 self.merged.syls.append(new_syl)

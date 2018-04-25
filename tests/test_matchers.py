@@ -1,7 +1,7 @@
 from pybo import *
 
 
-input_str = 'ངའི་མིག་གོ ཤི་བཀྲ་ཤིས་  tr བདེ་་ལེ གས། བཀྲ་ཤིས་བདེ་ལེགས་ཀཀ'
+input_str = 'ངའི་མཐའི་རྒྱ་མཚོའོ། ཤི་བཀྲ་ཤིས་  tr བདེ་་ལེ གས། བཀྲ་ཤིས་བདེ་ལེགས་ཀཀ'
 tok = BoTokenizer('POS')
 tokens = tok.tokenize(input_str)
 

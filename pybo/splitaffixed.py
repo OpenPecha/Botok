@@ -81,6 +81,8 @@ class SplitAffixed:
         t.tag = token_tag
         t.char_groups = token_char_groups
         t.affixed = True
+        if aa:
+            t.aa = True
 
         # affix token object
         a = Token()
@@ -97,5 +99,5 @@ class SplitAffixed:
 
     def get_affix_info(self, token):
         pos, affix_type, affix_len, aa = token.tag.split(self.tag_sep)
-        start_index = len(token.content) - 1 - int(affix_len)
+        start_index = token.syls[-1][-int(affix_len)]
         return pos, start_index, affix_type, aa
