@@ -76,6 +76,14 @@ class Token:
                 return self.cleaned_content[:-1] + 'འ་'
             else:
                 return self.cleaned_content + 'འ'
+        elif self.tag.count(AFFIX_SEP) == 3:
+            _, _, affix_len, aa = self.tag.split(AFFIX_SEP)
+            if affix_len:
+                affix_len = int(affix_len)
+                if self.cleaned_content.endswith('་'):
+                    return self.cleaned_content[:-affix_len - 1] + 'འ་'
+                else:
+                    return self.cleaned_content[:-affix_len] + 'འ'
         else:
             return self.cleaned_content
 
