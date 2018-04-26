@@ -67,8 +67,8 @@ class SplitAffixed:
         token_content, affix_content = split_contents(token.content, split_index)
         token_char_groups, affix_char_groups = split_char_groups(token.char_groups, split_index)
         token_length, affix_length = split_lengths(token.length, split_index)
-        token_tag, affix_tag = '{}{}{}'.format(pos, AFFIX_SEP, AFFIX_SEP), \
-                               '{}{}{}{}{}'.format('PART', AFFIX_SEP, affix_type, AFFIX_SEP, aa)
+        token_tag, affix_tag = '{}{}{}{}'.format(pos, AFFIX_SEP, AFFIX_SEP, AFFIX_SEP), \
+                               '{}{}{}{}{}'.format('PART', AFFIX_SEP, AFFIX_SEP, affix_type, AFFIX_SEP, aa)
         token_start, affix_start = token.start, token.start + token_length
         token_syls, affix_syls = split_syls(token.syls, split_index)
 
@@ -98,7 +98,7 @@ class SplitAffixed:
         a.char_groups = affix_char_groups
         a.affix = True
         a.affixed = False
-        t.get_pos_n_aa()
+        a.get_pos_n_aa()
 
         return t, a
 
