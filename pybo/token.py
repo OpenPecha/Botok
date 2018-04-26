@@ -47,10 +47,8 @@ class Token:
         if AFFIX_SEP in self.tag:
             parts = self.tag.split(AFFIX_SEP)
             self.pos = parts[0]
-            if parts[-1] == 'aa':
+            if not self.aa_word and parts[-1] == 'aa':
                 self.aa_word = True
-            elif parts[-1] == '':
-                self.aa_word = False
         else:
             self.pos = self.tag
 
