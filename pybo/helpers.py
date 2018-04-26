@@ -13,3 +13,4 @@ def write_file(file_path, content):
 
 
 AFFIX_SEP = 'ᛃ'
+OOV = 'OOV'

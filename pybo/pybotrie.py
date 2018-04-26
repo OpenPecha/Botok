@@ -3,7 +3,7 @@ import time
 import os
 import pickle
 from .basictrie import BasicTrie, Node
-from .helpers import open_file, AFFIX_SEP
+from .helpers import open_file, AFFIX_SEP, OOV
 
 
 class PyBoTrie(BasicTrie):
@@ -105,7 +105,7 @@ class PyBoTrie(BasicTrie):
                         break
                     word, pos = line.split(' ')
                 else:
-                    word, pos = line, 'XXX'
+                    word, pos = line, OOV
 
                 remove_word = False
                 if word[0] == '-':

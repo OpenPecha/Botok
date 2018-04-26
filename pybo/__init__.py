@@ -5,6 +5,7 @@ from .bostring import BoString
 from .bosyl import BoSyl
 from .cqlmatcher import CQLMatcher
 from .mergingmatcher import MergingMatcher
+from .lemmatizetoken import LemmatizeTokens
 from .pybochunk import PyBoChunk
 from .pybotextchunks import PyBoTextChunks
 from .pybotrie import PyBoTrie
@@ -22,7 +23,7 @@ VERSION = "0.1.4"
 
 
 __all__ = ['BasicTrie', 'BoChunk', 'BoString', 'BoTokenizer', 'BoSyl', 'CQLMatcher', 'MergingMatcher',
-           'PyBoChunk', 'PyBoTextChunks', 'PyBoTrie', 'SplitAffixed', 'SplittingMatcher',
+           'LemmatizeTokens', 'PyBoChunk', 'PyBoTextChunks', 'PyBoTrie', 'SplitAffixed', 'SplittingMatcher',
            'SylComponents', 'Query', 'parse_cql_query', 'Token', 'Tokenizer', 'TokenMerge',
            'TokenSplit']
 
@@ -45,4 +46,6 @@ class BoTokenizer:
         :return: list of pybo.tokenizer.Token objects
         """
         preprocessed = PyBoTextChunks(string)
-        return self.tok.tokenize(preprocessed, split_affixes=split_affixes)
+        tokens = self.tok.tokenize(preprocessed, split_affixes=split_affixes)
+        LemmatizeTokens().lemmatize(tokens)
+        return tokens

@@ -49,6 +49,6 @@ setup(
         "License :: OSI Approved :: Apache Software License",
         "Natural Language :: Tibetan"
     ],
-    package_data={'pybo': ['resources/*', 'resources/trie/*']},
+    package_data={'pybo': ['resources/*', 'resources/trie/*', 'resources/lemmas/*']},
     python_requires='>=3',
 )

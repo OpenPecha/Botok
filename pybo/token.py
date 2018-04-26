@@ -84,6 +84,8 @@ class Token:
                     return self.cleaned_content[:-affix_len - 1] + 'འ་'
                 else:
                     return self.cleaned_content[:-affix_len] + 'འ'
+            else:
+                return self.cleaned_content
         else:
             return self.cleaned_content
 

@@ -6,6 +6,9 @@ class SplitAffixed:
     """
     A class to split Token objects produced by BoTokenizer.Tokenizer
     if they contain affixed particles
+
+    .. note: should be rewritten with the inspiration of TokenSplit and
+            TokenMerge. Could be a function instead of a class
     """
 
     def __init__(self):
@@ -68,7 +71,7 @@ class SplitAffixed:
         token_char_groups, affix_char_groups = split_char_groups(token.char_groups, split_index)
         token_length, affix_length = split_lengths(token.length, split_index)
         token_tag, affix_tag = '{}{}{}{}'.format(pos, AFFIX_SEP, AFFIX_SEP, AFFIX_SEP), \
-                               '{}{}{}{}{}'.format('PART', AFFIX_SEP, AFFIX_SEP, affix_type, AFFIX_SEP, aa)
+                               '{}{}{}{}{}'.format('PART', AFFIX_SEP, affix_type, AFFIX_SEP, AFFIX_SEP, aa)
         token_start, affix_start = token.start, token.start + token_length
         token_syls, affix_syls = split_syls(token.syls, split_index)
 
