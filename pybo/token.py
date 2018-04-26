@@ -44,13 +44,14 @@ class Token:
             return None
 
     def get_pos_n_aa(self):
-        if AFFIX_SEP in self.tag:
-            parts = self.tag.split(AFFIX_SEP)
-            self.pos = parts[0]
-            if not self.aa_word and parts[-1] == 'aa':
-                self.aa_word = True
-        else:
-            self.pos = self.tag
+        if self.pos == '':
+            if AFFIX_SEP in self.tag:
+                parts = self.tag.split(AFFIX_SEP)
+                self.pos = parts[0]
+                if not self.aa_word and parts[-1] == 'aa':
+                    self.aa_word = True
+            else:
+                self.pos = self.tag
 
     @property
     def cleaned_content(self):

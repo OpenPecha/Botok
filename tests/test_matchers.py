@@ -35,6 +35,19 @@ def test_match_split():
     split_idx = 1  # char index in token.content where split should occur
     replace = '[tag="XXX" & pos="xxx"] []'
 
-    ms = SplittingMatcher(match_query, replace_idx, split_idx, tokens, replace)
-    split_tokens = ms.split_on_matches()
-    print('ok')
+    sm = SplittingMatcher(match_query, replace_idx, split_idx, tokens, replace)
+    split_tokens = sm.split_on_matches()
+    assert len(tokens) == 14
+    assert len(split_tokens) == 20
+
+
+def test_match_merge():
+    match_query = '[pos="NOUN" & content!=""] []'
+    replace_idx = 1  # slot number in match query
+    split_idx = 1  # char index in token.content where split should occur
+    replace = '[tag="XXX" & pos="xxx"]'
+
+    mm = MergingMatcher(match_query, replace_idx, tokens, replace)
+    merged_tokens = mm.merge_on_matches()
+    assert len(tokens) == 14
+    assert len(merged_tokens) == 8

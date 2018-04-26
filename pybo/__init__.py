@@ -4,6 +4,7 @@ from .bochunk import BoChunk
 from .bostring import BoString
 from .bosyl import BoSyl
 from .cqlmatcher import CQLMatcher
+from .mergingmatcher import MergingMatcher
 from .pybochunk import PyBoChunk
 from .pybotextchunks import PyBoTextChunks
 from .pybotrie import PyBoTrie
@@ -20,7 +21,7 @@ from .tokensplit import TokenSplit
 VERSION = "0.1.4"
 
 
-__all__ = ['BasicTrie', 'BoChunk', 'BoString', 'BoTokenizer', 'BoSyl', 'CQLMatcher',
+__all__ = ['BasicTrie', 'BoChunk', 'BoString', 'BoTokenizer', 'BoSyl', 'CQLMatcher', 'MergingMatcher',
            'PyBoChunk', 'PyBoTextChunks', 'PyBoTrie', 'SplitAffixed', 'SplittingMatcher',
            'SylComponents', 'Query', 'parse_cql_query', 'Token', 'Tokenizer', 'TokenMerge',
            'TokenSplit']

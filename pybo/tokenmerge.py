@@ -54,13 +54,17 @@ class TokenMerge:
         Re-joins the host-syllable and affixed particle syllables into a single one;
         then, affix is True and affixed also, so cleaned_content gets its tsek.
         """
-        for num, syl in enumerate(self.token2.syls):
-            new_syl = [i + self.token1.length for i in syl]
+        first_syl = True
+        if self.token2.syls:
+            for syl in self.token2.syls:
+                if syl:
+                    new_syl = [i + self.token1.length for i in syl]
 
-            # token1 is a host syllable and token2 its affixed syllable
-            if num == 0 and (self.token1.affixed and not self.token1.affix) and \
-                    (not self.token2.affixed and self.token2.affix):
-                self.merged.syls[-1] += new_syl
-                self.merged.affix = True
-            else:
-                self.merged.syls.append(new_syl)
+                    # token1 is a host syllable and token2 its affixed syllable
+                    if first_syl and (self.token1.affixed and not self.token1.affix) and \
+                            (not self.token2.affixed and self.token2.affix):
+                        self.merged.syls[-1] += new_syl
+                        self.merged.affix = True
+                        first_syl = False
+                    else:
+                        self.merged.syls.append(new_syl)
