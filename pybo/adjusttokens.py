@@ -35,8 +35,9 @@ class AdjustTokens:
 
     def parse_rules(self):
         def gen_file_paths(folders):
-            paths = [os.path.join(os.path.split(__file__)[0], folder, f) for folder in folders for f in os.listdir(folder)]
-            return paths
+            paths = [os.path.join(os.path.split(__file__)[0], folder, f) for folder in folders
+                     for f in os.listdir(folder)]
+            return sorted(paths)
 
         for rule_file in gen_file_paths(self.paths):
             self.rules.extend(yaml.load(open_file(rule_file)))
