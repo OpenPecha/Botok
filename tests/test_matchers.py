@@ -65,4 +65,11 @@ def test_match_replace():
 
     ReplacingMatcher(match_query, replace_idx, tokens, replace).replace_on_matches()
     assert len(tokens) == 14
-    assert tokens[0].tag == 'XXX'
+    assert tokens[0].pos == 'xxx'
+    assert tokens[1].pos == 'PART'
+
+
+def test_adjust_tokens():
+    at = AdjustTokens()
+    at.adjust(tokens)
+    print('ok')

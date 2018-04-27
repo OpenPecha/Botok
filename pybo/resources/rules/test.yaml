@@ -1,4 +1,9 @@
-# "split": [match_query, replace_idx, split_idx, replace_query]
-# "merge": [match_query, replace_idx, replace_query]
-"split": ['[cleaned_content="བར"] [cleaned_content="དུ་མ་"][cleaned_content="ཆོད་"]', 2, 1, '[pos="PART"] [pos="PART"]']
-"merge": ['[cleaned_content="བར"] [cleaned_content="དུ་མ་"][cleaned_content="ཆོད་"]', 2, '[pos="PART"]']
+# Syntax for the possible adjustments
+# ===================================
+# split: [match_query, replace_idx, split_idx, replace_query]
+# merge: [match_query, replace_idx, replace_query]
+# repla: [match_query, replace_idx, replace_query]
+
+- split: ['[cleaned_content="བར"] [cleaned_content="དུ་མ་"] [cleaned_content="ཆོད་"]', 2, 1, '[pos="PART"] [pos="PART"]']
+- merge: ['[cleaned_content="བར"] [cleaned_content="དུ་མ་"] [cleaned_content="ཆོད་"]', 2, '[pos="PART"]']
+- repla: ['[cleaned_content="བར"] [cleaned_content="དུ་མ་"] [cleaned_content="ཆོད་"]', 2, '[pos="PART"]']

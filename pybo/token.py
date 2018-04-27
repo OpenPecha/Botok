@@ -67,7 +67,7 @@ class Token:
             else:
                 return cleaned + '་'
         else:
-            return None
+            return ''
 
     @property
     def unaffixed_word(self):
