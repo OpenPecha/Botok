@@ -1,6 +1,6 @@
 # pybo
 
-A high-performance tokenizer for Tibetan language. 
+A word tokenizer for Tibetan language. Takes in chunks of text, and returns lists of words. 
 
 ## Getting Started 
 
