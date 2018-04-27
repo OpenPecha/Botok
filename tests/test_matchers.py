@@ -23,7 +23,7 @@ def test_cql():
 
 
 def test_token_split():
-    ts = TokenSplit(tokens[0], 1, token_changes='[tag="SPACE" & pos="PUNCT" & aa_word="False" & affixed="False"] []')
+    ts = TokenSplit(tokens[2], 1, token_changes='[tag="SPACE" & pos="PUNCT" & aa_word="False" & affixed="False"] []')
     first, second = ts.split()
     assert first.tag == 'SPACE'
     assert first.pos == 'PUNCT'
@@ -44,7 +44,7 @@ def test_match_split():
     sm = SplittingMatcher(match_query, replace_idx, split_idx, tokens, replace)
     split_tokens = sm.split_on_matches()
     assert len(tokens) == 14
-    assert len(split_tokens) == 20
+    assert len(split_tokens) == 19
 
 
 def test_match_merge():
@@ -70,6 +70,16 @@ def test_match_replace():
 
 
 def test_adjust_tokens():
-    at = AdjustTokens()
-    at.adjust(tokens)
-    print('ok')
+    string = 'ན་ན་ན་སྟེ་ན་བས་དགའ།། རྐྱེན་ངན་གྱིས་བར་དུ་མ་ཆོད་ཅིང་། །'
+    token_list = tok.tokenize(string)
+    at = AdjustTokens(rules_folder='../tests/resources/rules/')
+    adjusted = at.adjust(token_list)
+    assert token_list[10].content == 'བར་'
+    assert token_list[11].content == 'དུ་མ་'
+    assert token_list[12].content == 'ཆོད་'
+
+    assert adjusted[10].content == 'བར་དུ་'
+    assert adjusted[10].pos == 'PART'
+    assert adjusted[11].content == 'མ་'
+    assert adjusted[11].pos == 'PART'
+    assert adjusted[12].content == 'ཆོད་'

@@ -16,25 +16,28 @@ class SplittingMatcher:
     def split_on_matches(self):
         split_list = []
 
-        for i in range(len(self.token_list) - 1):
-            if self.__matches(i):
+        i = 0
+        while i < len(self.token_list):
+            if self.__matches(i, self.token_list):
                 # find the index of the token to split
                 idx = i + self.replace_idx
 
                 # add new tokens that precede the one to split
                 for r in range(i, idx):
                     split_list.append(self.token_list[r])
+                    i += 1
 
                 # split the token and add them to the new list
                 split_list.extend(self.__split(self.token_list[idx]))
 
             else:
                 split_list.append(self.token_list[i])
+            i += 1
 
         return split_list
 
-    def __matches(self, i):
-        return i + self.span <= len(self.token_list) and \
+    def __matches(self, i, token_list):
+        return i + self.span <= len(token_list) and \
                self.matcher(self.token_list[i:i + self.span + 1])
 
     def __split(self, token):

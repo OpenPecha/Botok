@@ -16,16 +16,21 @@ class TokenSplit:
 
     """
     def __init__(self, token, split_idx, token_changes=None):
-        self.first = copy.deepcopy(token)
-        self.second = copy.deepcopy(token)
+        self.token = token
+        self.first = None
+        self.second = None
         self.token_changes = token_changes
         self.idx = split_idx
 
     def split(self):
-        self.split_on_idx()
-        self.replace_attrs()
+        if len(self.token.syls) > 1:
+            self.__find_idx()
+            self.split_on_idx()
+            self.replace_attrs()
 
-        return self.first, self.second
+            return self.first, self.second
+        else:
+            return [self.token]
 
     def replace_attrs(self):
         if self.token_changes:
@@ -34,10 +39,15 @@ class TokenSplit:
             self.first, self.second = tokens
 
     def split_on_idx(self):
+        self.first = copy.deepcopy(self.token)
+        self.second = copy.deepcopy(self.token)
         self.__split_contents()
         self.__split_char_groups()
         self.__split_indices()
         self.__split_syls()
+
+    def __find_idx(self):
+        self.idx = self.token.syls[self.idx][0]
 
     def __split_contents(self):
         content = self.first.content
@@ -72,7 +82,7 @@ class TokenSplit:
 
         if syls:
             for syl in syls:
-                if syl[-1] <= self.idx:
+                if syl[-1] < self.idx:
                     self.first.syls.append(syl)
 
                 else:

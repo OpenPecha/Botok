@@ -23,11 +23,11 @@ class MergingMatcher:
                 # add new tokens that precede the one to split
                 for r in range(i, idx):
                     merged_list.append(self.token_list[r])
+                    i += 1
 
                 # split the token and add them to the new list
                 merged_list.append(self.__merge(self.token_list[idx], self.token_list[idx + 1]))
                 i += 1
-
             else:
                 merged_list.append(self.token_list[i])
 
