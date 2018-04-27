@@ -1,6 +1,6 @@
 # pybo
 
-Pybo is a python tokenizer for Tibetan built as a tokenizer plugin for spaCy and the Tibetan editor. It takes in a string of raw tibetan text and spits out a list of Token objects.
+A high-performance tokenizer for Tibetan language. 
 
 ## Getting Started 
 
