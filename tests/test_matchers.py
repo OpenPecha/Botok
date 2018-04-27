@@ -6,13 +6,19 @@ tok = BoTokenizer('POS')
 tokens = tok.tokenize(input_str)
 
 
+def test_cql_Query():
+    query = '[content="ན"] []'
+    q = Query(query)
+    assert q
+
+
 def test_cql():
     query = '[pos="NOUN" & content!=""] []'
     matcher = CQLMatcher(query)
     slices = matcher.match(tokens)
     slice_strings = [tuple([tokens[i].content for i in range(start, end + 1)]) for start, end in slices]
     assert slices == [(0, 1), (2, 3), (4, 5), (7, 8), (9, 10), (11, 12), (12, 13)]
-    assert slice_strings == [('མཐ', 'འི་'), ('རྒྱ་མཚོ', 'འི་'), ('གླིང་', '།'), ('བཀྲ་ཤིས་  ', 'tr'),
+    assert slice_strings == [(' མཐ', 'འི་'), ('རྒྱ་མཚོ', 'འི་'), ('གླིང་', '།'), ('བཀྲ་ཤིས་  ', 'tr'),
                              (' བདེ་་ལེ གས', '།'), (' བཀྲ་ཤིས་', 'བདེ་ལེགས་'), ('བདེ་ལེགས་', 'ཀཀ')]
 
 
@@ -44,10 +50,19 @@ def test_match_split():
 def test_match_merge():
     match_query = '[pos="NOUN" & content!=""] []'
     replace_idx = 1  # slot number in match query
-    split_idx = 1  # char index in token.content where split should occur
     replace = '[tag="XXX" & pos="xxx"]'
 
     mm = MergingMatcher(match_query, replace_idx, tokens, replace)
     merged_tokens = mm.merge_on_matches()
     assert len(tokens) == 14
     assert len(merged_tokens) == 8
+
+
+def test_match_replace():
+    match_query = '[pos="NOUN" & content!=""] []'
+    replace_idx = 1
+    replace = '[tag="XXX" & pos="xxx"]'
+
+    ReplacingMatcher(match_query, replace_idx, tokens, replace).replace_on_matches()
+    assert len(tokens) == 14
+    assert tokens[0].tag == 'XXX'

@@ -2,7 +2,7 @@
 from .cql import Query
 
 
-__all__ = ['Query', 'parse_cql_query']
+__all__ = ['Query', 'parse_cql_query', 'replace_token_attributes']
 
 
 def parse_cql_query(query, numerals=True, booleans=True):
@@ -55,3 +55,24 @@ def parse_cql_query(query, numerals=True, booleans=True):
         return pattern
     else:
         return None
+
+
+def replace_token_attributes(tokens, token_changes):
+    """
+    Applies in place the replacements found in the CQL query (token_changes)
+    the number of tokens in the list and the number of token slots in the query
+    must be even.
+
+    :param tokens: list of tokens
+    :param token_changes: CQL query
+    """
+    changes = parse_cql_query(token_changes)
+    if type(tokens) == list:
+        assert len(tokens) == len(changes)
+        for i in range(len(tokens)):
+            for attr, value in changes[i].items():
+                setattr(tokens[i], attr, value)
+    else:
+        assert len(changes) == 1
+        for attr, value in changes[0].items():
+            setattr(tokens, attr, value)

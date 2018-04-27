@@ -1,6 +1,6 @@
 # coding: utf-8
 import copy
-from .third_party import parse_cql_query
+from .third_party import replace_token_attributes
 
 
 class TokenMerge:
@@ -11,9 +11,7 @@ class TokenMerge:
         self.token1 = token1
         self.token2 = token2
         self.merged = copy.deepcopy(token1)
-        self.token_changes = parse_cql_query(token_changes)
-        if token_changes:
-            assert len(self.token_changes) == 1
+        self.token_changes = token_changes
 
     def merge(self):
         self.merge_attrs()
@@ -27,8 +25,7 @@ class TokenMerge:
         If no query is provided, the values of the first token are kept.
         """
         if self.token_changes:
-            for attr, value in self.token_changes[0].items():
-                setattr(self.merged, attr, value)
+            replace_token_attributes(self.merged, self.token_changes)
 
     def merge_attrs(self):
         self.__merge_contents()

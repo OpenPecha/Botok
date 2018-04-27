@@ -1,6 +1,6 @@
 # coding: utf-8
 import copy
-from .third_party import parse_cql_query
+from .third_party import replace_token_attributes
 
 
 class TokenSplit:
@@ -18,7 +18,7 @@ class TokenSplit:
     def __init__(self, token, split_idx, token_changes=None):
         self.first = copy.deepcopy(token)
         self.second = copy.deepcopy(token)
-        self.token1_changes, self.token2_changes = parse_cql_query(token_changes)
+        self.token_changes = token_changes
         self.idx = split_idx
 
     def split(self):
@@ -28,14 +28,10 @@ class TokenSplit:
         return self.first, self.second
 
     def replace_attrs(self):
-
-        if self.token1_changes:
-            for attr, value in self.token1_changes.items():
-                setattr(self.first, attr, value)
-
-        if self.token2_changes:
-            for attr, value in self.token2_changes.items():
-                setattr(self.second, attr, value)
+        if self.token_changes:
+            tokens = [self.first, self.second]
+            replace_token_attributes(tokens, self.token_changes)
+            self.first, self.second = tokens
 
     def split_on_idx(self):
         self.__split_contents()
