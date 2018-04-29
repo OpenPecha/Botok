@@ -53,7 +53,7 @@ class SplitAffixed:
         def split_syls(syls, split_idx):
             t_syls, a_syls = [], []
             for syl in syls:
-                if syl[-1] <= split_idx:
+                if syl[-1] < split_idx:
                     t_syls.append(syl)
                 else:
                     token_part, affix_part = [], []

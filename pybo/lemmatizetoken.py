@@ -9,11 +9,11 @@ class LemmatizeTokens:
     Fills the lemma attribute of a Token if the token has an unaffixed_word content
     in other words, if it is valid tibetan syllables.
     """
-    def __init__(self, custom_lemma_folder=None):
+    def __init__(self, lemma_folder=None):
         self.particles_path = os.path.join(os.path.split(__file__)[0], 'resources', 'lemmas', 'particles.yaml')
         self.paths = [os.path.join(os.path.split(__file__)[0], 'resources', 'lemmas')]
-        if custom_lemma_folder:
-            self.paths.append(custom_lemma_folder)
+        if lemma_folder:
+            self.paths.append(lemma_folder)
         self.lemmas = {}
         self.particles = {}
         self.parse_lemmas()

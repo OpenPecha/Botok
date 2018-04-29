@@ -7,7 +7,7 @@ tokens = tok.tokenize(input_str)
 
 
 def test_lemmatize():
-    lt = LemmatizeTokens()
+    lt = LemmatizeTokens(lemma_folder='../tests/resources/lemmas/')
     lt.lemmatize(tokens)
     assert tokens[1].content == 'འི་'
     assert tokens[1].lemma == 'གི'
