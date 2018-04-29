@@ -51,4 +51,5 @@ setup(
     ],
     package_data={'pybo': ['resources/*', 'resources/trie/*', 'resources/lemmas/*', 'resources/rules/*']},
     python_requires='>=3',
+    install_requires=['pyyaml']
 )
