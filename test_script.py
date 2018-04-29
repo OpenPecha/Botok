@@ -16,10 +16,10 @@ input_str = '༄༅། །རྒྱ་གར་སྐད་དུ། བོ་�
 
 # 2. CREATING THE OBJECTS 
 
-# 1.1. creating pre_processed object
+# 2.1. creating pre_processed object
 pre_processed = bo.PyBoTextChunks(input_str)
 
-# 1.2. creating tokens object
+# 2.2. creating tokens object
 tokens = tok.tokenize(input_str)
 
 # -------------------------
