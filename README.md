@@ -1,6 +1,8 @@
 <img src=https://raw.githubusercontent.com/mikkokotila/pybo/master/pybo_logo.png width=200>
 
-A word tokenizer for Tibetan language. Takes in chunks of text, and returns lists of words. 
+## Overview
+
+pybo is a word tokenizer for the Tibetan language entirely written in Python. pybo takes in chuncks of text, and returns lists of words. It provides an easy-to-use, high-performance tokenization pipeline that can be adapted either as a stand-alone solution or compliment.
 
 ## Getting Started 
 
