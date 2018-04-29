@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/Esukhia/pybo.svg?branch=master)](https://travis-ci.org/Esukhia/pybo)  [![Coverage Status](https://coveralls.io/repos/github/Esukhia/pybo/badge.svg?branch=master)](https://coveralls.io/github/Esukhia/pybo?branch=master)
+
 # pybo
 
 Pybo is a python tokenizer for Tibetan built as a tokenizer plugin for spaCy and the Tibetan editor. It takes in a string of raw tibetan text and spits out a list of Token objects.
