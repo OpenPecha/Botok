@@ -14,7 +14,7 @@ Or if you for some reason want to install from the latest Master branch:
 
 ## Use 
 
-To initiate the tokenizer together with part-of-speech capability: 
+#### To initiate the tokenizer together with part-of-speech capability: 
 
     # initialize the tokenizer
     pybo = bo.BoTokenizer('POS')
@@ -25,7 +25,7 @@ To initiate the tokenizer together with part-of-speech capability:
     # run the tokenizer
     tokens = tok.tokenize(input_str)
     
-Now in 'tokens' you have an iterable where each token consist of several meta-data:
+#### Now in 'tokens' you have an iterable where each token consist of several meta-data:
 
     # access the first token in the iterable
     tokens[0]
@@ -41,7 +41,17 @@ This will yield:
     tag: punct
     POS: punct    
     
-In case you want to access all words in a list: 
+#### In case you want to access all words in a list: 
 
     # iterate through the tokens object to get all the words in a list
     [t.content for t in tokens]
+
+#### Or just get all the nouns that were used in the text
+
+    # extract nouns from the tokens
+    [t.content for t in tokens if t.tag == 'NOUNᛃᛃᛃ']
+    
+These examples highlight the basic principle of accessing attributes within each token object. 
+
+
+
