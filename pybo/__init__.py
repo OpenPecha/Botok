@@ -21,7 +21,7 @@ from .tokenmerge import TokenMerge
 from .tokensplit import TokenSplit
 
 
-VERSION = "0.1.5"
+VERSION = "0.1.6"
 
 
 __all__ = ['AdjustTokens', 'BasicTrie', 'BoChunk', 'BoString', 'BoTokenizer', 'BoSyl', 'CQLMatcher', 'MergingMatcher',
