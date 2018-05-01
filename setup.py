@@ -11,7 +11,7 @@ from setuptools import setup, find_packages
 def read(fname):
     fname_rst = fname.replace('.md', '.rst')
     if os.path.exists(fname_rst):
-        return open(os.path.join(os.path.dirname(__file__), fname_rst)).read()
+        return open(os.path.join(os.path.dirname(__file__), fname_rst), encoding='utf-8').read()
     else:
         try:
             import pypandoc
@@ -20,12 +20,12 @@ def read(fname):
                 f.write(rst)
             return rst
         except (IOError, ImportError):
-            return open(os.path.join(os.path.dirname(__file__), fname)).read()
+            return open(os.path.join(os.path.dirname(__file__), fname), encoding='utf-8').read()
 
 
 setup(
     name="pybo",
-    version="0.1.5",  #edit version in __init__.py
+    version="0.1.6",  #edit version in __init__.py
     author="Esukhia development team",
     author_email="esukhiadev@gmail.com",
     description="Python utils for processing Tibetan",
