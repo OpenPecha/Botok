@@ -85,6 +85,23 @@ Strategy:
 
  - use the spaCy api to make the conversion
 
+### 5. Update Vocab, Lemma, Frequency, POS lists
+
+Status: Ongoing
+
+Strategy:
+
+- tsikchen list is a cleaned up version of the actual thing: compound words and >5 syl. were deleted
+- frequency is extracted from the non-lemmatized lexicon of ACTIB, needs to be upgraded when possible
+
+To do:
+
+- :)
+
+
+
+
+
 ## Licence
 
 The code is provided under [Apache Licence 2.0](LICENSE). Copyright ESUKHIA.
