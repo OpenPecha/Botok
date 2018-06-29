@@ -42,14 +42,14 @@ class BoTokenizer:
         self.lemmatize = lemmatize
         self.tok = Tokenizer(PyBoTrie(BoSyl(), profile=profile, user_word_list=user_word_list))
 
-    def tokenize(self, string, split_affixes=True):
+    def tokenize(self, string, split_affixes=True, debug=False):
         """
         :param string: to be tokenized
         :param split_affixes: separates the affixed particles into seperate tokens if True
         :return: list of pybo.tokenizer.Token objects
         """
         preprocessed = PyBoTextChunks(string)
-        tokens = self.tok.tokenize(preprocessed, split_affixes=split_affixes)
+        tokens = self.tok.tokenize(preprocessed, split_affixes=split_affixes, debug=debug)
         if self.lemmatize:
             LemmatizeTokens().lemmatize(tokens)
         return tokens

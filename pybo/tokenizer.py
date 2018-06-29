@@ -41,14 +41,14 @@ class Tokenizer:
             if chunk[0]:
                 # syl is extracted from input string, tsek added for the trie
                 syl = [self.pre_processed.string[idx] for idx in chunk[0]] + ['་']
-                self.debug(debug, syl)
+                self.debug(debug, '\n{}: {}'.format(c_idx, ''.join(syl)))
 
                 # >>> WALKING THE TRIE >>>
                 s_idx = 0
                 while s_idx <= len(syl)-1:
                     # beginning of current syllable
                     if s_idx == 0:
-                        self.debug(debug, syl[s_idx])
+                        self.debug(debug, '\t{}\t{}'.format(s_idx, syl[s_idx]))
 
                         # begining of current word
                         if not current_node:
@@ -65,7 +65,7 @@ class Tokenizer:
 
                     # continuing to walk
                     elif current_node and current_node.can_walk():
-                        self.debug(debug, syl[s_idx])
+                        self.debug(debug, '\t{}\t{}'.format(s_idx, syl[s_idx]))
                         current_node = self.trie.walk(syl[s_idx], current_node)
                         if current_node and current_node.is_match():
                             match_data[c_idx] = current_node.data
