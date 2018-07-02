@@ -67,15 +67,17 @@ class Tokenizer:
                     elif current_node and current_node.can_walk():
                         self.debug(debug, '\t{}\t{}'.format(s_idx, syl[s_idx]))
                         current_node = self.trie.walk(syl[s_idx], current_node)
-                        if current_node and current_node.is_match():
+                        if current_node and (current_node.is_match() or s_idx == len(syl) - 1):
                             match_data[c_idx] = current_node.data
                 # <<<<<<<<<<<<<<<<<<<<<<<<
 
-                        if not current_node and syls:
+                        elif not current_node and syls:
                             if not has_decremented:
                                 c_idx -= 1
                                 has_decremented = True
                             went_to_max = True
+                        elif not current_node and not syls:
+                            is_non_word = True
                         s_idx += 1
 
                     # CAN'T CONTINUE WALKING
