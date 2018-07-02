@@ -186,8 +186,13 @@ class BoChunk(BoString):
         """
         Tests whether the character at the given index is a Tibetan punctuation or not.
         """
+        # if a tsek if right after a punctuation
+        if char_idx and self.base_structure[char_idx-1] == self.PUNCT and \
+                self.base_structure[char_idx] == self.TSEK:
+            return True
         return self.base_structure[char_idx] == self.PUNCT or \
             self.base_structure[char_idx] == self.SPECIAL_PUNCT
+
 
     def chunk_spaces(self, start=None, end=None, yes=104, no=105):
         """
