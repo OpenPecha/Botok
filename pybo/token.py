@@ -21,6 +21,8 @@ class Token:
                              13: 'no-bo-no-skrt', 14: 'other', 15: 'space', 16: 'underscore'}
         self.chunk_markers = {100: 'bo', 101: 'non-bo', 102: 'punct', 103: 'non-punct', 104: 'space', 105: 'non-space',
                               106: 'syl', 1000: 'word', 1001: 'non-word'}
+        self.freq = 0
+        self.skrt = False
         self._ = {}  # dict for any user specific data
 
     def __getitem__(self, item):
@@ -36,6 +38,8 @@ class Token:
                    'pos': self.pos,
                    'affix': self.affix,
                    'affixed': self.affixed,
+                   'skrt': self.skrt,
+                   'freq': self.freq,
                    'cleaned_content': self.cleaned_content,
                    'unaffixed_word': self.unaffixed_word}
         if item in mapping:
@@ -109,5 +113,9 @@ class Token:
         out += '\nPOS: '
         if self.pos:
             out += self.pos
+        out += '\nskrt: "' + str(self.skrt) + '"'
+        out += '\nfreq: '
+        if self.freq:
+            out += str(self.freq)
         out += '\n'
         return out
