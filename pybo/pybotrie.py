@@ -50,13 +50,13 @@ class PyBoTrie(BasicTrie):
                  8: 'oral_corpus_2.txt',
                  9: 'oral_corpus_3.txt',
                  10: 'recordings_4.txt',
-                 11: 'gmd.txt'}
+                 11: 'mgd.txt'}
         tests = {1: 'test.txt'}
-        freq = {1: 'gmd_freq.txt'}
+        freq = {1: 'mgd_freq.txt'}
         profiles = {
                     'pytib': [files[1], files[2], files[3], files[5], 'particles.txt'],
                     'POS': [files[1], files[2], files[3], files[5], 'particles.txt'],
-	                'GMD': [files[1], files[2], files[3], files[5], 'particles.txt'],
+                    'MGD': [files[1], files[2], files[3], files[5], 'particles.txt'],
                     'empty': [],
                     'test': [tests[1]]
                     }
@@ -78,9 +78,9 @@ class PyBoTrie(BasicTrie):
             full_path_pos = os.path.join(os.path.split(__file__)[0], 'resources', 'trie', "Tibetan.DICT")
             self.__add_one_file(full_path_pos, data_only=True)
 
-        if self.profile == 'GMD':
+        if self.profile == 'MGD':
             full_path_dict = os.path.join(os.path.split(__file__)[0], 'resources', 'trie', "Tibetan.DICT")
-            full_path_freq = os.path.join(os.path.split(__file__)[0], 'resources', 'trie', "gmd_freq.txt")
+            full_path_freq = os.path.join(os.path.split(__file__)[0], 'resources', 'trie', "mgd_freq.txt")
             self.__add_one_file(full_path_dict, data_only=True)
             self.__add_one_file(full_path_freq, ins="freq", data_only=True)
 
