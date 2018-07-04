@@ -76,7 +76,9 @@ class PyBoTrie(BasicTrie):
 
         if self.profile == 'POS':
             full_path_pos = os.path.join(os.path.split(__file__)[0], 'resources', 'trie', "Tibetan.DICT")
+            full_path_freq = os.path.join(os.path.split(__file__)[0], 'resources', 'trie', "mgd_freq.txt")
             self.__add_one_file(full_path_pos, data_only=True)
+            self.__add_one_file(full_path_freq, ins="freq", data_only=True)
 
         if self.profile == 'MGD':
             full_path_dict = os.path.join(os.path.split(__file__)[0], 'resources', 'trie', "Tibetan.DICT")
