@@ -44,7 +44,7 @@ def test_non_max_end_of_string():
 
 def test_split_token():
     trie = PyBoTrie(BoSyl(), 'empty')
-    trie.inflect_n_add('བདེ་བ་', 'NOUN')
+    trie.inflect_n_add('བདེ་བ་', 'NOUN', ins='data')
     trie.add('གཏན་', 'NOUN')
     trie.add('གྱི་', data='PART')
     tok = Tokenizer(trie)
