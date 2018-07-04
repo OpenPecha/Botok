@@ -32,7 +32,7 @@ This is a list of all particles, compiled by hand, with the `PART` POS tag.
 
 This file has been extracted from:
 
-[Meelen, Marieke, Hill, Nathan, & Handy, Christopher. (2017). The Annotated Corpus of Classical Tibetan (ACTib), Part II - POS-tagged version, based on the BDRC digitised text collection, tagged with the Memory-Based Tagger from TiMBL [Data set]. Zenodo. http://doi.org/10.5281/zenodo.822537](https://doi.org/10.5281/zenodo.822537)
+Meelen, Marieke, Hill, Nathan, & Handy, Christopher. (2017). The Annotated Corpus of Classical Tibetan (ACTib), Part II - POS-tagged version, based on the BDRC digitised text collection, tagged with the Memory-Based Tagger from TiMBL [Data set]. Zenodo. [http://doi.org/10.5281/zenodo.822537](https://doi.org/10.5281/zenodo.822537)
 
 It is available under the [CC-BY 4.0 license](https://creativecommons.org/licenses/by/4.0/).
 
