@@ -1,5 +1,5 @@
 # coding: utf-8
-
+from re import search
 
 class BoString:
     """
@@ -158,3 +158,25 @@ class BoString:
             return {n: self.base_structure[i] for n, i in enumerate(range(start_idx, start_idx + slice_len))}
         else:
             return {i: self.base_structure[i] for i in range(start_idx, start_idx + slice_len)}
+
+    @staticmethod
+    def _is_skrt_syl(syl):
+        """
+        Checks whether a given syllable is Sanskrit.
+        Uses the regexes of Paul Hackett from his Visual Basic script
+
+        :param syl: syllable to test
+        :return: True if it is Sanskrit, False otherwise
+
+        .. note:: the original comments are preserved
+        .. Todo:: find source
+        """
+        # Now do Sanskrit: Skt.vowels, [g|d|b|dz]+_h, hr, shr, Skt
+        regex1 = r"([ཀ-ཬཱ-྅ྐ-ྼ]{0,}[ཱཱཱིུ-ཹཻཽ-ྃ][ཀ-ཬཱ-྅ྐ-ྼ]{0,}|[ཀ-ཬཱ-྅ྐ-ྼ]{0,}[གཌདབཛྒྜྡྦྫ][ྷ][ཀ-ཬཱ-྅ྐ-ྼ]{0,}|" \
+                 r"[ཀ-ཬཱ-྅ྐ-ྼ]{0,}[ཤཧ][ྲ][ཀ-ཬཱ-྅ྐ-ྼ]{0,}|" \
+                 r"[ཀ-ཬཱ-྅ྐ-ྼ]{0,}[གྷཊ-ཎདྷབྷཛྷཥཀྵ-ཬཱཱཱིུ-ཹཻཽ-ྃྒྷྚ-ྞྡྷྦྷྫྷྵྐྵ-ྼ][ཀ-ཬཱ-྅ྐ-ྼ]{0,})"
+        # more Sanskrit: invalid superscript-subscript pairs
+        regex2 = r"([ཀ-ཬཱ-྅ྐ-ྼ]{0,}[ཀཁགང-ཉཏ-དན-བམ-ཛཝ-ཡཤཧཨ][ྐ-ྫྷྮ-ྰྴ-ྼ][ཀ-ཬཱ-྅ྐ-ྼ]{0,})"
+        # tsa-phru mark used in Chinese transliteration
+        regex3 = r"([ཀ-ཬཱ-྅ྐ-ྼ]{0,}[༹][ཀ-ཬཱ-྅ྐ-ྼ]{0,})"
+        return search(regex1, syl) or search(regex2, syl) or search(regex3, syl)

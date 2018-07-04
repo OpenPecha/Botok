@@ -3,8 +3,6 @@ from .token import Token
 from .splitaffixed import SplitAffixed
 from .helpers import AFFIX_SEP
 
-from re import search
-
 
 class Tokenizer:
     """
@@ -207,7 +205,6 @@ class Tokenizer:
 
     def create_token(self, ttype, start, length, syls, tag=None, freq=0):
         """
-
         :param ttype: token type
         :param start: start index in input string
         :param length: length of the substring from the input string corresponding to this token
@@ -263,34 +260,9 @@ class Tokenizer:
         if token.syls:
             for syl in token.syls:
                 clean_syl = ''.join([token.content[s] for s in syl])
-                if self._is_skrt_syl(clean_syl):
+                if self.pre_processed._is_skrt_syl(clean_syl):
                     has_skrt = True
         return has_skrt
-
-    @staticmethod
-    def _is_skrt_syl(syl):
-        """
-        Checks whether a given syllable is Sanskrit.
-        Uses the regexes of Paul Hackett from his Visual Basic script
-
-        :param syl: syllable to test
-        :return: True if it is Sanskrit, False otherwise
-
-        .. note:: the original comments are preserved
-        .. Todo:: find source
-        """
-        # Now do Sanskrit: Skt.vowels, [g|d|b|dz]+_h, hr, shr, Skt
-        regex1 = r"([ཀ-ཬཱ-྅ྐ-ྼ]{0,}[ཱཱཱིུ-ཹཻཽ-ྃ][ཀ-ཬཱ-྅ྐ-ྼ]{0,}|[ཀ-ཬཱ-྅ྐ-ྼ]{0,}[གཌདབཛྒྜྡྦྫ][ྷ][ཀ-ཬཱ-྅ྐ-ྼ]{0,}|" \
-                 r"[ཀ-ཬཱ-྅ྐ-ྼ]{0,}[ཤཧ][ྲ][ཀ-ཬཱ-྅ྐ-ྼ]{0,}|" \
-                 r"[ཀ-ཬཱ-྅ྐ-ྼ]{0,}[གྷཊ-ཎདྷབྷཛྷཥཀྵ-ཬཱཱཱིུ-ཹཻཽ-ྃྒྷྚ-ྞྡྷྦྷྫྷྵྐྵ-ྼ][ཀ-ཬཱ-྅ྐ-ྼ]{0,})"
-        # more Sanskrit: invalid superscript-subscript pairs
-        regex2 = r"([ཀ-ཬཱ-྅ྐ-ྼ]{0,}[ཀཁགང-ཉཏ-དན-བམ-ཛཝ-ཡཤཧཨ][ྐ-ྫྷྮ-ྰྴ-ྼ][ཀ-ཬཱ-྅ྐ-ྼ]{0,})"
-        # tsa-phru mark used in Chinese transliteration
-        regex3 = r"([ཀ-ཬཱ-྅ྐ-ྼ]{0,}[༹][ཀ-ཬཱ-྅ྐ-ྼ]{0,})"
-        return search(regex1, syl) or search(regex2, syl) or search(regex3, syl)
-
-    def frequency(self):
-        pass
 
     @staticmethod
     def debug(debug, to_print):

@@ -83,6 +83,7 @@ class SplitAffixed:
         t.length = token_length
         t.syls = token_syls
         t.tag = token_tag
+        t.freq = token.freq
         t.char_groups = token_char_groups
         t.affix = False
         t.affixed = True
@@ -98,6 +99,7 @@ class SplitAffixed:
         a.length = affix_length
         a.syls = affix_syls
         a.tag = affix_tag
+        # The affixed part frequency is not added for the moment in Pybo
         a.char_groups = affix_char_groups
         a.affix = True
         a.affixed = False

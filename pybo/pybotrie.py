@@ -122,10 +122,7 @@ class PyBoTrie(BasicTrie):
                     word = word[1:]
                     remove_word = True
 
-                #if ins == "data":
                 self.inflect_n_add(word, pos, ins, data_only, remove_word)
-                #else:
-                #self.modify_tree(word + self.TSEK, pos, ins, data_only, remove_word)
 
     def inflect_n_add(self, word, pos, ins, data_only=False, remove_word=False):
         """
@@ -141,12 +138,17 @@ class PyBoTrie(BasicTrie):
         if self.bosyl.is_affixable(last_syl):
             affixed = self.bosyl.get_all_affixed(last_syl)
             for a in affixed:
-                data = '{}{}{}{}{}{}{}'.format(pos, AFFIX_SEP,
-                                               a[1]['POS'], AFFIX_SEP,
-                                               a[1]['len'], AFFIX_SEP,
-                                               a[1]['aa'])
-                self.modify_tree(word=beginning+a[0]+self.TSEK, data=data, ins=ins, data_only=data_only, remove_word=remove_word)
-        self.modify_tree(word=word + self.TSEK, data='{}{}{}{}'.format(pos, AFFIX_SEP, AFFIX_SEP, AFFIX_SEP), ins=ins, data_only=data_only, remove_word=remove_word)
+                if ins == "data":
+                    data = '{}{}{}{}{}{}{}'.format(pos, AFFIX_SEP,
+                                                    a[1]['POS'], AFFIX_SEP,
+                                                    a[1]['len'], AFFIX_SEP,
+                                                    a[1]['aa'])
+                else:
+                    data = pos
+                self.modify_tree(beginning+a[0]+self.TSEK, data, ins, data_only, remove_word)
+
+        data = '{}{}{}{}'.format(pos, AFFIX_SEP, AFFIX_SEP, AFFIX_SEP) if ins == "data" else pos
+        self.modify_tree(word + self.TSEK, data, ins, data_only, remove_word)
 
     def modify_tree(self, word, data, ins="data", data_only=False, remove_word=False):
         if remove_word and data_only:
