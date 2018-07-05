@@ -13,6 +13,8 @@ length: 7
 syl chars in content(བཀྲ ཤིས): [[0, 1, 2], [4, 5, 6]]
 tag: NOUN
 POS: NOUN
+skrt: "False"
+freq: 
 """
     assert tokens[0].__repr__() == expected
     assert tokens[1].content == '།'
