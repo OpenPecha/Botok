@@ -8,7 +8,7 @@ from .replacingmatcher import ReplacingMatcher
 
 class AdjustTokens:
     def __init__(self, rules_folder=None):
-        self.paths = [os.path.join(os.path.split(__file__)[0], 'resources', 'rules')]
+        self.paths = [] # [os.path.join(os.path.split(__file__)[0], 'resources', 'rules')]
         if rules_folder:
             self.paths.append(rules_folder)
         self.rules = []
