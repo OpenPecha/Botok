@@ -1,4 +1,7 @@
 from pybo import *
+import os
+
+rules_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "resources", "rules")
 
 
 input_str = ' མཐའི་རྒྱ་མཚོའི་གླིང་། ཤི་བཀྲ་ཤིས་  tr བདེ་་ལེ གས། བཀྲ་ཤིས་བདེ་ལེགས་ཀཀ'
@@ -72,7 +75,7 @@ def test_match_replace():
 def test_adjust_tokens():
     string = 'ན་ན་ན་སྟེ་ན་བས་དགའ།། རྐྱེན་ངན་གྱིས་བར་དུ་མ་ཆོད་ཅིང་། །'
     token_list = tok.tokenize(string)
-    at = AdjustTokens(rules_folder='../tests/resources/rules/')
+    at = AdjustTokens(rules_folder=rules_path)
     adjusted = at.adjust(token_list)
     assert token_list[10].content == 'བར་'
     assert token_list[11].content == 'དུ་མ་'
