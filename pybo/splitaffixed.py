@@ -84,6 +84,7 @@ class SplitAffixed:
         t.syls = token_syls
         t.tag = token_tag
         t.freq = token.freq
+        t.skrt = token.skrt
         t.char_groups = token_char_groups
         t.affix = False
         t.affixed = True
