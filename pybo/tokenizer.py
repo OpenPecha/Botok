@@ -49,19 +49,9 @@ class Tokenizer:
                     # beginning of current syllable
                     if s_idx == 0:
                         self.debug(debug, syl[s_idx])
-
-                        # begining of current word
-                        if not current_node:
-                            current_node = self.trie.walk(syl[s_idx], self.trie.head)
-                            if current_node and current_node.is_match():
-                                match_data[c_idx] = (current_node.data, current_node.freq)
-
-                        # walking resumed after previous syllable
-                        else:
-                            current_node = self.trie.walk(syl[s_idx], current_node)
-                            if current_node and current_node.is_match():
-                                match_data[c_idx] = (current_node.data, current_node.freq)
-                        s_idx += 1
+                        current_node = self.trie.walk(syl[s_idx], current_node)
+                        if current_node and current_node.is_match():
+                            match_data[c_idx] = (current_node.data, current_node.freq)
 
                     # continuing to walk
                     elif current_node and current_node.can_walk():
@@ -71,30 +61,26 @@ class Tokenizer:
                             match_data[c_idx] = (current_node.data, current_node.freq)
                 # <<<<<<<<<<<<<<<<<<<<<<<<
 
-                        elif not current_node and syls:
-                            if not has_decremented:
-                                c_idx -= 1
-                                has_decremented = True
+                        elif not current_node:
+                            if  syls:
+                                if not has_decremented:
+                                    c_idx -= 1
+                                    has_decremented = True
+                                went_to_max = True
+                            else:
+                                is_non_word = True
+
+                        elif current_node and not syls and s_idx == len(syl)-1:
                             went_to_max = True
-                        elif not current_node and not syls:
                             is_non_word = True
-                        elif s_idx == len(syl) - 1:
-                            went_to_max = True
-                        s_idx += 1
 
                     # CAN'T CONTINUE WALKING
                     else:
-
                         # a. potential word(syls) is not empty
                         if syls:
-                            # need to finish looping over current syl
-                            if went_to_max:
-                                s_idx += 1
-                                continue
-
                             # couldn't walk this syl until the end.
                             # decrementing chunk-idx for a new attempt to find a match
-                            if not has_decremented:
+                            if not (has_decremented or went_to_max):
                                 c_idx -= 1
                                 has_decremented = True  # ensures we only decrement once per syl
                             went_to_max = True
@@ -103,7 +89,7 @@ class Tokenizer:
                         else:
                             # there is only a non-word
                             is_non_word = True
-                        s_idx += 1
+                    s_idx += 1
 
                 # FINISHED LOOPING OVER CURRENT SYL
                 if is_non_word:
