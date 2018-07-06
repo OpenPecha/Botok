@@ -70,10 +70,6 @@ class Tokenizer:
                             else:
                                 is_non_word = True
 
-                        elif current_node and not syls and s_idx == len(syl)-1:
-                            went_to_max = True
-                            is_non_word = True
-
                     # CAN'T CONTINUE WALKING
                     else:
                         # a. potential word(syls) is not empty
@@ -100,13 +96,11 @@ class Tokenizer:
                     syls = []
 
                 else:
-
                     if went_to_max:
                         if not has_decremented:
                             c_idx -= 1
-
                         else:
-                            c_idx = self.add_found_word_or_non_word(c_idx, match_data, syls, tokens)
+                            c_idx = self.add_found_word_or_non_word(c_idx, match_data, syls, tokens, has_decremented)
                             match_data = {}
                             syls = []
                         went_to_max = False
@@ -126,6 +120,7 @@ class Tokenizer:
 
                 tokens.append(self.chunks_to_token([c_idx]))
 
+
             # END OF INPUT
             # if we reached end of input and there is a non-max-match
             if len(self.pre_processed.chunks) - 1 == c_idx:
@@ -133,6 +128,9 @@ class Tokenizer:
                     c_idx = self.add_found_word_or_non_word(c_idx, match_data, syls, tokens)
                     syls = []
                     current_node = None
+                if has_decremented:
+                    c_idx -= 1
+
             c_idx += 1
 
         # a potential token was left
@@ -142,10 +140,11 @@ class Tokenizer:
         self.pre_processed = None
 
         if split_affixes:
-            SplitAffixed().split(tokens)
+            s = SplitAffixed()
+            s.split(tokens)
         return tokens
 
-    def add_found_word_or_non_word(self, c_idx, match_data, syls, tokens):
+    def add_found_word_or_non_word(self, c_idx, match_data, syls, tokens, has_decremented=False):
         # there is a match
         if c_idx in match_data.keys():
             tokens.append(self.chunks_to_token(syls, tag=match_data[c_idx][0], freq=match_data[c_idx][1]))
@@ -164,6 +163,8 @@ class Tokenizer:
             # decrement chunk-idx for a new attempt to find a match
             if syls:
                 c_idx -= len(syls[1:]) - 1
+            if has_decremented or (c_idx < len(self.pre_processed.chunks) and self.pre_processed.chunks[c_idx][1][0] == 102):
+                c_idx -= 1
         return c_idx
 
     def chunks_to_token(self, syls, tag=None, freq=0, ttype=None):
