@@ -162,7 +162,7 @@ class Tokenizer:
             # decrement chunk-idx for a new attempt to find a match
             if syls:
                 c_idx -= len(syls[1:]) - 1
-            if has_decremented or (c_idx < len(self.pre_processed.chunks) and self.pre_processed.chunks[c_idx][1][0] == 102):
+            if has_decremented or (c_idx < len(self.pre_processed.chunks) and self.pre_processed.chunks[c_idx][0] == None):
                 c_idx -= 1
         return c_idx
 
