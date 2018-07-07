@@ -187,7 +187,8 @@ class BoChunk(BoString):
         Tests whether the character at the given index is a Tibetan punctuation or not.
         """
         # if a tsek if right after a punctuation
-        if char_idx and self.base_structure[char_idx-1] == self.PUNCT and \
+        if char_idx and (self.base_structure[char_idx-1] == self.PUNCT or \
+            self.base_structure[char_idx-1] == self.SPECIAL_PUNCT) and \
                 self.base_structure[char_idx] == self.TSEK:
             return True
         return self.base_structure[char_idx] == self.PUNCT or \
