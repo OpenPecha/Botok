@@ -13,6 +13,8 @@ length: 7
 syl chars in content(བཀྲ ཤིས): [[0, 1, 2], [4, 5, 6]]
 tag: NOUN
 POS: NOUN
+skrt: "False"
+freq: 
 """
     assert tokens[0].__repr__() == expected
     assert tokens[1].content == '།'
@@ -44,7 +46,7 @@ def test_non_max_end_of_string():
 
 def test_split_token():
     trie = PyBoTrie(BoSyl(), 'empty')
-    trie.inflect_n_add('བདེ་བ་', 'NOUN')
+    trie.inflect_n_add('བདེ་བ་', 'NOUN', ins='data')
     trie.add('གཏན་', 'NOUN')
     trie.add('གྱི་', data='PART')
     tok = Tokenizer(trie)

@@ -5,10 +5,11 @@
 
 
 class Node:
-    def __init__(self, label=None, leaf=False, data=None):
+    def __init__(self, label=None, leaf=False, data=None, freq=None):
         self.label = label
         self.leaf = leaf
         self.data = data
+        self.freq = freq
         self.children = dict()
 
     def add_child(self, key, leaf=False):
@@ -93,7 +94,7 @@ class BasicTrie:
         else:
             return {'exists': exists}
 
-    def add_data_to_word(self, word, data, overwrite=False):
+    def add_data_to_word(self, word, data, ins, overwrite=False):
         """ Adds data to a word, returns True if the data was added, False otherwise """
         if not word or word == '':
             return False
@@ -108,14 +109,22 @@ class BasicTrie:
         if not current_node.leaf:
             return False
 
-        if current_node.data:
+        to_data = True if ins == "data" else False
+        if (to_data and current_node.data) or \
+                (to_data == False and current_node.freq):
             if overwrite:
-                current_node.data = data
+                if to_data:
+                    current_node.data = data
+                else:
+                    current_node.freq = data
                 return True
             else:
                 return False
         else:
-            current_node.data = data
+            if to_data:
+                current_node.data = data
+            else:
+                current_node.freq = data
             return True
 
     def remove_word(self, word):
@@ -130,6 +139,7 @@ class BasicTrie:
                 return False
         current_node.leaf = False
         current_node.data = None
+        current_node.freq = None
         return True
 
 

@@ -13,8 +13,8 @@ def test_pybotrie():
 
 def test_affixed_entries():
     bt = PyBoTrie(BoSyl(), 'empty')
-    bt.inflect_n_add('གྲུབ་མཐའ་', 'NOUN')  # adds all inflected forms
-    bt.inflect_n_add('བཀྲ་ཤིས་', 'NOUN')  # only adds one entry in the trie
+    bt.inflect_n_add('གྲུབ་མཐའ་', 'NOUN', ins='data')  # adds all inflected forms
+    bt.inflect_n_add('བཀྲ་ཤིས་', 'NOUN', ins='data')  # only adds one entry in the trie
     assert bt.has_word('བཀྲ་ཤིས་') == {'data': 'NOUNᛃᛃᛃ', 'exists': True}
     assert bt.has_word('བཀྲ་ཤིསའི་') == {'exists': False}
     assert bt.has_word('གྲུབ་མཐའ་') == {'data': 'NOUNᛃᛃᛃ', 'exists': True}

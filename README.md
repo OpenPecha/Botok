@@ -41,7 +41,9 @@ This will yield:
     length: 4
     syl chars in content: None
     tag: punct
-    POS: punct    
+    POS: punct
+    skr: "False"
+    freq: 
     
 #### In case you want to access all words in a list: 
 
