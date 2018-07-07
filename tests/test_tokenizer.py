@@ -3,6 +3,7 @@ from pybo import *
 
 def test_token_to_string():
     tok = Tokenizer(PyBoTrie(BoSyl(), 'empty'))
+    tok.trie.rebuild_trie()
     tok.trie.add('བཀྲ་ཤིས་', data='NOUN')
     tokens = tok.tokenize(PyBoTextChunks('བཀྲ་ཤིས།'))
     expected = """content: "བཀྲ་ཤིས"
@@ -24,6 +25,7 @@ freq:
 
 def test_non_max2():
     tok = Tokenizer(PyBoTrie(BoSyl(), 'empty'))
+    tok.trie.rebuild_trie()
     tok.trie.add('བཀྲ་ཤིས་', data='NOUN')
     tok.trie.add('བཀྲ་ཤིས་བདེ་ལེགས།', data='EXCL')
     tokens = tok.tokenize(PyBoTextChunks('བཀྲ་ཤིས་བདེ་བཀྲ་'))
@@ -37,6 +39,7 @@ def test_non_max2():
 
 def test_non_max_end_of_string():
     tok = Tokenizer(PyBoTrie(BoSyl(), 'empty'))
+    tok.trie.rebuild_trie()
     tok.trie.add('བཀྲ་ཤིས་')
     tok.trie.add('བཀྲ་ཤིས་བདེ་ལེགས།')
     tokens = tok.tokenize(PyBoTextChunks('བཀྲ་ཤིས་བདེ་'))
@@ -46,6 +49,7 @@ def test_non_max_end_of_string():
 
 def test_split_token():
     trie = PyBoTrie(BoSyl(), 'empty')
+    trie.rebuild_trie()
     trie.inflect_n_add('བདེ་བ་', 'NOUN', ins='data')
     trie.add('གཏན་', 'NOUN')
     trie.add('གྱི་', data='PART')

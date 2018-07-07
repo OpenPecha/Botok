@@ -1,6 +1,7 @@
 from pybo import *
 
 tok = BoTokenizer('POS')
+tok.tok.trie.rebuild_trie()
 
 
 def test_missing_token1():
@@ -78,7 +79,8 @@ def test_missing_token12():
 def test_missing_token13():
     input_str = "།ཨོཾ་གི་རི་ཧི་རི་ཙི་རི། །ཨཱ་ཨཱ་ཤུ་མ་ཤ་"
     tokens = tok.tokenize(input_str)
-    assert ['།', 'ཨོཾ་', 'གི་', 'རི་', 'ཧི་', 'རི་', 'ཙི་', 'རི', '། ', '།', 'ཨཱ་', 'ཨཱ་', 'ཤུ་', 'མ་', 'ཤ་'] == [t.content for t in tokens]
+    assert ['།', 'ཨོཾ་', 'གི་', 'རི་', 'ཧི་', 'རི་', 'ཙི་', 'རི', '། ', '།',
+            'ཨཱ་', 'ཨཱ་', 'ཤུ་', 'མ་', 'ཤ་'] == [t.content for t in tokens]
 
 
 def test_missing_token14():
@@ -182,6 +184,7 @@ def test_missing_token30():
     tokens = tok.tokenize(input_str)
     assert ['བཀྲ་', 'མ', '།'] == [t.content for t in tokens]
 
+
 # Has to be corrected together with the DICT file
 """def test_missing_token31():
     # པར
@@ -249,6 +252,7 @@ def test_missing_token41():
     tokens = tok.tokenize(input_str)
     assert ['གཏུམ་', 'བྱེད་', 'དང་'] == [t.content for t in tokens]
 
+
 # Has to be corrected together with the DICT file
 """def test_missing_token42():
     # བས
@@ -291,6 +295,7 @@ def test_missing_token48():
     input_str = "ནུ་ཧེ་རུ་"
     tokens = tok.tokenize(input_str)
     assert ['ནུ་', 'ཧེ་', 'རུ་'] == [t.content for t in tokens]
+
 
 # Has to be corrected together with the DICT file
 """def test_missing_token49():

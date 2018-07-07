@@ -62,7 +62,7 @@ class Tokenizer:
                 # <<<<<<<<<<<<<<<<<<<<<<<<
 
                         elif not current_node:
-                            if  syls:
+                            if syls:
                                 if not has_decremented:
                                     c_idx -= 1
                                     has_decremented = True
@@ -119,7 +119,6 @@ class Tokenizer:
                     current_node = None
 
                 tokens.append(self.chunks_to_token([c_idx]))
-
 
             # END OF INPUT
             # if we reached end of input and there is a non-max-match

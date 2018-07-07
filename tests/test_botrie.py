@@ -6,6 +6,7 @@ from pybo import BoSyl
 
 def test_pybotrie():
     bt = PyBoTrie(BoSyl(), 'empty')
+    bt.rebuild_trie()
     bt.add('གྲུབ་མཐའ་', 'pos-tag')
     assert bt.has_word('གྲུབ་མཐའི་') == {'exists': False}
     assert bt.has_word('གྲུབ་མཐའ་') == {'exists': True, 'data': 'pos-tag'}
@@ -37,12 +38,14 @@ def test_trie():
 
 def test_building_trie():
     bt = PyBoTrie(BoSyl(), 'test')
+    bt.rebuild_trie()
     assert bt.has_word('བཀྲ་ཤིས་') == {'data': 'NOUNᛃᛃᛃ', 'exists': True}
     assert bt.has_word('ཤིས་') == {'data': 'NOUNᛃᛃᛃ', 'exists': True}
 
 
 def test_deactivate_trie_entries():
     trie = PyBoTrie(BoSyl(), 'empty')
+    trie.rebuild_trie()
     word = 'བཀྲ་ཤིས་'
     trie.add(word)
     assert trie.has_word(word)
