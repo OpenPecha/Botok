@@ -13,6 +13,7 @@ class PyBoTrie(BasicTrie):
         self.TSEK = '་'
         self.COMMENT = '#'
         self.profile = profile
+        #self.freq =
         self.pickled_file = profile + '_trie.pickled'
         self.user_word_list = user_word_list
         self.load_or_build_trie(build)
@@ -51,10 +52,11 @@ class PyBoTrie(BasicTrie):
                  10: 'recordings_4.txt',
                  11: 'mgd.txt'}
         tests = {1: 'test.txt'}
+        freq = {1: 'mgd_freq.txt'}
         profiles = {
                     'pytib': [files[1], files[2], files[3], files[5], 'particles.txt'],
                     'POS': [files[1], files[2], files[3], files[5], 'particles.txt'],
-	'MGD': [files[11], 'particles.txt'],
+                    'MGD': [files[1], files[2], files[3], files[5], 'particles.txt'],
                     'empty': [],
                     'test': [tests[1]]
                     }
@@ -74,14 +76,22 @@ class PyBoTrie(BasicTrie):
 
         if self.profile == 'POS':
             full_path_pos = os.path.join(os.path.split(__file__)[0], 'resources', 'trie', "Tibetan.DICT")
+            full_path_freq = os.path.join(os.path.split(__file__)[0], 'resources', 'trie', "mgd_freq.txt")
             self.__add_one_file(full_path_pos, data_only=True)
+            self.__add_one_file(full_path_freq, ins="freq", data_only=True)
+
+        if self.profile == 'MGD':
+            full_path_dict = os.path.join(os.path.split(__file__)[0], 'resources', 'trie', "Tibetan.DICT")
+            full_path_freq = os.path.join(os.path.split(__file__)[0], 'resources', 'trie', "mgd_freq.txt")
+            self.__add_one_file(full_path_dict, data_only=True)
+            self.__add_one_file(full_path_freq, ins="freq", data_only=True)
 
         with open(self.pickled_file, 'wb') as f:
             pickle.dump(self.head, f, pickle.HIGHEST_PROTOCOL)
         end = time.time()
         print('Time:', end - start)
 
-    def __add_one_file(self, in_file, data_only=False):
+    def __add_one_file(self, in_file, ins="data", data_only=False):
         """
         files can have comments starting with #
         spaces and empty lines are trimmed
@@ -114,9 +124,9 @@ class PyBoTrie(BasicTrie):
                     word = word[1:]
                     remove_word = True
 
-                self.inflect_n_add(word, pos, data_only, remove_word)
+                self.inflect_n_add(word, pos, ins, data_only, remove_word)
 
-    def inflect_n_add(self, word, pos, data_only=False, remove_word=False):
+    def inflect_n_add(self, word, pos, ins, data_only=False, remove_word=False):
         """
         Add to the trie all the affixed versions of the word
         :param word: a word without ending tsek
@@ -130,22 +140,27 @@ class PyBoTrie(BasicTrie):
         if self.bosyl.is_affixable(last_syl):
             affixed = self.bosyl.get_all_affixed(last_syl)
             for a in affixed:
-                data = '{}{}{}{}{}{}{}'.format(pos, AFFIX_SEP,
-                                               a[1]['POS'], AFFIX_SEP,
-                                               a[1]['len'], AFFIX_SEP,
-                                               a[1]['aa'])
-                self.modify_tree(beginning+a[0]+self.TSEK, data, data_only, remove_word)
-        self.modify_tree(word + self.TSEK, '{}{}{}{}'.format(pos, AFFIX_SEP, AFFIX_SEP, AFFIX_SEP), data_only, remove_word)
+                if ins == "data":
+                    data = '{}{}{}{}{}{}{}'.format(pos, AFFIX_SEP,
+                                                    a[1]['POS'], AFFIX_SEP,
+                                                    a[1]['len'], AFFIX_SEP,
+                                                    a[1]['aa'])
+                else:
+                    data = pos
+                self.modify_tree(beginning+a[0]+self.TSEK, data, ins, data_only, remove_word)
 
-    def modify_tree(self, word, data, data_only=False, remove_word=False):
+        data = '{}{}{}{}'.format(pos, AFFIX_SEP, AFFIX_SEP, AFFIX_SEP) if ins == "data" else pos
+        self.modify_tree(word + self.TSEK, data, ins, data_only, remove_word)
+
+    def modify_tree(self, word, data, ins="data", data_only=False, remove_word=False):
         if remove_word and data_only:
-            self.add_data_to_word(word, None)
+            self.add_data_to_word(word, None, ins)
         elif remove_word:
             self.remove_word(word)
         elif not data_only:
             self.add(word, data)
         else:
-            self.add_data_to_word(word, data, data_only)
+            self.add_data_to_word(word, data, ins, data_only)
 
     def split_at_last_syl(self, word):
         if word.count(self.TSEK) >= 1:
