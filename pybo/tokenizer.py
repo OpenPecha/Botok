@@ -140,8 +140,7 @@ class Tokenizer:
         self.pre_processed = None
 
         if split_affixes:
-            s = SplitAffixed()
-            s.split(tokens)
+            SplitAffixed().split(tokens)
         return tokens
 
     def add_found_word_or_non_word(self, c_idx, match_data, syls, tokens, has_decremented=False):
