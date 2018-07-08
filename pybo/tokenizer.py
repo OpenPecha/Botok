@@ -12,7 +12,7 @@ class Tokenizer:
         self.pre_processed = None
         self.trie = trie
         self.WORD = 1000
-        self.NON_WORD = 1001
+        self.OOV = 1001
 
     def tokenize(self, pre_processed, split_affixes=True, debug=False):
         """
@@ -91,7 +91,8 @@ class Tokenizer:
                 if is_non_word:
                     # non-word syls are turned into independant tokens
                     non_word = [c_idx]
-                    tokens.append(self.chunks_to_token(non_word, self.NON_WORD))
+                    # This syllabe does not exist in the Trie
+                    tokens.append(self.chunks_to_token(non_word, "non-word"))
                     match_data = {}
                     syls = []
 
@@ -156,7 +157,7 @@ class Tokenizer:
             c_idx = non_max_idx
         else:
             # add first syl in syls as non-word
-            tokens.append(self.chunks_to_token([syls[0]], self.NON_WORD))
+            tokens.append(self.chunks_to_token([syls[0]], self.OOV))
 
             # decrement chunk-idx for a new attempt to find a match
             if syls:
