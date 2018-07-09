@@ -116,7 +116,7 @@ class BasicTrie:
                 if to_data:
                     current_node.data = data
                 else:
-                    current_node.freq = data
+                    current_node.freq = int(data)
                 return True
             else:
                 return False
@@ -124,7 +124,7 @@ class BasicTrie:
             if to_data:
                 current_node.data = data
             else:
-                current_node.freq = data
+                current_node.freq = int(data)
             return True
 
     def remove_word(self, word):
