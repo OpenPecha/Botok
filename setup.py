@@ -40,6 +40,8 @@ setup(
     ],
     package_data={'pybo': ['resources/*', 'resources/trie/*', 'resources/lemmas/*', 'resources/rules/*']},
     python_requires='>=3',
+    setup_requires=["pytest-runner"],
+    tests_require=["pytest"],
     install_requires=[
         'pyyaml'
     ],
