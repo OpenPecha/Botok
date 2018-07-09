@@ -34,7 +34,7 @@ def test_non_max2():
     assert tokens[1].content == 'བདེ་'
     assert tokens[1].tag == 'non-word'
     assert tokens[2].content == 'བཀྲ་'
-    assert tokens[2].tag == 'non-word'
+    assert tokens[2].tag == 'oov'
 
 
 def test_non_max_end_of_string():
