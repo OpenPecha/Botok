@@ -25,7 +25,7 @@ def read(fname):
 
 setup(
     name="pybo",
-    version="0.1.6",  #edit version in __init__.py
+    version="0.2.0",  #edit version in __init__.py
     author="Esukhia development team",
     author_email="esukhiadev@gmail.com",
     description="Python utils for processing Tibetan",
