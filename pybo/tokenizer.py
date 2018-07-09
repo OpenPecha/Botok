@@ -225,7 +225,8 @@ class Tokenizer:
             token.affixed = True
         token.char_groups = self.pre_processed.export_groups(start, length, for_substring=True)
         token.skrt = self.sanskrit(token)
-        token.freq = freq
+        if freq:
+            token.freq = freq
         return token
 
     def sanskrit(self, token):
