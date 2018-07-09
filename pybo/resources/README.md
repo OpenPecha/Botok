@@ -8,11 +8,11 @@ This file has been compiled by hand based on the list presented in *TODO: ref. t
 
 It is used to check if a syllable is correct according to Classical Tibetan norms, and find the root letter.
 
-### frequency/gmd.csv
+### frequency/mgd.txt
 
 XXX
 
-### frequency/tc.csv
+### frequency/tc.txt
 
 XXX
 
@@ -47,6 +47,7 @@ Although the book is under copyright, we consider that the bare list of words we
 ### trie/mgd.txt
 
 XXX
+
 
 ### trie/recordings_4.txt , trie/oral_corpus_0.txt , trie/oral_corpus_1.txt , trie/oral_corpus_2.txt , trie/oral_corpus_3.txt
 
