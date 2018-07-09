@@ -56,7 +56,7 @@ class PyBoTrie(BasicTrie):
         profiles = {
                     'pytib': [files[1], files[2], files[3], files[5], 'particles.txt'],
                     'POS': [files[1], files[2], files[3], files[5], 'particles.txt'],
-                    'MGD': [files[1], files[2], files[3], files[5], 'particles.txt'],
+                    'MGD': [files[1], files[2], files[3], files[5], files[11], 'particles.txt'],
                     'empty': [],
                     'test': [tests[1]]
                     }
@@ -76,13 +76,13 @@ class PyBoTrie(BasicTrie):
 
         if self.profile == 'POS':
             full_path_pos = os.path.join(os.path.split(__file__)[0], 'resources', 'trie', "Tibetan.DICT")
-            full_path_freq = os.path.join(os.path.split(__file__)[0], 'resources', 'trie', "mgd_freq.txt")
+            full_path_freq = os.path.join(os.path.split(__file__)[0], 'resources', 'frequency', "mgd.txt")
             self.__add_one_file(full_path_pos, data_only=True)
             self.__add_one_file(full_path_freq, ins="freq", data_only=True)
 
         if self.profile == 'MGD':
             full_path_dict = os.path.join(os.path.split(__file__)[0], 'resources', 'trie', "Tibetan.DICT")
-            full_path_freq = os.path.join(os.path.split(__file__)[0], 'resources', 'trie', "mgd_freq.txt")
+            full_path_freq = os.path.join(os.path.split(__file__)[0], 'resources', 'frequency', "mgd.txt")
             self.__add_one_file(full_path_dict, data_only=True)
             self.__add_one_file(full_path_freq, ins="freq", data_only=True)
 
