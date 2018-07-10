@@ -9,7 +9,7 @@ from setuptools import setup, find_packages
 import pypandoc
 
 def read(fname):
-    rst = pypandoc.convert(os.path.join(os.path.dirname(__file__), fname), 'rst')
+    rst = pypandoc.convert_file(os.path.join(os.path.dirname(__file__), fname), 'rst', format='md')
     return rst
 
 
