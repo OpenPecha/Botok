@@ -205,8 +205,9 @@ class Tokenizer:
         token = Token()
         token.content = self.pre_processed.string[start:start+length]
         token.chunk_type = ttype
+        token.type = token.chunk_markers[ttype]
         token.start = start
-        token.length = length
+        token.len = length
         if syls != [None]:
             token.syls = []
             for syl in syls:
@@ -224,6 +225,7 @@ class Tokenizer:
             token.affix = True
             token.affixed = True
         token.char_groups = self.pre_processed.export_groups(start, length, for_substring=True)
+        token.char_types = [token.char_markers[token.char_groups[idx]] for idx in sorted(token.char_groups.keys())]
         token.skrt = self.sanskrit(token)
         if freq:
             token.freq = freq

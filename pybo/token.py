@@ -5,12 +5,14 @@ from .helpers import AFFIX_SEP
 class Token:
     def __init__(self):
         self.content = ''
+        self.char_types = None
         self.aa_word = None
         self.lemma = ''
         self.chunk_type = None
+        self.type = None
         self.char_groups = None
         self.start = 0
-        self.length = None
+        self.len = None
         self.syls = None
         self.tag = ''
         self.pos = ''
@@ -20,19 +22,21 @@ class Token:
                              7: 'skrt-vow', 8: 'punct', 9: 'num', 10: 'in-syl-mark', 11: 'special-punct', 12: 'symbol',
                              13: 'no-bo-no-skrt', 14: 'other', 15: 'space', 16: 'underscore'}
         self.chunk_markers = {100: 'bo', 101: 'non-bo', 102: 'punct', 103: 'non-punct', 104: 'space', 105: 'non-space',
-                              106: 'syl', 1000: 'word', 1001: 'oov'}
+                              106: 'syl', 107: 'sym', 108:'non-sym', 1000: 'word', 1001: 'oov'}
         self.freq = 0
         self.skrt = False
         self._ = {}  # dict for any user specific data
 
     def __getitem__(self, item):
         mapping = {'content': self.content,
+                   'char_types': self.char_types,
                    'aa_word': self.aa_word,
                    'lemma': self.lemma,
                    'chunk_type': self.chunk_type,
+                   'type': self.type,
                    'char_groups': self.char_groups,
                    'start': self.start,
-                   'length': self.length,
+                   'len': self.len,
                    'syls': self.syls,
                    'tag': self.tag,
                    'pos': self.pos,
@@ -95,13 +99,13 @@ class Token:
 
     def __repr__(self):
         out = 'content: "'+self.content+'"'
-        out += '\nchar types: '
+        out += '\nchar_types: '
         out += '|'+'|'.join([self.char_markers[self.char_groups[idx]]
                             for idx in sorted(self.char_groups.keys())])+'|'
-        out += '\ntype: ' + self.chunk_markers[self.chunk_type]
-        out += '\nstart in input: ' + str(self.start)
-        out += '\nlength: ' + str(self.length)
-        out += '\nsyl chars in content'
+        out += '\ntype: ' + self.type
+        out += '\nstart: ' + str(self.start)
+        out += '\nlen: ' + str(self.len)
+        out += '\nsyls '
         if self.syls:
             out += '(' + ' '.join([''.join([self.content[char] for char in syl]) for syl in self.syls]) + '): '
         else:
@@ -110,7 +114,7 @@ class Token:
         out += '\ntag: '
         if self.tag:
             out += self.tag
-        out += '\nPOS: '
+        out += '\npos: '
         if self.pos:
             out += self.pos
         out += '\nskrt: "' + str(self.skrt) + '"'

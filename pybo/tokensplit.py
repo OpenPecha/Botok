@@ -11,7 +11,7 @@ class TokenSplit:
         - token.content     : the string is split at the index
         - token.char_groups : the dict items are redistributed
         - token.start       : second token only. now equals "start + index"
-        - token.length      : length of new content
+        - token.len      : length of new content
         - token.syls        : syls are redistributed and split if necessary
 
     """
@@ -70,8 +70,8 @@ class TokenSplit:
         self.second.char_groups = c_g_2
 
     def __split_indices(self):
-        self.first.length = len(self.first.content)
-        self.second.length = len(self.second.content)
+        self.first.len = len(self.first.content)
+        self.second.len = len(self.second.content)
         self.second.start = self.second.start + self.idx
 
     def __split_syls(self):

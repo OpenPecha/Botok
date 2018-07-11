@@ -139,13 +139,17 @@ class BoChunk(BoString):
         self.SPACE_MARKER = 104
         self.NON_SPACE_MARKER = 105
         self.SYL_MARKER = 106
+        self.SYMBOL_MARKER = 107
+        self.NON_SYMBOL_MARKER = 108
         self.chunk_markers = {self.BO_MARKER: 'bo',
                               self.NON_BO_MARKER: 'non-bo',
                               self.PUNCT_MARKER: 'punct',
                               self.NON_PUNCT_MARKER: 'non-punct',
                               self.SPACE_MARKER: 'space',
                               self.NON_SPACE_MARKER: 'non-space',
-                              self.SYL_MARKER: 'syl'}
+                              self.SYL_MARKER: 'syl',
+                              self.SYMBOL_MARKER: 'sym',
+                              self.NON_SYMBOL_MARKER: 'non-sym'}
 
     def chunk_bo_chars(self, start=None, end=None, yes=100, no=101):
         """
@@ -181,6 +185,21 @@ class BoChunk(BoString):
         :type no: int (hard-coded value of NON_PUNCT_MARKER)
         """
         return self.__chunk_using(self.__is_punct, start, end, yes, no)
+
+    def chunk_symbol(self, start=None, end=None, yes=107, no=108):
+        """
+        Chunks input into Tibetan text("sym") or non-Tibetan("non-sym").
+
+        :type yes: int (hard-coded value of SYM_MARKER)
+        :type no: int (hard-coded value of NON_SYM_MARKER)
+        """
+        return self.__chunk_using(self.__is_sym, start, end, yes, no)
+
+    def __is_sym(self, char_idx):
+        """
+        Tests whether the character at the given index is a Tibetan symbols or not.
+        """
+        return self.base_structure[char_idx] == self.SYMBOLS
 
     def __is_punct(self, char_idx):
         """

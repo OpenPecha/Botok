@@ -7,13 +7,13 @@ def test_token_to_string():
     tok.trie.add('བཀྲ་ཤིས་', data='NOUN')
     tokens = tok.tokenize(PyBoTextChunks('བཀྲ་ཤིས།'))
     expected = """content: "བཀྲ་ཤིས"
-char types: |cons|cons|sub-cons|tsek|cons|vow|cons|
+char_types: |cons|cons|sub-cons|tsek|cons|vow|cons|
 type: syl
-start in input: 0
-length: 7
-syl chars in content(བཀྲ ཤིས): [[0, 1, 2], [4, 5, 6]]
+start: 0
+len: 7
+syls (བཀྲ ཤིས): [[0, 1, 2], [4, 5, 6]]
 tag: NOUN
-POS: NOUN
+pos: NOUN
 skrt: "False"
 freq: 
 """

@@ -43,7 +43,7 @@ class TokenMerge:
             self.merged.char_groups[new_idx] = self.token2.char_groups[idx]
 
     def __merge_indices(self):
-        self.merged.length += self.token2.length
+        self.merged.len += self.token2.len
 
     def __merge_syls(self):
         """
@@ -55,7 +55,7 @@ class TokenMerge:
         if self.token2.syls:
             for syl in self.token2.syls:
                 if syl:
-                    new_syl = [i + self.token1.length for i in syl]
+                    new_syl = [i + self.token1.len for i in syl]
 
                     # token1 is a host syllable and token2 its affixed syllable
                     if first_syl and (self.token1.affixed and not self.token1.affix) and \
