@@ -4,7 +4,7 @@ from pybo import *
 def test_token_to_string():
     tok = Tokenizer(PyBoTrie(BoSyl(), 'empty'))
     tok.trie.rebuild_trie()
-    tok.trie.add('བཀྲ་ཤིས་', data='NOUN')
+    tok.trie.add('བཀྲ་ཤིས་', data='NOUN', freq = 17500)
     tokens = tok.tokenize(PyBoTextChunks('བཀྲ་ཤིས།'))
     expected = """content: "བཀྲ་ཤིས"
 char_types: |cons|cons|sub-cons|tsek|cons|vow|cons|
@@ -15,7 +15,7 @@ syls (བཀྲ ཤིས): [[0, 1, 2], [4, 5, 6]]
 tag: NOUN
 pos: NOUN
 skrt: "False"
-freq: 
+freq: 17500
 """
     assert tokens[0].__repr__() == expected
     assert tokens[1].content == '།'

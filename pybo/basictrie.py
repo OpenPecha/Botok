@@ -35,7 +35,7 @@ class BasicTrie:
     def __getitem__(self, key):
         return self.head.children[key]
 
-    def add(self, word, data=None):
+    def add(self, word, data=None, freq=None):
         current_node = self.head
         word_finished = True
 
@@ -56,6 +56,8 @@ class BasicTrie:
         current_node.leaf = True
         if data:
             current_node.data = data
+        if freq:
+            current_node.freq = freq
 
     def walk(self, char, current_node=None):
         if not current_node:
