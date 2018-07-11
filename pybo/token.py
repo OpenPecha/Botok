@@ -23,7 +23,7 @@ class Token:
                              13: 'no-bo-no-skrt', 14: 'other', 15: 'space', 16: 'underscore'}
         self.chunk_markers = {100: 'bo', 101: 'non-bo', 102: 'punct', 103: 'non-punct', 104: 'space', 105: 'non-space',
                               106: 'syl', 107: 'sym', 108: 'non-sym', 109: 'num', 110: 'non-num', 1000: 'word', 1001: 'oov'}
-        self.freq = 0
+        self.freq = None
         self.skrt = False
         self._ = {}  # dict for any user specific data
 

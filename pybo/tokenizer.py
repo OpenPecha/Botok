@@ -166,7 +166,7 @@ class Tokenizer:
                 c_idx -= 1
         return c_idx
 
-    def chunks_to_token(self, syls, tag=None, freq=0, ttype=None):
+    def chunks_to_token(self, syls, tag=None, freq=None, ttype=None):
         if len(syls) == 1:
             # chunk format: ([char_idx1, char_idx2, ...], (type, start_idx, len_idx))
             token_syls = [self.pre_processed.chunks[syls[0]][0]]
@@ -191,7 +191,7 @@ class Tokenizer:
         else:
             return None  # should raise an error instead?
 
-    def create_token(self, ttype, start, length, syls, tag=None, freq=0):
+    def create_token(self, ttype, start, length, syls, tag=None, freq=None):
         """
         :param ttype: token type
         :param start: start index in input string
