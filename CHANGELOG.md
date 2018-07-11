@@ -7,8 +7,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ---
 
 ## [0.2.2](https://github.com/Esukhia/pybo/releases/tag/v0.2.2) - 20180711
+### Added
+ * two new tests in order to check the frequency of a token and if a syllable is sanskrit
+
 ### Fixed
- * add the resources frequency to the package
+ * [The resources for the frequency is not in the package #23](https://github.com/Esukhia/pybo/issues/23)
 
 ---
 
