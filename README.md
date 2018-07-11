@@ -43,8 +43,13 @@ This will yield:
     tag: punct
     pos: punct
     skr: "False"
-    freq: 
+    freq: 0
     
+notes:
+ - `start` is the starting index of the current token in the input string.
+ - `syls` is a list of cleaned syllables, each syllable being represented as a list of indices.
+Each index leads to a constituting character within the input string. 
+
 #### In case you want to access all words in a list: 
 
     # iterate through the tokens object to get all the words in a list
