@@ -6,6 +6,23 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ---
 
+## [0.2.1](https://github.com/Esukhia/pybo/releases/tag/v0.2.1) - 20180711
+### Added
+ * two new attibrutes on the tokens: `char_types` (type of characters in a syllable) and `type` (type of the token)
+
+### Changed
+ * token.lenght is now renamed to **token.len**
+ * `char types` (print-out attribute of a token) is now renamed to `char_types`
+ * `start in input` (print-out attribute of a token) is now renamed to `start`
+ * `syl chars in conten` (print-out attribute of a token) is now renamed to `syls`
+ * `POS` (print-out attribute of a token) is now renamed to `pos`
+
+### Fixed
+ * [symbol considered as token content #19](https://github.com/Esukhia/pybo/issues/19)
+ * [suggestion for token conventions #12](https://github.com/Esukhia/pybo/issues/12)
+
+---
+
 ## [0.2.0](https://github.com/Esukhia/pybo/releases/tag/v0.2.0) - 20180709
 ### Added
  * two new attibrutes on the tokens: `freq` (the word/syllable frequency) and `skrt` (test the syllable composition if it's a sanskrit syllable or not)

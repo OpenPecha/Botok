@@ -35,13 +35,13 @@ Or if you for some reason want to install from the latest Master branch:
 This will yield:
 
     content: "༄༅། "
-    char types: |punct|punct|punct|space|
+    char_types: |punct|punct|punct|space|
     type: punct
-    start in input: 0
-    length: 4
-    syl chars in content: None
+    start: 0
+    len: 4
+    syls: None
     tag: punct
-    POS: punct
+    pos: punct
     skr: "False"
     freq: 
     
