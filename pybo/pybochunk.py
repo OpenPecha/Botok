@@ -26,6 +26,7 @@ class PyBoChunk(BoChunk):
         chunks = self.chunk_bo_chars()
         self.pipe_chunk(chunks, self.chunk_punct, to_chunk=self.BO_MARKER, yes=self.PUNCT_MARKER)
         self.pipe_chunk(chunks, self.chunk_symbol, to_chunk=self.BO_MARKER, yes=self.SYMBOL_MARKER)
+        self.pipe_chunk(chunks, self.chunk_number, to_chunk=self.BO_MARKER, yes=self.NUMBER_MARKER)
         self.pipe_chunk(chunks, self.syllabify, to_chunk=self.BO_MARKER, yes=self.SYL_MARKER)
         self.__attach_space_chunks(chunks)
         if not indices:

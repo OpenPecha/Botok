@@ -229,6 +229,8 @@ class Tokenizer:
         token.skrt = self.sanskrit(token)
         if freq:
             token.freq = freq
+        else:
+            token.freq = None
         return token
 
     def sanskrit(self, token):

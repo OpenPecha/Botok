@@ -141,6 +141,8 @@ class BoChunk(BoString):
         self.SYL_MARKER = 106
         self.SYMBOL_MARKER = 107
         self.NON_SYMBOL_MARKER = 108
+        self.NUMBER_MARKER = 109
+        self.NON_NUMBER_MARKER = 110
         self.chunk_markers = {self.BO_MARKER: 'bo',
                               self.NON_BO_MARKER: 'non-bo',
                               self.PUNCT_MARKER: 'punct',
@@ -149,7 +151,9 @@ class BoChunk(BoString):
                               self.NON_SPACE_MARKER: 'non-space',
                               self.SYL_MARKER: 'syl',
                               self.SYMBOL_MARKER: 'sym',
-                              self.NON_SYMBOL_MARKER: 'non-sym'}
+                              self.NON_SYMBOL_MARKER: 'non-sym',
+                              self.NUMBER_MARKER: 'num',
+                              self.NON_NUMBER_MARKER: 'non-num'}
 
     def chunk_bo_chars(self, start=None, end=None, yes=100, no=101):
         """
@@ -194,6 +198,21 @@ class BoChunk(BoString):
         :type no: int (hard-coded value of NON_SYM_MARKER)
         """
         return self.__chunk_using(self.__is_sym, start, end, yes, no)
+
+    def chunk_number(self, start=None, end=None, yes=107, no=108):
+        """
+        Chunks input into Tibetan text("num") or non-Tibetan("non-num").
+
+        :type yes: int (hard-coded value of NUM_MARKER)
+        :type no: int (hard-coded value of NON_NUM_MARKER)
+        """
+        return self.__chunk_using(self.__is_num, start, end, yes, no)
+
+    def __is_num(self, char_idx):
+        """
+        Tests whether the character at the given index is a number  or not.
+        """
+        return self.base_structure[char_idx] == self.NUM
 
     def __is_sym(self, char_idx):
         """
