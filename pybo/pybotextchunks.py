@@ -49,4 +49,5 @@ class PyBoTextChunks(PyBoChunk):
         Tests whether the character at the given index is part of the cleaned syllable or not.
         """
         return self.base_structure[char_idx] != self.TSEK and \
-               self.base_structure[char_idx] != self.SPACE
+               self.base_structure[char_idx] != self.SPACE and \
+               self.base_structure[char_idx] != self.SKRT_LONG_VOW

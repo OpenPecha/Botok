@@ -1,12 +1,14 @@
 from pybo import *
+import bophono
 
 
 def test_token_to_string():
     tok = Tokenizer(PyBoTrie(BoSyl(), 'empty'))
     tok.trie.rebuild_trie()
     tok.trie.add('བཀྲ་ཤིས་', data='NOUN', freq = 17500)
-    tokens = tok.tokenize(PyBoTextChunks('བཀྲ་ཤིས།'))
+    tokens = tok.tokenize(PyBoTextChunks('བཀྲ་ཤིས།'), phono=True)
     expected = """content: "བཀྲ་ཤིས"
+phono: /ʈaˊ.ɕi/
 char_types: |cons|cons|sub-cons|tsek|cons|vow|cons|
 type: syl
 start: 0

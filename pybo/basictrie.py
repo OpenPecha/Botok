@@ -5,11 +5,12 @@
 
 
 class Node:
-    def __init__(self, label=None, leaf=False, data=None, freq=None):
+    def __init__(self, label=None, leaf=False, data=None, freq=None, skrt=None):
         self.label = label
         self.leaf = leaf
         self.data = data
         self.freq = freq
+        self.skrt = skrt
         self.children = dict()
 
     def add_child(self, key, leaf=False):
@@ -35,7 +36,7 @@ class BasicTrie:
     def __getitem__(self, key):
         return self.head.children[key]
 
-    def add(self, word, data=None, freq=None):
+    def add(self, word, data=None, freq=None, skrt=None):
         current_node = self.head
         word_finished = True
 
@@ -58,6 +59,8 @@ class BasicTrie:
             current_node.data = data
         if freq:
             current_node.freq = freq
+        if skrt:
+            current_node.skrt = skrt
 
     def walk(self, char, current_node=None):
         if not current_node:

@@ -1,0 +1,156 @@
+# these are pretty obvious
+2:བ/Ca,w-
+2:བོ/Co,w-
+# Exception from THL (not taking nasalizations)
+རྡོ་རྗེ/Ce,t-or|c-
+བླ་བྲང,l+ap|r-ang
+འབྲི་རུ/Cu,ph-i|r-
+ལྷ་རྗེ/Ce,lh+ar|c-
+ལྷ་བྲིས་པ/Ca,lh+ap|r-i|p+
+ཨུ་རྒྱན,+ur|ky-än
+ཨོ་རྒྱན,+or|ky-än
+བླ་བྲང,l+ap|thr-ang
+# NT p. 60
+ཨ་གསར,+ak|s+ar
+ས་གདན,s+ap|tän
+ཁ་གཅོད,kh+ap|cö'
+དབ/Cb,w+
+# numbers, from NT Annex 1, completed by Drupchen
+བཅུ་གཅིག,c+uk|c+ik
+བཅུ་གཉིས,c+uk|ny+i'
+བཅུ་གསུམ,c+uk|s+um
+བཅུ་བཞི/Ci,c+up|sh-
+བཅུ་བདུན,c+up|t-ün
+བཅོ་བརྒྱད,c+op|ky-ä'
+རྩ་བཞི/Ci,ts+ap|sh-
+རྩ་བདུན,ts+ap|t-ün
+རྩ་བརྒྱད,ts+ap|ky-ä'
+སོ་བརྒྱད,s+op|ky-ä'
+བཞི་བཅུ/Cu,sh-ip|c+
+ལྔ་བཅུ/Cu,ng+ap|c+
+ང་བཞི/Ci,ng-ap|sh-
+དགུ་བཅུ/Cu,k-u|c+
+# possible according to accent, not always (source: Drupchen)
+ལྔ་ཁྲི/Ci,ng+ap|thr+
+གོ་བཞི/Ci,k-op|sh-
+གོ་བརྒྱད,k-op|ky-ä'
+གྱ་བདུན,ky-ap|t-ün
+རེ་བདུན,r-ep|t-ün
+ང་བརྒྱད,ng-ap|ky-ä'
+ཞེ་བདུན,sh-ep|t-ün
+སོ་བཞི/Ci,s+op|sh-
+# Sanskrit (TODO: check)
+པདྨ/Ca,p+e|m-
+ཀརྨ/Ca,k+ar|m-
+# NT Annex 1, nasalizer
+ཞབས་འདེགས,sh-am|~t-ek
+ཞིབ་འཇུག,sh-im|~c-uk
+མིག་འཁྲུལ,m+ing|~thr+ül
+སྔོན་འགྲོ/Co,ng+ön|~tr-
+སྨོན་འདུན,m+ön|~t-ün
+དཔལ་འབར,p+äm|~p-ar
+དམའ་འབེབས,m+am|~p-ep
+ཤ་འབྲས,sh+am|~tr-ä'
+དགེ་འདུན,k-en|~t-ün
+མི་འདུག,m-in|~tu'
+བོད་ལྗོངས,ph-ön|~c-ong
+དུས་འཁོར,th-üng|~kh+or
+གསར་འགྱུར,s+ang|~ky-ur
+རྒྱུ་མཚན,ky-um|~tsh+än
+རྒྱ་མཚོ/Co,ky-am|~tsh+
+བོད་ཟླ/Ca,ph+ön|~t-
+ད་ལྟ/Ca,th-an|~t+
+དཔལ་ལྡན,p+än|~t-än
+སྟོབས་ལྡན,t+om|~t-än
+ཡུལ་ལྗོངས,y-ün|~c-ong
+འབྲས་ལྗོངས,tr-än|~c-ong
+ཡལ་ག/Ca,y-än|~k-
+དགའ་ལྡན,k-an|~t-än
+གསོལ་འདེབས,s+ön|~t-ep
+དུད་འགྲོ/Co,th-ün|~tr-
+ཞིབ་འཇུག,sh-im|~c-uk
+འཐབ་འཛིང,th+am|~ts-ing
+སྐུ་འབུམ,k+um|~p-um
+ཡར་འབྲོ/Co,y-a:m|~tr-
+གཡུ་མཚོ/Co,y+um|~tsh+
+བདག་འཛིན,t-an|~ts-in
+སྐྱབས་འགྲོ/Co,ky+am|~tr-
+ཁ་འདོན,kh+an|~t-ön
+ཞལ་འདེབས,sh-än|~t-ep
+རྟེན་འབྲེལ,t+em|~tr-el
+རྒྱལ་མཚན,ky-än|~tsh+än
+སྐུ་མདུན,k+un|~t-ün
+ཕྱག་མཛོད,ch+ang|~ts-ö'
+ལྷ་མཛེས,lh+an|~ts-e'
+ལོ་མཆོད,l-om|~ch+ö'
+# THL nasalizations
+བཀའ་འགྱུར,k+an|~ky-ur
+ངོས་འཛིན,ng-ön|~ts-in
+རིག་འཛིན,r-in|~ts-in
+མཁའ་འགྲོ/Co,kh+an|~tr-
+དཀྱིལ་འཁོར,ky+in|~kh+or
+ཆོས་འཕེལ,ch+öm|~ph+el
+དཔལ་འབྱོར,p+än|~c-or
+རྒྱུ་འབྲས,ky-un|~tr-ä'
+ཨ་མདོ/Co,+am|~t-
+མེ་མད/Cc,m-en|~t-
+རྒྱལ་རྩེ/Ce,ky-än|~ts+
+ཆབ་མདོ/Co,ch+am|~t-
+རྟ་མགྲིན,t+am|~tr-in
+# Nasalizations from Esukhia doc
+འདི་ཚོ/Co,t-in|~tsh+
+དེ་ཚོ/Co,th-en|~tsh+
+སྐུ་འདྲ/Ca,k+un|~tr-
+གང་འདྲ,kh-an|~tr-
+## da drag (a relatively safe list, but it's a difficult subject)
+ཀུན,k+ün~
+ཤིན,sh+in~
+འོན,-ön~
+བསྟན,t+än~
+ཕྱིན,ch+in~
+## g instead of k
+ཐིག་ལེ/Ce,th+ig|l-
+# l not pronounced
+གསལ་པོ/Co,s+ä|p+
+# Epenthesis, other difficulties, some from rigpa_exceptions.txt
+ཡ་བཞི/Ci,y-ap|sh-
+ས་བཅད,s+ap|c+ä'
+ཡང་ལེ་བེར,y-ang|l-e|w-er
+#མཆོད་རྟེན,ch+ör|t+en (only in some dialects)
+སྡེ་དགེ/Ce,t-er|k-
+སློ་བཟང,l+op|s-ang
+# not sure about these:
+#སྤྲེའུ,p+iu
+#ལྡེའུ་བཙན,~t-e|ts+än
+#ཐེའུ་རང,th+e|r-ang
+#སྤྲུལ་སྐུ/Cu,tr+ül|k+
+# from Perl module, padmakara_exceptions.txt
+མི་འབྲལ,m-in|~tr-äl
+མི་འབྱུང,m-in|~c-ung
+མི་འདོད,m-in|~t-ö'
+མི་འགག,m-in|~k-ak
+མི་འགྱུར,m-in|~ky-ur
+རྒྱས་འདེབས,ky-en|~t-ep
+རྒྱུ་འགྲུལ,ky-un|~tr-ül
+སྐྱེ་འགྲོ/Co,ky+en|~tr-
+སྐྱེ་མཆེད,ky+em|~ch+e'
+སྤྱོད་འཇུག,c+ön|~c-uk
+ཞེ་འདོད,sh-en|~t-ö'
+# from Perl module, rigpa_exceptions.txt
+དེ་འབྲེལ,th-en|~tr-el
+དེ་འདྲ/Ca,th-in|~tr-
+འདི་འདྲ/Ca,t-i|~tr-
+དཀའ་འགྲེལ,k+an|~tr-el
+ག་འདྲ/Ca,kh-an|~tr-
+མི་ལྡོག,m-in|~t-ok
+མཁས་འཇུག,kh+en|~c-uk
+རེ་འདོད,r-en|~t-ö'
+སྒྲོ་འདོགས,tr-ön|~t-ok
+ཚེ་འཛིན,tsh+en|~ts-in
+བདེ་མཆོག,t-em|~ch+ok
+ཆེ་མཆོག,ch+em|~ch+ok
+བདེ་འགྲོ/Co,t-em|~tr-
+# Other sources (oral)
+བུ་འདོད,p-un|~t-ö'
+# from མཚོ་མེ་འབར
+མེ་འབར,m-en|p-ar

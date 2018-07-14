@@ -77,19 +77,31 @@ class PyBoTrie(BasicTrie):
         if self.profile == 'POS':
             full_path_pos = os.path.join(os.path.split(__file__)[0], 'resources', 'trie', "Tibetan.DICT")
             full_path_freq = os.path.join(os.path.split(__file__)[0], 'resources', 'frequency', "mgd.txt")
+            full_path_skrt = os.path.join(os.path.split(__file__)[0], 'resources', 'sanskrit', "sanskrit.txt")
             self.__add_one_file(full_path_pos, data_only=True)
             self.__add_one_file(full_path_freq, ins="freq", data_only=True)
+            self.__add_sanskrit_to_trie(full_path_skrt)
 
         if self.profile == 'MGD':
             full_path_dict = os.path.join(os.path.split(__file__)[0], 'resources', 'trie', "Tibetan.DICT")
             full_path_freq = os.path.join(os.path.split(__file__)[0], 'resources', 'frequency', "mgd.txt")
+            full_path_skrt = os.path.join(os.path.split(__file__)[0], 'resources', 'sanskrit', "sanskrit.txt")
             self.__add_one_file(full_path_dict, data_only=True)
             self.__add_one_file(full_path_freq, ins="freq", data_only=True)
+            self.__add_sanskrit_to_trie(full_path_skrt)
 
         with open(self.pickled_file, 'wb') as f:
             pickle.dump(self.head, f, pickle.HIGHEST_PROTOCOL)
         end = time.time()
         print('Time:', end - start)
+
+    def __add_sanskrit_to_trie(self, in_file):
+        for line in open_file(in_file).split('\n'):
+            if line:
+                word = line
+
+            sep = "" if word[-1] == "ཿ" else "་"
+            self.add(word+sep, skrt=True)
 
     def __add_one_file(self, in_file, ins="data", data_only=False):
         """

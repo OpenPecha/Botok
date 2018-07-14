@@ -199,7 +199,7 @@ class BoChunk(BoString):
         """
         return self.__chunk_using(self.__is_sym, start, end, yes, no)
 
-    def chunk_number(self, start=None, end=None, yes=107, no=108):
+    def chunk_number(self, start=None, end=None, yes=109, no=110):
         """
         Chunks input into Tibetan text("num") or non-Tibetan("non-num").
 
@@ -232,7 +232,6 @@ class BoChunk(BoString):
         return self.base_structure[char_idx] == self.PUNCT or \
             self.base_structure[char_idx] == self.SPECIAL_PUNCT
 
-
     def chunk_spaces(self, start=None, end=None, yes=104, no=105):
         """
         Chunks input into any valid Unicode spaces("space") or something else("non-space").
@@ -257,7 +256,7 @@ class BoChunk(BoString):
         if not start and not end:
             start, end = 0, self.len
 
-        indices = self.__chunk(start, end, self.__is_tsek)
+        indices = self.__chunk(start, end, self.__is_tsek_or_long_skrt_vowel)
         for num, i in enumerate(indices):
             if i[0] and num - 1 >= 0 and not indices[num - 1][0]:
                 indices[num - 1] = (indices[num - 1][0], indices[num - 1][1], indices[num - 1][2] + i[2])
@@ -270,6 +269,15 @@ class BoChunk(BoString):
         Used as test to find syllable boundaries by ``syllabify()``.
         """
         return self.base_structure[char_idx] == self.TSEK
+
+    def __is_tsek_or_long_skrt_vowel(self, char_idx):
+        """
+        Tests whether the character at the given index in a tsek or not.
+        Used as test to find syllable boundaries by ``syllabify()``.
+        """
+
+        return  self.base_structure[char_idx] == self.TSEK or \
+                self.base_structure[char_idx] == self.SKRT_LONG_VOW
 
     def get_chunked(self, indices, gen=False):
         """

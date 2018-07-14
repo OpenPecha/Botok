@@ -5,6 +5,7 @@ from .helpers import AFFIX_SEP
 class Token:
     def __init__(self):
         self.content = ''
+        self.phono = ''
         self.char_types = None
         self.aa_word = None
         self.lemma = ''
@@ -20,15 +21,17 @@ class Token:
         self.affixed = False
         self.char_markers = {1: 'cons', 2: 'sub-cons', 3: 'vow', 4: 'tsek', 5: 'skrt-cons', 6: 'skrt-sub-cons',
                              7: 'skrt-vow', 8: 'punct', 9: 'num', 10: 'in-syl-mark', 11: 'special-punct', 12: 'symbol',
-                             13: 'no-bo-no-skrt', 14: 'other', 15: 'space', 16: 'underscore'}
+                             13: 'no-bo-no-skrt', 14: 'other', 15: 'space', 16: 'underscore', 17:'skrt-vow_long'}
         self.chunk_markers = {100: 'bo', 101: 'non-bo', 102: 'punct', 103: 'non-punct', 104: 'space', 105: 'non-space',
-                              106: 'syl', 107: 'sym', 108: 'non-sym', 109: 'num', 110: 'non-num', 1000: 'word', 1001: 'oov'}
+                              106: 'syl', 107: 'sym', 108: 'non-sym', 109: 'num', 110: 'non-num',
+                              1000: 'word', 1001: 'oov'}
         self.freq = None
         self.skrt = False
         self._ = {}  # dict for any user specific data
 
     def __getitem__(self, item):
         mapping = {'content': self.content,
+                   'phono': self.phono,
                    'char_types': self.char_types,
                    'aa_word': self.aa_word,
                    'lemma': self.lemma,
@@ -99,6 +102,8 @@ class Token:
 
     def __repr__(self):
         out = 'content: "'+self.content+'"'
+        if self.phono:
+            out += '\nphono: /'+self.phono+'/'
         out += '\nchar_types: '
         out += '|'+'|'.join([self.char_markers[self.char_groups[idx]]
                             for idx in sorted(self.char_groups.keys())])+'|'

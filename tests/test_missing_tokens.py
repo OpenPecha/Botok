@@ -13,13 +13,13 @@ def test_missing_token1():
 def test_missing_token2():
     input_str = "ཨ་དྷྱིད་ཤུ་ཀ་ར་"
     tokens = tok.tokenize(input_str)
-    assert ['ཨ་', 'དྷྱིད་', 'ཤུ་', 'ཀ་ར་'] == [t.content for t in tokens]
+    assert ['ཨ་', 'དྷྱིད་', 'ཤུ་ཀ་', 'ར་'] == [t.content for t in tokens]
 
 
 def test_missing_token3():
     input_str = "ཀི་བི་ཏི་སྭཱ་"
     tokens = tok.tokenize(input_str)
-    assert ['ཀི་', 'བི་', 'ཏི་', 'སྭཱ་'] == [t.content for t in tokens]
+    assert ['ཀི་', 'བི་ཏི་', 'སྭཱ་'] == [t.content for t in tokens]
 
 
 def test_missing_token4():
@@ -73,14 +73,13 @@ def test_missing_token11():
 def test_missing_token12():
     input_str = "བྷ་ག་ཁ་ཆེ་"
     tokens = tok.tokenize(input_str)
-    assert ['བྷ་', 'ག་', 'ཁ་ཆེ་'] == [t.content for t in tokens]
+    assert ['བྷ་ག་', 'ཁ་ཆེ་'] == [t.content for t in tokens]
 
 
 def test_missing_token13():
     input_str = "།ཨོཾ་གི་རི་ཧི་རི་ཙི་རི། །ཨཱ་ཨཱ་ཤུ་མ་ཤ་"
     tokens = tok.tokenize(input_str)
-    assert ['།', 'ཨོཾ་', 'གི་', 'རི་', 'ཧི་', 'རི་', 'ཙི་', 'རི', '། ', '།',
-            'ཨཱ་', 'ཨཱ་', 'ཤུ་', 'མ་', 'ཤ་'] == [t.content for t in tokens]
+    assert ['།', 'ཨོཾ་', 'གི་རི་', 'ཧི་', 'རི་', 'ཙི་', 'རི', '། ', '།', 'ཨཱ་', 'ཨཱ་ཤུ་', 'མ་', 'ཤ་'] == [t.content for t in tokens]
 
 
 def test_missing_token14():
@@ -98,7 +97,7 @@ def test_missing_token15():
 def test_missing_token16():
     input_str = "ནཱ་ཤ་"
     tokens = tok.tokenize(input_str)
-    assert ['ནཱ་', 'ཤ་'] == [t.content for t in tokens]
+    assert ['ནཱ་ཤ་'] == [t.content for t in tokens]
 
 
 def test_missing_token17():
@@ -276,7 +275,7 @@ def test_missing_token44():
 def test_missing_token45():
     input_str = "ཞལ་བྷ་ག་"
     tokens = tok.tokenize(input_str)
-    assert ['ཞལ་', 'བྷ་', 'ག་'] == [t.content for t in tokens]
+    assert ['ཞལ་', 'བྷ་ག་'] == [t.content for t in tokens]
 
 
 def test_missing_token46():
@@ -294,7 +293,7 @@ def test_missing_token47():
 def test_missing_token48():
     input_str = "ནུ་ཧེ་རུ་"
     tokens = tok.tokenize(input_str)
-    assert ['ནུ་', 'ཧེ་', 'རུ་'] == [t.content for t in tokens]
+    assert ['ནུ་', 'ཧེ་རུ་'] == [t.content for t in tokens]
 
 
 # Has to be corrected together with the DICT file

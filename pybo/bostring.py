@@ -46,6 +46,7 @@ class BoString:
         self.SKRT_CONS = 5
         self.SKRT_SUB_CONS = 6
         self.SKRT_VOW = 7
+        self.SKRT_LONG_VOW = 17
         self.PUNCT = 8
         self.NUM = 9
         self.IN_SYL_MARK = 10
@@ -62,6 +63,7 @@ class BoString:
                              self.SKRT_CONS: 'skrt-cons',
                              self.SKRT_SUB_CONS: 'skrt-sub-cons',
                              self.SKRT_VOW: 'skrt-vow',
+                             self.SKRT_LONG_VOW: 'skrt-long-vow',
                              self.PUNCT: 'punct',
                              self.NUM: 'num',
                              self.IN_SYL_MARK: 'in-syl-mark',
@@ -90,7 +92,8 @@ class BoString:
         tsek = "་༌"
         skrt_cons = "གྷཊཋཌཌྷཎདྷབྷཛྷཥཀྵ྅"
         skrt_sub_cons = "ྑྖྠྥྪྮྯྰྴྶྸྺྻྼཱྒྷྚྛྜྜྷྞྡྷྦྷྫྷྵྐྵ"
-        skrt_vow = "ཱཱིུྲྀཷླྀཹ྄ཱཻཽྀྀྂྃ྆ཿ"
+        skrt_vow = "ཱཱིུྲྀཷླྀཹ྄ཱཻཽྀྀྂྃ྆"
+        skrt_long_vow = "ཿ"
         normal_punct = "༄༅༆༈།༎༏༐༑༔༴༼༽"
         numerals = "༠༡༢༣༤༥༦༧༨༩"
         in_syl_marks = "༵༷༸ཾ"
@@ -113,6 +116,8 @@ class BoString:
                 self.base_structure[i] = self.SKRT_SUB_CONS
             elif char in skrt_vow:
                 self.base_structure[i] = self.SKRT_VOW
+            elif char in skrt_long_vow:
+                self.base_structure[i] = self.SKRT_LONG_VOW
             elif char in normal_punct:
                 self.base_structure[i] = self.PUNCT
             elif char in numerals:
