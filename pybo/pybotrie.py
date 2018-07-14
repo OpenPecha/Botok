@@ -50,13 +50,14 @@ class PyBoTrie(BasicTrie):
                  8: 'oral_corpus_2.txt',
                  9: 'oral_corpus_3.txt',
                  10: 'recordings_4.txt',
-                 11: 'mgd.txt'}
+                 11: 'mgd.txt',
+                 12: 'verbs.txt'}
         tests = {1: 'test.txt'}
         freq = {1: 'mgd_freq.txt'}
         profiles = {
                     'pytib': [files[1], files[2], files[3], files[5], 'particles.txt'],
                     'POS': [files[1], files[2], files[3], files[5], 'particles.txt'],
-                    'MGD': [files[1], files[2], files[3], files[5], files[11], 'particles.txt'],
+                    'MGD': [files[1], files[2], files[3], files[5], files[11], files[12], 'particles.txt'],
                     'empty': [],
                     'test': [tests[1]]
                     }
