@@ -128,6 +128,7 @@ class Tokenizer:
                     match_data = {}
                     syls = []
                     current_node = None
+                    continue
 
                 tokens.append(self.chunks_to_token([c_idx]))
 
