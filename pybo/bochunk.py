@@ -231,7 +231,8 @@ class BoChunk(BoString):
                 self.base_structure[char_idx-1] == self.OTHER or \
                 self.base_structure[char_idx-1] == self.PUNCT or \
                 self.base_structure[char_idx-1] == self.SPECIAL_PUNCT) and \
-                self.base_structure[char_idx] == self.TSEK:
+                self.base_structure[char_idx] == self.TSEK or \
+                self.base_structure[char_idx] == self.SPACE:
             return True
         return self.base_structure[char_idx] == self.PUNCT or \
             self.base_structure[char_idx] == self.SPECIAL_PUNCT
