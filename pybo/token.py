@@ -128,6 +128,6 @@ class Token:
         if self._:
             out += '\n'
             for k, v in self._.items():
-                out += "_: {} -> {}\n".format(k, v)
+                out += "_{}: {}\n".format(k, v)
         out += '\n'
         return out
