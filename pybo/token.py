@@ -122,8 +122,12 @@ class Token:
         out += '\npos: '
         if self.pos:
             out += self.pos
-        out += '\nskrt: "' + str(self.skrt) + '"'
+        out += "\nskrt: {}".format(self.skrt)
         out += '\nfreq: '
         out += str(self.freq)
+        if self._:
+            out += '\n'
+            for k, v in self._.items():
+                out += "_: {} -> {}\n".format(k, v)
         out += '\n'
         return out
