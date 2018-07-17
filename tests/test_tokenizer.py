@@ -16,7 +16,7 @@ len: 7
 syls (བཀྲ ཤིས): [[0, 1, 2], [4, 5, 6]]
 tag: NOUN
 pos: NOUN
-skrt: "False"
+skrt: False
 freq: 17500
 """
     assert tokens[0].__repr__() == expected

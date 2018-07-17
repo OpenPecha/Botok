@@ -8,7 +8,7 @@ def test_pybo_chunk():
     pybo_string = PyBoChunk(' བཀྲ་ཤིས་  tr བདེ་་ལེ གས། ')
     found = pybo_string.chunk(indices=False)
     found = pybo_string.get_markers(found)
-    assert found == [('syl', ' བཀྲ་'), ('syl', 'ཤིས་  '), ('non-bo', 'tr'), ('syl', ' བདེ་་'), ('syl', 'ལེ གས'),
+    assert found == [('syl', ' བཀྲ་'), ('syl', 'ཤིས་  '), ('non-bo', 'tr '), ('syl', 'བདེ་་'), ('syl', 'ལེ གས'),
                      ('punct', '། ')]
 
 

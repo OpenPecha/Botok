@@ -43,7 +43,7 @@ def test_missing_token6():
 def test_missing_token7():
     input_str = "གདབ། །ཨོཾ་ན་"
     tokens = tok.tokenize(input_str)
-    assert ['གདབ', '། ', '།', 'ཨོཾ་', 'ན་'] == [t.content for t in tokens]
+    assert ['གདབ', '། །', 'ཨོཾ་', 'ན་'] == [t.content for t in tokens]
 
 
 def test_missing_token8():
@@ -55,7 +55,7 @@ def test_missing_token8():
 def test_missing_token9():
     input_str = "བསྐོལ། །རྡོ་རྗེ་"
     tokens = tok.tokenize(input_str)
-    assert ['བསྐོལ', '། ', '།', 'རྡོ་རྗེ་'] == [t.content for t in tokens]
+    assert ['བསྐོལ', '། །', 'རྡོ་རྗེ་'] == [t.content for t in tokens]
 
 
 def test_missing_token10():
@@ -79,7 +79,7 @@ def test_missing_token12():
 def test_missing_token13():
     input_str = "།ཨོཾ་གི་རི་ཧི་རི་ཙི་རི། །ཨཱ་ཨཱ་ཤུ་མ་ཤ་"
     tokens = tok.tokenize(input_str)
-    assert ['།', 'ཨོཾ་', 'གི་རི་', 'ཧི་', 'རི་', 'ཙི་', 'རི', '། ', '།', 'ཨཱ་', 'ཨཱ་ཤུ་', 'མ་', 'ཤ་'] == [t.content for t in tokens]
+    assert ['།', 'ཨོཾ་', 'གི་རི་', 'ཧི་', 'རི་', 'ཙི་', 'རི', '། །', 'ཨཱ་', 'ཨཱ་ཤུ་', 'མ་', 'ཤ་'] == [t.content for t in tokens]
 
 
 def test_missing_token14():
@@ -91,7 +91,7 @@ def test_missing_token14():
 def test_missing_token15():
     input_str = "བསྣམས། །རྩི་"
     tokens = tok.tokenize(input_str)
-    assert ['བསྣམས', '། ', '།', 'རྩི་'] == [t.content for t in tokens]
+    assert ['བསྣམས', '། །', 'རྩི་'] == [t.content for t in tokens]
 
 
 def test_missing_token16():
@@ -219,7 +219,7 @@ def test_missing_token35():
 def test_missing_token36():
     input_str = "བསྲུབས་བྱས་པས། །ལྟེ་ལྐོག་"
     tokens = tok.tokenize(input_str)
-    assert ['བསྲུབས་', 'བྱས་པ', 'ས', '། ', '།', 'ལྟེ་', 'ལྐོག་'] == [t.content for t in tokens]
+    assert ['བསྲུབས་', 'བྱས་པ', 'ས', '། །', 'ལྟེ་', 'ལྐོག་'] == [t.content for t in tokens]
 
 
 def test_missing_token37():
@@ -237,7 +237,7 @@ def test_missing_token38():
 def test_missing_token39():
     input_str = "འཛོམ། །རྣོ་"
     tokens = tok.tokenize(input_str)
-    assert ['འཛོམ', '། ', '།', 'རྣོ་'] == [t.content for t in tokens]
+    assert ['འཛོམ', '། །', 'རྣོ་'] == [t.content for t in tokens]
 
 
 def test_missing_token40():
@@ -287,7 +287,7 @@ def test_missing_token46():
 def test_missing_token47():
     input_str = "འཁོས་དུ། །ཆེ་"
     tokens = tok.tokenize(input_str)
-    assert ['འཁོས་', 'དུ', '། ', '།', 'ཆེ་'] == [t.content for t in tokens]
+    assert ['འཁོས་', 'དུ', '། །', 'ཆེ་'] == [t.content for t in tokens]
 
 
 def test_missing_token48():
@@ -331,7 +331,7 @@ def test_missing_token53():
 def test_missing_token54():
     input_str = "བྷ་གར་འཁྱིལ། །ཨོཾ་"
     tokens = tok.tokenize(input_str)
-    assert ['བྷ་', 'གར་', 'འཁྱིལ', '། ', '།', 'ཨོཾ་'] == [t.content for t in tokens]
+    assert ['བྷ་', 'གར་', 'འཁྱིལ', '། །', 'ཨོཾ་'] == [t.content for t in tokens]
 
 
 def test_missing_token55():
