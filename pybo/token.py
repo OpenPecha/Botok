@@ -92,9 +92,15 @@ class Token:
             if affix_len:
                 affix_len = int(affix_len)
                 if self.cleaned_content.endswith('་'):
-                    return self.cleaned_content[:-affix_len - 1] + 'འ་'
+                    if aa:
+                        return self.cleaned_content[:-affix_len - 1] + 'འ་'
+                    else:
+                        return self.cleaned_content[:-affix_len - 1] + '་'
                 else:
-                    return self.cleaned_content[:-affix_len] + 'འ'
+                    if aa:
+                        return self.cleaned_content[:-affix_len] + 'འ'
+                    else:
+                        return self.cleaned_content[:-affix_len]
             else:
                 return self.cleaned_content
         else:
