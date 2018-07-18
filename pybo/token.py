@@ -86,7 +86,7 @@ class Token:
             if self.cleaned_content.endswith('་'):
                 return self.cleaned_content[:-1] + 'འ་'
             else:
-                return self.cleaned_content + 'འ'
+                return self.cleaned_content + 'འ་'
         elif self.tag.count(AFFIX_SEP) == 3:
             _, _, affix_len, aa = self.tag.split(AFFIX_SEP)
             if affix_len:
@@ -98,39 +98,47 @@ class Token:
                         return self.cleaned_content[:-affix_len - 1] + '་'
                 else:
                     if aa:
-                        return self.cleaned_content[:-affix_len] + 'འ'
+                        return self.cleaned_content[:-affix_len] + 'འ་'
                     else:
-                        return self.cleaned_content[:-affix_len]
-            else:
-                return self.cleaned_content
+                        return self.cleaned_content[:-affix_len] + '་'
+
+        if self.cleaned_content and not self.cleaned_content.endswith('་'):
+            return self.cleaned_content + '་'
         else:
             return self.cleaned_content
 
     def __repr__(self):
-        out = 'content: "'+self.content+'"'
+        out = 'content: "{}"'.format(self.content)
+        if self.cleaned_content:
+            out += '\ncleaned_content: "{}"'.format(self.cleaned_content)
+        if self.unaffixed_word:
+            out += '\nunaffixed_word: "{}"'.format(self.unaffixed_word)
+        if self.lemma:
+            out += '\nlemma: "{}"'.format(self.lemma)
         if self.phono:
-            out += '\nphono: /'+self.phono+'/'
-        out += '\nchar_types: '
-        out += '|'+'|'.join([self.char_markers[self.char_groups[idx]]
-                            for idx in sorted(self.char_groups.keys())])+'|'
+            out += '\nphono: /{}/'.format(self.phono)
+        out += '\nchar_types: |' + '|'.join([self.char_markers[self.char_groups[idx]]
+                                             for idx in sorted(self.char_groups.keys())])+'|'
         out += '\ntype: ' + self.type
         out += '\nstart: ' + str(self.start)
         out += '\nlen: ' + str(self.len)
-        out += '\nsyls '
-        if self.syls:
-            out += '(' + ' '.join([''.join([self.content[char] for char in syl]) for syl in self.syls]) + '): '
-        else:
-            out += ': '
-        out += str(self.syls)
-        out += '\ntag: '
+        if self.syls and self.syls != []:
+            out += '\nsyls (' + ' '.join([''.join([self.content[char] for char in syl])
+                                   for syl in self.syls]) + '): ' + str(self.syls)
         if self.tag:
-            out += self.tag
-        out += '\npos: '
+            out += '\ntag: {}'.format(self.tag)
         if self.pos:
-            out += self.pos
-        out += "\nskrt: {}".format(self.skrt)
-        out += '\nfreq: '
-        out += str(self.freq)
+            out += '\npos: {}'.format(self.pos)
+        if self.affix:
+            out += '\naffix: {}'.format(self.affix)
+        if self.affixed:
+            out += '\naffixed: {}'.format(self.affixed)
+        if self.aa_word:
+            out += '\naa_word: {}'.format(self.aa_word)
+        if self.skrt:
+            out += "\nskrt: {}".format(self.skrt)
+        if self.freq:
+            out += '\nfreq: {}'.format(self.freq)
         if self._:
             out += '\n'
             for k, v in self._.items():

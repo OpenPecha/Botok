@@ -23,10 +23,10 @@ class LemmatizeTokens:
             if token.unaffixed_word:
                 no_tsek = token.unaffixed_word.rstrip('་')
                 if no_tsek in self.particles and token.pos == 'PART':
-                    token.lemma = self.particles[no_tsek]
+                    token.lemma = self.particles[no_tsek] + '་'
 
                 elif no_tsek in self.lemmas:
-                    token.lemma = self.lemmas[no_tsek]
+                    token.lemma = self.lemmas[no_tsek] + '་'
 
                 else:
                     token.lemma = token.unaffixed_word
