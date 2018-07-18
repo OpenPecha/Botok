@@ -12,10 +12,6 @@ class PyBoChunk(BoChunk):
             | chunk "bo" into syllables
             | delete chunks containing spaces and transfer their content to the previous chunk
 
-    :Example:
-
-    >>>
-
     .. note:: Following Tibetan usage, it does not consider space as a punctuation mark.
     Spaces get attached to the chunk preceding them.
     """

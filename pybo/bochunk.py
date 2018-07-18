@@ -225,14 +225,14 @@ class BoChunk(BoString):
         Tests whether the character at the given index is a Tibetan punctuation or not.
         """
         # if a tsek or a space is right after
-        if char_idx and \
-                (self.base_structure[char_idx-1] == self.SYMBOLS or \
-                self.base_structure[char_idx-1] == self.NUM or \
-                self.base_structure[char_idx-1] == self.OTHER or \
-                self.base_structure[char_idx-1] == self.PUNCT or \
-                self.base_structure[char_idx-1] == self.SPECIAL_PUNCT) and \
-                (self.base_structure[char_idx] == self.TSEK or \
-                self.base_structure[char_idx] == self.SPACE):
+        if char_idx \
+                and (self.base_structure[char_idx-1] == self.SYMBOLS or
+                     self.base_structure[char_idx-1] == self.NUM or
+                     self.base_structure[char_idx-1] == self.OTHER or
+                     self.base_structure[char_idx-1] == self.PUNCT or
+                     self.base_structure[char_idx-1] == self.SPECIAL_PUNCT) \
+                and (self.base_structure[char_idx] == self.TSEK or
+                     self.base_structure[char_idx] == self.SPACE):
             return True
         return self.base_structure[char_idx] == self.PUNCT or \
             self.base_structure[char_idx] == self.SPECIAL_PUNCT
@@ -280,9 +280,8 @@ class BoChunk(BoString):
         Tests whether the character at the given index in a tsek or not.
         Used as test to find syllable boundaries by ``syllabify()``.
         """
-
-        return  self.base_structure[char_idx] == self.TSEK or \
-                self.base_structure[char_idx] == self.SKRT_LONG_VOW
+        return self.base_structure[char_idx] == self.TSEK or \
+            self.base_structure[char_idx] == self.SKRT_LONG_VOW
 
     def get_chunked(self, indices, gen=False):
         """

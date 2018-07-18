@@ -47,7 +47,7 @@ class Tokenizer:
             # 1. CHUNK IS SYLLABLE
             if chunk[0]:
                 # syl is extracted from input string, tsek added for the trie
-                if  chunk[0][-1] < pre_processed.len - 1 and self.pre_processed.string[chunk[0][-1]+1] == "ཿ":
+                if chunk[0][-1] < pre_processed.len - 1 and self.pre_processed.string[chunk[0][-1]+1] == "ཿ":
                     syl = [self.pre_processed.string[idx] for idx in chunk[0]] + ['ཿ']
                 else:
                     syl = [self.pre_processed.string[idx] for idx in chunk[0]] + ['་']
