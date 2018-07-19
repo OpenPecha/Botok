@@ -196,16 +196,16 @@ class BoChunk(BoString):
         """
         # if a tsek or a space is right after
         if char_idx \
-                and (self.base_structure[char_idx-1] == self.SYMBOLS or
-                     self.base_structure[char_idx-1] == self.NUM or
-                     self.base_structure[char_idx-1] == self.OTHER or
-                     self.base_structure[char_idx-1] == self.PUNCT or
-                     self.base_structure[char_idx-1] == self.SPECIAL_PUNCT or
-                     self.base_structure[char_idx-1] == self.TSEK or
-                     self.base_structure[char_idx - 1] == self.SPACE) \
-                and (self.base_structure[char_idx] == self.TSEK or
-                     self.base_structure[char_idx] == self.SPACE or
-                     self.base_structure[char_idx] == self.PUNCT):
+                and (self.base_structure[char_idx-1] == self.SYMBOLS
+                     or self.base_structure[char_idx-1] == self.NUM
+                     or self.base_structure[char_idx-1] == self.OTHER
+                     or self.base_structure[char_idx-1] == self.PUNCT
+                     or self.base_structure[char_idx-1] == self.SPECIAL_PUNCT
+                     or self.base_structure[char_idx-1] == self.TSEK
+                     or self.base_structure[char_idx - 1] == self.SPACE) \
+                and (self.base_structure[char_idx] == self.TSEK
+                     or self.base_structure[char_idx] == self.SPACE
+                     or self.base_structure[char_idx] == self.PUNCT):
             return True
         # (self.base_structure[char_idx-1] == self.TSEK and self.base_structure[char_idx-1] == self.SPACE)
         return self.base_structure[char_idx] == self.PUNCT or \
