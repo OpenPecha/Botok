@@ -36,8 +36,8 @@ class MergingMatcher:
         return merged_list
 
     def __matches(self, i):
-        return i + self.span <= len(self.token_list) and \
-               self.matcher(self.token_list[i:i + self.span + 1])
+        return i + self.span <= len(self.token_list) \
+               and self.matcher(self.token_list[i:i + self.span + 1])
 
     def __merge(self, token1, token2):
         ts = TokenMerge(token1, token2, self.token_changes)

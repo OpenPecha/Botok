@@ -164,10 +164,10 @@ class Tokenizer:
             for syl in syls:
                 if syl <= non_max_idx:
                     non_max_syls.append(syl)
-            tokens.append(self.chunks_to_token(non_max_syls, \
-                                   tag=match_data[non_max_idx][0], \
-                                   freq=match_data[non_max_idx][1], \
-                                   skrt=match_data[non_max_idx][2]))
+            tokens.append(self.chunks_to_token(non_max_syls,
+                                               tag=match_data[non_max_idx][0],
+                                               freq=match_data[non_max_idx][1],
+                                               skrt=match_data[non_max_idx][2]))
             c_idx = non_max_idx
         else:
             # add first syl in syls as non-word

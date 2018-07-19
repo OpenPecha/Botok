@@ -58,8 +58,8 @@ class TokenMerge:
                     new_syl = [i + self.token1.len for i in syl]
 
                     # token1 is a host syllable and token2 its affixed syllable
-                    if first_syl and (self.token1.affixed and not self.token1.affix) and \
-                            (not self.token2.affixed and self.token2.affix):
+                    if first_syl and (self.token1.affixed and not self.token1.affix) \
+                            and (not self.token2.affixed and self.token2.affix):
                         self.merged.syls[-1] += new_syl
                         self.merged.affix = True
                         first_syl = False

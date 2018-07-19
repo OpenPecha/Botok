@@ -37,8 +37,8 @@ class SplittingMatcher:
         return split_list
 
     def __matches(self, i, token_list):
-        return i + self.span <= len(token_list) and \
-               self.matcher(self.token_list[i:i + self.span + 1])
+        return i + self.span <= len(token_list) \
+            and self.matcher(self.token_list[i:i + self.span + 1])
 
     def __split(self, token):
         ts = TokenSplit(token, self.split_idx, self.token_changes)

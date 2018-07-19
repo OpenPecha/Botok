@@ -13,7 +13,6 @@ class PyBoTrie(BasicTrie):
         self.TSEK = '་'
         self.COMMENT = '#'
         self.profile = profile
-        #self.freq =
         self.pickled_file = profile + '_trie.pickled'
         self.user_word_list = user_word_list
         self.load_or_build_trie(build)

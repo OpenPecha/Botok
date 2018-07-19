@@ -207,9 +207,9 @@ class BoChunk(BoString):
                      or self.base_structure[char_idx] == self.SPACE
                      or self.base_structure[char_idx] == self.PUNCT):
             return True
-        # (self.base_structure[char_idx-1] == self.TSEK and self.base_structure[char_idx-1] == self.SPACE)
-        return self.base_structure[char_idx] == self.PUNCT or \
-            self.base_structure[char_idx] == self.SPECIAL_PUNCT
+
+        return self.base_structure[char_idx] == self.PUNCT \
+            or self.base_structure[char_idx] == self.SPECIAL_PUNCT
 
     def chunk_symbol(self, start=None, end=None, yes=107, no=108):
         """
