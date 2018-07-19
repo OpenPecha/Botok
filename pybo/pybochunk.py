@@ -9,6 +9,8 @@ class PyBoChunk(BoChunk):
     Implements the following chunking pipeline:
             chunk "input_str" into "bo"/"non-bo"
             | chunk "bo" into "punct"/"bo"
+            | chunk "bo" into "sym"/"bo"
+            | chunk "bo" into "num"/"bo"
             | chunk "bo" into syllables
             | delete chunks containing spaces and transfer their content to the previous chunk
 
