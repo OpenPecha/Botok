@@ -180,11 +180,3 @@ class PyBoTrie(BasicTrie):
             return word[:tsek_idx+1], word[tsek_idx+1:]
         else:
             return '', word
-
-
-if __name__ == '__main__':
-    """ Example use """
-    bt = PyBoTrie('POS')
-    print('གྲུབ་མཐའ་', bt.has_word('གྲུབ་མཐའ་'))
-    print('གྲུབ་མཐའི་', bt.has_word('གྲུབ་མཐའི་'))
-    print('ཟས་', bt.has_word('ཟས་'))
