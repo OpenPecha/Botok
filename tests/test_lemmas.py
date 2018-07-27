@@ -14,4 +14,4 @@ def test_lemmatize():
     lt = LemmatizeTokens(lemma_folder=resource_path)
     lt.lemmatize(tokens)
     assert tokens[1].content == 'འི་'
-    assert tokens[1].lemma == 'གི'
+    assert tokens[1].lemma == 'གི་'

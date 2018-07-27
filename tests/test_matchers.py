@@ -21,9 +21,9 @@ def test_cql():
     matcher = CQLMatcher(query)
     slices = matcher.match(tokens)
     slice_strings = [tuple([tokens[i].content for i in range(start, end + 1)]) for start, end in slices]
-    assert slices == [(0, 1), (2, 3), (4, 5), (7, 8), (9, 10), (11, 12), (12, 13)]
+    assert slices == [(0, 1), (2, 3), (4, 5), (7, 8), (13, 14), (14, 15)]
     assert slice_strings == [(' མཐ', 'འི་'), ('རྒྱ་མཚོ', 'འི་'), ('གླིང་', '། '), ('བཀྲ་ཤིས་  ', 'tr '),
-                             ('བདེ་་ལེ གས', '། '), ('བཀྲ་ཤིས་', 'བདེ་ལེགས་'), ('བདེ་ལེགས་', 'ཀཀ')]
+                             ('བཀྲ་ཤིས་', 'བདེ་ལེགས་'), ('བདེ་ལེགས་', 'ཀཀ')]
 
 
 def test_token_split():
@@ -68,7 +68,7 @@ def test_match_replace():
     replace = '[tag="XXX" & pos="xxx"]'
 
     ReplacingMatcher(match_query, replace_idx, tokens, replace).replace_on_matches()
-    assert len(tokens) == 14
+    assert len(tokens) == 16
     assert tokens[0].pos == 'xxx'
     assert tokens[1].pos == 'PART'
 

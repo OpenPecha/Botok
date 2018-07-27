@@ -8,6 +8,8 @@ def test_token_to_string():
     tok.trie.add('བཀྲ་ཤིས་', data='NOUN', freq = 17500)
     tokens = tok.tokenize(PyBoTextChunks('བཀྲ་ཤིས།'), phono=True)
     expected = """content: "བཀྲ་ཤིས"
+cleaned_content: "བཀྲ་ཤིས་"
+unaffixed_word: "བཀྲ་ཤིས་"
 phono: /ʈaˊ.ɕi/
 char_types: |cons|cons|sub-cons|tsek|cons|vow|cons|
 type: syl
@@ -16,7 +18,6 @@ len: 7
 syls (བཀྲ ཤིས): [[0, 1, 2], [4, 5, 6]]
 tag: NOUN
 pos: NOUN
-skrt: False
 freq: 17500
 """
     assert tokens[0].__repr__() == expected
