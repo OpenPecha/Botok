@@ -1,5 +1,5 @@
 # coding: utf-8
-from .adjusttokens import AdjustTokens
+# from .adjusttokens import AdjustTokens
 from .basictrie import BasicTrie
 from .bochunk import BoChunk
 from .bostring import BoString
@@ -21,10 +21,10 @@ from .tokenmerge import TokenMerge
 from .tokensplit import TokenSplit
 
 
-VERSION = "0.2.2"
+VERSION = "0.2.2.1"
 
 
-__all__ = ['AdjustTokens', 'BasicTrie', 'BoChunk', 'BoString', 'BoTokenizer', 'BoSyl', 'CQLMatcher', 'MergingMatcher',
+__all__ = ['BasicTrie', 'BoChunk', 'BoString', 'BoTokenizer', 'BoSyl', 'CQLMatcher', 'MergingMatcher',
            'LemmatizeTokens', 'PyBoChunk', 'PyBoTextChunks', 'PyBoTrie', 'ReplacingMatcher', 'SplitAffixed',
            'SplittingMatcher', 'SylComponents', 'Query', 'parse_cql_query', 'replace_token_attributes', 'Token',
            'Tokenizer', 'TokenMerge', 'TokenSplit']

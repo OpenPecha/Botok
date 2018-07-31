@@ -2,7 +2,7 @@
 from .token import Token
 from .splitaffixed import SplitAffixed
 from .helpers import AFFIX_SEP
-import bophono
+# import bophono
 
 
 class Tokenizer:
@@ -15,10 +15,10 @@ class Tokenizer:
         self.WORD = 1000
         self.OOV = 1001
 
-        self.bophono_options = {
-            'aspirateLowTones': True,
-            'prefixStrategy': 'always'
-        }
+        # self.bophono_options = {
+        #     'aspirateLowTones': True,
+        #     'prefixStrategy': 'always'
+        # }
 
     def tokenize(self, pre_processed, split_affixes=True, phono=False, debug=False):
         """
@@ -29,7 +29,7 @@ class Tokenizer:
         :param debug: prints debug info in True
         :return: a list of Token objects
         """
-        self.phono_switch = phono
+        # self.phono_switch = phono
         self.pre_processed = pre_processed
         tokens = []
         syls = []
@@ -218,8 +218,8 @@ class Tokenizer:
         """
         token = Token()
         token.content = self.pre_processed.string[start:start+length]
-        if self.phono_switch:
-            token.phono = bophono.UnicodeToApi(options=self.bophono_options).get_api(token.content)
+        # if self.phono_switch:
+        #     token.phono = bophono.UnicodeToApi(options=self.bophono_options).get_api(token.content)
         token.chunk_type = ttype
         token.type = token.chunk_markers[ttype]
         token.start = start
