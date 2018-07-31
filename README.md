@@ -62,5 +62,8 @@ Each index leads to a constituting character within the input string.
     
 These examples highlight the basic principle of accessing attributes within each token object. 
 
+## Acknowledgement
+
+A big thanks to the Khyentse Foundation for contributing USD22,000 to support Drupchen and Sekou, our two linguist/programmers who kickstarted the project.
 
 
