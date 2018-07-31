@@ -64,6 +64,11 @@ These examples highlight the basic principle of accessing attributes within each
 
 ## Acknowledgement
 
-A big thanks to the Khyentse Foundation for contributing USD22,000 to support Drupchen and Sekou, our two linguist/programmers who kickstarted the project.
+**pybo** is an open source library for Tibetan NLP.
 
+We are always open to cooperation in introducing new features, tool integrations and testing solutions.
 
+Many thanks to companies and organizations who supported the development of pybo, especially:
+
+* [Khyentse Foundation](https://khyentsefoundation.org) for contributing USD22,000 to kickstart the project 
+* The [Barom/Esukhia canon project](http://www.barom.org) for sponsoring data creation
