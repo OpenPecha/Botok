@@ -1,5 +1,6 @@
 # coding: utf-8
 from .bochunk import BoChunk
+from .bostring import BoString
 
 
 class PyBoChunk(BoChunk):
@@ -22,10 +23,10 @@ class PyBoChunk(BoChunk):
 
     def chunk(self, indices=True, gen=False):
         chunks = self.chunk_bo_chars()
-        self.pipe_chunk(chunks, self.chunk_punct, to_chunk=self.BO_MARKER, yes=self.PUNCT_MARKER)
-        self.pipe_chunk(chunks, self.chunk_symbol, to_chunk=self.BO_MARKER, yes=self.SYMBOL_MARKER)
-        self.pipe_chunk(chunks, self.chunk_number, to_chunk=self.BO_MARKER, yes=self.NUMBER_MARKER)
-        self.pipe_chunk(chunks, self.syllabify, to_chunk=self.BO_MARKER, yes=self.SYL_MARKER)
+        self.pipe_chunk(chunks, self.chunk_punct, to_chunk=BoChunk.BO_MARKER, yes=BoChunk.PUNCT_MARKER)
+        self.pipe_chunk(chunks, self.chunk_symbol, to_chunk=BoChunk.BO_MARKER, yes=BoChunk.SYMBOL_MARKER)
+        self.pipe_chunk(chunks, self.chunk_number, to_chunk=BoChunk.BO_MARKER, yes=BoChunk.NUMBER_MARKER)
+        self.pipe_chunk(chunks, self.syllabify, to_chunk=BoChunk.BO_MARKER, yes=BoChunk.SYL_MARKER)
         self.__attach_space_chunks(chunks)
         if not indices:
             return self.get_chunked(chunks, gen=gen)
@@ -57,7 +58,7 @@ class PyBoChunk(BoChunk):
         spaces_count = 0
         i = start
         while i < end:
-            if self.base_structure[i] == self.SPACE:
+            if self.base_structure[i] == BoString.SPACE:
                 spaces_count += 1
             i += 1
         return spaces_count == end - start

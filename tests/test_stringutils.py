@@ -56,3 +56,13 @@ def test_spaces():
     found = bo_string.get_chunked(chunks)
     assert found == [('space', ' '), ('non-space', 'བཀྲ་ཤིས་'), ('space', '  '), ('non-space', 'tr'), ('space', ' '),
                      ('non-space', 'བདེ་ལེགས།')]
+
+
+def test_multiple_spaces():
+    bo_string = PyBoChunk('ཤི ས་ཤི  ས་')
+    chunks = bo_string.chunk()
+    chunks = bo_string.get_markers(chunks)
+    chunks = bo_string.get_chunked(chunks)
+    assert ('syl', 'ཤི ས་') == chunks[0]
+    assert ('syl', 'ཤི  ས་') == chunks[1]
+    assert 2 == len(chunks)

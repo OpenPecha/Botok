@@ -39,55 +39,56 @@ class BoString:
                 Be sure to create the corresponding constants in ``__init__()`` and the corresponding
                 entries in ``__init__().char_markers``.
     """
+    cons = "ཀཁགངཅཆཇཉཏཐདནཔཕབམཙཚཛཝཞཟའཡརལཤསཧཨཪ"
+    CONS = 1
+    sub_cons = "ྐྒྔྕྗྙྟྡྣྤྦྨྩྫྭྱྲླྷ"
+    SUB_CONS = 2
+    vow = "ིེོུ"
+    VOW = 3
+    tsek = "་༌"
+    TSEK = 4
+    skrt_cons = "གྷཊཋཌཌྷཎདྷབྷཛྷཥཀྵ྅"
+    SKRT_CONS = 5
+    skrt_sub_cons = "ྑྖྠྥྪྮྯྰྴྶྸྺྻྼཱྒྷྚྛྜྜྷྞྡྷྦྷྫྷྵྐྵ"
+    SKRT_SUB_CONS = 6
+    skrt_vow = "ཱཱིུྲྀཷླྀཹ྄ཱཻཽྀྀྂྃ྆"
+    SKRT_VOW = 7
+    skrt_long_vow = "ཿ"
+    SKRT_LONG_VOW = 17
+    normal_punct = "༄༅༆༈།༎༏༐༑༔༴༼༽"
+    PUNCT = 8
+    numerals = "༠༡༢༣༤༥༦༧༨༩"
+    NUM = 9
+    in_syl_marks = "༵༷༸ཾ"
+    IN_SYL_MARK = 10
+    special_punct = "༁༂༃༒༇༉༊༺༻༾༿࿐࿑࿓࿔"
+    SPECIAL_PUNCT = 11
+    symbols = "ༀ༓༕༖༗༘༙༚༛༜༝༞༟༪༫༬༭༮༯༰༱༲༳༶༹྇ྈྉྊྋྌྍྎྏ྾྿࿀࿁࿂࿃࿄࿅࿆࿇࿈࿉࿊࿋࿌࿎࿏࿒࿕࿖࿗࿘࿙࿚"
+    SYMBOLS = 12
+    non_bo_non_skrt = "ཫཬ"
+    NON_BO_NON_SKRT = 13
+    OTHER = 14
+    # all spaces from the unicode tables
+    spaces = ["\t", " ", " ", "᠎", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", "​", " ", " ", "　", "﻿"]
+    SPACE = 15
+
     def __init__(self, string):
-        self.cons = "ཀཁགངཅཆཇཉཏཐདནཔཕབམཙཚཛཝཞཟའཡརལཤསཧཨཪ"
-        self.CONS = 1
-        self.sub_cons = "ྐྒྔྕྗྙྟྡྣྤྦྨྩྫྭྱྲླྷ"
-        self.SUB_CONS = 2
-        self.vow = "ིེོུ"
-        self.VOW = 3
-        self.tsek = "་༌"
-        self.TSEK = 4
-        self.skrt_cons = "གྷཊཋཌཌྷཎདྷབྷཛྷཥཀྵ྅"
-        self.SKRT_CONS = 5
-        self.skrt_sub_cons = "ྑྖྠྥྪྮྯྰྴྶྸྺྻྼཱྒྷྚྛྜྜྷྞྡྷྦྷྫྷྵྐྵ"
-        self.SKRT_SUB_CONS = 6
-        self.skrt_vow = "ཱཱིུྲྀཷླྀཹ྄ཱཻཽྀྀྂྃ྆"
-        self.SKRT_VOW = 7
-        self.skrt_long_vow = "ཿ"
-        self.SKRT_LONG_VOW = 17
-        self.normal_punct = "༄༅༆༈།༎༏༐༑༔༴༼༽"
-        self.PUNCT = 8
-        self.numerals = "༠༡༢༣༤༥༦༧༨༩"
-        self.NUM = 9
-        self.in_syl_marks = "༵༷༸ཾ"
-        self.IN_SYL_MARK = 10
-        self.special_punct = "༁༂༃༒༇༉༊༺༻༾༿࿐࿑࿓࿔"
-        self.SPECIAL_PUNCT = 11
-        self.symbols = "ༀ༓༕༖༗༘༙༚༛༜༝༞༟༪༫༬༭༮༯༰༱༲༳༶༹྇ྈྉྊྋྌྍྎྏ྾྿࿀࿁࿂࿃࿄࿅࿆࿇࿈࿉࿊࿋࿌࿎࿏࿒࿕࿖࿗࿘࿙࿚"
-        self.SYMBOLS = 12
-        self.non_bo_non_skrt = "ཫཬ"
-        self.NON_BO_NON_SKRT = 13
-        self.OTHER = 14
-        # all spaces from the unicode tables
-        self.spaces = ["\t", " ", " ", "᠎", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", "​", " ", " ", "　", "﻿"]
-        self.SPACE = 15
-        self.char_markers = {self.CONS: 'cons',
-                             self.SUB_CONS: 'sub-cons',
-                             self.VOW: 'vow',
-                             self.TSEK: 'tsek',
-                             self.SKRT_CONS: 'skrt-cons',
-                             self.SKRT_SUB_CONS: 'skrt-sub-cons',
-                             self.SKRT_VOW: 'skrt-vow',
-                             self.SKRT_LONG_VOW: 'skrt-long-vow',
-                             self.PUNCT: 'punct',
-                             self.NUM: 'num',
-                             self.IN_SYL_MARK: 'in-syl-mark',
-                             self.SPECIAL_PUNCT: 'special-punct',
-                             self.SYMBOLS: 'symbol',
-                             self.NON_BO_NON_SKRT: 'no-bo-no-skrt',
-                             self.OTHER: 'other',
-                             self.SPACE: 'space'}
+        self.char_markers = {BoString.CONS: 'cons',
+                             BoString.SUB_CONS: 'sub-cons',
+                             BoString.VOW: 'vow',
+                             BoString.TSEK: 'tsek',
+                             BoString.SKRT_CONS: 'skrt-cons',
+                             BoString.SKRT_SUB_CONS: 'skrt-sub-cons',
+                             BoString.SKRT_VOW: 'skrt-vow',
+                             BoString.SKRT_LONG_VOW: 'skrt-long-vow',
+                             BoString.PUNCT: 'punct',
+                             BoString.NUM: 'num',
+                             BoString.IN_SYL_MARK: 'in-syl-mark',
+                             BoString.SPECIAL_PUNCT: 'special-punct',
+                             BoString.SYMBOLS: 'symbol',
+                             BoString.NON_BO_NON_SKRT: 'no-bo-no-skrt',
+                             BoString.OTHER: 'other',
+                             BoString.SPACE: 'space'}
 
         self.string = string
         self.len = len(string)
@@ -100,38 +101,38 @@ class BoString:
         """
         for i in range(len(self.string)):
             char = self.string[i]
-            if char in self.cons:
-                self.base_structure[i] = self.CONS
-            elif char in self.sub_cons:
-                self.base_structure[i] = self.SUB_CONS
-            elif char in self.vow:
-                self.base_structure[i] = self.VOW
-            elif char in self.tsek:
-                self.base_structure[i] = self.TSEK
-            elif char in self.skrt_cons:
-                self.base_structure[i] = self.SKRT_CONS
-            elif char in self.skrt_sub_cons:
-                self.base_structure[i] = self.SKRT_SUB_CONS
-            elif char in self.skrt_vow:
-                self.base_structure[i] = self.SKRT_VOW
-            elif char in self.skrt_long_vow:
-                self.base_structure[i] = self.SKRT_LONG_VOW
-            elif char in self.normal_punct:
-                self.base_structure[i] = self.PUNCT
-            elif char in self.numerals:
-                self.base_structure[i] = self.NUM
-            elif char in self.in_syl_marks:
-                self.base_structure[i] = self.IN_SYL_MARK
-            elif char in self.special_punct:
-                self.base_structure[i] = self.SPECIAL_PUNCT
-            elif char in self.symbols:
-                self.base_structure[i] = self.SYMBOLS
-            elif char in self.non_bo_non_skrt:
-                self.base_structure[i] = self.NON_BO_NON_SKRT
-            elif char in self.spaces:
-                self.base_structure[i] = self.SPACE
+            if char in BoString.cons:
+                self.base_structure[i] = BoString.CONS
+            elif char in BoString.sub_cons:
+                self.base_structure[i] = BoString.SUB_CONS
+            elif char in BoString.vow:
+                self.base_structure[i] = BoString.VOW
+            elif char in BoString.tsek:
+                self.base_structure[i] = BoString.TSEK
+            elif char in BoString.skrt_cons:
+                self.base_structure[i] = BoString.SKRT_CONS
+            elif char in BoString.skrt_sub_cons:
+                self.base_structure[i] = BoString.SKRT_SUB_CONS
+            elif char in BoString.skrt_vow:
+                self.base_structure[i] = BoString.SKRT_VOW
+            elif char in BoString.skrt_long_vow:
+                self.base_structure[i] = BoString.SKRT_LONG_VOW
+            elif char in BoString.normal_punct:
+                self.base_structure[i] = BoString.PUNCT
+            elif char in BoString.numerals:
+                self.base_structure[i] = BoString.NUM
+            elif char in BoString.in_syl_marks:
+                self.base_structure[i] = BoString.IN_SYL_MARK
+            elif char in BoString.special_punct:
+                self.base_structure[i] = BoString.SPECIAL_PUNCT
+            elif char in BoString.symbols:
+                self.base_structure[i] = BoString.SYMBOLS
+            elif char in BoString.non_bo_non_skrt:
+                self.base_structure[i] = BoString.NON_BO_NON_SKRT
+            elif char in BoString.spaces:
+                self.base_structure[i] = BoString.SPACE
             else:
-                self.base_structure[i] = self.OTHER
+                self.base_structure[i] = BoString.OTHER
 
     def export_groups(self, start_idx, slice_len, for_substring=True):
         """
