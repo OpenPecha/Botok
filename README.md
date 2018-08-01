@@ -62,5 +62,13 @@ Each index leads to a constituting character within the input string.
     
 These examples highlight the basic principle of accessing attributes within each token object. 
 
+## Acknowledgement
 
+**pybo** is an open source library for Tibetan NLP.
 
+We are always open to cooperation in introducing new features, tool integrations and testing solutions.
+
+Many thanks to companies and organizations who supported the development of pybo, especially:
+
+* [Khyentse Foundation](https://khyentsefoundation.org) for contributing USD22,000 to kickstart the project 
+* The [Barom/Esukhia canon project](http://www.barom.org) for sponsoring training data curation
