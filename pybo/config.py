@@ -16,32 +16,35 @@ class Config:
         config : Dictionary object containing all the configuration elements
     """
     def __init__(self, filename):
-        """Initialise the class configuration
+        """Initialize the class
 
-            :param filename: Filename of the file with its extension
-        """
-        file, extension = os.path.splitext(filename)
-        if extension != ".yaml":
-            raise Exception("Unrecognised file extension. it only supports .yaml files")
-
-        self.filename = filename
-
-    def parse_config_file(self):
-        """Parsing the configuration file
-
-        Converting the configuration file into a Python dictionnaire object which
+        Converting the configuration file into a Python dictionnary object which
         contains all the necesary parameters to set up Pybo properly.
 
         The text file has to respect the YAML writing rules.
         For more information: 'https://pyyaml.org/wiki/PyYAML'
 
-        :return: The Python dictionary object containing the configuration
+            :param filename: Filename of the file with its extension
         """
-        config_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", self.filename)
+        file, extension = os.path.splitext(filename)
+        if extension != ".yaml":
+            raise Exception("Unrecognised file extension. It only supports .yaml files")
 
-        with open(config_file, mode="r", encoding="utf-8") as f:
+        self.filename = filename
+        self.full_path_name = os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", self.filename)
+
+        with open(self.full_path_name, mode="r", encoding="utf-8") as f:
             self.config = yaml.load(f.read())
-        return self.config
+
+    def get_profile(self, profile):
+        """Get the profile configuration list
+
+        Each profile has a list of files which can be collected by this function.
+
+        :param profile: the profile name
+        :return: the list of files of the selected profile
+        """
+        return self.config["POS"]["Profile"][profile]
 
 
 if __name__ == '__main__':
