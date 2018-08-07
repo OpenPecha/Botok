@@ -72,3 +72,4 @@ Many thanks to companies and organizations who supported the development of pybo
 
 * [Khyentse Foundation](https://khyentsefoundation.org) for contributing USD22,000 to kickstart the project 
 * The [Barom/Esukhia canon project](http://www.barom.org) for sponsoring training data curation
+* [BDRC](https://tbrc.org) for contributing 2 staff for 6 months for data curation
