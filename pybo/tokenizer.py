@@ -135,7 +135,7 @@ class Tokenizer:
             # END OF INPUT
             # if we reached end of input and there is a non-max-match
             if len(self.pre_processed.chunks) - 1 == c_idx:
-                if any(match_data) and current_node and not current_node.leaf:
+                if any(match_data.values()) and current_node and not current_node.leaf:
                     c_idx = self.add_found_word_or_non_word(c_idx, match_data, syls, tokens)
                     syls = []
                     current_node = None
@@ -158,7 +158,7 @@ class Tokenizer:
         # there is a match
         if c_idx in match_data.keys():
             tokens.append(self.chunks_to_token(syls, tag=match_data[c_idx][0], freq=match_data[c_idx][1], skrt=match_data[c_idx][2]))
-        elif any(match_data):
+        elif any(match_data.values()):
             non_max_idx = sorted(match_data.keys())[-1]
             non_max_syls = []
             for syl in syls:
