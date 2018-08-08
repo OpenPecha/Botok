@@ -1,0 +1,25 @@
+POS:
+  trie_files:
+    - &part 'particles.txt'
+    - &ancient ancient.txt
+    - &except exceptions.txt
+    - &uncomp uncompound_lexicon.txt
+    - &tsikchen tsikchen.txt
+    - &oral0 oral_corpus_0.txt
+    - &oral1 oral_corpus_1.txt
+    - &oral2 oral_corpus_2.txt
+    - &oral3 oral_corpus_3.txt
+    - &record recordings_4.txt
+    - &mgd mgd.txt
+    - &verb verbs.txt
+  skrt_files:
+    - &skrt ~ssanskrit.txt
+  pos_files:
+    - &tibdict ~pTibetan.DICT
+  freq_files:
+    - &freq_mgd ~fmgd.txt
+  Profile:
+    pytib: [*ancient, *except, *uncomp, *tsikchen, *tibdict, *part]
+    POS: [*ancient, *except, *uncomp, *tsikchen, *tibdict, *part]
+    PP: [*part]
+    GMD: [*ancient, *except, *uncomp, *tsikchen, *mgd, *verb, *tibdict, *skrt, *freq_mgd, *part]

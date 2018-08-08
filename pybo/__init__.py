@@ -19,6 +19,7 @@ from .token import Token
 from .tokenizer import Tokenizer
 from .tokenmerge import TokenMerge
 from .tokensplit import TokenSplit
+from .config import Config
 
 
 VERSION = "0.2.2.1"
@@ -39,8 +40,9 @@ class BoTokenizer:
         """
         :param profile: profile for building the trie. (see config.yaml)
         """
+        self.config_profile = Config("config.yaml")
         self.lemmatize = lemmatize
-        self.tok = Tokenizer(PyBoTrie(BoSyl(), profile=profile, user_word_list=user_word_list))
+        self.tok = Tokenizer(PyBoTrie(BoSyl(), profile=profile, user_word_list=user_word_list, config=self.config_profile))
 
     def tokenize(self, string, split_affixes=True, phono=False, debug=False):
         """
