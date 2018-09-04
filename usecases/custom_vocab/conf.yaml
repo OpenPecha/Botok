@@ -1,9 +1,12 @@
+
 Exec:
     profile: Amdo1
+    tok_profile: POS
     vocab_path: vocabs
     input_folder: input
     output_folder: output
     tokenized_suffix: _tokenized
+    rebuild_trie: False
 
 Profiles:
     Amdo1:
