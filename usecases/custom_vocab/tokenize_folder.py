@@ -49,7 +49,7 @@ def main():
     suffix = config['Exec']['tokenized_suffix']
 
     user_paths = get_vocab_files(profile, vocab_profiles, vocab_path)
-    tokenize_folder('input', 'output', user_vocabs=user_paths)
+    tokenize_folder('input', 'output', user_vocabs=user_paths, suffix=suffix)
 
 
 if __name__ == '__main__':
