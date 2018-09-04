@@ -21,7 +21,7 @@ def get_tokenized_string(tokens):
     return out
 
 
-def tokenize_folder(in_folder, out_folder='output', user_vocabs=[]):
+def tokenize_folder(in_folder, out_folder='output', user_vocabs=[], suffix='_tokenized'):
     in_folder = Path(in_folder)
     out_folder = Path(out_folder)
 
@@ -36,16 +36,21 @@ def tokenize_folder(in_folder, out_folder='output', user_vocabs=[]):
         tokens = tok.tokenize(content)
         out = get_tokenized_string(tokens)
         out = ' '.join(out)
-        out_file = out_folder / str(f.stem + '_tokenized' + f.suffix)
+        out_file = out_folder / str(f.stem + suffix + f.suffix)
         out_file.write_text(out, encoding='utf-8-sig')
 
 
-if __name__ == '__main__':
+def main():
     config = yaml.load(Path('conf.yaml').read_text(encoding='utf-8-sig'))
 
     profile = config['Exec']['profile']
     vocab_path = config['Exec']['vocab_path']
     vocab_profiles = config['Profiles']
+    suffix = config['Exec']['tokenized_suffix']
 
     user_paths = get_vocab_files(profile, vocab_profiles, vocab_path)
     tokenize_folder('input', 'output', user_vocabs=user_paths)
+
+
+if __name__ == '__main__':
+    main()

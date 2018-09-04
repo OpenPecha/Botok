@@ -3,6 +3,7 @@ Exec:
     vocab_path: vocabs
     input_folder: input
     output_folder: output
+    tokenized_suffix: _tokenized
 
 Profiles:
     Amdo1:
