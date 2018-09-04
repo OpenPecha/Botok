@@ -15,9 +15,8 @@ Exec:
 
 Profiles:
     Amdo1:
-        - a.txt
-        - b.txt
-        - c.txt'''
+        - མཚོ་སྔོན་རྐང་ཚ།.txt
+        '''
 
 
 def get_vocab_files(config):
@@ -35,7 +34,9 @@ def get_vocab_files(config):
 def get_tokenized_string(tokens):
     out = []
     for t in tokens:
-        if t.type != 'syl':
+        if '༺' in t.content or '༻' in t.content:
+            out.append(t.content.replace('༺', '[').replace('༻', ']'))
+        elif t.type != 'syl':
             out.append(t.content)
         else:
             out.append(t.unaffixed_word)

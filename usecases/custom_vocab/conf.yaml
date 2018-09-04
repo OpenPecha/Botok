@@ -10,6 +10,5 @@ Exec:
 
 Profiles:
     Amdo1:
-        - a.txt
-        - b.txt
-        - c.txt
+        - མཚོ་སྔོན་རྐང་ཚ།.txt
+        
