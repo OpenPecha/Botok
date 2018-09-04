@@ -1,0 +1,11 @@
+Exec:
+    profile: Amdo1
+    vocab_path: vocabs
+    input_folder: input
+    output_folder: output
+
+Profiles:
+    Amdo1:
+        - a.txt
+        - b.txt
+        - c.txt
