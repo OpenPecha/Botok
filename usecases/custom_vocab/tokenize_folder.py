@@ -15,8 +15,7 @@ Exec:
 
 Profiles:
     Amdo1:
-        - མཚོ་སྔོན་རྐང་ཚ།.txt
-        '''
+        - མཚོ་སྔོན་རྐང་ཚ།.txt'''
 
 
 def get_vocab_files(config):
