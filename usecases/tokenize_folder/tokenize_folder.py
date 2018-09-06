@@ -79,19 +79,17 @@ def GUI(config):
     while True:
         with sg.FlexForm('Folder Tokenizer') as form:
 
-            layout = [[sg.Multiline(default_text=config, scale=(2, 10))],
+            layout = [[sg.Multiline(default_text=config, scale=(1, 20))],
                       [sg.Submit(button_text='Tokenize'), sg.Quit()]]
 
             button, (new_config,) = form.LayoutAndRead(layout)
+            config = new_config[:-1]  # delete the added \n char
+
             if button == 'Tokenize':
-                if config != new_config:
-                    main(new_config)
-                else:
-                    main(config)
+                main(config)
             else:
-                if config != new_config:
-                    Path('conf.yaml').write_text(new_config)
                 break
+    Path('conf.yaml').write_text(config)
 
 
 if __name__ == '__main__':
