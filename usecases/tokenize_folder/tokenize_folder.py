@@ -1,10 +1,10 @@
 from pybo import BoTokenizer
+import PySimpleGUI as sg
 from pathlib import Path
 import yaml
 
 
-default_config = '''
-Exec:
+default_config = '''Exec:
     profile: Amdo1
     tok_profile: POS
     vocab_path: vocabs
@@ -68,15 +68,35 @@ def tokenize_folder(config, user_vocabs=[]):
         out_file.write_text(out, encoding='utf-8-sig')
 
 
-def main():
-    config = yaml.load(Path('conf.yaml').read_text(encoding='utf-8-sig'))
+def main(config):
+    config = yaml.load(config)
 
     user_paths = get_vocab_files(config)
     tokenize_folder(config, user_paths)
+
+
+def GUI(config):
+    while True:
+        with sg.FlexForm('Folder Tokenizer') as form:
+
+            layout = [[sg.Multiline(default_text=config, scale=(2, 10))],
+                      [sg.Submit(button_text='Tokenize'), sg.Quit()]]
+
+            button, (new_config,) = form.LayoutAndRead(layout)
+            if button == 'Tokenize':
+                if config != new_config:
+                    main(new_config)
+                else:
+                    main(config)
+            else:
+                if config != new_config:
+                    Path('conf.yaml').write_text(new_config)
+                break
 
 
 if __name__ == '__main__':
     # ensure config.yaml exists with default values
     if not Path('conf.yaml').exists():
         Path('conf.yaml').write_text(default_config)
-    main()
+    raw_config = Path('conf.yaml').read_text(encoding='utf-8-sig')
+    GUI(raw_config)
