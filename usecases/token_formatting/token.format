@@ -1,0 +1,21 @@
+Profiles:
+    corpus:
+        token_separator: ' '
+        space_replace: '_'
+        included_chunks:
+            non-bo: False
+            punct: False
+            sym: False
+            num: False
+            syl: True
+        word_format:
+            normal_words: unaffixed_word
+            affixes:
+                format: unaffixed_word
+                marker: '–'
+            affixed_words:
+                format: unaffixed_word
+        marks:
+            pos:
+                oov: '#'
+                non-word: '#'
