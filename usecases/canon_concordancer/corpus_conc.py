@@ -13,7 +13,7 @@ from collections import defaultdict
 
 
 default_config = '''Exec:
-    profile: Amdo1
+    profile: ''
     tok_profile: GMD
     vocab_path: vocabs
     input_folder: input
@@ -86,10 +86,8 @@ def mark_oov_nonword(tokens):
     out = []
     for t in tokens:
         token = t.content.replace(' ', '_')
-        if t.pos == 'oov' or t.pos == 'OOV':
+        if t.pos == 'oov'or t.pos == 'non-word':
             out.append(f'#{token}')
-        elif t.pos == 'non-word:':
-            out.append(f'${token}')
         else:
             out.append(token)
     return out
@@ -97,7 +95,6 @@ def mark_oov_nonword(tokens):
 
 def get_oov_nonword_types():
     folder = Path('output/tokenized')
-    oov = defaultdict(dict)
     nonword = defaultdict(dict)
     for f in folder.glob('*.txt'):
         content = f.read_text(encoding='utf-8-sig').split('\n')
@@ -106,34 +103,27 @@ def get_oov_nonword_types():
             w = w.rstrip('་')
             if '#' in w:
                 w = w.lstrip('#')
-                if f.stem not in oov[w]:
-                    oov[w][f.stem] = 0
-                oov[w][f.stem] += 1
-            elif '$' in w:
-                w = w.lstrip('$')
                 if w not in nonword[w]:
                     nonword[w][f.stem] = 0
                 nonword[w][f.stem] += 1
-    oov_out = ''
-    for k, v in oov.items():
-        oov_out += f'\n{k}\n'
-        for kk, vv in v.items():
-            oov_out += f'\t\t{kk}:\t\t{vv}\n'
-    Path('output/types/oov.txt').write_text(oov_out, encoding='utf-8-sig')
 
     nonword_out = ''
     for k, v in nonword.items():
         nonword_out += f'\n{k}\n'
+        total = 0
         for kk, vv in v.items():
             nonword_out += f'\t{kk}:\t\t{vv}\n'
+            total += vv
+        nonword_out += f'\ttotal:\t\t{total}\n'
+
     Path('output/types/nonwords.txt').write_text(nonword_out, encoding='utf-8-sig')
+    return nonword
 
-    return oov.keys(), nonword.keys()
 
-
-def create_concs(marked, left=5, right=5, folder=None):
+def create_concs(marked, left=5, right=5):
     for token in marked:
         concs = []
+        total_occurences = sum(marked[token].values())
 
         # find concs
         tok_folder = Path('output/tokenized')
@@ -158,11 +148,11 @@ def create_concs(marked, left=5, right=5, folder=None):
                     concs.append((l_conc, words[num], r_conc))
 
         # format concs
-        out = ',L5,L4,L3,L2,L1,A,R1,R2,R3,R4,R5\n'
+        out = 'L5\tL4\tL3\tL2\tL1\tA\tR1\tR2\tR3\tR4\tR5\n'
         for c in concs:
-            out += ','.join(c[0] + [c[1]] + c[2]) + '\n'
+            out += '\t'.join(c[0] + [c[1]] + c[2]) + '\n'
 
-        out_file = Path(f'output/concordances/{folder}') / f'{token}.csv'
+        out_file = Path(f'output/concordances/') / f'{total_occurences}_{token}.tsv'
         out_file.write_text(out)
 
 
@@ -170,9 +160,8 @@ def main():
     tok_folder = Path('output/tokenized')
     if tok_folder.is_dir() and len(list(tok_folder.glob('*.txt'))) == 0:
         tokenize_folder(mark_oov_nonword)
-    oov, nonword = get_oov_nonword_types()
-    create_concs(oov, folder='oov')
-    create_concs(nonword, folder='nonword')
+    nonword = get_oov_nonword_types()
+    create_concs(nonword)
 
 
 if __name__ == '__main__':
