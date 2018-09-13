@@ -26,12 +26,12 @@ class PyBoTrie(BasicTrie):
             self.load_trie()
 
     def load_trie(self):
-        print('Loading Trie...')
+        print('Loading Trie...', end=' ')
         start = time.time()
         with open(self.pickled_file, 'rb') as f:
             self.head = pickle.load(f)
         end = time.time()
-        print('Time:', end - start)
+        print('({:.0f}s.)'.format(end - start))
 
     def rebuild_trie(self):
         self.head = Node()
@@ -40,7 +40,7 @@ class PyBoTrie(BasicTrie):
     def build_trie(self):
         """
         """
-        print('building Trie...', end=' ')
+        print('Building Trie...', end=' ')
         start = time.time()
 
         for f in self.config_trie.get_profile(self.profile):
@@ -67,7 +67,7 @@ class PyBoTrie(BasicTrie):
         with open(self.pickled_file, 'wb') as f:
             pickle.dump(self.head, f, pickle.HIGHEST_PROTOCOL)
         end = time.time()
-        print('Time:', end - start)
+        print('({:.0f} s.)'.format(end - start))
 
     def __add_one_file(self, in_file, ins="data", data_only=False):
         """
@@ -109,6 +109,8 @@ class PyBoTrie(BasicTrie):
                     if word[0] == '-':
                         word = word[1:]
                         remove_word = True
+
+                    word = word.rstrip('།')  # strip any ending shad
 
                     self.inflect_n_add(word, pos, ins, data_only, remove_word)
 
