@@ -1,14 +1,7 @@
-# workflow:
-# 1. tokenize canon, all tokenized files are in output/tokenized
-# 2. parse all types of non-words and OOV, from tokenized files : output/types
-#    (gather stats about how many instances of each time in what file + total)
-# 3. for each type, parse the whole output folder and generate a syllable-based concordance
-#    + file name in the first column : output/concordances
-
-
 from pybo import BoTokenizer
 from pathlib import Path
 import yaml
+import re
 from collections import defaultdict
 
 
@@ -41,7 +34,14 @@ def get_vocab_files(config):
     return abs_paths
 
 
-def process_folders(config, format_func, user_vocabs=[]):
+def clean_lines(content):
+    content = re.sub(r'\[[^\]]+\]', '', content)
+    content = re.sub(r'\{[^\}]+\}', '', content)
+    content = re.sub('\n', '', content)
+    return content
+
+
+def process_folders(config, format_func, user_vocabs=[], remove_page_info=True):
     in_folder = config['Exec']['input_folder']
     out_folder = config['Exec']['output_folder']
     tok_profile = config['Exec']['tok_profile']
@@ -60,6 +60,8 @@ def process_folders(config, format_func, user_vocabs=[]):
     in_files = in_folder.glob('*.txt')
     for f in in_files:
         content = f.read_text(encoding='utf-8-sig')
+        if remove_page_info:
+            content = clean_lines(content)
         tokens = tok.tokenize(content)
         out = format_func(tokens)
         out = ' '.join(out).replace('\n ', '\n')
@@ -93,7 +95,27 @@ def mark_oov_nonword(tokens):
     return out
 
 
-def get_oov_nonword_types():
+def mark_skrt_nonwords(tokens):
+    out = []
+    for t in tokens:
+        token = t.content.replace(' ', '_')
+        skrt = False
+        nonword = False
+        if t.pos == 'oov' or t.pos == 'non-word':
+            nonword = True
+        if t.skrt:
+            skrt = True
+
+        if nonword and not skrt:
+            out.append(f'#{token}')
+        elif nonword and skrt:
+            out.append(f'${token}')
+        else:
+            out.append(token)
+    return out
+
+
+def get_oov_nonword_types(marker, filename):
     folder = Path('output/tokenized')
     nonword = defaultdict(dict)
     for f in folder.glob('*.txt'):
@@ -101,23 +123,25 @@ def get_oov_nonword_types():
         words = [word for c in content for word in c.split(' ')]
         for w in words:
             w = w.rstrip('་')
-            if '#' in w:
-                w = w.lstrip('#')
+            if marker in w:
+                w = w.lstrip(marker)
                 if w not in nonword[w]:
                     nonword[w][f.stem] = 0
                 nonword[w][f.stem] += 1
 
-    nonword_out = ''
-    for k, v in nonword.items():
-        nonword_out += f'\n{k}\n'
+    out = []
+    for k in nonword.keys():
         total = 0
-        for kk, vv in v.items():
-            nonword_out += f'\t{kk}:\t\t{vv}\n'
-            total += vv
-        nonword_out += f'\ttotal:\t\t{total}\n'
+        for v in nonword[k].values():
+            total += v
+        out.append((total, k))
 
-    Path('output/types/nonwords.txt').write_text(nonword_out, encoding='utf-8-sig')
-    return nonword
+    nonword_out = ''
+    for o in sorted(out, reverse=True):
+        nonword_out += f'{o[1]}\t{o[0]}\n'
+
+    Path(f'output/types/{filename}.txt').write_text(nonword_out, encoding='utf-8-sig')
+    # return nonword
 
 
 def create_concs(marked, left=5, right=5):
@@ -156,12 +180,22 @@ def create_concs(marked, left=5, right=5):
         out_file.write_text(out)
 
 
+def clean_state():
+    to_empty = [('output/concordances/', '*.tsv'),
+                ('output/tokenized/', '*.txt'),
+                ('output/types/', '*.txt')]
+    for path, ext in to_empty:
+        for f in Path(path).glob(ext):
+            f.unlink()
+
+
 def main():
+    clean_state()
     tok_folder = Path('output/tokenized')
-    if tok_folder.is_dir() and len(list(tok_folder.glob('*.txt'))) == 0:
-        tokenize_folder(mark_oov_nonword)
-    nonword = get_oov_nonword_types()
-    create_concs(nonword)
+    tokenize_folder(mark_skrt_nonwords)
+    get_oov_nonword_types('#', 'nonwords')
+    get_oov_nonword_types('$', 'sanskrit')
+    # create_concs(nonword)
 
 
 if __name__ == '__main__':
