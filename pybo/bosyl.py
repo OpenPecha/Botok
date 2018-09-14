@@ -1,5 +1,4 @@
 # coding: utf-8
-import re
 from .sylcomponents import SylComponents
 
 
@@ -17,8 +16,13 @@ class BoSyl(SylComponents):
 
     def is_affixable(self, syl):
         """expects a clean syllable without ending tsek"""
-        regex = r'(ར|ས|འི|འམ|འང|འོ)$'
-        return self.is_thame(syl) and re.findall(regex, syl) == []
+        affixable = False
+        if self.is_thame(syl):
+            affixable = True
+            for ending in ['ར', 'ས', 'འི', 'འོ', 'འིའོ']:
+                if len(syl) > len(ending) and syl.endswith(ending):
+                    affixable = False
+        return affixable
 
     def get_all_affixed(self, syl):
         """

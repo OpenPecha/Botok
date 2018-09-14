@@ -136,7 +136,7 @@ class SylComponents:
                     None if more than one solution from get_parts()
         """
         components = self.get_parts(syl)
-        if type(components) == 'list' or not components:
+        if type(components) == list or not components:
             return None
         else:
             return self.mingzhis[components[0]]
