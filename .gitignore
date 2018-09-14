@@ -1,8 +1,11 @@
 
 # Created by https://www.gitignore.io/api/macos,pydev,python,eclipse,pycharm+all,visualstudio,visualstudiocode
 
-### Eclipse ###
+# User data
+usecases/canon_concordancer/input
+usecases/canon_concordancer/output
 
+### Eclipse ###
 .metadata
 bin/
 tmp/
