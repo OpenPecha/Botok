@@ -1,10 +1,9 @@
 # coding: utf-8
 import time
-import os
 import pickle
+from pathlib import Path
 from .basictrie import BasicTrie, Node
-from .helpers import open_file, AFFIX_SEP, OOV
-from .config import Config
+from .helpers import AFFIX_SEP, OOV
 
 
 class PyBoTrie(BasicTrie):
@@ -20,7 +19,7 @@ class PyBoTrie(BasicTrie):
         self.load_or_build_trie(build)
 
     def load_or_build_trie(self, build):
-        if build or not os.path.exists(self.pickled_file):
+        if build or not Path(self.pickled_file).exists():
             self.build_trie()
         else:
             self.load_trie()
@@ -58,7 +57,7 @@ class PyBoTrie(BasicTrie):
                     resource_directory = 'sanskrit'
                     ins_s = "skrt"
                 f = f[2:]
-            full_path = os.path.join(os.path.split(__file__)[0], 'resources', resource_directory, str(f))
+            full_path = Path().cwd() / 'resources' / resource_directory / f
             self.__add_one_file(full_path, ins=ins_s, data_only=data_s)
 
         for f in self.user_word_list:
@@ -79,14 +78,14 @@ class PyBoTrie(BasicTrie):
         :param data_only:
         """
         if ins == "skrt":
-            for line in open_file(in_file).split('\n'):
+            for line in in_file.read_text(encoding='utf-8-sig').split('\n'):
                 if line:
                     word = line
 
                 sep = "" if word[-1] == "ཿ" else "་"
                 self.add(word + sep, skrt=True)
         else:
-            for line in open_file(in_file).split('\n'):
+            for line in in_file.read_text(encoding='utf-8-sig').split('\n'):
                 if self.COMMENT in line:
                     comment_idx = line.index(self.COMMENT)
                     line = line[:comment_idx]

@@ -1,5 +1,5 @@
 # coding: utf-8
-# from .adjusttokens import AdjustTokens
+from .adjusttokens import AdjustTokens
 from .basictrie import BasicTrie
 from .bochunk import BoChunk
 from .bostring import BoString
@@ -25,7 +25,7 @@ from .config import Config
 VERSION = "0.2.2.1"
 
 
-__all__ = ['BasicTrie', 'BoChunk', 'BoString', 'BoTokenizer', 'BoSyl', 'CQLMatcher', 'MergingMatcher',
+__all__ = ['AdjustTokens', 'BasicTrie', 'BoChunk', 'BoString', 'BoTokenizer', 'BoSyl', 'CQLMatcher', 'MergingMatcher',
            'LemmatizeTokens', 'PyBoChunk', 'PyBoTextChunks', 'PyBoTrie', 'ReplacingMatcher', 'SplitAffixed',
            'SplittingMatcher', 'SylComponents', 'Query', 'parse_cql_query', 'replace_token_attributes', 'Token',
            'Tokenizer', 'TokenMerge', 'TokenSplit']
@@ -36,15 +36,15 @@ class BoTokenizer:
     Convenience class to tokenize a given string.
 
     """
-    def __init__(self, profile, user_word_list=[], lemmatize=True):
+    def __init__(self, profile, user_word_list=[], lemma_folder=None):
         """
         :param profile: profile for building the trie. (see config.yaml)
         """
         self.config_profile = Config("config.yaml")
-        self.lemmatize = lemmatize
+        self.lt = LemmatizeTokens(lemma_folder=lemma_folder)
         self.tok = Tokenizer(PyBoTrie(BoSyl(), profile=profile, user_word_list=user_word_list, config=self.config_profile))
 
-    def tokenize(self, string, split_affixes=True, phono=False, debug=False):
+    def tokenize(self, string, split_affixes=True, lemmatize=True, phono=False, debug=False):
         """
         :param string: to be tokenized
         :param split_affixes: separates the affixed particles into seperate tokens if True
@@ -52,6 +52,6 @@ class BoTokenizer:
         """
         preprocessed = PyBoTextChunks(string)
         tokens = self.tok.tokenize(preprocessed, split_affixes=split_affixes, phono=phono, debug=debug)
-        if self.lemmatize:
-            LemmatizeTokens().lemmatize(tokens)
+        if lemmatize:
+            self.lt.lemmatize(tokens)
         return tokens

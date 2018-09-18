@@ -1,6 +1,4 @@
-import os
 import yaml
-from .helpers import open_file
 from .splittingmatcher import SplittingMatcher
 from .mergingmatcher import MergingMatcher
 from .replacingmatcher import ReplacingMatcher
@@ -8,7 +6,7 @@ from .replacingmatcher import ReplacingMatcher
 
 class AdjustTokens:
     def __init__(self, rules_folder=None):
-        self.paths = [] # [os.path.join(os.path.split(__file__)[0], 'resources', 'rules')]
+        self.paths = []
         if rules_folder:
             self.paths.append(rules_folder)
         self.rules = []
@@ -34,10 +32,6 @@ class AdjustTokens:
         return token_list
 
     def parse_rules(self):
-        def gen_file_paths(folders):
-            paths = [os.path.join(os.path.split(__file__)[0], folder, f) for folder in folders
-                     for f in os.listdir(folder)]
-            return sorted(paths)
-
-        for rule_file in gen_file_paths(self.paths):
-            self.rules.extend(yaml.load(open_file(rule_file)))
+        paths = [p for path in self.paths for p in path.glob('*.*')]
+        for rule_file in sorted(paths):
+            self.rules.extend(yaml.load(rule_file.read_text(encoding='utf-8-sig')))

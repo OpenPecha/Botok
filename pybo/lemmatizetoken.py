@@ -1,7 +1,6 @@
 # coding: utf-8
-from .helpers import open_file
 import yaml
-import os
+from pathlib import Path
 
 
 class LemmatizeTokens:
@@ -10,10 +9,11 @@ class LemmatizeTokens:
     in other words, if it is valid tibetan syllables.
     """
     def __init__(self, lemma_folder=None):
-        self.particles_path = os.path.join(os.path.split(__file__)[0], 'resources', 'lemmas', 'particles.yaml')
-        self.paths = [os.path.join(os.path.split(__file__)[0], 'resources', 'lemmas')]
+        self.particles_path = Path().cwd() / 'resources' / 'lemmas' / 'particles.yaml'
+        self.paths = []
+        self.paths.append(self.particles_path.parent)
         if lemma_folder:
-            self.paths.append(lemma_folder)
+            self.paths.append(Path(lemma_folder).resolve())
         self.lemmas = {}
         self.particles = {}
         self.parse_lemmas()
@@ -37,7 +37,7 @@ class LemmatizeTokens:
         :param filename: input file
         :return: dict where key is a form and value is its lemma
         """
-        parsed_yaml = yaml.load(open_file(filename))
+        parsed_yaml = yaml.load(filename.read_text(encoding='utf-8-sig'))
 
         lemmas = {}
         for lemma, forms in parsed_yaml.items():
@@ -47,12 +47,7 @@ class LemmatizeTokens:
         return lemmas
 
     def parse_lemmas(self):
-        def gen_file_paths(folders):
-            paths = [os.path.join(os.path.split(__file__)[0], folder, f) for folder in folders for f in os.listdir(folder)]
-            paths.remove(self.particles_path)
-            return paths
+        paths = [p for path in self.paths for p in path.glob('*.yaml')]
 
-        for lemmafile in gen_file_paths(self.paths):
+        for lemmafile in paths:
             self.lemmas.update(self.parse_lemma_file(lemmafile))
-
-        self.particles.update(self.parse_lemma_file(self.particles_path))

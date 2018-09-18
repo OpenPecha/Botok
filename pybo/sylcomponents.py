@@ -1,7 +1,7 @@
 # coding: utf-8
 import re
-import os
 import json
+from pathlib import Path
 
 
 class SylComponents:
@@ -12,10 +12,10 @@ class SylComponents:
     def __init__(self):
         # check for possible dadrag https://github.com/eroux/tibetan-spellchecker/blob/master/doc/second-suffix-da.md
         # roots is an import from root + rareC and wazurC and suffixes is the 'AB' entry from  suffixes.json
-        self.data_path = os.path.join(os.path.split(__file__)[0], "resources", "SylComponents.json")
+        self.data_path = Path().cwd() / "resources" / "SylComponents.json"
 
-        with open(self.data_path, 'r', -1, 'utf-8-sig') as f:
-            data = json.loads(f.read())
+        data = json.loads(self.data_path.read_text(encoding='utf-8-sig'))
+
         self.dadrag = data['dadrag']
         self.roots = data['roots']
         self.suffixes = data['suffixes']

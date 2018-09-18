@@ -3,15 +3,40 @@
 """Configuration file to set up Pybo
 """
 
-import os
-
+from pathlib import Path
 import yaml
+
+default_config = '''pybo:
+  trie_files:
+    - &part 'particles.txt'
+    - &ancient ancient.txt
+    - &except exceptions.txt
+    - &uncomp uncompound_lexicon.txt
+    - &tsikchen tsikchen.txt
+    - &oral0 oral_corpus_0.txt
+    - &oral1 oral_corpus_1.txt
+    - &oral2 oral_corpus_2.txt
+    - &oral3 oral_corpus_3.txt
+    - &record recordings_4.txt
+    - &mgd mgd.txt
+    - &verb verbs.txt
+  skrt_files:
+    - &skrt ~ssanskrit.txt
+  pos_files:
+    - &tibdict ~pTibetan.DICT
+  freq_files:
+    - &freq_mgd ~fmgd.txt
+  Profile:
+    pytib: [*ancient, *except, *uncomp, *tsikchen, *tibdict, *part]
+    POS: [*ancient, *except, *uncomp, *tsikchen, *tibdict, *part]
+    PP: [*part]
+    GMD: [*ancient, *except, *uncomp, *tsikchen, *mgd, *verb, *tibdict, *skrt, *freq_mgd, *part]'''
 
 
 class Config:
     """Configuration class
 
-    Attributs :
+    Attributes :
         filename: Complete filename of the configuration file
         config : Dictionary object containing all the configuration elements
     """
@@ -26,15 +51,15 @@ class Config:
 
             :param filename: Filename of the file with its extension
         """
-        file, extension = os.path.splitext(filename)
-        if extension != ".yaml":
+        self.filename = Path(filename).resolve()
+        if self.filename.suffix != ".yaml":
             raise Exception("Unrecognised file extension. It only supports .yaml files")
 
-        self.filename = filename
-        self.full_path_name = os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", self.filename)
+        # if the file doesn't exist, write it with the default values
+        if not self.filename.is_file():
+            self.filename.write_text(default_config, encoding='utf-8-sig')
 
-        with open(self.full_path_name, mode="r", encoding="utf-8") as f:
-            self.config = yaml.load(f.read())
+        self.config = yaml.load(self.filename.open(mode='r', encoding='utf-8-sig'))
 
     def get_profile(self, profile):
         """Get the profile configuration list
@@ -44,10 +69,14 @@ class Config:
         :param profile: the profile name
         :return: the list of files of the selected profile
         """
-        return self.config["POS"]["Profile"][profile]
+        return self.config["pybo"]["Profile"][profile]
+
+    def reset_default(self):
+        """Resets the configuration file to the default values"""
+        self.filename.write_text(default_config, encoding='utf-8-sig')
 
 
 if __name__ == '__main__':
     config = Config("config.yaml")
-    config.parse_config_file()
-    print(config.config)
+    config.reset_default()
+    print(config.get_profile('POS'))
