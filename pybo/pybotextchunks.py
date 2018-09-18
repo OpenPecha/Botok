@@ -13,8 +13,8 @@ class PyBoTextChunks(PyBoChunk):
             - the chunk itself
 
     """
-    def __init__(self, string):
-        PyBoChunk.__init__(self, string)
+    def __init__(self, string, ignore_chars=[]):
+        PyBoChunk.__init__(self, string, ignore_chars=ignore_chars)
         self.chunks = self.serve_syls_to_trie()
 
     def serve_syls_to_trie(self):

@@ -3,6 +3,7 @@ from pybo import *
 
 ###########################################
 tok = BoTokenizer('POS')  # instanciated
+tok.tok.trie.rebuild_trie()
 
 input_str = ' ཤི་བཀྲ་ཤིས་  tr བདེ་་ལེ གས། བཀྲ་ཤིས་བདེ་ལེགས་ཀཀ'
 tokens = tok.tokenize(input_str)

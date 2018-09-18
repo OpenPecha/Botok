@@ -143,8 +143,8 @@ class BoChunk(BoString):
     NUMBER_MARKER = 109
     NON_NUMBER_MARKER = 110
 
-    def __init__(self, string):
-        BoString.__init__(self, string)
+    def __init__(self, string, ignore_chars=[]):
+        BoString.__init__(self, string, ignore_chars=ignore_chars)
         self.chunk_markers = {self.BO_MARKER: 'bo',
                               self.NON_BO_MARKER: 'non-bo',
                               self.PUNCT_MARKER: 'punct',

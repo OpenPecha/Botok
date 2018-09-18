@@ -72,7 +72,7 @@ class BoString:
     spaces = ["\t", " ", " ", "᠎", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", "​", " ", " ", "　", "﻿"]
     SPACE = 15
 
-    def __init__(self, string):
+    def __init__(self, string, ignore_chars=[]):
         self.char_markers = {self.CONS: 'cons',
                              self.SUB_CONS: 'sub-cons',
                              self.VOW: 'vow',
@@ -90,6 +90,8 @@ class BoString:
                              self.OTHER: 'other',
                              self.SPACE: 'space'}
 
+        for c in ignore_chars:
+            self.spaces.append(c)
         self.string = string
         self.len = len(string)
         self.base_structure = {}

@@ -36,11 +36,12 @@ class BoTokenizer:
     Convenience class to tokenize a given string.
 
     """
-    def __init__(self, profile, user_word_list=[], lemma_folder=None):
+    def __init__(self, profile, user_word_list=[], lemma_folder=None, ignore_chars=[]):
         """
         :param profile: profile for building the trie. (see config.yaml)
         """
         self.config_profile = Config("config.yaml")
+        self.ignore_chars = ignore_chars
         self.lt = LemmatizeTokens(lemma_folder=lemma_folder)
         self.tok = Tokenizer(PyBoTrie(BoSyl(), profile=profile, user_word_list=user_word_list, config=self.config_profile))
 
@@ -50,7 +51,7 @@ class BoTokenizer:
         :param split_affixes: separates the affixed particles into seperate tokens if True
         :return: list of pybo.tokenizer.Token objects
         """
-        preprocessed = PyBoTextChunks(string)
+        preprocessed = PyBoTextChunks(string, ignore_chars=self.ignore_chars)
         tokens = self.tok.tokenize(preprocessed, split_affixes=split_affixes, phono=phono, debug=debug)
         if lemmatize:
             self.lt.lemmatize(tokens)
