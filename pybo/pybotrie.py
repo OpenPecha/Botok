@@ -24,6 +24,10 @@ class PyBoTrie(BasicTrie):
         else:
             self.load_trie()
 
+        # load the custom entries on the fly (at each instanciation)
+        for f in self.user_word_list:
+            self.__add_one_file(f)
+
     def load_trie(self):
         print('Loading Trie...', end=' ')
         start = time.time()
@@ -59,9 +63,6 @@ class PyBoTrie(BasicTrie):
                 f = f[2:]
             full_path = Path(__file__).parent / 'resources' / resource_directory / f
             self.__add_one_file(full_path, ins=ins_s, data_only=data_s)
-
-        for f in self.user_word_list:
-            self.__add_one_file(f)
 
         with open(self.pickled_file, 'wb') as f:
             pickle.dump(self.head, f, pickle.HIGHEST_PROTOCOL)
