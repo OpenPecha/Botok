@@ -15,6 +15,29 @@ Profiles:
                 marker: '–'
             affixed_words:
                 format: unaffixed_word
+            meta_tokens:
+                markers: True
+                meta: True
+        marks:
+            pos:
+                oov: '#'
+                non-word: '#'
+    non-word:
+        token_separator: ' '
+        space_replace: '_'
+        included_chunks:
+            non-bo: True
+            punct: True
+            sym: True
+            num: True
+            syl: True
+        word_format:
+            normal_words: content
+            affixes:
+                format: content
+                marker: ''
+            affixed_words:
+                format: content
         marks:
             pos:
                 oov: '#'

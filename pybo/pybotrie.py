@@ -57,7 +57,7 @@ class PyBoTrie(BasicTrie):
                     resource_directory = 'sanskrit'
                     ins_s = "skrt"
                 f = f[2:]
-            full_path = Path().cwd() / 'resources' / resource_directory / f
+            full_path = Path(__file__).parent / 'resources' / resource_directory / f
             self.__add_one_file(full_path, ins=ins_s, data_only=data_s)
 
         for f in self.user_word_list:

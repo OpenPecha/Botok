@@ -1,4 +1,4 @@
-POS:
+﻿pybo:
   trie_files:
     - &part 'particles.txt'
     - &ancient ancient.txt

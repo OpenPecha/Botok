@@ -1,7 +1,7 @@
 from pybo import *
-import os
+from pathlib import Path
 
-rules_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "resources", "rules")
+rules_path = Path(__file__).parent / "resources" / "rules"
 
 
 input_str = ' མཐའི་རྒྱ་མཚོའི་གླིང་། ཤི་བཀྲ་ཤིས་  tr བདེ་་ལེ གས། བཀྲ་ཤིས་བདེ་ལེགས་ཀཀ'

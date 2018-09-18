@@ -9,7 +9,7 @@ class LemmatizeTokens:
     in other words, if it is valid tibetan syllables.
     """
     def __init__(self, lemma_folder=None):
-        self.particles_path = Path().cwd() / 'resources' / 'lemmas' / 'particles.yaml'
+        self.particles_path = Path(__file__).parent / 'resources' / 'lemmas' / 'particles.yaml'
         self.paths = []
         self.paths.append(self.particles_path.parent)
         if lemma_folder:

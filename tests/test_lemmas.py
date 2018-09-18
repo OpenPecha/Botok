@@ -1,13 +1,13 @@
 from pybo import *
-import os
+from pathlib import Path
 
-resource_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "resources", "lemmas")
+resource_path = Path().cwd() / "resources" / "lemmas"
 
 
 input_str = ' མཐའི་རྒྱ་མཚོའི་གླིང་། ཤི་བཀྲ་ཤིས་  tr བདེ་་ལེ གས། བཀྲ་ཤིས་བདེ་ལེགས་ཀཀ'
-tok = BoTokenizer('POS', lemmatize=False)
+tok = BoTokenizer('POS')
 tok.tok.trie.rebuild_trie()
-tokens = tok.tokenize(input_str)
+tokens = tok.tokenize(input_str, lemmatize=False)
 
 
 def test_lemmatize():
