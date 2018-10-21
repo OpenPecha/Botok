@@ -156,7 +156,7 @@ class SylComponents:
         else:
             if syl in self.dadrag:
                 return 'dadrag'
-            elif re.findall(mingzhi + '([ྱྲླྭྷ]?[ིེོུ]?(འ?[ིོུ]?ར?ས?|(འ[མང])?|(འིའོ)?))$', syl) != []:
+            elif re.search(mingzhi + '([ྱྲླྭྷ]?[ིེོུ]?(འ?[ིོུ]?ར?ས?|(འ[མང])|(འོའ[མང])|(འིའ[ོམང])))$', syl) is not None:
                 return 'thame'
             else:
                 return syl
@@ -173,3 +173,5 @@ if __name__ == '__main__':
     """ example of use """
     sc = SylComponents()
     assert sc.get_parts('བཀྲིས') == ('བཀྲ', 'ིས')
+    assert(sc.get_info('དེའིའམ') == 'thame')
+    assert(sc.get_info('དེའི') == 'thame')
