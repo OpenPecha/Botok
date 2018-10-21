@@ -24,7 +24,7 @@ class BoSyl(SylComponents):
         if self.is_thame(syl):
             affixable = True
             for ending in ['ར', 'ས', 'འི', 'འོ', 'མ', 'ང']:
-                if syl.endswith(ending):
+                if len(syl) > len(ending) and syl.endswith(ending):
                     affixable = False
         return affixable
 
@@ -57,7 +57,7 @@ if __name__ == '__main__':
     bs = BoSyl()
     print(bs.is_affixable('དྭོགས'))
     test = 'བཀྲིས'
-    for syl in ['བཀྲིས', 'བཀའ', 'བཀྲི', 'དེའོ', 'དེའིའོ', 'དགས', 'ལེགས', 'དེའིའམ']:
+    for syl in ['བཀྲིས', 'བཀའ', 'བཀྲི', 'དེའོ', 'དེའིའོ', 'དགས', 'ལེགས', 'དེའིའམ', 'མ']:
         print(syl, 'can be affixed:', bs.is_affixable(syl))
         if bs.is_affixable(syl):
             print(bs.get_all_affixed(syl))
