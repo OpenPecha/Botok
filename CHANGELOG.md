@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+
+## [0.2.3](https://github.com/Esukhia/pybo/releases/tag/v0.2.2) - 20181022
+### Added
+ * new affix combinations (see [#25](https://github.com/Esukhia/pybo/issues/25))
+
 ---
 
 ## [0.2.2](https://github.com/Esukhia/pybo/releases/tag/v0.2.2) - 20180711
