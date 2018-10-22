@@ -65,6 +65,6 @@ for tag in tags:
 # 5. VALIDITY TESTING
 
 # 5.1. length of output
-expected = 15
+expected = 13
 if len(l) != expected:
     raise ValidityError('Test 5.1. failed with list length ' + str(len(l)) + ' instead of the expected ' + str(expected))
