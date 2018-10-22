@@ -25,10 +25,10 @@ from .config import Config
 VERSION = "0.2.2.1"
 
 
-__all__ = ['AdjustTokens', 'BasicTrie', 'BoChunk', 'BoString', 'BoTokenizer', 'BoSyl', 'CQLMatcher', 'MergingMatcher',
-           'LemmatizeTokens', 'PyBoChunk', 'PyBoTextChunks', 'PyBoTrie', 'ReplacingMatcher', 'SplitAffixed',
-           'SplittingMatcher', 'SylComponents', 'Query', 'parse_cql_query', 'replace_token_attributes', 'Token',
-           'Tokenizer', 'TokenMerge', 'TokenSplit']
+__all__ = ['AdjustTokens', 'BasicTrie', 'BoChunk', 'BoString', 'BoTokenizer', 'BoSyl', 'Config', 'CQLMatcher',
+           'MergingMatcher', 'LemmatizeTokens', 'PyBoChunk', 'PyBoTextChunks', 'PyBoTrie', 'ReplacingMatcher',
+           'SplitAffixed', 'SplittingMatcher', 'SylComponents', 'Query', 'parse_cql_query', 'replace_token_attributes',
+           'Token', 'Tokenizer', 'TokenMerge', 'TokenSplit']
 
 
 class BoTokenizer:

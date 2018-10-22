@@ -27,6 +27,7 @@ default_config = '''pybo:
   freq_files:
     - &freq_mgd ~fmgd.txt
   Profile:
+    empty: []
     pytib: [*ancient, *except, *uncomp, *tsikchen, *tibdict, *part]
     POS: [*ancient, *except, *uncomp, *tsikchen, *tibdict, *part]
     PP: [*part]

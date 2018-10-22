@@ -1,16 +1,14 @@
 from pybo import *
-import bophono
 
 
 def test_token_to_string():
-    tok = Tokenizer(PyBoTrie(BoSyl(), 'empty'))
+    tok = Tokenizer(PyBoTrie(BoSyl(), 'empty', config=Config("config.yaml")))
     tok.trie.rebuild_trie()
-    tok.trie.add('བཀྲ་ཤིས་', data='NOUN', freq = 17500)
+    tok.trie.add('བཀྲ་ཤིས་', data='NOUN', freq=17500)
     tokens = tok.tokenize(PyBoTextChunks('བཀྲ་ཤིས།'), phono=True)
     expected = """content: "བཀྲ་ཤིས"
 cleaned_content: "བཀྲ་ཤིས་"
 unaffixed_word: "བཀྲ་ཤིས་"
-phono: /ʈaˊ.ɕi/
 char_types: |cons|cons|sub-cons|tsek|cons|vow|cons|
 type: syl
 start: 0
@@ -27,7 +25,7 @@ freq: 17500
 
 
 def test_non_max2():
-    tok = Tokenizer(PyBoTrie(BoSyl(), 'empty'))
+    tok = Tokenizer(PyBoTrie(BoSyl(), 'empty', config=Config("config.yaml")))
     tok.trie.rebuild_trie()
     tok.trie.add('བཀྲ་ཤིས་', data='NOUN')
     tok.trie.add('བཀྲ་ཤིས་བདེ་ལེགས།', data='EXCL')
@@ -41,7 +39,7 @@ def test_non_max2():
 
 
 def test_non_max_end_of_string():
-    tok = Tokenizer(PyBoTrie(BoSyl(), 'empty'))
+    tok = Tokenizer(PyBoTrie(BoSyl(), 'empty', config=Config("config.yaml")))
     tok.trie.rebuild_trie()
     tok.trie.add('བཀྲ་ཤིས་')
     tok.trie.add('བཀྲ་ཤིས་བདེ་ལེགས།')
@@ -51,7 +49,7 @@ def test_non_max_end_of_string():
 
 
 def test_split_token():
-    trie = PyBoTrie(BoSyl(), 'empty')
+    trie = PyBoTrie(BoSyl(), 'empty', config=Config("config.yaml"))
     trie.rebuild_trie()
     trie.inflect_n_add('བདེ་བ་', 'NOUN', ins='data')
     trie.add('གཏན་', 'NOUN')

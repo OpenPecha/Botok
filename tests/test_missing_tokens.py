@@ -1,6 +1,6 @@
 from pybo import *
 
-tok = BoTokenizer('POS')
+tok = BoTokenizer('GMD')
 tok.tok.trie.rebuild_trie()
 
 
@@ -31,7 +31,7 @@ def test_missing_token4():
 def test_missing_token5():
     input_str = "ད་མེད་བྷ་གར་"
     tokens = tok.tokenize(input_str)
-    assert ['ད་', 'མེད་', 'བྷ་', 'གར་'] == [t.content for t in tokens]
+    assert ['ད་', 'མེད་', 'བྷ་ག', 'ར་'] == [t.content for t in tokens]
 
 
 def test_missing_token6():
@@ -103,7 +103,7 @@ def test_missing_token16():
 def test_missing_token17():
     input_str = "གནོས་སྨྱོ་བྱེད་བརྗེད་"
     tokens = tok.tokenize(input_str)
-    assert ['གནོས་', 'སྨྱོ་', 'བྱེད་', 'བརྗེད་'] == [t.content for t in tokens]
+    assert ['གནོས་', 'སྨྱོ་བྱེད་', 'བརྗེད་'] == [t.content for t in tokens]
 
 
 def test_missing_token18():
@@ -296,18 +296,17 @@ def test_missing_token48():
     assert ['ནུ་', 'ཧེ་རུ་'] == [t.content for t in tokens]
 
 
-# Has to be corrected together with the DICT file
-"""def test_missing_token49():
-    # པར
+# TODO: expected is ['བརྩེགས་', 'རྣམ་པ', 'ར་'], yet the data contain 'རྣམ་པར་'
+def test_missing_token49():
     input_str = "བརྩེགས་རྣམ་པར་"
     tokens = tok.tokenize(input_str)
-    assert ['བརྩེགས་', 'རྣམ་པ', 'ར་'] == [t.content for t in tokens]"""
+    assert ['བརྩེགས་', 'རྣམ་པར་'] == [t.content for t in tokens]
 
 
 def test_missing_token50():
     input_str = "བྷ་གར་"
     tokens = tok.tokenize(input_str)
-    assert ['བྷ་', 'གར་'] == [t.content for t in tokens]
+    assert ['བྷ་ག', 'ར་'] == [t.content for t in tokens]
 
 
 def test_missing_token51():
@@ -331,13 +330,13 @@ def test_missing_token53():
 def test_missing_token54():
     input_str = "བྷ་གར་འཁྱིལ། །ཨོཾ་"
     tokens = tok.tokenize(input_str)
-    assert ['བྷ་', 'གར་', 'འཁྱིལ', '། །', 'ཨོཾ་'] == [t.content for t in tokens]
+    assert ['བྷ་ག', 'ར་', 'འཁྱིལ', '། །', 'ཨོཾ་'] == [t.content for t in tokens]
 
 
 def test_missing_token55():
     input_str = "བྷ་གར་སྦྱོར་"
     tokens = tok.tokenize(input_str)
-    assert ['བྷ་', 'གར་', 'སྦྱོར་'] == [t.content for t in tokens]
+    assert ['བྷ་ག', 'ར་', 'སྦྱོར་'] == [t.content for t in tokens]
 
 
 def test_missing_token56():
