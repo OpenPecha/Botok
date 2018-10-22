@@ -146,9 +146,11 @@ class SylComponents:
         """
         :param syl: syllable
         :return: required info to part_agreement:
-                - dadrag
-                - thame
-                - the syllable
+                - "dadrag" A syllable that historically received a "da" second suffix.
+                            As for now, the list contains ["ཀུན", "ཤིན", "འོན"] (See pybo/resources/SylComponents.json)
+                - "thame"  A syllable that has the potential of hosting an affixed particle.
+                            Will be returned for all such syls, whether or not there is a particle.
+                - the syllable itself in all other cases
         """
         mingzhi = self.get_mingzhi(syl)
         if not mingzhi:
