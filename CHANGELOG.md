@@ -8,6 +8,31 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## [0.2.16](https://github.com/Esukhia/pybo/releases/tag/v0.2.16) - 20181023
 ### Added
  * new affix combinations (see [#25](https://github.com/Esukhia/pybo/issues/25))
+ * externalized trie profiles in config files
+ * added `\t` to the space list in BoSyl (sometimes used instead of a space)
+ * added tibetan-verbs-database to MGD trie profile
+ * added frequency info to the trie
+
+### Changed
+ * improve and simplify setup.py
+ * improve `Token.__repr__()`
+ * if there is a space after a shed, put the space in the punctuation token instead of the next syllable 
+    and merge into 1 token only the བཞི་ཤད་
+    
+    ex:
+    
+    `["།", " བཀྲ་ཤིས་"]` -> `["། ", "བཀྲ་ཤིས་"]` and  `["།། ", "།།"]` -> `["།། །།"]`
+
+    Nota: both "༎" (Tibetan Mark Nyis Shad `U+0F0E`) and "།།" (Tibetan Mark Shad x 2 `U+0F0DU+0F0D`) are supported
+ * mgd.txt and sanskrit.txt have been cleaned up and updated
+
+### Fixed
+ * when tokenizing without splitting the affixed particles, the unaffixed_word attribute added a འ to words not needing it. 
+   (རྒྱ་མཚོར་ gave རྒྱ་མཚོའ་)
+ * missing tseks are now detected after char types 'numbers', 'other' and 'symbols'
+ * `long_skrt_vowel` (Tibetan Sign Rnam Bcad `U+0F7F`) is treated as syllable content. It triggers a syllable change, 
+    as the tsek already does. (a tsek is not added in the presence of a `long_skrt_vowel`)
+ * added mechanism to generate tokens of type `numbers` (previously considered symbols)
 
 ---
 
