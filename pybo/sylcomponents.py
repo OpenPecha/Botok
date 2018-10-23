@@ -15,7 +15,8 @@ class SylComponents:
         # roots is an import from root + rareC and wazurC and suffixes is the 'AB' entry from  suffixes.json
         self.data_path = Path(__file__).parent / "resources" / "SylComponents.json"
 
-        data = json.loads(self.data_path.read_text(encoding='utf-8-sig'))
+        with self.data_path.open('r', encoding='utf-8-sig') as f:
+            data = json.loads(f.read())
 
         self.dadrag = data['dadrag']
         self.roots = data['roots']

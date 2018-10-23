@@ -13,7 +13,7 @@ class PyBoTrie(BasicTrie):
         self.TSEK = '་'
         self.COMMENT = '#'
         self.profile = profile
-        self.pickled_file = profile + '_trie.pickled'
+        self.pickled_file = Path(profile + '_trie.pickled')
         self.user_word_list = user_word_list
         self.config_trie = config
         self.load_or_build_trie(build)
@@ -31,7 +31,7 @@ class PyBoTrie(BasicTrie):
     def load_trie(self):
         print('Loading Trie...', end=' ')
         start = time.time()
-        with open(self.pickled_file, 'rb') as f:
+        with self.pickled_file.open('rb') as f:
             self.head = pickle.load(f)
         end = time.time()
         print('({:.0f}s.)'.format(end - start))
@@ -64,7 +64,7 @@ class PyBoTrie(BasicTrie):
             full_path = Path(__file__).parent / 'resources' / resource_directory / f
             self.__add_one_file(full_path, ins=ins_s, data_only=data_s)
 
-        with open(self.pickled_file, 'wb') as f:
+        with self.pickled_file.open('wb') as f:
             pickle.dump(self.head, f, pickle.HIGHEST_PROTOCOL)
         end = time.time()
         print('({:.0f} s.)'.format(end - start))
@@ -76,17 +76,24 @@ class PyBoTrie(BasicTrie):
         a single space(breaks if more than one), a comma or a tab can be used as separators
 
         :param in_file: file to be processed
+        :type in_file: Path object
         :param data_only:
         """
         if ins == "skrt":
-            for line in in_file.read_text(encoding='utf-8-sig').split('\n'):
+            with in_file.open('r', encoding='utf-8-sig') as f:
+                lines = [line.rstrip('\n') for line in f.readlines()]
+
+            for line in lines:
                 if line:
                     word = line
 
                 sep = "" if word[-1] == "ཿ" else "་"
                 self.add(word + sep, skrt=True)
         else:
-            for line in in_file.read_text(encoding='utf-8-sig').split('\n'):
+            with in_file.open('r', encoding='utf-8-sig') as f:
+                lines = [line.rstrip('\n') for line in f.readlines()]
+
+            for line in lines:
                 if self.COMMENT in line:
                     comment_idx = line.index(self.COMMENT)
                     line = line[:comment_idx]

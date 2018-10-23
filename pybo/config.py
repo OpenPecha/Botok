@@ -58,9 +58,11 @@ class Config:
 
         # if the file doesn't exist, write it with the default values
         if not self.filename.is_file():
-            self.filename.write_text(default_config, encoding='utf-8-sig')
+            with self.filename.open('w', encoding='utf-8-sig') as f:
+                f.write(default_config)
 
-        self.config = yaml.load(self.filename.open(mode='r', encoding='utf-8-sig'))
+        with self.filename.open('r', encoding='utf-8-sig') as g:
+            self.config = yaml.load(g.read())
 
     def get_profile(self, profile):
         """Get the profile configuration list
@@ -74,7 +76,8 @@ class Config:
 
     def reset_default(self):
         """Resets the configuration file to the default values"""
-        self.filename.write_text(default_config, encoding='utf-8-sig')
+        with self.filename.open('w', encoding='utf-8-sig') as f:
+            f.write(default_config)
 
 
 if __name__ == '__main__':

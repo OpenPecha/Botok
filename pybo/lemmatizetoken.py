@@ -37,7 +37,9 @@ class LemmatizeTokens:
         :param filename: input file
         :return: dict where key is a form and value is its lemma
         """
-        parsed_yaml = yaml.load(filename.read_text(encoding='utf-8-sig'))
+        filename = Path(filename)
+        with filename.open('r', encoding='utf-8-sig') as f:
+            parsed_yaml = yaml.load(f.read())
 
         lemmas = {}
         for lemma, forms in parsed_yaml.items():
