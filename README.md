@@ -83,7 +83,7 @@ rm -rf dist/
 python3 setup.py clean sdist
 ```
 
-and upload on twine with:
+and upload on twine (versio >= `1.11.0`) with:
 
 ```
 twine upload dist/*
