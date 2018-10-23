@@ -38,8 +38,5 @@ setup(
     package_data={'pybo': ['resources/*', 'resources/trie/*', 'resources/frequency/*', 'resources/lemmas/*', 'resources/rules/*', 'resources/sanskrit/*']},
     python_requires='>=3',
     # setup_requires=["pytest-runner"],
-    tests_require=["pytest"],
-    install_requires=[
-        # 'pyyaml',
-    ],
+    tests_require=["pytest"]
 )

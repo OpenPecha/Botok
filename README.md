@@ -76,9 +76,15 @@ Many thanks to companies and organizations who supported the development of pybo
 
 ## Maintainance
 
-Upload on pip:
+Build the source dist:
 
 ```
-python setup.py sdist
+rm -rf dist/
+python3 setup.py clean sdist
+```
+
+and upload on twine with:
+
+```
 twine upload dist/*
 ```
