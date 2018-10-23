@@ -39,7 +39,7 @@ setuptools.setup(
         "Natural Language :: Tibetan"
     ],
     package_data={'pybo': ['resources/*', 'resources/trie/*', 'resources/frequency/*', 'resources/lemmas/*', 'resources/rules/*', 'resources/sanskrit/*']},
-    python_requires='>=3',
+    python_requires='>=3.4',
     # setup_requires=["pytest-runner"],
     tests_require=["pytest"]
 )
