@@ -4,21 +4,24 @@
 from __future__ import print_function
 
 import os
-from setuptools import setup, find_packages
+import setuptools
+from pkg_resources import parse_version
+
+assert(parse_version(setuptools.__version__) >= parse_version("38.6.0"))
 
 def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
-setup(
+setuptools.setup(
     name="pybo",
-    version="0.2.3",  # also edit version in pybo/__init__.py
+    version="0.2.16",  # also edit version in pybo/__init__.py
     author="Esukhia development team",
     author_email="esukhiadev@gmail.com",
     description="Python utils for processing Tibetan",
     license="Apache2",
     keywords="nlp computational_linguistics search ngrams language_models linguistics toolkit tibetan",
     url="https://github.com/Esukhia/pybo",
-    packages=find_packages(),
+    packages=setuptools.find_packages(),
     long_description=read('README.md'),
     long_description_content_type="text/markdown",
     project_urls={
