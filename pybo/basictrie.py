@@ -132,9 +132,11 @@ class BasicTrie:
                 current_node.freq = int(data)
             return True
 
-    def remove_word(self, word):
+    def deactivate_word(self, word):
         """
-        removes the word, returns True if the word was present, False otherwise
+        make the word not findable.
+
+        :return True if the word exists, False otherwise
         """
         current_node = self.head
         for letter in word:

@@ -49,5 +49,13 @@ def test_deactivate_trie_entries():
     word = 'བཀྲ་ཤིས་'
     trie.add(word)
     assert trie.has_word(word)
-    trie.remove_word(word)
+    trie.deactivate_word(word)
     assert trie.has_word(word) == {'exists': False}
+
+    trie.rebuild_trie()
+    words = ['བཀྲ་ཤིས་', 'བདེ་ལེགས་']
+    trie.add(words[0])
+    trie.add(words[1])
+    trie.deactivate_words('resources/remove_vocabs/test.txt')
+    assert trie.has_word(words[0]) == {'exists': False}
+    assert trie.has_word(words[1]) == {'exists': False}

@@ -30,7 +30,7 @@ class PyBoTrie(BasicTrie):
             self.__add_one_file(f)
 
         for f in self.todel_filenames:
-            self.deactivate_entries(f)
+            self.deactivate_words(f)
 
     def load_trie(self):
         print('Loading Trie...', end=' ')
@@ -155,7 +155,7 @@ class PyBoTrie(BasicTrie):
         if remove_word and data_only:
             self.add_data_to_word(word, None, ins)
         elif remove_word:
-            self.remove_word(word)
+            self.deactivate_word(word)
         elif not data_only:
             self.add(word, data)
         else:
@@ -168,7 +168,11 @@ class PyBoTrie(BasicTrie):
         else:
             return '', word
 
-    def deactivate_entries(self, f):
+    def deactivate_words(self, f):
+        """
+
+        :param f: filename of wordlist
+        """
         with Path(f).open('r', encoding='utf-8-sig') as f:
             words = [line.rstrip('\n') for line in f.readlines()]
 
@@ -178,4 +182,4 @@ class PyBoTrie(BasicTrie):
         words = [word + '་' if not word.endswith('་') else word for word in words]
 
         for word in words:
-            self.remove_word(word)
+            self.deactivate_word(word)
