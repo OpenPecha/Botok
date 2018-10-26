@@ -40,7 +40,13 @@ class PyBoChunk(BoChunk):
         """
         for num, i in enumerate(indices):
             if num - 1 >= 0 and self.__only_contains_spaces(i[1], i[1] + i[2]):
-                indices[num - 1] = (indices[num - 1][0], indices[num - 1][1], indices[num - 1][2] + i[2])
+                previous_chunk = indices[num - 1]
+                inc = 0
+                while not previous_chunk:
+                    inc += 1
+                    previous_chunk = indices[num - 1 - inc]
+
+                indices[num - 1 - inc] = (previous_chunk[0], previous_chunk[1], previous_chunk[2] + i[2])
                 indices[num] = False
 
         c = 0
