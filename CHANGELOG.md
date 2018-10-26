@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.2.18](https://github.com/Esukhia/pybo/releases/tag/v0.2.18) - 20181026
+### Fixed
+ * bugfix: couldn't attach the content of second chunk of spaces in case two chunks in a row contain only spaces
+
+    While attaching the content of space chunks to the previous chunk, if the previous chunk was a space chunk and its content already attached, the only thing remaining is a bool False as space-holder.
+    In this case, if the current chunk is also a space chunk, it couldn't attach to the previous chunk.
+
+    Now goes back to the last valid chunk and attaches content to it.
+    
+
 ## [0.2.17](https://github.com/Esukhia/pybo/releases/tag/v0.2.17) - 20181026
 ### Added
  * `deactivate_wordlist()` method to `pybotrie`. This dynamically deactivates lists of words in the trie
