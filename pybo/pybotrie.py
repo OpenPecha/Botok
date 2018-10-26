@@ -7,14 +7,15 @@ from .helpers import AFFIX_SEP, OOV
 
 
 class PyBoTrie(BasicTrie):
-    def __init__(self, bosyl, profile='pytib', build=False, user_word_list=[], config=None):
+    def __init__(self, bosyl, profile='pytib', build=False, toadd_filenames=[], todel_filenames=[], config=None):
         BasicTrie.__init__(self)
         self.bosyl = bosyl
         self.TSEK = '་'
         self.COMMENT = '#'
         self.profile = profile
         self.pickled_file = Path(profile + '_trie.pickled')
-        self.user_word_list = user_word_list
+        self.toadd_filenames = toadd_filenames
+        self.todel_filenames = toadd_filenames
         self.config_trie = config
         self.load_or_build_trie(build)
 
@@ -25,8 +26,11 @@ class PyBoTrie(BasicTrie):
             self.load_trie()
 
         # load the custom entries on the fly (at each instanciation)
-        for f in self.user_word_list:
+        for f in self.toadd_filenames:
             self.__add_one_file(f)
+
+        for f in self.todel_filenames:
+            self.deactivate_entries(f)
 
     def load_trie(self):
         print('Loading Trie...', end=' ')
@@ -163,3 +167,15 @@ class PyBoTrie(BasicTrie):
             return word[:tsek_idx+1], word[tsek_idx+1:]
         else:
             return '', word
+
+    def deactivate_entries(self, f):
+        with Path(f).open('r', encoding='utf-8-sig') as f:
+            words = [line.rstrip('\n') for line in f.readlines()]
+
+        # cleanup the entries
+        # TODO: also remove non-breaking tseks. maybe centralize in a method such cleanup
+        words = [word.rstrip('།') for word in words]
+        words = [word + '་' if not word.endswith('་') else word for word in words]
+
+        for word in words:
+            self.remove_word(word)

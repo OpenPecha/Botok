@@ -36,14 +36,20 @@ class BoTokenizer:
     Convenience class to tokenize a given string.
 
     """
-    def __init__(self, profile, user_word_list=[], lemma_folder=None, ignore_chars=[]):
+    def __init__(self, profile, toadd_filenames=[], todel_filenames=[], lemma_folder=None, ignore_chars=[]):
         """
         :param profile: profile for building the trie. (see config.yaml)
         """
         self.config_profile = Config("config.yaml")
         self.ignore_chars = ignore_chars
         self.lt = LemmatizeTokens(lemma_folder=lemma_folder)
-        self.tok = Tokenizer(PyBoTrie(BoSyl(), profile=profile, user_word_list=user_word_list, config=self.config_profile))
+        self.tok = Tokenizer(PyBoTrie(BoSyl(),
+                                      profile=profile,
+                                      toadd_filenames=toadd_filenames,
+                                      todel_filenames=todel_filenames,
+                                      config=self.config_profile
+                                      )
+                             )
 
     def tokenize(self, string, split_affixes=True, lemmatize=True, phono=False, debug=False):
         """
