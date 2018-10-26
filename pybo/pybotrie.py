@@ -30,7 +30,7 @@ class PyBoTrie(BasicTrie):
             self.__add_one_file(f)
 
         for f in self.todel_filenames:
-            self.deactivate_words(f)
+            self.deactivate_wordlist(f)
 
     def load_trie(self):
         print('Loading Trie...', end=' ')
@@ -168,7 +168,7 @@ class PyBoTrie(BasicTrie):
         else:
             return '', word
 
-    def deactivate_words(self, f):
+    def deactivate_wordlist(self, f):
         """
 
         :param f: filename of wordlist
