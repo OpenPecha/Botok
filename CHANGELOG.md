@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.2.17](https://github.com/Esukhia/pybo/releases/tag/v0.2.17) - 20181026
+### Added
+ * `deactivate_wordlist()` method to `pybotrie`. This dynamically deactivates lists of words in the trie
 
 ## [0.2.16](https://github.com/Esukhia/pybo/releases/tag/v0.2.16) - 20181023
 ### Added
