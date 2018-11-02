@@ -74,16 +74,30 @@ def test_match_replace():
 
 
 def test_adjust_tokens():
-    string = 'ན་ན་ན་སྟེ་ན་བས་དགའ།། རྐྱེན་ངན་གྱིས་བར་དུ་མ་ཆོད་ཅིང་། །'
+    # string = 'ན་ན་ན་སྟེ་ན་བས་དགའ།། རྐྱེན་ངན་གྱིས་བར་དུ་མ་ཆོད་ཅིང་། །'
+    # token_list = tok.tokenize(string, split_affixes=False)
+    # at = AdjustTokens(rules_folder=rules_path)
+    # adjusted = at.adjust(token_list)
+    # assert token_list[9].content == 'བར་'
+    # assert token_list[10].content == 'དུ་མ་'
+    # assert token_list[11].content == 'ཆོད་'
+
+    # assert adjusted[9].content == 'བར་དུ་'
+    # assert adjusted[9].pos == 'PART'
+    # assert adjusted[10].content == 'མ་'
+    # assert adjusted[10].pos == 'PART'
+    # assert adjusted[11].content == 'ཆོད་'
+
+    string= 'ལ་ལ་ལ་ལ་ལ་བ་ཡོད།'
     token_list = tok.tokenize(string, split_affixes=False)
     at = AdjustTokens(rules_folder=rules_path)
     adjusted = at.adjust(token_list)
-    assert token_list[9].content == 'བར་'
-    assert token_list[10].content == 'དུ་མ་'
-    assert token_list[11].content == 'ཆོད་'
+    assert token_list[0].content == 'ལ་ལ་'
+    assert token_list[1].content == 'ལ་ལ་'
 
-    assert adjusted[9].content == 'བར་དུ་'
-    assert adjusted[9].pos == 'PART'
-    assert adjusted[10].content == 'མ་'
-    assert adjusted[10].pos == 'PART'
-    assert adjusted[11].content == 'ཆོད་'
+    assert adjusted[0].content == 'ལ་'
+    assert adjusted[0].pos == 'PART'
+    assert adjusted[1].content == 'ལ་ལ་'
+    assert adjusted[1].pos == 'PART'
+    assert adjusted[2].content == 'ལ་'
+    assert adjusted[2].pos == 'PART'
