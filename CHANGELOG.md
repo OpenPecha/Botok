@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.2.19](https://github.com/Esukhia/pybo/releases/tag/v0.2.19) - 20181207
+### Fixed
+ * files to delete didn't get deleted (wrong variable name)
+
+### Added
+ * Deletes all the inflected variants of a given word in the trie instead of just the given (uninflected) variant
+
 ## [0.2.18](https://github.com/Esukhia/pybo/releases/tag/v0.2.18) - 20181026
 ### Fixed
  * bugfix: couldn't attach the content of second chunk of spaces in case two chunks in a row contain only spaces
