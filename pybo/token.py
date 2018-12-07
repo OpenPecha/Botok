@@ -49,10 +49,8 @@ class Token:
                    'freq': self.freq,
                    'cleaned_content': self.cleaned_content,
                    'unaffixed_word': self.unaffixed_word}
-        if item in mapping:
-            return mapping[item]
-        else:
-            return None
+
+        return mapping[item] if item in mapping else None
 
     def get_pos_n_aa(self):
         if self.pos == '':

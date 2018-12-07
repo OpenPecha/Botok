@@ -15,7 +15,7 @@ class PyBoTrie(BasicTrie):
         self.profile = profile
         self.pickled_file = Path(profile + '_trie.pickled')
         self.toadd_filenames = toadd_filenames
-        self.todel_filenames = toadd_filenames
+        self.todel_filenames = todel_filenames
         self.config_trie = config
         self.load_or_build_trie(build)
 
@@ -27,7 +27,7 @@ class PyBoTrie(BasicTrie):
 
         # load the custom entries on the fly (at each instanciation)
         for f in self.toadd_filenames:
-            self.__add_one_file(f)
+            self.__add_one_file(Path(f))
 
         for f in self.todel_filenames:
             self.deactivate_wordlist(f)
@@ -155,7 +155,7 @@ class PyBoTrie(BasicTrie):
         if remove_word and data_only:
             self.add_data_to_word(word, None, ins)
         elif remove_word:
-            self.deactivate_word(word)
+            self.deactivate_inflected(word)
         elif not data_only:
             self.add(word, data)
         else:
@@ -168,6 +168,20 @@ class PyBoTrie(BasicTrie):
         else:
             return '', word
 
+    def deactivate_inflected(self, word):
+        self.deactivate_word(word)
+
+        if word.endswith(self.TSEK):
+            word = word[:-1]
+
+        beginning, last_syl = self.split_at_last_syl(word)
+
+        if self.bosyl.is_affixable(last_syl):
+            affixed = self.bosyl.get_all_affixed(last_syl)
+            for a in affixed:
+                affixed_word = beginning + a[0] + self.TSEK
+                self.deactivate_word(affixed_word)
+
     def deactivate_wordlist(self, f):
         """
 
@@ -179,7 +193,7 @@ class PyBoTrie(BasicTrie):
         # cleanup the entries
         # TODO: also remove non-breaking tseks. maybe centralize in a method such cleanup
         words = [word.rstrip('།') for word in words]
-        words = [word + '་' if not word.endswith('་') else word for word in words]
+        words = [word + self.TSEK if not word.endswith(self.TSEK) else word for word in words]
 
         for word in words:
-            self.deactivate_word(word)
+            self.deactivate_inflected(word)
