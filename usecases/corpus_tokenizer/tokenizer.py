@@ -231,7 +231,7 @@ if __name__ == '__main__':
 ༺སྒ་བ་།སྒལ་བ་༻ ༺ཟིག་༻ ༺ཁོས་འུ་།ན་གི་༺ཟེ་གི་༻ རྒྱ་གྲམ་དམར་༺རོ་།པོ་༻ ཨེ། ཇོ་བོ་རིན་པོ་༼མོ་མིང་༽༺ཨུ་༻ཡིན། 
 ཨ་ལ། ༼༼ཧ་ཧ་ཧ་ཧ་༽༽ སྐྱེ་དངོས་སྲུང་སྐྱོབས་༺ཡེ་གྱི་བོ་༻ལོ་༺དུ་འུ་༻རིང་༺ང་༻སྲུང་སྐྱོབས་་་ ༺ཁ་ཕྱེ་སོ་།ཁ་ཕྱེ་ལུགས་༻མ་ཤེས་༙ཁྱིར་༙ སོང་༺ངིས་༻'''
 
-    tok = BoTokenizer('GMD', user_word_list=get_vocab_files('vocabs'))
+    tok = BoTokenizer('GMD', toadd_filenames=get_vocab_files('vocabs'))
     corpus = CorpusTokenizer(tok)
 
     tokens = corpus.corpus_tokens(in_str)

@@ -12,7 +12,7 @@ def get_vocab_files(vocab_folder):
 if __name__ == '__main__':
     custom_vocab_filenames = get_vocab_files('vocabs')
 
-    tok = BoTokenizer('POS', user_word_list=custom_vocab_filenames)
+    tok = BoTokenizer('POS', toadd_filenames=custom_vocab_filenames)
 
     in_str = 'བཀྲ་ཤིས་བདེ་ལེགས། ཀཀཀ། པཔཔ།'
     tokens = tok.tokenize(in_str)

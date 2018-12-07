@@ -53,7 +53,7 @@ def process_folders(config, format_func, user_vocabs=[], remove_page_info=True):
     assert in_folder.is_dir()           # check the input folder exists
     out_folder.mkdir(exist_ok=True)     # ensure the output folder exists
 
-    tok = BoTokenizer(tok_profile, user_word_list=user_vocabs)
+    tok = BoTokenizer(tok_profile, toadd_filenames=user_vocabs)
     if bool(config['Exec']['rebuild_trie']):
         tok.tok.trie.rebuild_trie()
 
