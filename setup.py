@@ -3,7 +3,7 @@
 
 from __future__ import print_function
 
-import os
+from pathlib import Path
 import setuptools
 from pkg_resources import parse_version
 
@@ -11,12 +11,14 @@ assert(parse_version(setuptools.__version__) >= parse_version("38.6.0"))
 
 
 def read(fname):
-    return open(os.path.join(os.path.dirname(__file__), fname)).read()
+    p = Path(__file__) / fname
+    with p.resolve().open(encoding='utf-8') as f:
+        return f.read()
 
 
 setuptools.setup(
     name="pybo",
-    version="0.2.19",  # also edit version in pybo/__init__.py
+    version="0.2.20",  # also edit version in pybo/__init__.py
     author="Esukhia development team",
     author_email="esukhiadev@gmail.com",
     description="Python utils for processing Tibetan",
