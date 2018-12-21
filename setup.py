@@ -11,8 +11,8 @@ assert(parse_version(setuptools.__version__) >= parse_version("38.6.0"))
 
 
 def read(fname):
-    p = Path(__file__) / fname
-    with p.resolve().open(encoding='utf-8') as f:
+    p = Path(__file__).parent / fname
+    with p.open(encoding='utf-8') as f:
         return f.read()
 
 
