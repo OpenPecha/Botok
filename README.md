@@ -88,3 +88,7 @@ and upload on twine (versio >= `1.11.0`) with:
 ```
 twine upload dist/*
 ```
+
+## License
+
+The Python code is Copyright (C) 2018 Esukhia, provided under [Apache 2](LICENSE). See [CONTRIBUTORS.md](CONTRIBUTORS.md) for a list of authors and contributors.
