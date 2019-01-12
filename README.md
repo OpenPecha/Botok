@@ -94,6 +94,7 @@ twine upload dist/*
 The Python code is Copyright (C) 2018 Esukhia, provided under [Apache 2](LICENSE). 
 
 author: [Drupchen](https://github.com/drupchen)
+
 contributors:
  * [Élie Roux](https://github.com/eroux)
  * [Thubten Rinzin](https://github.com/thubtenrigzin)
