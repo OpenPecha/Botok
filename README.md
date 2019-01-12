@@ -91,4 +91,12 @@ twine upload dist/*
 
 ## License
 
-The Python code is Copyright (C) 2018 Esukhia, provided under [Apache 2](LICENSE). See [CONTRIBUTORS.md](CONTRIBUTORS.md) for a list of authors and contributors.
+The Python code is Copyright (C) 2018 Esukhia, provided under [Apache 2](LICENSE). 
+
+author: [Drupchen](https://github.com/drupchen)
+contributors:
+ * [Élie Roux](https://github.com/eroux)
+ * [Thubten Rinzin](https://github.com/thubtenrigzin)
+ * [Ngawang Trinley](https://github.com/ngawangtrinley)
+ * [Mikko Kotila](https://github.com/mikkokotila)
+ * [Tenzin](https://github.com/10zinten)
