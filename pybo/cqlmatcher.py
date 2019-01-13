@@ -24,7 +24,7 @@ class CQLMatcher:
         """
         slice_len = len(self.query.tokenexprs) - 1
         matches = []
-        for i in range(len(tokens_list) - 1):
+        for i in range(len(tokens_list)):
             if i + slice_len <= len(tokens_list) and self.query(tokens_list[i:i + slice_len + 1]):
                 matches.append((i, i + slice_len))
         return matches

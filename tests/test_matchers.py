@@ -101,3 +101,19 @@ def test_adjust_tokens():
     assert adjusted[1].pos == 'PART'
     assert adjusted[2].content == 'ལ་'
     assert adjusted[2].pos == 'PART'
+
+
+def test_last_token():
+    token1 = Token()
+    token1.pos = 'NOUN'
+
+    token2 = Token()
+    token2.pos = 'VERB'
+
+    matcher = CQLMatcher('[pos="NOUN"]')
+    slices = matcher.match([token1, token2])
+    assert [(0, 0)] == slices
+
+    matcher = CQLMatcher('[pos="VERB"]')
+    slices = matcher.match([token1, token2])
+    assert [(1, 1)] == slices
