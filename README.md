@@ -19,7 +19,7 @@ Or if you for some reason want to install from the latest Master branch:
 #### To initiate the tokenizer together with part-of-speech capability: 
 
     # initialize the tokenizer
-    pybo = bo.BoTokenizer('POS')
+    tok = bo.BoTokenizer('POS')
     
     # read in some Tibetan text
     input_str = '༄༅། །རྒྱ་གར་སྐད་དུ། བོ་དྷི་སཏྭ་ཙརྻ་ཨ་བ་ཏ་ར། བོད་སྐད་དུ། བྱང་ཆུབ་སེམས་དཔའི་སྤྱོད་པ་ལ་འཇུག་པ། །སངས་རྒྱས་དང་བྱང་ཆུབ་སེམས་དཔའ་ཐམས་ཅད་ལ་ཕྱག་འཚལ་ལོ། །བདེ་གཤེགས་ཆོས་ཀྱི་སྐུ་མངའ་སྲས་བཅས་དང༌། །ཕྱག་འོས་ཀུན་ལའང་གུས་པར་ཕྱག་འཚལ་ཏེ། །བདེ་གཤེགས་སྲས་ཀྱི་སྡོམ་ལ་འཇུག་པ་ནི། །ལུང་བཞིན་མདོར་བསྡུས་ནས་ནི་བརྗོད་པར་བྱ། །'
@@ -88,3 +88,16 @@ and upload on twine (versio >= `1.11.0`) with:
 ```
 twine upload dist/*
 ```
+
+## License
+
+The Python code is Copyright (C) 2019 Esukhia, provided under [Apache 2](LICENSE). 
+
+author: [Drupchen](https://github.com/drupchen)
+
+contributors:
+ * [Élie Roux](https://github.com/eroux)
+ * [Thubten Rinzin](https://github.com/thubtenrigzin)
+ * [Ngawang Trinley](https://github.com/ngawangtrinley)
+ * [Mikko Kotila](https://github.com/mikkokotila)
+ * [Tenzin](https://github.com/10zinten)
