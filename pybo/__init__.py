@@ -22,7 +22,7 @@ from .tokensplit import TokenSplit
 from .config import Config
 
 
-VERSION = "0.2.20"
+VERSION = "0.2.21"
 
 
 __all__ = ['AdjustTokens', 'BasicTrie', 'BoChunk', 'BoString', 'BoTokenizer', 'BoSyl', 'Config', 'CQLMatcher',

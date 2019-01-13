@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.2.21](https://github.com/Esukhia/pybo/releases/tag/v0.2.21) - 20191301
+### Fixed
+ * CQL matcher didn't match last token
+
 ## [0.2.20](https://github.com/Esukhia/pybo/releases/tag/v0.2.20) - 20181221
 ### Fixed
  * didn't install well on Windows.
