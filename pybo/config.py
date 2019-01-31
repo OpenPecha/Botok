@@ -31,7 +31,37 @@ default_config = '''pybo:
     pytib: [*ancient, *except, *uncomp, *tsikchen, *tibdict, *part]
     POS: [*ancient, *except, *uncomp, *tsikchen, *tibdict, *part]
     PP: [*part]
-    GMD: [*ancient, *except, *uncomp, *tsikchen, *mgd, *verb, *tibdict, *skrt, *freq_mgd, *part]'''
+    GMD: [*ancient, *except, *uncomp, *tsikchen, *mgd, *verb, *tibdict, *skrt, *freq_mgd, *part]
+
+pipeline:
+  basic:
+      pre: pre_basic
+      tok: spaces
+      proc: spaces_fulltext
+      frm: plaintext
+  pybo_raw_content:
+      pre: pre_basic
+      tok: pybo
+      pybo_profile: GMD
+      proc: pybo_raw_content
+      frm: plaintext
+  pybo_raw_lines:
+      pre: pre_basic_lines
+      tok: pybo
+      pybo_profile: GMD
+      proc: pybo_raw_content
+      frm: plaintext
+  syls:
+      pre: pre_basic
+      tok: syls
+      proc: spaces_fulltext
+      frm: plaintext
+  pybo_raw_types:
+      pre: pre_basic
+      tok: pybo
+      pybo_profile: GMD
+      proc: pybo_raw_types
+      frm: types'''
 
 
 class Config:
@@ -64,7 +94,7 @@ class Config:
         with self.filename.open('r', encoding='utf-8-sig') as g:
             self.config = yaml.load(g.read())
 
-    def get_profile(self, profile):
+    def get_tokenizer_profile(self, profile):
         """Get the profile configuration list
 
         Each profile has a list of files which can be collected by this function.
@@ -72,7 +102,11 @@ class Config:
         :param profile: the profile name
         :return: the list of files of the selected profile
         """
-        return self.config["pybo"]["Profile"][profile]
+        return self.config["tokenizer"]["Profile"][profile]
+
+    def get_pipeline_profile(self, profile):
+
+        return self.config["pipeline"][profile]
 
     def reset_default(self):
         """Resets the configuration file to the default values"""
@@ -81,6 +115,6 @@ class Config:
 
 
 if __name__ == '__main__':
-    config = Config("config.yaml")
+    config = Config("pybo.yaml")
     config.reset_default()
-    print(config.get_profile('POS'))
+    print(config.get_tokenizer_profile('POS'))
