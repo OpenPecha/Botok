@@ -26,7 +26,7 @@ from .replacingmatcher import ReplacingMatcher
 from .splittingmatcher import SplittingMatcher
 from .adjusttokens import AdjustTokens
 
-from .bopipeline import BoPipeLine
+from .bopipeline import BoPipeline
 
 from .third_party import Query, parse_cql_query, replace_token_attributes
 from .config import Config

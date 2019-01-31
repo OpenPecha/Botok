@@ -4,7 +4,7 @@ from .bopipes import pipes
 from .config import Config
 
 
-class BoPipeLine:
+class BoPipeline:
     def __init__(self, profile, new_pipes=None):
         self.pipes = pipes
         self.update_pipes(new_pipes)

@@ -38,9 +38,9 @@ print(tokens[0])
 # POS: VERB
 
 count_tokens = 'pybo_raw_types'
-pipeline = BoPipeLine(profile=count_tokens)
+pipeline = BoPipeline(profile=count_tokens)
 pipeline.prof = 'POS'
-result = pipeline.pipe_str(' ཤི་བཀྲ་ཤིས་  tr བདེ་ལེགས། བཀྲ་ཤིས་བདེ་ལེགས་ཀཀ')
+result = pipeline.pipe_str(' ཤི་བཀྲ་ཤིས་  tr བདེ་ལེགས། བཀྲ་ཤིས་བདེ་ལེགས་ཀཀ  བཀྲ་ཤིས་')
 print(result)
 # ཤི་	1
 # བཀྲ་ཤིས་ 	1
