@@ -5,7 +5,7 @@ from pybo import BoSyl
 
 
 def test_pybotrie():
-    bt = PyBoTrie(BoSyl(), 'empty', config=Config("config.yaml"))
+    bt = PyBoTrie(BoSyl(), 'empty', config=Config("pybo.yaml"))
     bt.rebuild_trie()
     bt.add('གྲུབ་མཐའ་', 'pos-tag')
     assert bt.has_word('གྲུབ་མཐའི་') == {'exists': False}
@@ -13,7 +13,7 @@ def test_pybotrie():
 
 
 def test_affixed_entries():
-    bt = PyBoTrie(BoSyl(), 'empty', config=Config("config.yaml"))
+    bt = PyBoTrie(BoSyl(), 'empty', config=Config("pybo.yaml"))
     bt.inflect_n_add('གྲུབ་མཐའ་', 'NOUN', ins='data')  # adds all inflected forms
     bt.inflect_n_add('བཀྲ་ཤིས་', 'NOUN', ins='data')  # only adds one entry in the trie
     assert bt.has_word('བཀྲ་ཤིས་') == {'data': 'NOUNᛃᛃᛃ', 'exists': True}
@@ -37,14 +37,14 @@ def test_trie():
 
 
 def test_building_trie():
-    bt = PyBoTrie(BoSyl(), 'pytib', config=Config("config.yaml"))
+    bt = PyBoTrie(BoSyl(), 'pytib', config=Config("pybo.yaml"))
     bt.rebuild_trie()
     assert bt.has_word('བཀྲ་ཤིས་') == {'data': 'NOUNᛃᛃᛃ', 'exists': True}
     assert bt.has_word('ཤིས་') == {'data': 'VERBᛃᛃᛃ', 'exists': True}
 
 
 def test_deactivate_trie_entries():
-    trie = PyBoTrie(BoSyl(), 'empty', config=Config("config.yaml"))
+    trie = PyBoTrie(BoSyl(), 'empty', config=Config("pybo.yaml"))
     trie.rebuild_trie()
     word = 'བཀྲ་ཤིས་'
     trie.add(word)
@@ -56,6 +56,6 @@ def test_deactivate_trie_entries():
     words = ['བཀྲ་ཤིས་', 'བདེ་ལེགས་']
     trie.add(words[0])
     trie.add(words[1])
-    trie.deactivate_words('resources/remove_vocabs/test.txt')
+    trie.deactivate_wordlist('resources/remove_vocabs/test.txt')
     assert trie.has_word(words[0]) == {'exists': False}
     assert trie.has_word(words[1]) == {'exists': False}

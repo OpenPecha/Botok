@@ -36,3 +36,17 @@ print(tokens[0])
 # syl chars in content(ཤི): [[1, 2]]
 # tag: VERBᛃᛃᛃ
 # POS: VERB
+
+count_tokens = 'pybo_raw_types'
+pipeline = BoPipeline(profile=count_tokens)
+pipeline.prof = 'POS'
+result = pipeline.pipe_str(' ཤི་བཀྲ་ཤིས་  tr བདེ་ལེགས། བཀྲ་ཤིས་བདེ་ལེགས་ཀཀ  བཀྲ་ཤིས་')
+print(result)
+# ཤི་	1
+# བཀྲ་ཤིས་ 	1
+# tr 	1
+# བདེ་ལེགས	1
+# ། 	1
+# བཀྲ་ཤིས་	1
+# བདེ་ལེགས་	1
+# ཀཀ	1

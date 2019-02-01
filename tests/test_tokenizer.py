@@ -2,7 +2,7 @@ from pybo import *
 
 
 def test_token_to_string():
-    tok = Tokenizer(PyBoTrie(BoSyl(), 'empty', config=Config("config.yaml")))
+    tok = Tokenizer(PyBoTrie(BoSyl(), 'empty', config=Config("pybo.yaml")))
     tok.trie.rebuild_trie()
     tok.trie.add('བཀྲ་ཤིས་', data='NOUN', freq=17500)
     tokens = tok.tokenize(PyBoTextChunks('བཀྲ་ཤིས།'), phono=True)
@@ -25,7 +25,7 @@ freq: 17500
 
 
 def test_non_max2():
-    tok = Tokenizer(PyBoTrie(BoSyl(), 'empty', config=Config("config.yaml")))
+    tok = Tokenizer(PyBoTrie(BoSyl(), 'empty', config=Config("pybo.yaml")))
     tok.trie.rebuild_trie()
     tok.trie.add('བཀྲ་ཤིས་', data='NOUN')
     tok.trie.add('བཀྲ་ཤིས་བདེ་ལེགས།', data='EXCL')
@@ -39,7 +39,7 @@ def test_non_max2():
 
 
 def test_non_max_end_of_string():
-    tok = Tokenizer(PyBoTrie(BoSyl(), 'empty', config=Config("config.yaml")))
+    tok = Tokenizer(PyBoTrie(BoSyl(), 'empty', config=Config("pybo.yaml")))
     tok.trie.rebuild_trie()
     tok.trie.add('བཀྲ་ཤིས་')
     tok.trie.add('བཀྲ་ཤིས་བདེ་ལེགས།')
@@ -49,7 +49,7 @@ def test_non_max_end_of_string():
 
 
 def test_split_token():
-    trie = PyBoTrie(BoSyl(), 'empty', config=Config("config.yaml"))
+    trie = PyBoTrie(BoSyl(), 'empty', config=Config("pybo.yaml"))
     trie.rebuild_trie()
     trie.inflect_n_add('བདེ་བ་', 'NOUN', ins='data')
     trie.add('གཏན་', 'NOUN')

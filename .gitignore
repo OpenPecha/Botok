@@ -560,9 +560,6 @@ default.profile
 
 # pybo
 *.pickled
-**/config.yaml
-
-# pypi
-README.rst
+**/pybo.yaml
 
 # End of https://www.gitignore.io/api/macos,pydev,python,eclipse,pycharm+all,visualstudio,visualstudiocode

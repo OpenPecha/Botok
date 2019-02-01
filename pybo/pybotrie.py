@@ -50,7 +50,7 @@ class PyBoTrie(BasicTrie):
         print('Building Trie...', end=' ')
         start = time.time()
 
-        for f in self.config_trie.get_profile(self.profile):
+        for f in self.config_trie.get_tokenizer_profile(self.profile):
             ins_s = "data"
             data_s = False
             resource_directory = 'trie'
