@@ -30,23 +30,20 @@ def test_add_custom_pipes():
 
         return [f'{t["cleaned_content"].replace(" ", "_")}/{t["pos"]}' for t in tokens]
 
+    # create the pipe to be injected in the pipeline
     pipes = {'proc': {'pybo_pos': pybo_pos}}
 
-    profile = {'pybo_pos':
-                   {
-                       'pre': 'pre_basic',
-                       'tok': 'pybo',
-                       'pybo_profile': 'GMD',
-                       'proc': 'pybo_pos',
-                       'frm': 'plaintext'
-                   }
-    }
+    # create a profile using the new pipe to be injected
+    profile = {'pybo_pos': {
+                            'pre': 'pre_basic',
+                            'tok': 'pybo',
+                            'pybo_profile': 'POS',
+                            'proc': 'pybo_pos',
+                            'frm': 'plaintext'}}
 
     pipeline = BoPipeline(profile=profile, new_pipes=pipes)
-    pipeline.prof = 'POS'
 
     result = pipeline.pipe_str(' ཤི་བཀྲ་ཤིས་  tr བདེ་ལེགས། བཀྲ་ཤིས་བདེ་ལེགས་ཀཀ x  བཀྲ་ཤིས་')
     expected = 'ཤི་/VERB བཀྲ་ཤིས་/NOUN /non-bo བདེ་ལེགས་/NOUN /punct བཀྲ་ཤིས་/NOUN ' \
                'བདེ་ལེགས་/NOUN ཀཀ་/non-word /non-bo བཀྲ་ཤིས་/NOUN'
     assert expected == result
-
