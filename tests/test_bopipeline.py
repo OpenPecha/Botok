@@ -25,10 +25,9 @@ def test_add_custom_pipes():
     # create custom pipe
     def pybo_pos(tokens: List[PyboToken]) -> List[str]:
         """transforms the pybo tokens into word/POS format
-        replaces spaces in the tokens by underscores
         """
 
-        return [f'{t["cleaned_content"].replace(" ", "_")}/{t["pos"]}' for t in tokens]
+        return [f'{t["cleaned_content"]}/{t["pos"]}' for t in tokens]
 
     # create the pipe to be injected in the pipeline
     pipes = {'proc': {'pybo_pos': pybo_pos}}
