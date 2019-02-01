@@ -46,7 +46,7 @@ class BoPipeline:
             for section, values in new_pipes.items():
                 assert section in ['pre', 'tok', 'proc', 'frm'], 'Every pipe must fit in either sections: pre, tok, proc or frm'
                 for name, func in values.items():
-                    assert name not in self.pipes[section], f'The pipe {name} already exists in the pipes. Please rename it'
+                    assert name not in self.pipes[section], 'The pipe ' + name + ' already exists in the pipes. Please rename it'
                     self.pipes[section][name] = func
 
     def pipe_str(self, text: str) -> str:
@@ -112,11 +112,11 @@ class BoPipeline:
         for arg, val in pipeline.items():
             # ensure all arguments are valid attributes
             if arg not in self.args_list:
-                raise SyntaxError(f'{arg} is not a valid argument\nvalid options are {" ".join(self.map)}')
+                raise SyntaxError(arg + ' is not a valid argument\nvalid options are ' + str(self.args_list))
 
             # ensure arguments have valid values
             if arg in pipes and val not in pipes[arg]:
-                raise SyntaxError(f'{val} is not a valid value for {arg}\nvalid options are {" ".join(pipes[arg])}')
+                raise SyntaxError(val + ' is not a valid value for ' + arg + '\nvalid options are ' + " ".join(pipes[arg]))
 
     def is_valid_pipeline(self):
         # missing pipes
