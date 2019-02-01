@@ -108,6 +108,25 @@ class Config:
 
         return self.config["pipeline"][profile]
 
+    def add_pipeline_profile(self, profile):
+        print('ok')
+        args_list = ['pre', 'tok', 'proc', 'frm',  # components
+                     'pybo_profile',               # pybo
+                     'left', 'right',              # concs
+                     'filename']                   # others
+
+        key = list(profile.keys())
+        assert len(key) == 1
+        key = key[0]
+
+        parts = profile[key]
+        component_keys = list(parts.keys())
+        assert len(component_keys) >= 4
+        for c in component_keys:
+            assert c in args_list
+
+        self.config['pipeline'][key] = parts
+
     def reset_default(self):
         """Resets the configuration file to the default values"""
         with self.filename.open('w', encoding='utf-8-sig') as f:
@@ -116,5 +135,6 @@ class Config:
 
 if __name__ == '__main__':
     config = Config("pybo.yaml")
+    config.add_pipeline_profile({'test': {'pre': 'test', 'tok': 'test1', 'proc': 'test2', 'frm': 'test3'}})
     config.reset_default()
     print(config.get_tokenizer_profile('POS'))

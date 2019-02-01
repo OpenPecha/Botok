@@ -27,6 +27,11 @@ class BoPipeline:
                           }
 
         self.config = Config('pybo.yaml')
+
+        if isinstance(profile, dict):
+            self.config.add_pipeline_profile(profile)
+            profile = list(profile.keys())[0]  # prepare for next line
+
         self.parse_profile(self.config.get_pipeline_profile(profile))
 
     def update_pipes(self, new_pipes):
