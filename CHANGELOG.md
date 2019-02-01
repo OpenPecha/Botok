@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.3.0](https://github.com/Esukhia/pybo/releases/tag/v0.3.0) - 20190201
+### Added
+ * BoPipeline class. This allows to easily establish a custom pipeline that includes the BoTokenizer
+   The tests are limited to the intended functionality. The default pipes should be cleaned and rethought.
+
 ## [0.2.21](https://github.com/Esukhia/pybo/releases/tag/v0.2.21) - 20191301
 ### Fixed
  * CQL matcher didn't match last token

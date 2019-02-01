@@ -31,4 +31,4 @@ from .bopipeline import BoPipeline
 from .third_party import Query, parse_cql_query, replace_token_attributes
 from .config import Config
 
-VERSION = "0.2.21"
+VERSION = "0.3.0"
