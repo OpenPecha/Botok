@@ -22,7 +22,7 @@ x 	1"""
 
 
 def test_add_custom_pipes():
-    # create custom pipe
+    # create custom function
     def pybo_pos(tokens: List[PyboToken]) -> List[str]:
         """transforms the pybo tokens into word/POS format
         """
@@ -33,6 +33,8 @@ def test_add_custom_pipes():
     pipes = {'proc': {'pybo_pos': pybo_pos}}
 
     # create a profile using the new pipe to be injected
+    # note: providing this profile this way is equal to writing it in pybo.yaml
+    # and passing the name of the new profile as argument.
     profile = {'pybo_pos': {
                             'pre': 'pre_basic',
                             'tok': 'pybo',
