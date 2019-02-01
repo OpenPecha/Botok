@@ -6,7 +6,7 @@
 from pathlib import Path
 import yaml
 
-default_config = '''pybo:
+default_config = '''tokenizer:
   trie_files:
     - &part 'particles.txt'
     - &ancient ancient.txt
