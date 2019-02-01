@@ -112,11 +112,11 @@ class BoPipeline:
         for arg, val in pipeline.items():
             # ensure all arguments are valid attributes
             if arg not in self.args_list:
-                raise SyntaxError(arg + ' is not a valid argument\nvalid options are ' + str(self.args_list))
+                raise SyntaxError(f'{arg} is not a valid argument\nvalid options are {" ".join(self.map)}')
 
             # ensure arguments have valid values
             if arg in pipes and val not in pipes[arg]:
-                raise SyntaxError(val + ' is not a valid value for ' + arg + '\nvalid options are ' + " ".join(pipes[arg]))
+                raise SyntaxError(f'{val} is not a valid value for {arg}\nvalid options are {" ".join(pipes[arg])}')
 
     def is_valid_pipeline(self):
         # missing pipes
