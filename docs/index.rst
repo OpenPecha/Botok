@@ -16,6 +16,7 @@ can be adapted either as a stand-alone solution or compliment.
 
 .. toctree::
    :maxdepth: 2
+   :hidden:
    :caption: Overview:
 
    overview/getstarted
@@ -24,6 +25,7 @@ can be adapted either as a stand-alone solution or compliment.
 
 .. toctree::
    :maxdepth: 2
+   :hidden:
    :caption: Modules:
 
    modules/botokenizer
