@@ -20,3 +20,11 @@ can be adapted either as a stand-alone solution or compliment.
 
    overview/getstarted
    overview/ack
+
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Modules:
+
+   modules/botokenizer
+   modules/token
