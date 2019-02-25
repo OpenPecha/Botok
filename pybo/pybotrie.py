@@ -53,19 +53,18 @@ class PyBoTrie(BasicTrie):
         for f in self.config_trie.get_tokenizer_profile(self.profile):
             ins_s = "data"
             data_s = False
-            resource_directory = 'trie'
-            if f.startswith("~"):
-                if f[1] == "p":
-                    data_s = True
-                if f[1] == "f":
-                    resource_directory = 'frequency'
-                    ins_s = "freq"
-                    data_s = True
-                elif f[1] == "s":
-                    resource_directory = 'sanskrit'
-                    ins_s = "skrt"
-                f = f[2:]
-            full_path = Path(__file__).parent / 'resources' / resource_directory / f
+
+            full_path = Path(__file__).parent / 'resources' / f
+            
+            resource_type = full_path.parent.name
+            if resource_type == 'pos':
+                data_s = True
+            elif resource_type == 'frequency':
+                ins_s = "freq"
+                data_s = True
+            elif resource_type == 'sanskrit':
+                ins_s = "skrt"
+            
             self.__add_one_file(full_path, ins=ins_s, data_only=data_s)
 
         with self.pickled_file.open('wb') as f:

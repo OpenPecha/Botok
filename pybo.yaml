@@ -13,11 +13,11 @@
     - &mgd mgd.txt
     - &verb verbs.txt
   skrt_files:
-    - &skrt ~ssanskrit.txt
+    - &skrt sanskrit.txt
   pos_files:
-    - &tibdict ~pTibetan.DICT
+    - &tibdict Tibetan.DICT
   freq_files:
-    - &freq_mgd ~fmgd.txt
+    - &freq_mgd mgd.txt
   Profile:
     pytib: [*ancient, *except, *uncomp, *tsikchen, *tibdict, *part]
     POS: [*ancient, *except, *uncomp, *tsikchen, *tibdict, *part]

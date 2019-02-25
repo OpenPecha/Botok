@@ -21,11 +21,11 @@ default_config = '''tokenizer:
     - &mgd mgd.txt
     - &verb verbs.txt
   skrt_files:
-    - &skrt ~ssanskrit.txt
+    - &skrt sanskrit.txt
   pos_files:
-    - &tibdict ~pTibetan.DICT
+    - &tibdict Tibetan.DICT
   freq_files:
-    - &freq_mgd ~fmgd.txt
+    - &freq_mgd mgd.txt
   Profile:
     empty: []
     pytib: [*ancient, *except, *uncomp, *tsikchen, *tibdict, *part]
@@ -82,6 +82,7 @@ class Config:
 
             :param filename: Filename of the file with its extension
         """
+
         self.filename = Path(filename).resolve()
         if self.filename.suffix != ".yaml":
             raise Exception("Unrecognised file extension. It only supports .yaml files")
@@ -93,6 +94,24 @@ class Config:
 
         with self.filename.open('r', encoding='utf-8-sig') as g:
             self.config = yaml.load(g.read())
+
+        # preprocess the config to include parent dir of each resource file
+        self.config = self.__preprocess_config(self.config)
+        
+    def __preprocess_config(self, config):
+            profile = config['tokenizer']['Profile']
+            for k, v in profile.items():
+                profile[k] = list(map(lambda x: Path(self.__return_type(x, config)) / x, profile[k]))
+            config['tokenizer']['Profile'] = profile
+            return config
+    
+    def __return_type(self, fn, config):
+            type2dir = {'trie_files': 'trie', 'skrt_files': 'sanskrit', 'pos_files': 'pos',
+                'freq_files': 'frequency', 'lemmas_files': 'lemmas'}
+            token_files = list(config['tokenizer'].keys())[:-1]
+            for file_type in token_files:                      
+                if fn in config['tokenizer'][file_type]:           
+                    return type2dir[file_type]
 
     def get_tokenizer_profile(self, profile):
         """Get the profile configuration list
