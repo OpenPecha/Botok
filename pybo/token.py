@@ -1,13 +1,22 @@
 # coding: utf-8
-from .helpers import AFFIX_SEP
+from .helpers import AFFIX_SEP, TSEK
 
 
 class Token:
+    a_n_tsek = 'འ་'
+    char_markers = {1: 'cons', 2: 'sub-cons', 3: 'vow', 4: 'tsek', 5: 'skrt-cons', 6: 'skrt-sub-cons',
+                    7: 'skrt-vow', 8: 'punct', 9: 'num', 10: 'in-syl-mark', 11: 'special-punct', 12: 'symbol',
+                    13: 'no-bo-no-skrt', 14: 'other', 15: 'space', 16: 'underscore', 17: 'skrt-vow_long'}
+    chunk_markers = {100: 'bo', 101: 'non-bo', 102: 'punct', 103: 'non-punct', 104: 'space', 105: 'non-space',
+                     106: 'syl', 107: 'sym', 108: 'non-sym', 109: 'num', 110: 'non-num',
+                     1000: 'word', 1001: 'oov'}
+
     def __init__(self):
         self.content = ''
         self.phono = ''
         self.char_types = None
         self.aa_word = None
+        self.papo_word = None
         self.lemma = ''
         self.chunk_type = None
         self.type = None
@@ -19,12 +28,6 @@ class Token:
         self.pos = ''
         self.affix = False
         self.affixed = False
-        self.char_markers = {1: 'cons', 2: 'sub-cons', 3: 'vow', 4: 'tsek', 5: 'skrt-cons', 6: 'skrt-sub-cons',
-                             7: 'skrt-vow', 8: 'punct', 9: 'num', 10: 'in-syl-mark', 11: 'special-punct', 12: 'symbol',
-                             13: 'no-bo-no-skrt', 14: 'other', 15: 'space', 16: 'underscore', 17:'skrt-vow_long'}
-        self.chunk_markers = {100: 'bo', 101: 'non-bo', 102: 'punct', 103: 'non-punct', 104: 'space', 105: 'non-space',
-                              106: 'syl', 107: 'sym', 108: 'non-sym', 109: 'num', 110: 'non-num',
-                              1000: 'word', 1001: 'oov'}
         self.freq = None
         self.skrt = False
         self._ = {}  # dict for any user specific data
@@ -34,6 +37,7 @@ class Token:
                    'phono': self.phono,
                    'char_types': self.char_types,
                    'aa_word': self.aa_word,
+                   'papo_word': self.papo_word,
                    'lemma': self.lemma,
                    'chunk_type': self.chunk_type,
                    'type': self.type,
@@ -65,43 +69,43 @@ class Token:
     @property
     def cleaned_content(self):
         """
-        Will append a tsek to every syllable except syllables that host
+        Will append a TSEK to every syllable except syllables that host
         an affix.
 
         """
         if self.syls:
-            cleaned = '་'.join([''.join([self.content[idx] for idx in syl]) for syl in self.syls])
+            cleaned = TSEK.join([''.join([self.content[idx] for idx in syl]) for syl in self.syls])
             if self.affixed and not self.affix:
                 return cleaned
             else:
-                return cleaned + '་'
+                return cleaned + TSEK
         else:
             return ''
 
     @property
     def unaffixed_word(self):
         if self.aa_word and (not self.affix and self.affixed):
-            if self.cleaned_content.endswith('་'):
-                return self.cleaned_content[:-1] + 'འ་'
+            if self.cleaned_content.endswith(TSEK):
+                return self.cleaned_content[:-1] + Token.a_n_tsek
             else:
-                return self.cleaned_content + 'འ་'
+                return self.cleaned_content + Token.a_n_tsek
         elif self.tag.count(AFFIX_SEP) == 3:
             _, _, affix_len, aa = self.tag.split(AFFIX_SEP)
             if affix_len:
                 affix_len = int(affix_len)
-                if self.cleaned_content.endswith('་'):
+                if self.cleaned_content.endswith(TSEK):
                     if aa:
-                        return self.cleaned_content[:-affix_len - 1] + 'འ་'
+                        return self.cleaned_content[:-affix_len - 1] + Token.a_n_tsek
                     else:
-                        return self.cleaned_content[:-affix_len - 1] + '་'
+                        return self.cleaned_content[:-affix_len - 1] + TSEK
                 else:
                     if aa:
-                        return self.cleaned_content[:-affix_len] + 'འ་'
+                        return self.cleaned_content[:-affix_len] + Token.a_n_tsek
                     else:
-                        return self.cleaned_content[:-affix_len] + '་'
+                        return self.cleaned_content[:-affix_len] + TSEK
 
-        if self.cleaned_content and not self.cleaned_content.endswith('་'):
-            return self.cleaned_content + '་'
+        if self.cleaned_content and not self.cleaned_content.endswith(TSEK):
+            return self.cleaned_content + TSEK
         else:
             return self.cleaned_content
 

@@ -1,6 +1,5 @@
 # coding: utf-8
 from .token import Token
-from .splitaffixed import SplitAffixed
 from .helpers import AFFIX_SEP
 # import bophono
 
@@ -150,8 +149,6 @@ class Tokenizer:
 
         self.pre_processed = None
 
-        if split_affixes:
-            SplitAffixed().split(tokens)
         return tokens
 
     def add_found_word_or_non_word(self, c_idx, match_data, syls, tokens, has_decremented=False):

@@ -2,6 +2,8 @@
 import yaml
 from pathlib import Path
 
+from .helpers import TSEK
+
 
 class LemmatizeTokens:
     """
@@ -21,12 +23,12 @@ class LemmatizeTokens:
     def lemmatize(self, token_list):
         for token in token_list:
             if token.unaffixed_word:
-                no_tsek = token.unaffixed_word.rstrip('་')
+                no_tsek = token.unaffixed_word.rstrip(TSEK)
                 if no_tsek in self.particles and token.pos == 'PART':
-                    token.lemma = self.particles[no_tsek] + '་'
+                    token.lemma = self.particles[no_tsek] + TSEK
 
                 elif no_tsek in self.lemmas:
-                    token.lemma = self.lemmas[no_tsek] + '་'
+                    token.lemma = self.lemmas[no_tsek] + TSEK
 
                 else:
                     token.lemma = token.unaffixed_word

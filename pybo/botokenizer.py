@@ -1,5 +1,7 @@
 from .config import Config
 from .lemmatizetoken import LemmatizeTokens
+from .mergepapo import MergePaPo
+from .splitaffixed import SplitAffixed
 from .tokenizer import Tokenizer
 from .pybotrie import PyBoTrie
 from .bosyl import BoSyl
@@ -34,6 +36,14 @@ class BoTokenizer:
         """
         preprocessed = PyBoTextChunks(string, ignore_chars=self.ignore_chars)
         tokens = self.tok.tokenize(preprocessed, split_affixes=split_affixes, phono=phono, debug=debug)
+
+        if split_affixes:
+            SplitAffixed().split(tokens)
+
+        # merge pa/po/ba/bo tokens with previous ones
+        MergePaPo().merge(tokens)
+
         if lemmatize:
             self.lt.lemmatize(tokens)
+
         return tokens
