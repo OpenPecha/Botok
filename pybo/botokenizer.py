@@ -35,7 +35,7 @@ class BoTokenizer:
         :return: list of pybo.tokenizer.Token objects
         """
         preprocessed = PyBoTextChunks(string, ignore_chars=self.ignore_chars)
-        tokens = self.tok.tokenize(preprocessed, split_affixes=split_affixes, phono=phono, debug=debug)
+        tokens = self.tok.tokenize(preprocessed, phono=phono, debug=debug)
 
         if split_affixes:
             SplitAffixed().split(tokens)

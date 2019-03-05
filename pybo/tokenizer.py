@@ -19,12 +19,10 @@ class Tokenizer:
         #     'prefixStrategy': 'always'
         # }
 
-    def tokenize(self, pre_processed, split_affixes=True, phono=False, debug=False):
+    def tokenize(self, pre_processed, phono=False, debug=False):
         """
 
         :param pre_processed: PyBoTextChunks of the text to be tokenized
-        :param split_affixes: splits affixed particles inside tokens if True,
-                              else keeps affixed tokens
         :param debug: prints debug info in True
         :return: a list of Token objects
         """
