@@ -74,6 +74,7 @@ def test_match_replace():
 
 
 def test_adjust_tokens():
+    # !!! rules for the following is not anymore in the rules_path
     # string = 'ན་ན་ན་སྟེ་ན་བས་དགའ།། རྐྱེན་ངན་གྱིས་བར་དུ་མ་ཆོད་ཅིང་། །'
     # token_list = tok.tokenize(string, split_affixes=False)
     # at = AdjustTokens(rules_folder=rules_path)
@@ -81,14 +82,14 @@ def test_adjust_tokens():
     # assert token_list[9].content == 'བར་'
     # assert token_list[10].content == 'དུ་མ་'
     # assert token_list[11].content == 'ཆོད་'
-
+    #
     # assert adjusted[9].content == 'བར་དུ་'
     # assert adjusted[9].pos == 'PART'
     # assert adjusted[10].content == 'མ་'
     # assert adjusted[10].pos == 'PART'
     # assert adjusted[11].content == 'ཆོད་'
 
-    string= 'ལ་ལ་ལ་ལ་ལ་བ་ཡོད།'
+    string = 'ལ་ལ་ལ་ལ་ལ་བ་ཡོད།'
     token_list = tok.tokenize(string, split_affixes=False)
     at = AdjustTokens(rules_folder=rules_path)
     adjusted = at.adjust(token_list)
@@ -117,3 +118,16 @@ def test_last_token():
     matcher = CQLMatcher('[pos="VERB"]')
     slices = matcher.match([token1, token2])
     assert [(1, 1)] == slices
+
+
+def test_papomerge():
+    token_list = tok.tokenize('བཀྲ་ཤིས་-པ་')
+    token_list = [t for t in token_list if t.content != '-']  # remove the "-" inserted to ensure we have two tokens
+    mp = MergePaPo()
+    mp.merge(token_list)
+    assert len(token_list) == 1 and token_list[0].content == 'བཀྲ་ཤིས་པ་'
+
+    token_list = tok.tokenize('བཀྲ་ཤིས་-པའོ།')
+    token_list = [t for t in token_list if t.content != '-']  # remove the "-" inserted to ensure we have two tokens
+    mp.merge(token_list)
+    assert len(token_list) == 3 and token_list[0].content == 'བཀྲ་ཤིས་པ'

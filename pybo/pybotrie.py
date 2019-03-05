@@ -3,14 +3,13 @@ import time
 import pickle
 from pathlib import Path
 from .basictrie import BasicTrie, Node
-from .helpers import AFFIX_SEP, OOV
+from .helpers import AFFIX_SEP, OOV, TSEK, NAMCHE, SHAD
 
 
 class PyBoTrie(BasicTrie):
     def __init__(self, bosyl, profile='pytib', build=False, toadd_filenames=[], todel_filenames=[], config=None):
         BasicTrie.__init__(self)
         self.bosyl = bosyl
-        self.TSEK = '་'
         self.COMMENT = '#'
         self.profile = profile
         self.pickled_file = Path(profile + '_trie.pickled')
@@ -91,7 +90,7 @@ class PyBoTrie(BasicTrie):
                 if line:
                     word = line
 
-                sep = "" if word[-1] == "ཿ" else "་"
+                sep = "" if word[-1] == NAMCHE else TSEK
                 self.add(word + sep, skrt=True)
         else:
             with in_file.open('r', encoding='utf-8-sig') as f:
@@ -121,7 +120,7 @@ class PyBoTrie(BasicTrie):
                         word = word[1:]
                         remove_word = True
 
-                    word = word.rstrip('།')  # strip any ending shad
+                    word = word.rstrip(SHAD)  # strip any ending shad
 
                     self.inflect_n_add(word, pos, ins, data_only, remove_word)
 
@@ -131,7 +130,7 @@ class PyBoTrie(BasicTrie):
         :param word: a word without ending tsek
         :param pos: initial POS
         """
-        if word.endswith(self.TSEK):
+        if word.endswith(TSEK):
             word = word[:-1]
 
         beginning, last_syl = self.split_at_last_syl(word)
@@ -146,10 +145,10 @@ class PyBoTrie(BasicTrie):
                                                     a[1]['aa'])
                 else:
                     data = pos
-                self.modify_tree(beginning+a[0]+self.TSEK, data, ins, data_only, remove_word)
+                self.modify_tree(beginning+a[0]+TSEK, data, ins, data_only, remove_word)
 
         data = '{}{}{}{}'.format(pos, AFFIX_SEP, AFFIX_SEP, AFFIX_SEP) if ins == "data" else pos
-        self.modify_tree(word + self.TSEK, data, ins, data_only, remove_word)
+        self.modify_tree(word + TSEK, data, ins, data_only, remove_word)
 
     def modify_tree(self, word, data, ins="data", data_only=False, remove_word=False):
         if remove_word and data_only:
@@ -162,8 +161,8 @@ class PyBoTrie(BasicTrie):
             self.add_data_to_word(word, data, ins, data_only)
 
     def split_at_last_syl(self, word):
-        if word.count(self.TSEK) >= 1:
-            tsek_idx = word.rindex(self.TSEK)
+        if word.count(TSEK) >= 1:
+            tsek_idx = word.rindex(TSEK)
             return word[:tsek_idx+1], word[tsek_idx+1:]
         else:
             return '', word
@@ -171,7 +170,7 @@ class PyBoTrie(BasicTrie):
     def deactivate_inflected(self, word):
         self.deactivate_word(word)
 
-        if word.endswith(self.TSEK):
+        if word.endswith(TSEK):
             word = word[:-1]
 
         beginning, last_syl = self.split_at_last_syl(word)
@@ -179,7 +178,7 @@ class PyBoTrie(BasicTrie):
         if self.bosyl.is_affixable(last_syl):
             affixed = self.bosyl.get_all_affixed(last_syl)
             for a in affixed:
-                affixed_word = beginning + a[0] + self.TSEK
+                affixed_word = beginning + a[0] + TSEK
                 self.deactivate_word(affixed_word)
 
     def deactivate_wordlist(self, f):
@@ -193,7 +192,7 @@ class PyBoTrie(BasicTrie):
         # cleanup the entries
         # TODO: also remove non-breaking tseks. maybe centralize in a method such cleanup
         words = [word.rstrip('།') for word in words]
-        words = [word + self.TSEK if not word.endswith(self.TSEK) else word for word in words]
+        words = [word + TSEK if not word.endswith(TSEK) else word for word in words]
 
         for word in words:
             self.deactivate_inflected(word)

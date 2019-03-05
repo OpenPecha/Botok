@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.4.0](https://github.com/Esukhia/pybo/releases/tag/v0.4.0) - 20190305
+### Added
+ * MergePaPo class. Any token containing པ་/པོ་/བ་/བོ་ in Token.clean_content is by default merged to the previous one
+### Changed
+ * SplitAffixed was moved from Tokenizer to BoTokenizer, meaning that Tokenizer outputs tokens as they come out from the trie.
+   BoTokenizer also hosts LemmatizeTokens.
+ * A bit of cleanup
+
+## [0.3.0](https://github.com/Esukhia/pybo/releases/tag/v0.3.0) - 20190201
+### Added
+ * BoPipeline class. This allows to easily establish a custom pipeline that includes the BoTokenizer
+   The tests are limited to the intended functionality. The default pipes should be cleaned and rethought.
+
 ## [0.2.21](https://github.com/Esukhia/pybo/releases/tag/v0.2.21) - 20191301
 ### Fixed
  * CQL matcher didn't match last token

@@ -49,16 +49,15 @@ def test_non_max_end_of_string():
 
 
 def test_split_token():
-    trie = PyBoTrie(BoSyl(), 'empty', config=Config("pybo.yaml"))
-    trie.rebuild_trie()
-    trie.inflect_n_add('བདེ་བ་', 'NOUN', ins='data')
-    trie.add('གཏན་', 'NOUN')
-    trie.add('གྱི་', data='PART')
-    tok = Tokenizer(trie)
-    tokens = tok.tokenize(PyBoTextChunks('གཏན་གྱི་བདེ་བའི་རྒྱུ།'), split_affixes=False)
+    tok = BoTokenizer('empty')
+    tok.tok.trie.rebuild_trie()
+    tok.tok.trie.inflect_n_add('བདེ་བ་', 'NOUN', ins='data')
+    tok.tok.trie.add('གཏན་', 'NOUN')
+    tok.tok.trie.add('གྱི་', data='PART')
+    tokens = tok.tokenize('གཏན་གྱི་བདེ་བའི་རྒྱུ།', split_affixes=False)
     assert len(tokens) == 5
     assert tokens[2].content == 'བདེ་བའི་'
-    tokens = tok.tokenize(PyBoTextChunks('གཏན་གྱི་བདེ་བའི་རྒྱུ།'))
+    tokens = tok.tokenize('གཏན་གྱི་བདེ་བའི་རྒྱུ།')
     assert len(tokens) == 6
     assert tokens[2].content == 'བདེ་བ'
     assert tokens[3].content == 'འི་'

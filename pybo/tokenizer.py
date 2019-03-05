@@ -1,6 +1,5 @@
 # coding: utf-8
 from .token import Token
-from .splitaffixed import SplitAffixed
 from .helpers import AFFIX_SEP
 # import bophono
 
@@ -20,12 +19,10 @@ class Tokenizer:
         #     'prefixStrategy': 'always'
         # }
 
-    def tokenize(self, pre_processed, split_affixes=True, phono=False, debug=False):
+    def tokenize(self, pre_processed, phono=False, debug=False):
         """
 
         :param pre_processed: PyBoTextChunks of the text to be tokenized
-        :param split_affixes: splits affixed particles inside tokens if True,
-                              else keeps affixed tokens
         :param debug: prints debug info in True
         :return: a list of Token objects
         """
@@ -150,8 +147,6 @@ class Tokenizer:
 
         self.pre_processed = None
 
-        if split_affixes:
-            SplitAffixed().split(tokens)
         return tokens
 
     def add_found_word_or_non_word(self, c_idx, match_data, syls, tokens, has_decremented=False):
@@ -237,7 +232,7 @@ class Tokenizer:
                 token.tag = tag
         if token.tag:
             token.get_pos_n_aa()
-        if AFFIX_SEP in token.tag and not AFFIX_SEP * 3 in token.tag:
+        if AFFIX_SEP in token.tag and AFFIX_SEP * 3 not in token.tag:
             token.affix = True
             token.affixed = True
         token.char_groups = self.pre_processed.export_groups(start, length, for_substring=True)

@@ -32,6 +32,7 @@ class TokenMerge:
         self.__merge_char_groups()
         self.__merge_indices()
         self.__merge_syls()
+        self.__del_lemma()
 
     def __merge_contents(self):
         self.merged.content += self.token2.content
@@ -65,3 +66,10 @@ class TokenMerge:
                         first_syl = False
                     else:
                         self.merged.syls.append(new_syl)
+
+    def __del_lemma(self):
+        """
+        Simply deletes any lemma in merged since the lemma of the merged token can't be guessed.
+        """
+        if self.token1['lemma']:
+            self.merged.lemma = None
