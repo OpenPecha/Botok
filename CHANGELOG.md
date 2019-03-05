@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.4.1](https://github.com/Esukhia/pybo/releases/tag/v0.4.1) - 20190306
+### Added
+ * BoPipeline is now a class with 4 arguments, one for each pipe. 
+   (Warning: not thoroughly tested)
+
 ## [0.4.0](https://github.com/Esukhia/pybo/releases/tag/v0.4.0) - 20190305
 ### Added
  * MergePaPo class. Any token containing པ་/པོ་/བ་/བོ་ in Token.clean_content is by default merged to the previous one

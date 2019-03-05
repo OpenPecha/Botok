@@ -1,10 +1,13 @@
 from pathlib import Path
+from secrets import token_hex
+from collections import namedtuple
+from types import FunctionType
 
 from .bopipes import pipes
 from .config import Config
 
 
-class BoPipeline:
+class Pipeline:
     def __init__(self, profile, new_pipes=None):
         self.pipes = pipes
         self.update_pipes(new_pipes)
@@ -138,3 +141,30 @@ class BoPipeline:
         if (self.proc.endswith('concs') and not self.frm.endswith('concs')) \
            or (self.frm.endswith('concs') and not self.proc.endswith('concs')):
             raise BrokenPipeError('concs processor requires a concs formatter (both names end with "concs").')
+
+
+class BoPipeline(Pipeline):
+    def __init__(self, preprocessor, tokenizer, processor, formatter, pybo_profile=None):
+        Ids = namedtuple('Ids', ['name', 'profile', 'pre', 'tok', 'proc', 'frm'])
+        self.ids = Ids(token_hex(16), token_hex(16), token_hex(16),
+                       token_hex(16), token_hex(16), token_hex(16))
+        self.pipes = {'pre': {}, 'tok': {}, 'proc': {}, 'frm': {}}
+        self.profile = {self.ids.name: {}}
+        self.__create_pipeline(preprocessor, tokenizer, processor, formatter, pybo_profile)
+        super().__init__(self.profile, self.pipes)
+
+    def __create_pipeline(self, preprocessor, tokenizer, processor, formatter, pybo_profile):
+        for a, b, c in [('pre', self.ids.pre, preprocessor),
+                        ('tok', self.ids.tok, tokenizer),
+                        ('proc', self.ids.proc, processor),
+                        ('frm', self.ids.frm, formatter)]:
+            if isinstance(c, FunctionType):
+                self.pipes[a] = {b: c}
+                self.profile[self.ids.name][a] = b
+            elif isinstance(c, str):
+                self.profile[self.ids.name][a] = c
+            else:
+                raise SyntaxError('Should be either a function or a string')
+
+        if pybo_profile and isinstance(pybo_profile, str):
+            self.profile[self.ids.name]['pybo_profile'] = pybo_profile

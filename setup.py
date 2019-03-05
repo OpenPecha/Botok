@@ -18,7 +18,7 @@ def read(fname):
 
 setuptools.setup(
     name="pybo",
-    version="0.4.0",  # also edit version in pybo/__init__.py
+    version="0.4.1",  # also edit version in pybo/__init__.py
     author="Esukhia development team",
     author_email="esukhiadev@gmail.com",
     description="Python utils for processing Tibetan",
@@ -43,7 +43,7 @@ setuptools.setup(
         "Natural Language :: Tibetan"
     ],
     package_data={'pybo': ['resources/*', 'resources/trie/*', 'resources/frequency/*', 'resources/lemmas/*', 'resources/rules/*', 'resources/sanskrit/*']},
-    python_requires='>=3.4',
+    python_requires='>=3.6',
     # setup_requires=["pytest-runner"],
     tests_require=["pytest"],
     install_requires=[
