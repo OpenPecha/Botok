@@ -43,6 +43,10 @@ def is_skrt_word(word):
 
 # ############################################ A. Preprocessing ###################################################### #
 
+def dummy_preprocess(text: str) -> str:
+    return text
+
+
 def basic_cleanup(text: str) -> str:
     text = text.strip()
     text = re.sub(r'\n+', ' ', text)
@@ -79,7 +83,7 @@ def bo_syl_tok(text: str) -> List[str]:
 
 # ############################################ C. Processors ######################################################### #
 
-def spaces_plain_fulltext(tokens: List[str]) -> List[str]:
+def dummy_process(tokens: List[str]) -> List[str]:
     # do nothing
     return tokens
 
@@ -141,6 +145,11 @@ def pybo_raw_content(tokens: List[PyboToken]) -> List[str]:
 
 # ############################################ D. Formatters ######################################################### #
 
+
+def dummy_format(tokens: List[str]) -> List[str]:
+    return tokens
+
+
 def plaintext(tokens: List[str], sep: chr = ' ') -> str:
     # do nothing
     return sep.join(tokens)
@@ -171,6 +180,7 @@ def stats_types(total_mistakes: DefaultDict[str, int], sep: chr = '\t') -> str:
 pipes = {
     # a. Preprocessing
     'pre': {
+        'dummy': dummy_preprocess,
         'pre_basic': basic_cleanup,
         'pre_basic_lines': basic_keeps_lines,
     },
@@ -182,7 +192,7 @@ pipes = {
     },
     # c. Processors
     'proc': {
-        'spaces_fulltext': spaces_plain_fulltext,
+        'dummy': dummy_process,
         'pybo_raw_content': pybo_raw_content,
         'pybo_raw_types': pybo_raw_types,
         'pybo_types': pybo_error_types,
@@ -190,6 +200,7 @@ pipes = {
     },
     # d. Formatters
     'frm': {
+        'dummy': dummy_format,
         'plaintext': plaintext,
         'concs': basic_conc,
         'types': stats_types,

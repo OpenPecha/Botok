@@ -163,8 +163,14 @@ class BoPipeline(Pipeline):
                 self.profile[self.ids.name][a] = b
             elif isinstance(c, str):
                 self.profile[self.ids.name][a] = c
+            elif isinstance(c, tuple) and len(c) == 2:
+                name, func = c
+                assert isinstance(name, str)
+                assert isinstance(func, FunctionType)
+                self.pipes[a] = {name: func}
+                self.profile[self.ids.name][a] = name
             else:
-                raise SyntaxError('Should be either a function or a string')
+                raise SyntaxError('Should be either a function, a string or a tuple containing a string and a function')
 
         if pybo_profile and isinstance(pybo_profile, str):
             self.profile[self.ids.name]['pybo_profile'] = pybo_profile
