@@ -109,7 +109,6 @@ class Config:
         return self.config["pipeline"][profile]
 
     def add_pipeline_profile(self, profile):
-        print('ok')
         args_list = ['pre', 'tok', 'proc', 'frm',  # components
                      'pybo_profile',               # pybo
                      'left', 'right',              # concs
