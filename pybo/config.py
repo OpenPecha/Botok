@@ -92,7 +92,7 @@ class Config:
                 f.write(default_config)
 
         with self.filename.open('r', encoding='utf-8-sig') as g:
-            self.config = yaml.load(g.read())
+            self.config = yaml.load(g.read(), Loader=yaml.FullLoader)
 
     def get_tokenizer_profile(self, profile):
         """Get the profile configuration list

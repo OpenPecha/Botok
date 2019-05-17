@@ -44,10 +44,11 @@ class Tokenizer:
             # 1. CHUNK IS SYLLABLE
             if chunk[0]:
                 # syl is extracted from input string, tsek added for the trie
+                syl = [self.pre_processed.string[idx] for idx in chunk[0]]
                 if chunk[0][-1] < pre_processed.len - 1 and self.pre_processed.string[chunk[0][-1]+1] == "ཿ":
-                    syl = [self.pre_processed.string[idx] for idx in chunk[0]] + ['ཿ']
+                    syl += ['ཿ']
                 else:
-                    syl = [self.pre_processed.string[idx] for idx in chunk[0]] + ['་']
+                    syl += ['་']
                 self.debug(debug, syl)
 
                 # >>> WALKING THE TRIE >>>
@@ -115,6 +116,12 @@ class Tokenizer:
 
                     else:
                         syls.append(c_idx)
+                        # end of input and the end of syllable is reached
+                        if c_idx == len(pre_processed.chunks) - 1 and s_idx == len(syl):
+                            c_idx = self.add_found_word_or_non_word(c_idx, match_data, syls, tokens, has_decremented)
+                            match_data = {}
+                            syls = []
+                            s_idx += 1
 
             # 2. CHUNK IS NON-SYLLABLE
             else:

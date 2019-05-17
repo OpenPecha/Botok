@@ -5,7 +5,7 @@ from pybo import *
 tok = BoTokenizer('POS')  # instanciated
 tok.tok.trie.rebuild_trie()
 
-input_str = ' ཤི་བཀྲ་ཤིས་  tr བདེ་་ལེ གས། བཀྲ་ཤིས་བདེ་ལེགས་ཀཀ'
+input_str = ' དེ་ལ་ནི་རང་ལྷ་དེ་འོ་སྙམ་པའི་རིགས་འདྲ་བར་བར་མ་ཆད་དུ་མི་དགོས'
 tokens = tok.tokenize(input_str)
 ###########################################
 
@@ -38,7 +38,7 @@ print(tokens[0])
 # POS: VERB
 
 count_tokens = 'pybo_raw_types'
-pipeline = BoPipeline(profile=count_tokens)
+pipeline = BoPipeline(pybo_profile=count_tokens)
 pipeline.prof = 'POS'
 result = pipeline.pipe_str(' ཤི་བཀྲ་ཤིས་  tr བདེ་ལེགས། བཀྲ་ཤིས་བདེ་ལེགས་ཀཀ  བཀྲ་ཤིས་')
 print(result)

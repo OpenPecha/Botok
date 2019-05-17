@@ -41,7 +41,7 @@ class LemmatizeTokens:
         """
         filename = Path(filename)
         with filename.open('r', encoding='utf-8-sig') as f:
-            parsed_yaml = yaml.load(f.read())
+            parsed_yaml = yaml.load(f.read(), Loader=yaml.FullLoader)
 
         lemmas = {}
         for lemma, forms in parsed_yaml.items():

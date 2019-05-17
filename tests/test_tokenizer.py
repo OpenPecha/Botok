@@ -61,3 +61,17 @@ def test_split_token():
     assert len(tokens) == 6
     assert tokens[2].content == 'བདེ་བ'
     assert tokens[3].content == 'འི་'
+
+
+def test_bug1():
+    tok = BoTokenizer('POS')
+    string = 'བ་ཀུ་'
+    tokens = tok.tokenize(string, debug=True)
+    assert tokens
+
+
+def test_bug2():
+    tok = BoTokenizer('GMD')
+    string = 'བྲ་གྲྀ་'
+    tokens = tok.tokenize(string, debug=True)
+    assert tokens

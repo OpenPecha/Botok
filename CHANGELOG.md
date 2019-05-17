@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.4.3](https://github.com/Esukhia/pybo/releases/tag/v0.4.3) - 20190517
+### Fixed
+ * bugfix: the yaml warning is fixed
+ * bugfix: an infinite loop is fixed
+ * bugfix: papomerge is fixed
+
 ## [0.4.2](https://github.com/Esukhia/pybo/releases/tag/v0.4.2) - 20190306
 ### Added
  * BoPipeline now accepts naming custom pipes. a (string, function) is allowed as argument 
