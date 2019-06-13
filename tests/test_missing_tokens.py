@@ -1,6 +1,6 @@
 from pybo import *
 
-tok = BoTokenizer('GMD')
+tok = Tokenizer('GMD')
 tok.tok.trie.rebuild_trie()
 
 
@@ -213,7 +213,7 @@ def test_missing_token34():
 def test_missing_token35():
     input_str = "ལྡང་པ་ན།"
     tokens = tok.tokenize(input_str)
-    assert ['ལྡང་པ་', 'ན', '།'] == [t.content for t in tokens]
+    assert ['ལྡང་', 'པ་', 'ན', '།'] == [t.content for t in tokens]
 
 
 def test_missing_token36():

@@ -5,14 +5,14 @@ from pybo import *
 
 
 def test_pybo_chunk():
-    pybo_string = PyBoChunk(' བཀྲ་ཤིས་  tr བདེ་་ལེ གས། ')
+    pybo_string = Chunks(' བཀྲ་ཤིས་  tr བདེ་་ལེ གས། ')
     found = pybo_string.chunk(indices=False)
     found = pybo_string.get_markers(found)
     assert found == [('syl', ' བཀྲ་'), ('syl', 'ཤིས་  '), ('non-bo', 'tr '), ('syl', 'བདེ་'), ('punct', '་'), ('syl', 'ལེ གས'),
                      ('punct', '། ')]
 
 
-bo_string = BoChunk(' བཀྲ་ཤིས་  tr བདེ་ལེགས།')
+bo_string = Chunks(' བཀྲ་ཤིས་  tr བདེ་ལེགས།')
 
 
 def test_bo():
@@ -61,7 +61,7 @@ def test_spaces():
 
 
 def test_multiple_spaces():
-    bo_string = PyBoChunk('ཤི ས་ཤི  ས་')
+    bo_string = Chunks('ཤི ས་ཤི  ས་')
     chunks = bo_string.chunk()
     chunks = bo_string.get_markers(chunks)
     chunks = bo_string.get_chunked(chunks)

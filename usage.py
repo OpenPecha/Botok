@@ -2,7 +2,7 @@ from pybo import *
 
 
 ###########################################
-tok = BoTokenizer('POS')  # instanciated
+tok = Tokenizer('POS')  # instanciated
 tok.tok.trie.rebuild_trie()
 
 input_str = ' དེ་ལ་ནི་རང་ལྷ་དེ་འོ་སྙམ་པའི་རིགས་འདྲ་བར་བར་མ་ཆད་དུ་མི་དགོས'
@@ -37,11 +37,11 @@ print(tokens[0])
 # tag: VERBᛃᛃᛃ
 # POS: VERB
 
-count_tokens = 'pybo_raw_types'
-pipeline = BoPipeline(pybo_profile=count_tokens)
-pipeline.prof = 'POS'
-result = pipeline.pipe_str(' ཤི་བཀྲ་ཤིས་  tr བདེ་ལེགས། བཀྲ་ཤིས་བདེ་ལེགས་ཀཀ  བཀྲ་ཤིས་')
-print(result)
+# count_tokens = 'pybo_raw_types'
+# pipeline = Pipeline(pybo_profile=count_tokens)
+# pipeline.prof = 'POS'
+# result = pipeline.pipe_str(' ཤི་བཀྲ་ཤིས་  tr བདེ་ལེགས། བཀྲ་ཤིས་བདེ་ལེགས་ཀཀ  བཀྲ་ཤིས་')
+# print(result)
 # ཤི་	1
 # བཀྲ་ཤིས་ 	1
 # tr 	1

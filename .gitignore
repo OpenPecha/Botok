@@ -540,8 +540,8 @@ paket-files/
 *.pyc
 
 # Cake - Uncomment if you are using it
-# tools/**
-# !tools/packages.config
+# textunits/**
+# !textunits/packages.config
 
 # Telerik's JustMock configuration file
 *.jmconfig

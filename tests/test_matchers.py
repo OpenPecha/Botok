@@ -5,7 +5,7 @@ rules_path = Path(__file__).parent / "resources" / "rules"
 
 
 input_str = ' མཐའི་རྒྱ་མཚོའི་གླིང་། ཤི་བཀྲ་ཤིས་  tr བདེ་་ལེ གས། བཀྲ་ཤིས་བདེ་ལེགས་ཀཀ'
-tok = BoTokenizer('POS')
+tok = Tokenizer('POS')
 tok.tok.trie.rebuild_trie()
 tokens = tok.tokenize(input_str)
 
@@ -123,7 +123,7 @@ def test_last_token():
 def test_papomerge():
     token_list = tok.tokenize('བཀྲ་ཤིས་-པ་')
     token_list = [t for t in token_list if t.content != '-']  # remove the "-" inserted to ensure we have two tokens
-    mp = MergePaPo()
+    mp = MergeDagdra()
     mp.merge(token_list)
     assert len(token_list) == 1 and token_list[0].content == 'བཀྲ་ཤིས་པ་'
 
