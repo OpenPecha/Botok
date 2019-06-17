@@ -1,15 +1,8 @@
 # coding: utf-8
-from ..helpers import AFFIX_SEP, TSEK
+from ..helpers import AFFIX_SEP, TSEK, AA_TSEK
 
 
 class Token:
-    a_n_tsek = 'འ་'
-    char_markers = {1: 'cons', 2: 'sub-cons', 3: 'vow', 4: 'tsek', 5: 'skrt-cons', 6: 'skrt-sub-cons',
-                    7: 'skrt-vow', 8: 'punct', 9: 'num', 10: 'in-syl-mark', 11: 'special-punct', 12: 'symbol',
-                    13: 'no-bo-no-skrt', 14: 'other', 15: 'space', 16: 'underscore', 17: 'skrt-vow_long'}
-    chunk_markers = {100: 'bo', 101: 'non-bo', 102: 'punct', 103: 'non-punct', 104: 'space', 105: 'non-space',
-                     106: 'syl', 107: 'sym', 108: 'non-sym', 109: 'num', 110: 'non-num',
-                     1000: 'word', 1001: 'oov'}
 
     def __init__(self):
         self.content = ''
@@ -86,21 +79,21 @@ class Token:
     def unaffixed_word(self):
         if self.aa_word and (not self.affix and self.affixed):
             if self.cleaned_content.endswith(TSEK):
-                return self.cleaned_content[:-1] + Token.a_n_tsek
+                return self.cleaned_content[:-1] + AA_TSEK
             else:
-                return self.cleaned_content + Token.a_n_tsek
+                return self.cleaned_content + AA_TSEK
         elif self.tag.count(AFFIX_SEP) == 3:
             _, _, affix_len, aa = self.tag.split(AFFIX_SEP)
             if affix_len:
                 affix_len = int(affix_len)
                 if self.cleaned_content.endswith(TSEK):
                     if aa:
-                        return self.cleaned_content[:-affix_len - 1] + Token.a_n_tsek
+                        return self.cleaned_content[:-affix_len - 1] + AA_TSEK
                     else:
                         return self.cleaned_content[:-affix_len - 1] + TSEK
                 else:
                     if aa:
-                        return self.cleaned_content[:-affix_len] + Token.a_n_tsek
+                        return self.cleaned_content[:-affix_len] + AA_TSEK
                     else:
                         return self.cleaned_content[:-affix_len] + TSEK
 
@@ -119,8 +112,8 @@ class Token:
             out += '\nlemma: "{}"'.format(self.lemma)
         if self.phono:
             out += '\nphono: /{}/'.format(self.phono)
-        out += '\nchar_types: |' + '|'.join([self.char_markers[self.char_groups[idx]]
-                                             for idx in sorted(self.char_groups.keys())])+'|'
+        # out += '\nchar_types: |' + '|'.join([char_markers_rev[self.char_groups[idx]]
+        #                                      for idx in sorted(self.char_groups.keys())])+'|'
         out += '\ntype: ' + self.type
         out += '\nstart: ' + str(self.start)
         out += '\nlen: ' + str(self.len)

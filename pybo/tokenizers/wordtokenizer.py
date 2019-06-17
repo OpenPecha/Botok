@@ -9,7 +9,7 @@ from ..textunits.bosyl import BoSyl
 from ..config import Config
 
 
-class Tokenizer:
+class WordTokenizer:
     """
     Convenience class to tokenize a given string.
 
@@ -35,7 +35,7 @@ class Tokenizer:
         :param split_affixes: separates the affixed particles into seperate tokens if True
         :param lemmatize: adds the lemma for every token
         :param debug: print debug info while parsing
-        :return: list of pybo.tokenizer.Token objects
+        :return: list of pybo.tokenizers.Token objects
         """
         preprocessed = TokChunks(string, ignore_chars=self.ignore_chars)
         tokens = self.tok.tokenize(preprocessed, debug=debug)

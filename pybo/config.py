@@ -4,64 +4,67 @@
 """
 
 from pathlib import Path
+from textwrap import dedent
 import yaml
 
-default_config = '''tokenizer:
-  trie_files:
-    - &part 'particles.txt'
-    - &ancient ancient.txt
-    - &except exceptions.txt
-    - &uncomp uncompound_lexicon.txt
-    - &tsikchen tsikchen.txt
-    - &oral0 oral_corpus_0.txt
-    - &oral1 oral_corpus_1.txt
-    - &oral2 oral_corpus_2.txt
-    - &oral3 oral_corpus_3.txt
-    - &record recordings_4.txt
-    - &mgd mgd.txt
-    - &verb verbs.txt
-  skrt_files:
-    - &skrt ~ssanskrit.txt
-  pos_files:
-    - &tibdict ~pTibetan.DICT
-  freq_files:
-    - &freq_mgd ~fmgd.txt
-  Profile:
-    empty: []
-    pytib: [*ancient, *except, *uncomp, *tsikchen, *tibdict, *part]
-    POS: [*ancient, *except, *uncomp, *tsikchen, *tibdict, *part]
-    PP: [*part]
-    GMD: [*ancient, *except, *uncomp, *tsikchen, *mgd, *verb, *tibdict, *skrt, *freq_mgd, *part]
-
-pipeline:
-  basic:
-      pre: pre_basic
-      tok: spaces
-      proc: spaces_fulltext
-      frm: plaintext
-  pybo_raw_content:
-      pre: pre_basic
-      tok: pybo
-      pybo_profile: GMD
-      proc: pybo_raw_content
-      frm: plaintext
-  pybo_raw_lines:
-      pre: pre_basic_lines
-      tok: pybo
-      pybo_profile: GMD
-      proc: pybo_raw_content
-      frm: plaintext
-  syls:
-      pre: pre_basic
-      tok: syls
-      proc: spaces_fulltext
-      frm: plaintext
-  pybo_raw_types:
-      pre: pre_basic
-      tok: pybo
-      pybo_profile: GMD
-      proc: pybo_raw_types
-      frm: types'''
+default_config = dedent('''\
+                        tokenizers:
+                          trie_files:
+                            - &ancient trie/ancient.txt
+                            - &except trie/exceptions.txt
+                            - &uncomp trie/uncompound_lexicon.txt
+                            - &tsikchen trie/tsikchen.txt
+                            - &oral0 trie/oral_corpus_0.txt
+                            - &oral1 trie/oral_corpus_1.txt
+                            - &oral2 trie/oral_corpus_2.txt
+                            - &oral3 trie/oral_corpus_3.txt
+                            - &record trie/recordings_4.txt
+                            - &part trie/particles.txt
+                            - &mgd trie/mgd.txt
+                            - &verbs trie/verbs.txt
+                          skrt_files:
+                            - &skrt sanskrit/sanskrit.txt
+                          pos_files:
+                            - &soas pos/Tibetan.DICT
+                          freq_files:
+                            - &freq_mgd frequency/mgd.txt
+                            - &tc frequency/tc.txt
+                          profiles:
+                            empty: []
+                            pytib: [*ancient, *except, *uncomp, *tsikchen, *soas, *part]
+                            POS: [*ancient, *except, *uncomp, *tsikchen, *soas, *part]
+                            PP: [*part]
+                            GMD: [*ancient, *except, *uncomp, *tsikchen, *mgd, *verbs, *soas, *skrt, *freq_mgd, *part]
+                        
+                        pipeline:
+                          basic:
+                              pre: pre_basic
+                              tok: spaces
+                              proc: spaces_fulltext
+                              frm: plaintext
+                          pybo_raw_content:
+                              pre: pre_basic
+                              tok: pybo
+                              pybo_profile: GMD
+                              proc: pybo_raw_content
+                              frm: plaintext
+                          pybo_raw_lines:
+                              pre: pre_basic_lines
+                              tok: pybo
+                              pybo_profile: GMD
+                              proc: pybo_raw_content
+                              frm: plaintext
+                          syls:
+                              pre: pre_basic
+                              tok: syls
+                              proc: spaces_fulltext
+                              frm: plaintext
+                          pybo_raw_types:
+                              pre: pre_basic
+                              tok: pybo
+                              pybo_profile: GMD
+                              proc: pybo_raw_types
+                              frm: types''')
 
 
 class Config:
@@ -102,29 +105,11 @@ class Config:
         :param profile: the profile name
         :return: the list of files of the selected profile
         """
-        return self.config["tokenizer"]["Profile"][profile]
+        return self.config["tokenizers"]["profiles"][profile]
 
     def get_pipeline_profile(self, profile):
 
         return self.config["pipeline"][profile]
-
-    def add_pipeline_profile(self, profile):
-        args_list = ['pre', 'tok', 'proc', 'frm',  # components
-                     'pybo_profile',               # pybo
-                     'left', 'right',              # concs
-                     'filename']                   # others
-
-        key = list(profile.keys())
-        assert len(key) == 1
-        key = key[0]
-
-        parts = profile[key]
-        component_keys = list(parts.keys())
-        assert len(component_keys) >= 4
-        for c in component_keys:
-            assert c in args_list
-
-        self.config['pipeline'][key] = parts
 
     def reset_default(self):
         """Resets the configuration file to the default values"""
@@ -134,6 +119,5 @@ class Config:
 
 if __name__ == '__main__':
     config = Config("pybo.yaml")
-    config.add_pipeline_profile({'test': {'pre': 'test', 'tok': 'test1', 'proc': 'test2', 'frm': 'test3'}})
     config.reset_default()
     print(config.get_tokenizer_profile('POS'))

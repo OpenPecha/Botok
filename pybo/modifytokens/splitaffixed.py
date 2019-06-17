@@ -1,5 +1,5 @@
 # coding: utf-8
-from ..tokenizer.token import Token
+from ..tokenizers.token import Token
 from ..helpers import AFFIX_SEP
 
 

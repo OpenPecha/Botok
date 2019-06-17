@@ -2,8 +2,8 @@
 from typing import List, NewType
 
 from ..chunks.chunks import Chunks
-from ..tokenizer.token import Token
-from ..tokenizer.tokenizer import Tokenizer
+from ..tokenizers.token import Token
+from ..tokenizers.wordtokenizer import WordTokenizer
 
 PyboToken = NewType('PyboToken', Token)
 
@@ -16,7 +16,7 @@ def space_tok(text: str) -> List[str]:
 
 
 def bo_tok(text: str, profile: str) -> List[PyboToken]:
-    tok = Tokenizer(profile)
+    tok = WordTokenizer(profile)
     return tok.tokenize(text)
 
 

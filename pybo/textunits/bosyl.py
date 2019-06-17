@@ -5,17 +5,17 @@ from .sylcomponents import SylComponents
 class BoSyl(SylComponents):
     def __init__(self):
         SylComponents.__init__(self)
-        self.affixes = {'ར': {'len': 1, 'POS': 'la'},
-                        'ས': {'len': 1, 'POS': 'gis'},
-                        'འི': {'len': 2, 'POS': 'gi'},
-                        'འམ': {'len': 2, 'POS': 'am'},
-                        'འང': {'len': 2, 'POS': 'ang'},
-                        'འོ': {'len': 2, 'POS': 'o'},
-                        'འིའོ': {'len': 4, 'POS': 'gi+o'},
-                        'འིའམ': {'len': 4, 'POS': 'gi+am'},
-                        'འིའང': {'len': 4, 'POS': 'gi+ang'},
-                        'འོའམ': {'len': 4, 'POS': 'o+am'},
-                        'འོའང': {'len': 4, 'POS': 'o+ang'}
+        self.affixes = {'ར': {'len': 1, 'affix': 'la'},
+                        'ས': {'len': 1, 'affix': 'gis'},
+                        'འི': {'len': 2, 'affix': 'gi'},
+                        'འམ': {'len': 2, 'affix': 'am'},
+                        'འང': {'len': 2, 'affix': 'ang'},
+                        'འོ': {'len': 2, 'affix': 'o'},
+                        'འིའོ': {'len': 4, 'affix': 'gi+o'},
+                        'འིའམ': {'len': 4, 'affix': 'gi+am'},
+                        'འིའང': {'len': 4, 'affix': 'gi+ang'},
+                        'འོའམ': {'len': 4, 'affix': 'o+am'},
+                        'འོའང': {'len': 4, 'affix': 'o+ang'}
                         }
 
     def is_affixable(self, syl):
@@ -31,14 +31,14 @@ class BoSyl(SylComponents):
     def get_all_affixed(self, syl):
         """
         :param syl: syl to be affixed
-        :return: if affixable: list of (<syl+affixed>, {'len': int, 'POS': str, 'aa': bool})
+        :return: if affixable: [(<syl+affixed>, {'len': int, 'affix': str, 'aa': bool}), (..., ...)]
                  otherwise   : <syl>
         """
         if self.is_affixable(syl):
             affixed = []
-            aa = ''
+            aa = False
             if syl.endswith('འ'):
-                aa = 'aa'
+                aa = True
                 syl = syl[:-1]
 
             for a in self.affixes.keys():

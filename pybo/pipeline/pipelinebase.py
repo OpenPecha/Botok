@@ -103,15 +103,15 @@ class PipelineBase:
     def is_valid_pipeline(self):
         # missing pipes
         if not self.tok or not self.mod or not self.form:
-            raise BrokenPipeError('A valid pipeline must have a tokenizer, a processor and a formatter.')
+            raise BrokenPipeError('A valid pipeline must have a tokenizers, a processor and a formatter.')
 
         # detect pipeline inconsistencies through naming conventions
         if self.tok == 'pybo' and not self.prof:
-            raise AttributeError('pybo tokenizer requires a profile as argument.')
+            raise AttributeError('pybo tokenizers requires a profile as argument.')
 
         if (self.tok == 'pybo' and not self.mod.startswith('pybo')) \
            or (self.mod.startswith('pybo') and not self.tok == 'pybo'):
-            raise BrokenPipeError('pybo tokenizer requires a pybo processor (both names start with "pybo").')
+            raise BrokenPipeError('pybo tokenizers requires a pybo processor (both names start with "pybo").')
 
         if (self.mod.endswith('types') and not self.form.endswith('types')) \
            or (self.form.endswith('types') and not self.mod.endswith('types')):

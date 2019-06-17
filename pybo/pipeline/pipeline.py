@@ -11,14 +11,10 @@ from .modify import *
 from .format import *
 
 
-def dummy(objects):
-    return objects
-
-
 pipes = {
     # a. Preprocessing
     'prep': {
-        'dummy': dummy,
+        'dummy': lambda x: x,
         'pre_basic': basic_cleanup,
         'pre_basic_lines': basic_keeps_lines,
     },
@@ -30,7 +26,7 @@ pipes = {
     },
     # c. Processors
     'mod': {
-        'dummy': dummy,
+        'dummy': lambda x: x,
         'pybo_raw_content': pybo_raw_content,
         'pybo_raw_types': pybo_raw_types,
         'pybo_types': pybo_error_types,
@@ -38,7 +34,7 @@ pipes = {
     },
     # d. Formatters
     'form': {
-        'dummy': dummy,
+        'dummy': lambda x: x,
         'plaintext': plaintext,
         'concs': basic_conc,
         'types': stats_types,

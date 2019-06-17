@@ -1,6 +1,6 @@
 from pybo import *
 
-tok = Tokenizer('GMD')
+tok = WordTokenizer('GMD')
 tok.tok.trie.rebuild_trie()
 
 

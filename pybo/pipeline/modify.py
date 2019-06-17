@@ -2,8 +2,8 @@
 from typing import List, DefaultDict, NewType
 from collections import defaultdict
 
-from ..helpers import is_skrt_word
-from ..tokenizer.token import Token
+from ..third_party.is_skrt import is_skrt_word
+from ..tokenizers.token import Token
 
 PyboToken = NewType('PyboToken', Token)
 

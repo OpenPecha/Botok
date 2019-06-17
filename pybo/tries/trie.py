@@ -2,8 +2,9 @@
 import time
 import pickle
 from pathlib import Path
+
 from .basictrie import BasicTrie, Node
-from ..helpers import AFFIX_SEP, OOV, TSEK, NAMCHE, SHAD
+from ..helpers import AFFIX_SEP, OOV, TSEK, NAMCHE, SHAD, HASH
 
 
 class Trie(BasicTrie):
@@ -13,8 +14,7 @@ class Trie(BasicTrie):
             toadd_filenames = []
         if todel_filenames is None:
             todel_filenames = []
-        self.bosyl = bosyl
-        self.COMMENT = '#'
+        self.bosyl = bosyl()
         self.profile = profile
         self.pickled_file = Path(profile + '_trie.pickled')
         self.toadd_filenames = toadd_filenames
@@ -28,10 +28,9 @@ class Trie(BasicTrie):
         else:
             self.load_trie()
 
-        # load the custom entries on the fly (at each instanciation)
+        # add and deactivate the custom entries on the fly, at each instanciation
         for f in self.toadd_filenames:
             self.__add_one_file(Path(f))
-
         for f in self.todel_filenames:
             self.deactivate_wordlist(f)
 
@@ -54,6 +53,8 @@ class Trie(BasicTrie):
         start = time.time()
 
         for f in self.config_trie.get_tokenizer_profile(self.profile):
+            print()
+
             ins_s = "data"
             data_s = False
             resource_directory = 'trie'
@@ -95,14 +96,14 @@ class Trie(BasicTrie):
                     word = line
 
                 sep = "" if word[-1] == NAMCHE else TSEK
-                self.add(word + sep, skrt=True)
+                self.add(word + sep)
         else:
             with in_file.open('r', encoding='utf-8-sig') as f:
                 lines = [line.rstrip('\n') for line in f.readlines()]
 
             for line in lines:
-                if self.COMMENT in line:
-                    comment_idx = line.index(self.COMMENT)
+                if HASH in line:
+                    comment_idx = line.index(HASH)
                     line = line[:comment_idx]
 
                 line = line.strip()
@@ -119,50 +120,41 @@ class Trie(BasicTrie):
                     else:
                         word, pos = line, OOV
 
-                    remove_word = False
+                    deactivate = False
                     if word[0] == '-':
                         word = word[1:]
-                        remove_word = True
+                        deactivate = True
 
                     word = word.rstrip(SHAD)  # strip any ending shad
 
-                    self.inflect_n_add(word, pos, ins, data_only, remove_word)
+                    self.inflect_n_add(word, pos, ins, data_only, deactivate)
 
-    def inflect_n_add(self, word, pos, ins, data_only=False, remove_word=False):
+    def inflect_n_add(self, word, data, deactivate=False, overwrite=True):
         """
         Add to the trie all the affixed versions of the word
         :param word: a word without ending tsek
         :param pos: initial POS
         """
+        # add/deactivate word as is
+        self.modify_tree(word, data, deactivate=deactivate, overwrite=overwrite)
+
+        # add/deactivate inflected forms
         if word.endswith(TSEK):
             word = word[:-1]
-
         beginning, last_syl = self.split_at_last_syl(word)
 
         if self.bosyl.is_affixable(last_syl):
             affixed = self.bosyl.get_all_affixed(last_syl)
             for a in affixed:
-                if ins == "data":
-                    data = '{}{}{}{}{}{}{}'.format(pos, AFFIX_SEP,
-                                                    a[1]['POS'], AFFIX_SEP,
-                                                    a[1]['len'], AFFIX_SEP,
-                                                    a[1]['aa'])
-                else:
-                    data = pos
-                self.modify_tree(beginning+a[0]+TSEK, data, ins, data_only, remove_word)
+                a[1].update(data)  # adds affix, len and aa
+                inflected_word = beginning + a[0] + TSEK
+                self.modify_tree(inflected_word, a[1], deactivate=deactivate, overwrite=overwrite)
 
-        data = '{}{}{}{}'.format(pos, AFFIX_SEP, AFFIX_SEP, AFFIX_SEP) if ins == "data" else pos
-        self.modify_tree(word + TSEK, data, ins, data_only, remove_word)
-
-    def modify_tree(self, word, data, ins="data", data_only=False, remove_word=False):
-        if remove_word and data_only:
-            self.add_data_to_word(word, None, ins)
-        elif remove_word:
-            self.deactivate_inflected(word)
-        elif not data_only:
-            self.add(word, data)
+    def modify_tree(self, word, data, deactivate=False, overwrite=True):
+        if not deactivate:
+            self.add_data_to_word(word, data, overwrite=overwrite)
         else:
-            self.add_data_to_word(word, data, ins, data_only)
+            self.deactivate_word(word)
 
     def split_at_last_syl(self, word):
         if word.count(TSEK) >= 1:
@@ -195,7 +187,7 @@ class Trie(BasicTrie):
 
         # cleanup the entries
         # TODO: also remove non-breaking tseks. maybe centralize in a method such cleanup
-        words = [word.rstrip('།') for word in words]
+        words = [word.rstrip(SHAD) for word in words]
         words = [word + TSEK if not word.endswith(TSEK) else word for word in words]
 
         for word in words:

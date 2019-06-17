@@ -1,4 +1,9 @@
 # coding: utf-8
+from .charcategories import get_char_category
+from ..helpers import CharMarkers as cm
+from ..helpers import char_values
+
+
 class BoString:
     """
     This class is the foundational building block of pre-processing.
@@ -18,6 +23,7 @@ class BoString:
     :Example:
 
     >>> from pybo.textunits.bostring import BoString
+    >>> from pybo.helpers import CharMarkers
 
     >>> bo_str = ' བཀྲ་ཤིས་  tr བདེ་ལེགས།'
     >>> bs = BoString(bo_str)
@@ -26,7 +32,7 @@ class BoString:
     {0: 15, 1: 1, 2: 1, 3: 2, 4: 4, 5: 1, 6: 3, 7: 1, 8: 4, 9: 15, 10: 15, 11: 14,
     12: 14, 13: 15, 14: 1, 15: 1, 16: 3, 17: 4, 18: 1, 19: 3, 20: 1, 21: 1, 22: 8}
 
-    >>> {k: bs.char_markers[v] for k, v in bs.base_structure.items()}
+    >>> bs.get_categories()
     {0: 'space', 1: 'cons', 2: 'cons', 3: 'sub-cons', 4: 'tsek', 5: 'cons', 6: 'vow',
     7: 'cons', 8: 'tsek', 9: 'space', 10: 'space', 11: 'other', 12: 'other',
     13: 'space', 14: 'cons', 15: 'cons', 16: 'vow', 17: 'tsek', 18: 'cons', 19: 'vow',
@@ -36,60 +42,10 @@ class BoString:
                 Be sure to create the corresponding constants in ``__init__()`` and the corresponding
                 entries in ``__init__().char_markers``.
     """
-    cons = "ཀཁགངཅཆཇཉཏཐདནཔཕབམཙཚཛཝཞཟའཡརལཤསཧཨཪ"
-    CONS = 1
-    sub_cons = "ྐྒྔྕྗྙྟྡྣྤྦྨྩྫྭྱྲླྷ"
-    SUB_CONS = 2
-    vow = "ིེོུ"
-    VOW = 3
-    tsek = "་༌"
-    TSEK = 4
-    skrt_cons = "གྷཊཋཌཌྷཎདྷབྷཛྷཥཀྵ྅"
-    SKRT_CONS = 5
-    skrt_sub_cons = "ྑྖྠྥྪྮྯྰྴྶྸྺྻྼཱྒྷྚྛྜྜྷྞྡྷྦྷྫྷྵྐྵ"
-    SKRT_SUB_CONS = 6
-    skrt_vow = "ཱཱིུྲྀཷླྀཹ྄ཱཻཽྀྀྂྃ྆"
-    SKRT_VOW = 7
-    skrt_long_vow = "ཿ"
-    SKRT_LONG_VOW = 17
-    normal_punct = "༄༅༆༈།༎༏༐༑༔༴༼༽"
-    PUNCT = 8
-    numerals = "༠༡༢༣༤༥༦༧༨༩"
-    NUM = 9
-    in_syl_marks = "༵༷༸ཾ"
-    IN_SYL_MARK = 10
-    special_punct = "༁༂༃༒༇༉༊༺༻༾༿࿐࿑࿓࿔"
-    SPECIAL_PUNCT = 11
-    symbols = "ༀ༓༕༖༗༘༙༚༛༜༝༞༟༪༫༬༭༮༯༰༱༲༳༶༹྇ྈྉྊྋྌྍྎྏ྾྿࿀࿁࿂࿃࿄࿅࿆࿇࿈࿉࿊࿋࿌࿎࿏࿒࿕࿖࿗࿘࿙࿚"
-    SYMBOLS = 12
-    non_bo_non_skrt = "ཫཬ"
-    NON_BO_NON_SKRT = 13
-    OTHER = 14
-    # all spaces from the unicode tables
-    spaces = ["\t", " ", " ", "᠎", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", "​", " ", " ", "　", "﻿"]
-    SPACE = 15
-
     def __init__(self, string, ignore_chars=None):
-        self.char_markers = {self.CONS: 'cons',
-                             self.SUB_CONS: 'sub-cons',
-                             self.VOW: 'vow',
-                             self.TSEK: 'tsek',
-                             self.SKRT_CONS: 'skrt-cons',
-                             self.SKRT_SUB_CONS: 'skrt-sub-cons',
-                             self.SKRT_VOW: 'skrt-vow',
-                             self.SKRT_LONG_VOW: 'skrt-long-vow',
-                             self.PUNCT: 'punct',
-                             self.NUM: 'num',
-                             self.IN_SYL_MARK: 'in-syl-mark',
-                             self.SPECIAL_PUNCT: 'special-punct',
-                             self.SYMBOLS: 'symbol',
-                             self.NON_BO_NON_SKRT: 'no-bo-no-skrt',
-                             self.OTHER: 'other',
-                             self.SPACE: 'space'}
-
-        if isinstance(ignore_chars, list):
-            for c in ignore_chars:
-                self.spaces.append(c)
+        if ignore_chars is None:
+            ignore_chars = []
+        self.ignore_chars = ignore_chars
         self.string = string
         self.len = len(string)
         self.base_structure = {}
@@ -101,38 +57,11 @@ class BoString:
         """
         for i in range(len(self.string)):
             char = self.string[i]
-            if char in self.cons:
-                self.base_structure[i] = self.CONS
-            elif char in self.sub_cons:
-                self.base_structure[i] = self.SUB_CONS
-            elif char in self.vow:
-                self.base_structure[i] = self.VOW
-            elif char in self.tsek:
-                self.base_structure[i] = self.TSEK
-            elif char in self.skrt_cons:
-                self.base_structure[i] = self.SKRT_CONS
-            elif char in self.skrt_sub_cons:
-                self.base_structure[i] = self.SKRT_SUB_CONS
-            elif char in self.skrt_vow:
-                self.base_structure[i] = self.SKRT_VOW
-            elif char in self.skrt_long_vow:
-                self.base_structure[i] = self.SKRT_LONG_VOW
-            elif char in self.normal_punct:
-                self.base_structure[i] = self.PUNCT
-            elif char in self.numerals:
-                self.base_structure[i] = self.NUM
-            elif char in self.in_syl_marks:
-                self.base_structure[i] = self.IN_SYL_MARK
-            elif char in self.special_punct:
-                self.base_structure[i] = self.SPECIAL_PUNCT
-            elif char in self.symbols:
-                self.base_structure[i] = self.SYMBOLS
-            elif char in self.non_bo_non_skrt:
-                self.base_structure[i] = self.NON_BO_NON_SKRT
-            elif char in self.spaces:
-                self.base_structure[i] = self.SPACE
+            cat = get_char_category(char)
+            if char in self.ignore_chars:
+                self.base_structure[i] = cm.TRANSPARENT.value  # spaces chars are allowed anywhere, thus ignored
             else:
-                self.base_structure[i] = self.OTHER
+                self.base_structure[i] = cat
 
     def export_groups(self, start_idx, slice_len, for_substring=True):
         """
@@ -162,3 +91,9 @@ class BoString:
             return {n: self.base_structure[i] for n, i in enumerate(range(start_idx, start_idx + slice_len))}
         else:
             return {i: self.base_structure[i] for i in range(start_idx, start_idx + slice_len)}
+
+    def get_categories(self, struct=None):
+        if struct is None or not isinstance(struct, dict):
+            return {k: char_values[v] for k, v in self.base_structure.items()}
+        else:
+            return {k: char_values[v] for k, v in struct.items()}

@@ -23,9 +23,9 @@ from .textunits.sylcomponents import SylComponents
 
 from .third_party.cqlparser import Query, parse_cql_query, replace_token_attributes
 
-from .tokenizer.token import Token
-from .tokenizer.tokenize import Tokenize
-from .tokenizer.tokenizer import Tokenizer
+from .tokenizers.token import Token
+from .tokenizers.tokenize import Tokenize
+from .tokenizers.wordtokenizer import WordTokenizer
 
 from .tries.basictrie import BasicTrie
 from .tries.trie import Trie

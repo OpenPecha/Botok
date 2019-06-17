@@ -2,7 +2,7 @@ from pybo import *
 
 
 ###########################################
-tok = Tokenizer('POS')  # instanciated
+tok = WordTokenizer('POS')  # instanciated
 tok.tok.trie.rebuild_trie()
 
 input_str = ' དེ་ལ་ནི་རང་ལྷ་དེ་འོ་སྙམ་པའི་རིགས་འདྲ་བར་བར་མ་ཆད་དུ་མི་དགོས'
