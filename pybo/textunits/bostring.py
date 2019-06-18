@@ -1,7 +1,7 @@
 # coding: utf-8
 from .charcategories import get_char_category
-from ..helpers import CharMarkers as cm
-from ..helpers import char_values
+from ..vars import CharMarkers as a
+from ..vars import char_values
 
 
 class BoString:
@@ -23,7 +23,7 @@ class BoString:
     :Example:
 
     >>> from pybo.textunits.bostring import BoString
-    >>> from pybo.helpers import CharMarkers
+    >>> from pybo.vars import CharMarkers
 
     >>> bo_str = ' བཀྲ་ཤིས་  tr བདེ་ལེགས།'
     >>> bs = BoString(bo_str)
@@ -59,7 +59,7 @@ class BoString:
             char = self.string[i]
             cat = get_char_category(char)
             if char in self.ignore_chars:
-                self.base_structure[i] = cm.TRANSPARENT.value  # spaces chars are allowed anywhere, thus ignored
+                self.base_structure[i] = a.TRANSPARENT.value  # spaces chars are allowed anywhere, thus ignored
             else:
                 self.base_structure[i] = cat
 

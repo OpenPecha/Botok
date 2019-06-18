@@ -4,7 +4,7 @@ import pickle
 from pathlib import Path
 
 from .basictrie import BasicTrie, Node
-from ..helpers import AFFIX_SEP, OOV, TSEK, NAMCHE, SHAD, HASH
+from ..vars import AFFIX_SEP, OOV, TSEK, NAMCHE, SHAD, HASH
 
 
 class Trie(BasicTrie):

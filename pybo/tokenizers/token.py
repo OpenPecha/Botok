@@ -1,5 +1,5 @@
 # coding: utf-8
-from ..helpers import AFFIX_SEP, TSEK, AA_TSEK
+from ..vars import AFFIX_SEP, TSEK, AA_TSEK
 
 
 class Token:

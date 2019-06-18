@@ -3,7 +3,7 @@
 from re import search
 
 from .token import Token
-from ..helpers import AFFIX_SEP, NAMCHE, TSEK
+from ..vars import AFFIX_SEP, NAMCHE, TSEK
 
 
 class Tokenize:

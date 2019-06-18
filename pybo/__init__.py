@@ -31,6 +31,6 @@ from .tries.basictrie import BasicTrie
 from .tries.trie import Trie
 
 from .config import Config
-from .helpers import *
+from .vars import *
 
 VERSION = "0.4.3"

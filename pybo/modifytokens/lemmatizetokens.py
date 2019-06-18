@@ -2,7 +2,7 @@
 import yaml
 from pathlib import Path
 
-from ..helpers import TSEK
+from ..vars import TSEK
 
 
 class LemmatizeTokens:

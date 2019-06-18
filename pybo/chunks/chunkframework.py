@@ -1,7 +1,7 @@
 # coding: utf8
 from .chunkframeworkbase import ChunkFrameworkBase
-from ..helpers import CharMarkers as a
-from ..helpers import ChunkMarkers as u
+from ..vars import CharMarkers as a
+from ..vars import ChunkMarkers as u
 
 
 class ChunkFramework(ChunkFrameworkBase):

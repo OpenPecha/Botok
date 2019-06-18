@@ -1,6 +1,6 @@
 # coding: utf-8
 from ..tokenizers.token import Token
-from ..helpers import AFFIX_SEP
+from ..vars import AFFIX_SEP
 
 
 class SplitAffixed:

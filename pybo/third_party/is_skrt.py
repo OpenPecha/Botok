@@ -1,7 +1,7 @@
 # coding: utf-8
 import re
 
-from ..helpers import TSEK
+from ..vars import TSEK
 
 
 def is_skrt(syl):

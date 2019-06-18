@@ -1,6 +1,5 @@
 # coding: utf-8
-from enum import Enum, unique, IntEnum, auto
-
+from enum import IntEnum
 
 AFFIX_SEP = 'ᛃ'
 OOV = 'OOV'

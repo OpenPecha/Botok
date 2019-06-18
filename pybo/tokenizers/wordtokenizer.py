@@ -4,7 +4,7 @@ from pybo.modifytokens.mergedagdra import MergeDagdra
 from pybo.modifytokens.lemmatizetokens import LemmatizeTokens
 
 from ..tries.trie import Trie
-from ..chunks.tokchunks import TokChunks
+from ..chunks.chunks import TokChunks
 from ..textunits.bosyl import BoSyl
 from ..config import Config
 

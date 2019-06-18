@@ -2,7 +2,7 @@ from pathlib import Path
 import csv
 from collections import defaultdict
 
-from ..helpers import CharMarkers as c
+from ..vars import CharMarkers as c
 
 # Get the categories of Tibetan characters from the csv file
 categories = defaultdict(list)

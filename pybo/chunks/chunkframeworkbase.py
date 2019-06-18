@@ -1,8 +1,8 @@
 # coding: utf-8
 from ..textunits.bostring import BoString
-from ..helpers import chunk_values
-from ..helpers import CharMarkers as a
-from ..helpers import ChunkMarkers as u
+from ..vars import chunk_values
+from ..vars import CharMarkers as a
+from ..vars import ChunkMarkers as u
 
 
 class ChunkFrameworkBase:
