@@ -6,6 +6,8 @@
 
 class Node:
     def __init__(self, label=None, leaf=False, data=None):
+        if data is None:
+            data = {'_': {}}  # the dict in '_' is for user-data
         self.label = label
         self.leaf = leaf
         self.data = data
@@ -59,7 +61,7 @@ class BasicTrie:
             current_node.data.update(data)
 
     def walk(self, char, current_node=None):
-        # used in Tokenize
+        # logic of walking the trie adapted to be done outside the trie class (for Tokenize)
         if not current_node:
             current_node = self.head
 
@@ -149,16 +151,3 @@ class BasicTrie:
             return True
         else:
             return False
-
-
-if __name__ == '__main__':
-    """Example use """
-    trie = BasicTrie()
-    words = 'hello goo good goodbye help gerald gold tea ted team to too tom stan standard money'
-    for n, w in enumerate(words.split()):
-        trie.add(w, {'count': n})
-    trie.add_data_to_word('goodbye', {'count': 150, 'test': [1, 2, 3]}, overwrite=False)
-    trie.deactivate_word('goodbye')
-    print("'goodbye':", trie.has_word('goodbye'))
-    trie.deactivate_word('goodbye', rev=True)
-    print("'goodbye':", trie.has_word('goodbye'))
