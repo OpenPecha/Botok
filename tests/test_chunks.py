@@ -44,12 +44,21 @@ def test_tokchunks():
                       (None, (103, 91, 24))]
 
     # the second element of each tuple is the chunk from Chunks
-    readable = c.get_readable([a[1] for a in chunks[1:5]])
-    assert readable == [('TEXT', 'བཀྲ་'),
-                        ('TEXT', 'ཤིས་'),
-                        ('TEXT', 'བདེ་'),
-                        ('TEXT', 'ལེགས')]
+    readable = [(a[0], c.get_readable([a[1]])[0]) for a in chunks]
+    assert readable == [(None,              ('PUNCT', '༆ ')),
+                        ([2, 3, 4],         ('TEXT', 'བཀྲ་')),
+                        ([6, 7, 8],         ('TEXT', 'ཤིས་')),
+                        ([10, 11, 12],      ('TEXT', 'བདེ་')),
+                        ([14, 15, 16, 17],  ('TEXT', 'ལེགས')),
+                        (None,              ('PUNCT', '།། །། ')),
+                        (None,              ('LATIN', '23PIEIUZLDVéjoldvép«»("«»%= ')),
+                        (None,              ('SYM', '༪༫༝༜༛༚')),
+                        (None,              ('PUNCT', '༇༆ ')),
+                        (None,              ('NUM', '༡༢༣༠༩༨ ')),
+                        (None,              ('LATIN', 'This is a test.')),
+                        (None,              ('CJK', ' 这是  什么 ')),
+                        (None,              ('OTHER', 'กขฃคฅฆงจฉชซฌญฎฏฐฑฒณดตถทธ'))]
 
-    # just for the fun of it: get the cleaned syllable that will be fed to the trie
-    chunks = [''.join([string[c] for c in chars]) + TSEK for chars, chunk in chunks[1:5]]
+    # just for the fun of it: get the cleaned syllable as it is done in the Tokenizer
+    chunks = [''.join([string[c] for c in chars]) + TSEK for chars, chunk in chunks if chars]
     assert chunks == ['བཀྲ་', 'ཤིས་', 'བདེ་', 'ལེགས་']
