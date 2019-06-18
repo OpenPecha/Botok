@@ -1,8 +1,8 @@
 # coding: utf-8
-from .chunkbase import ChunkBase
+from .bochunk import BoChunk
 
 
-class Chunks(ChunkBase):
+class PyBoChunk(BoChunk):
     """
     Produces chunks of the following types: bo, non-bo, punct and syl chunks
 
@@ -17,8 +17,8 @@ class Chunks(ChunkBase):
     .. note:: Following Tibetan usage, it does not consider space as a punctuation mark.
     Spaces get attached to the chunk preceding them.
     """
-    def __init__(self, string, ignore_chars=None):
-        ChunkBase.__init__(self, string, ignore_chars=ignore_chars)
+    def __init__(self, string, ignore_chars=[]):
+        BoChunk.__init__(self, string, ignore_chars=ignore_chars)
 
     def chunk(self, indices=True, gen=False):
         chunks = self.chunk_bo_chars()

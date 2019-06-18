@@ -1,7 +1,6 @@
 # coding: utf-8
 import copy
-
-from ..third_party.cqlparser import replace_token_attributes
+from .third_party import replace_token_attributes
 
 
 class TokenSplit:

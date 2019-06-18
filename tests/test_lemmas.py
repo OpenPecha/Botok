@@ -5,7 +5,7 @@ resource_path = Path().cwd() / "resources" / "lemmas"
 
 
 input_str = ' མཐའི་རྒྱ་མཚོའི་གླིང་། ཤི་བཀྲ་ཤིས་  tr བདེ་་ལེ གས། བཀྲ་ཤིས་བདེ་ལེགས་ཀཀ'
-tok = Tokenizer('POS')
+tok = BoTokenizer('POS')
 tok.tok.trie.rebuild_trie()
 tokens = tok.tokenize(input_str, lemmatize=False)
 

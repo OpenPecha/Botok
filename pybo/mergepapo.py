@@ -1,8 +1,7 @@
-# coding: utf-8
 from .tokenmerge import TokenMerge
 
 
-class MergeDagdra:
+class MergePaPo:
     """
     A class to merge pa/po/ba/bo tokens in a token list produced by BoTokenizer
 

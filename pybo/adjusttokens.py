@@ -1,6 +1,4 @@
-# coding: utf-8
 import yaml
-
 from .splittingmatcher import SplittingMatcher
 from .mergingmatcher import MergingMatcher
 from .replacingmatcher import ReplacingMatcher
@@ -36,4 +34,4 @@ class AdjustTokens:
     def parse_rules(self):
         paths = [p for path in self.paths for p in path.glob('*.*')]
         for rule_file in sorted(paths):
-            self.rules.extend(yaml.load(rule_file.read_text(encoding='utf-8-sig'), Loader=yaml.FullLoader))
+            self.rules.extend(yaml.load(rule_file.read_text(encoding='utf-8-sig')))

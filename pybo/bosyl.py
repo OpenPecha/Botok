@@ -49,3 +49,17 @@ class BoSyl(SylComponents):
             return affixed
         else:
             return syl
+
+
+if __name__ == '__main__':
+    """ example of use """
+
+    bs = BoSyl()
+    print(bs.is_affixable('དྭོགས'))
+    test = 'བཀྲིས'
+    for syl in ['བཀྲིས', 'བཀའ', 'བཀྲི', 'དེའོ', 'དེའིའོ', 'དགས', 'ལེགས', 'དེའིའམ', 'མ']:
+        print(syl, 'can be affixed:', bs.is_affixable(syl))
+        if bs.is_affixable(syl):
+            print(bs.get_all_affixed(syl))
+            # [('བཀར', 'ར', True), ('བཀས', 'ས', True), ('བཀའི', 'འི', True), ('བཀའམ', 'འམ', True), ('བཀའང', 'འང', True),
+            # ('བཀའོ', 'འོ', True), ('བཀའིའོ', 'འིའོ', True)]

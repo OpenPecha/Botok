@@ -3,16 +3,12 @@ import time
 import pickle
 from pathlib import Path
 from .basictrie import BasicTrie, Node
-from ..helpers import AFFIX_SEP, OOV, TSEK, NAMCHE, SHAD
+from .helpers import AFFIX_SEP, OOV, TSEK, NAMCHE, SHAD
 
 
-class Trie(BasicTrie):
-    def __init__(self, bosyl, profile='pytib', build=False, toadd_filenames=None, todel_filenames=None, config=None):
+class PyBoTrie(BasicTrie):
+    def __init__(self, bosyl, profile='pytib', build=False, toadd_filenames=[], todel_filenames=[], config=None):
         BasicTrie.__init__(self)
-        if toadd_filenames is None:
-            toadd_filenames = []
-        if todel_filenames is None:
-            todel_filenames = []
         self.bosyl = bosyl
         self.COMMENT = '#'
         self.profile = profile
@@ -68,7 +64,7 @@ class Trie(BasicTrie):
                     resource_directory = 'sanskrit'
                     ins_s = "skrt"
                 f = f[2:]
-            full_path = Path(__file__).parent.parent / 'resources' / resource_directory / f
+            full_path = Path(__file__).parent / 'resources' / resource_directory / f
             self.__add_one_file(full_path, ins=ins_s, data_only=data_s)
 
         with self.pickled_file.open('wb') as f:

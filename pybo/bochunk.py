@@ -1,8 +1,8 @@
 # coding: utf-8
-from ..textunits.bostring import BoString
+from .bostring import BoString
 
 
-class ChunkBase(BoString):
+class BoChunk(BoString):
     """
     This class is a framework to split a given string into chunks of characters sharing similar properties.
     Fine chunking is possible by piping any number of chunking methods as desired.
@@ -16,10 +16,10 @@ class ChunkBase(BoString):
 
     :Example:
 
-    >>> from pybo.chunks.chunkbase import ChunkBase
+    >>> from pybo.bochunk import BoChunk
 
     >>> bo_str = ' བཀྲ་ཤིས་  tr བདེ་ལེགས།'
-    >>> bc = ChunkBase(bo_str)
+    >>> bc = BoChunk(bo_str)
 
     # 1. Initial chunking
     >>> chunks = bc.chunk_bo_chars()  # uses default chunk-marks here, but override them in the pipeline
@@ -143,7 +143,7 @@ class ChunkBase(BoString):
     NUMBER_MARKER = 109
     NON_NUMBER_MARKER = 110
 
-    def __init__(self, string, ignore_chars=None):
+    def __init__(self, string, ignore_chars=[]):
         BoString.__init__(self, string, ignore_chars=ignore_chars)
         self.chunk_markers = {self.BO_MARKER: 'bo',
                               self.NON_BO_MARKER: 'non-bo',

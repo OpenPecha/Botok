@@ -1,36 +1,35 @@
 # coding: utf-8
-from .chunks.chunkbase import ChunkBase
-from .chunks.chunks import Chunks
-from .chunks.tokchunks import TokChunks
 
-from .modifytokens.adjusttokens import AdjustTokens
-from .modifytokens.cqlmatcher import CQLMatcher
-from .modifytokens.lemmatizetokens import LemmatizeTokens
-from .modifytokens.mergedagdra import MergeDagdra
-from .modifytokens.mergingmatcher import MergingMatcher
-from .modifytokens.replacingmatcher import ReplacingMatcher
-from .modifytokens.splitaffixed import SplitAffixed
-from .modifytokens.splittingmatcher import SplittingMatcher
-from .modifytokens.tokenmerge import TokenMerge
-from .modifytokens.tokensplit import TokenSplit
+# Preprocessing
+from .bostring import BoString
+from .bosyl import BoSyl
+from .sylcomponents import SylComponents
+from .bochunk import BoChunk
+from .pybochunk import PyBoChunk
+from .pybotextchunks import PyBoTextChunks
 
-from .pipeline.pipelinebase import PipelineBase
-from .pipeline.pipeline import Pipeline
+# Tokenizer
+from .basictrie import BasicTrie
+from .pybotrie import PyBoTrie
+from .token import Token
+from .tokenizer import Tokenizer
+from .splitaffixed import SplitAffixed
+from .lemmatizetoken import LemmatizeTokens
+from .mergepapo import MergePaPo
+from .botokenizer import BoTokenizer
 
-from .textunits.bostring import BoString
-from .textunits.bosyl import BoSyl
-from .textunits.sylcomponents import SylComponents
+# Matchers
+from .tokenmerge import TokenMerge
+from .tokensplit import TokenSplit
+from .cqlmatcher import CQLMatcher
+from .mergingmatcher import MergingMatcher
+from .replacingmatcher import ReplacingMatcher
+from .splittingmatcher import SplittingMatcher
+from .adjusttokens import AdjustTokens
 
-from .third_party.cqlparser import Query, parse_cql_query, replace_token_attributes
+from .bopipeline import BoPipeline
 
-from .tokenizer.token import Token
-from .tokenizer.tokenize import Tokenize
-from .tokenizer.tokenizer import Tokenizer
-
-from .tries.basictrie import BasicTrie
-from .tries.trie import Trie
-
+from .third_party import Query, parse_cql_query, replace_token_attributes
 from .config import Config
-from .helpers import *
 
 VERSION = "0.4.3"

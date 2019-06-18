@@ -1,5 +1,5 @@
 # coding: utf-8
-from ..helpers import AFFIX_SEP, TSEK
+from .helpers import AFFIX_SEP, TSEK
 
 
 class Token:
@@ -145,5 +145,5 @@ class Token:
             out += '\n'
             for k, v in self._.items():
                 out += "_{}: {}\n".format(k, v)
-        out += '\n\n'
+        out += '\n'
         return out

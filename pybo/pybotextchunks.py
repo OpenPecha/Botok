@@ -1,20 +1,20 @@
 # coding: utf-8
-from .chunks import Chunks
+from .pybochunk import PyBoChunk
 
 
-class TokChunks(Chunks):
+class PyBoTextChunks(PyBoChunk):
     """
-    This class uses the chunks produced by ``Chunks`` to identify Tibetan syllables and clean them.
+    This class uses the chunks produced by ``PyBoChunk`` to identify Tibetan syllables and clean them.
     Thus produces pre-processed Tibetan text that can be further processed.
 
-    Every chunk produced by ``Chunks`` is wrapped into a tuple containing:
+    Every chunk produced by ``PyBoChunk`` is wrapped into a tuple containing:
             - either None or a list containing the cleaned syllable
               (the indices to every non-space and non-tsek char in every syllable chunk)
             - the chunk itself
 
     """
-    def __init__(self, string, ignore_chars=list):
-        Chunks.__init__(self, string, ignore_chars=ignore_chars)
+    def __init__(self, string, ignore_chars=[]):
+        PyBoChunk.__init__(self, string, ignore_chars=ignore_chars)
         self.chunks = self.serve_syls_to_trie()
 
     def serve_syls_to_trie(self):

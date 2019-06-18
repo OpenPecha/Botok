@@ -1,5 +1,4 @@
-# coding: utf-8
-from ..third_party.cqlparser import Query, replace_token_attributes
+from .third_party import Query, replace_token_attributes
 
 
 class ReplacingMatcher:

@@ -1,4 +1,7 @@
 # coding: utf-8
+from re import search
+
+
 class BoString:
     """
     This class is the foundational building block of pre-processing.
@@ -17,7 +20,7 @@ class BoString:
 
     :Example:
 
-    >>> from pybo.textunits.bostring import BoString
+    >>> from pybo.bostring import BoString
 
     >>> bo_str = ' བཀྲ་ཤིས་  tr བདེ་ལེགས།'
     >>> bs = BoString(bo_str)
@@ -69,7 +72,7 @@ class BoString:
     spaces = ["\t", " ", " ", "᠎", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", "​", " ", " ", "　", "﻿"]
     SPACE = 15
 
-    def __init__(self, string, ignore_chars=None):
+    def __init__(self, string, ignore_chars=[]):
         self.char_markers = {self.CONS: 'cons',
                              self.SUB_CONS: 'sub-cons',
                              self.VOW: 'vow',
@@ -87,9 +90,8 @@ class BoString:
                              self.OTHER: 'other',
                              self.SPACE: 'space'}
 
-        if isinstance(ignore_chars, list):
-            for c in ignore_chars:
-                self.spaces.append(c)
+        for c in ignore_chars:
+            self.spaces.append(c)
         self.string = string
         self.len = len(string)
         self.base_structure = {}
@@ -148,9 +150,7 @@ class BoString:
 
         :Example:
 
-        >>> bo_str = ' བཀྲ་ཤིས་  tr བདེ་ལེགས།'
-        >>> bs = BoString(bo_str)
-
+        # reuses the variables declared in the Class docstring
         >>> bs.export_groups(2, 5)
         {0: 1, 1: 2, 2: 4, 3: 1, 4: 3}
 
@@ -162,3 +162,25 @@ class BoString:
             return {n: self.base_structure[i] for n, i in enumerate(range(start_idx, start_idx + slice_len))}
         else:
             return {i: self.base_structure[i] for i in range(start_idx, start_idx + slice_len)}
+
+    @staticmethod
+    def _is_skrt_syl(syl):
+        """
+        Checks whether a given syllable is Sanskrit.
+        Uses the regexes of Paul Hackett from his Visual Basic script
+
+        :param syl: syllable__ to test
+        :return: True if it is Sanskrit, False otherwise
+
+        .. note:: the original comments are preserved
+        .. Todo:: find source
+        """
+        # Now do Sanskrit: Skt.vowels, [g|d|b|dz]+_h, hr, shr, Skt
+        regex1 = r"([ཀ-ཬཱ-྅ྐ-ྼ]{0,}[ཱཱཱིུ-ཹཻཽ-ྃ][ཀ-ཬཱ-྅ྐ-ྼ]{0,}|[ཀ-ཬཱ-྅ྐ-ྼ]{0,}[གཌདབཛྒྜྡྦྫ][ྷ][ཀ-ཬཱ-྅ྐ-ྼ]{0,}|" \
+                 r"[ཀ-ཬཱ-྅ྐ-ྼ]{0,}[ཤཧ][ྲ][ཀ-ཬཱ-྅ྐ-ྼ]{0,}|" \
+                 r"[ཀ-ཬཱ-྅ྐ-ྼ]{0,}[གྷཊ-ཎདྷབྷཛྷཥཀྵ-ཬཱཱཱིུ-ཹཻཽ-ྃྒྷྚ-ྞྡྷྦྷྫྷྵྐྵ-ྼ][ཀ-ཬཱ-྅ྐ-ྼ]{0,})"
+        # more Sanskrit: invalid superscript-subscript pairs
+        regex2 = r"([ཀ-ཬཱ-྅ྐ-ྼ]{0,}[ཀཁགང-ཉཏ-དན-བམ-ཛཝ-ཡཤཧཨ][ྐ-ྫྷྮ-ྰྴ-ྼ][ཀ-ཬཱ-྅ྐ-ྼ]{0,})"
+        # tsa-phru mark used in Chinese transliteration
+        regex3 = r"([ཀ-ཬཱ-྅ྐ-ྼ]{0,}[༹][ཀ-ཬཱ-྅ྐ-ྼ]{0,})"
+        return search(regex1, syl) or search(regex2, syl) or search(regex3, syl)

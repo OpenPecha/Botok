@@ -2,7 +2,7 @@
 import yaml
 from pathlib import Path
 
-from ..helpers import TSEK
+from .helpers import TSEK
 
 
 class LemmatizeTokens:
@@ -11,8 +11,10 @@ class LemmatizeTokens:
     in other words, if it is valid tibetan syllables.
     """
     def __init__(self, lemma_folder=None):
-        self.paths = [Path(__file__).parent.parent / 'resources' / 'lemmas']
-        if isinstance(lemma_folder, str) or isinstance(lemma_folder, Path):
+        self.particles_path = Path(__file__).parent / 'resources' / 'lemmas' / 'particles.yaml'
+        self.paths = []
+        self.paths.append(self.particles_path.parent)
+        if lemma_folder:
             self.paths.append(Path(lemma_folder).resolve())
         self.lemmas = {}
         self.particles = {}

@@ -1,5 +1,5 @@
 # coding: utf-8
-from ..third_party.cqlparser import Query
+from .third_party import Query
 from .tokenmerge import TokenMerge
 
 
