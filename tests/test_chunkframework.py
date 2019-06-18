@@ -85,6 +85,7 @@ def test_other():
 
 
 def test_full_example():
+    # Follows the order implemented in Chunks
     string = '༆ བཀྲ་ཤིས་བདེ་ལེགས།། །། 23PIEIUZLDVéjoldvép«»("«»%= ༪༫༝༜༛༚༇༆ ༡༢༣༠༩༨ ' \
              'This is a test. 这是  什么 กขฃคฅฆงจฉชซฌญฎฏฐฑฒณดตถทธ'
     cb = ChunkFramework(string)

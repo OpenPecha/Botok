@@ -1,8 +1,7 @@
 # coding: utf-8
 from .chunks.chunkframeworkbase import ChunkFrameworkBase
 from .chunks.chunkframework import ChunkFramework
-from .chunks.chunks import Chunks
-from .chunks.tokchunks import TokChunks
+from .chunks.chunks import Chunks, TokChunks
 
 from .modifytokens.adjusttokens import AdjustTokens
 from .modifytokens.cqlmatcher import CQLMatcher
