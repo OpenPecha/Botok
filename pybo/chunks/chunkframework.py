@@ -1,11 +1,10 @@
-# coding: utf-8
-from ..textunits.bostring import BoString
+# coding: utf8
+from .chunkframeworkbase import ChunkFrameworkBase
 from ..helpers import CharMarkers as a
 from ..helpers import ChunkMarkers as u
-from ..helpers import chunk_values
 
 
-class ChunkBase:
+class ChunkFramework(ChunkFrameworkBase):
     """
     This class is a framework to split a given string into chunks of characters sharing similar properties.
     Fine chunking is possible by piping any number of chunking methods as desired.
@@ -19,10 +18,10 @@ class ChunkBase:
 
     :Example:
 
-    >>> from pybo.chunks.chunkbase import ChunkBase
+    >>> from pybo.chunks.chunkframework import ChunkFramework
 
     >>> bo_str = ' བཀྲ་ཤིས་  tr བདེ་ལེགས།'
-    >>> bc = ChunkBase(bo_str)
+    >>> bc = ChunkFramework(bo_str)
 
     # 1. Initial chunking
     >>> chunks = bc.chunk_bo_chars()  # uses default chunk-marks here, but override them in the pipeline
@@ -35,7 +34,7 @@ class ChunkBase:
     [(100, ' བཀྲ་ཤིས་  '), (101, 'tr'), (100, ' བདེ་ལེགས།')]
 
     # 2. First piped chunking: re-chunks tibetan chunks into tibetan text and tibetan punctuation.
-    >>> bc.pipe_chunk(chunks, bc.chunk_punct, to_chunk=u.BO, yes=u.PUNCT)
+    >>> bc.pipe_chunk(chunks, bc.chunk_punct, to_chunk_marker=u.BO, yes=u.PUNCT)
 
     >>> chunks
     [(100, 0, 11), (101, 11, 2), (100, 13, 9), (102, 22, 1)]
@@ -45,7 +44,7 @@ class ChunkBase:
     [(100, ' བཀྲ་ཤིས་  '), (101, 'tr'), (100, ' བདེ་ལེགས'), (102, '།')]
 
     # 3. Second piped chunking: re-chunks tibetan text into syllables, keeping the same chunk-marker.
-    >>> bc.pipe_chunk(chunks, bc.syllabify, to_chunk=u.BO, yes=u.BO)
+    >>> bc.pipe_chunk(chunks, bc.syllabify, to_chunk_marker=u.BO, yes=u.BO)
 
     >>> chunks
     [(100, 0, 5), (100, 5, 4), (100, 9, 2), (101, 11, 2), (100, 13, 5), (100, 18, 4), (102, 22, 1)]
@@ -133,8 +132,6 @@ class ChunkBase:
     - test methods start with "__is_xxx".
     - chunk type constants end in "_MARKER" to be differenciated from ``BoString`` constants
     """
-    def __init__(self, string, ignore_chars=None):
-        self.bs = BoString(string, ignore_chars=ignore_chars)
 
     def chunk_bo_chars(self, start=None, end=None, yes=u.BO.value, no=u.OTHER.value):
         """
@@ -151,7 +148,7 @@ class ChunkBase:
         :return: the resulting chunks
         :rtype: list of tuples containing each 3 ints: chunk-mark, starting_index, chunk_length
         """
-        return self.__chunk_using(self.__is_bo_unicode, start, end, yes, no)
+        return self.chunk_using(self.__is_bo_unicode, start, end, yes, no)
 
     def __is_bo_unicode(self, char_idx):
         """
@@ -165,13 +162,13 @@ class ChunkBase:
             and self.bs.base_structure[char_idx] != a.CJK
 
     def chunk_latin(self, start=None, end=None, yes=u.LATIN.value, no=u.OTHER.value):
-        return self.__chunk_using(self.__is_latin, start, end, yes, no)
+        return self.chunk_using(self.__is_latin, start, end, yes, no)
 
     def __is_latin(self, char_idx):
         return self.bs.base_structure[char_idx] == a.LATIN or self.bs.base_structure[char_idx] == a.TRANSPARENT
 
     def chunk_cjk(self, start=None, end=None, yes=u.CJK.value, no=u.OTHER.value):
-        return self.__chunk_using(self.__is_cjk, start, end, yes, no)
+        return self.chunk_using(self.__is_cjk, start, end, yes, no)
 
     def __is_cjk(self, char_idx):
         return self.bs.base_structure[char_idx] == a.CJK or self.bs.base_structure[char_idx] == a.TRANSPARENT
@@ -183,7 +180,7 @@ class ChunkBase:
         :type yes: int (hard-coded value of PUNCT_MARKER)
         :type no: int (hard-coded value of NON_PUNCT_MARKER)
         """
-        return self.__chunk_using(self.__is_punct, start, end, yes, no)
+        return self.chunk_using(self.__is_punct, start, end, yes, no)
 
     def __is_punct(self, char_idx):
         """
@@ -204,7 +201,8 @@ class ChunkBase:
             return True
 
         return self.bs.base_structure[char_idx] == a.NORMAL_PUNCT \
-            or self.bs.base_structure[char_idx] == a.SPECIAL_PUNCT
+            or self.bs.base_structure[char_idx] == a.SPECIAL_PUNCT \
+            or self.bs.base_structure[char_idx] == a.TRANSPARENT
 
     def chunk_symbol(self, start=None, end=None, yes=u.SYM.value, no=u.NON_SYM.value):
         """
@@ -213,13 +211,14 @@ class ChunkBase:
         :type yes: int (hard-coded value of SYM_MARKER)
         :type no: int (hard-coded value of NON_SYM_MARKER)
         """
-        return self.__chunk_using(self.__is_sym, start, end, yes, no)
+        return self.chunk_using(self.__is_sym, start, end, yes, no)
 
     def __is_sym(self, char_idx):
         """
         Tests whether the character at the given index is a Tibetan symbols or not.
         """
-        return self.bs.base_structure[char_idx] == a.SYMBOL
+        return self.bs.base_structure[char_idx] == a.SYMBOL \
+            or self.bs.base_structure[char_idx] == a.TRANSPARENT
 
     def chunk_number(self, start=None, end=None, yes=u.NUM.value, no=u.NON_NUM.value):
         """
@@ -228,13 +227,14 @@ class ChunkBase:
         :type yes: int (hard-coded value of NUM_MARKER)
         :type no: int (hard-coded value of NON_NUM_MARKER)
         """
-        return self.__chunk_using(self.__is_num, start, end, yes, no)
+        return self.chunk_using(self.__is_num, start, end, yes, no)
 
     def __is_num(self, char_idx):
         """
         Tests whether the character at the given index is a number  or not.
         """
-        return self.bs.base_structure[char_idx] == a.NUMERAL
+        return self.bs.base_structure[char_idx] == a.NUMERAL \
+            or self.bs.base_structure[char_idx] == a.TRANSPARENT
 
     def chunk_spaces(self, start=None, end=None, yes=u.SPACE.value, no=u.NON_SPACE.value):
         """
@@ -243,7 +243,7 @@ class ChunkBase:
         :type yes: int (hard-coded value of SPACE_MARKER)
         :type no: int (hard-coded value of NON_SPACE_MARKER)
         """
-        return self.__chunk_using(self.__is_space, start, end, yes, no)
+        return self.chunk_using(self.__is_space, start, end, yes, no)
 
     def __is_space(self, char_idx):
         """
@@ -260,7 +260,7 @@ class ChunkBase:
         if not start and not end:
             start, end = 0, self.bs.len
 
-        indices = self.__chunk(start, end, self.__is_tsek_or_long_skrt_vowel)
+        indices = self.chunk(start, end, self.__is_tsek_or_long_skrt_vowel)
         for num, i in enumerate(indices):
             if i[0] and num - 1 >= 0 and not indices[num - 1][0]:
                 indices[num - 1] = (indices[num - 1][0], indices[num - 1][1], indices[num - 1][2] + i[2])
@@ -275,105 +275,3 @@ class ChunkBase:
         """
         return self.bs.base_structure[char_idx] == a.TSEK or \
             self.bs.base_structure[char_idx] == a.SKRT_LONG_VOW
-
-    def get_readable(self, indices, gen=False):
-        out = self.get_markers(indices)
-        return self.get_chunked(out, gen=gen)
-
-    def get_chunked(self, indices, gen=False):
-        """
-        Replaces the indices in every chunk tuple with the corresponding substring.
-
-        :param indices: the output of a previous chunking method
-        :param gen: if True, returns a generator with the chunks, a list otherwise
-        :type indices: list of tuples each containing 3 ints
-        :type gen: bool
-        :return: the marker/substring pairs in a list
-        :rtype: list of tuples each containing: a chunk-mark(int or str), a substring
-        """
-        if gen:
-            return ((i, self.bs.string[start:start + length]) for i, start, length in indices)
-        return [(i, self.bs.string[start:start + length]) for i, start, length in indices]
-
-    def get_markers(self, indices):
-        """
-        Replaces the int representation of the chunk-mark by its str counterpart.
-
-        :param indices: indices containing ints as markers
-        :type indices: list of tuples containing each an int and the indices or the substring
-        :return: the chunks where the chunk-mark is the human-readable description
-        :rtype: list of tuples containing each a str and the indices or the substring
-        """
-        return [tuple([chunk_values[i[0]]] + list(i[1:])) for i in indices]
-
-    @staticmethod
-    def pipe_chunk(indices, piped_chunk, to_chunk: int, yes: int):
-        """
-        Re-chunks in place the chunks produced by a previous chunking method.
-
-        :param indices: the chunks from a previous chunking method
-        :param piped_chunk: new chunking method to apply
-        :param to_chunk: chunk-mark to identify which chunks will be re-chunked
-        :param yes: new chunk-mark to be used for matching chunks (leave empty to use default value)
-                    The new chunks not passing the internal test will keep the previous chunk-mark.
-        :type indices: list of tuples containing each 3 ints
-        :type piped_chunk: callable
-        :type yes: int
-        """
-        for i, chunk in enumerate(indices):
-            if chunk[0] == to_chunk:
-                new = piped_chunk(chunk[1], chunk[1]+chunk[2], yes=yes)
-                if new:
-                    del indices[i]
-                    for j, n_chunk in enumerate(new):
-                        if n_chunk[0] != yes:
-                            indices.insert(i+j, (chunk[0], n_chunk[1], n_chunk[2]))
-                        else:
-                            indices.insert(i+j, n_chunk)
-
-    def __chunk_using(self, condition, start, end, yes, no):
-        if not start and not end:
-            start, end = 0, self.bs.len
-
-        indices = self.__chunk(start, end, condition)
-        return [(yes, i[1], i[2]) if i[0] else (no, i[1], i[2]) for i in indices]
-
-    @staticmethod
-    def __chunk(start_idx, end_idx, condition):
-        """
-        The method that actually creates groups of characters satisfying the test method
-        and not satisfying it from the given range within the input string.
-
-        :param start_idx: first char of the range to be chunked
-        :param end_idx: last char
-        :param condition: test method
-        :type start_idx: int
-        :type end_idx: int
-        :type condition: callable
-        :return: the chunk indices with True/False instead of the chunk markers
-        :rtype: list of tuples containing each: a bool (matched/not the test method) and the indices
-        """
-        chunked = []
-        start = start_idx
-        length = 0
-        prev_state = -1
-        current_state = -1
-        for i in range(start_idx, end_idx):
-            current_state = condition(i)
-            if prev_state == -1:
-                prev_state = current_state
-
-            if current_state == prev_state:
-                length += 1
-            else:
-                chunked.append((prev_state, start, length))
-                prev_state = current_state
-                start += length
-                length = 1
-        # final element
-        if length != 0:
-            if current_state == prev_state:
-                if start + length < end_idx:
-                    length += 1
-            chunked.append((prev_state, start, length))
-        return chunked

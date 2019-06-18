@@ -1,5 +1,6 @@
 # coding: utf-8
-from .chunks.chunkbase import ChunkBase
+from .chunks.chunkframeworkbase import ChunkFrameworkBase
+from .chunks.chunkframework import ChunkFramework
 from .chunks.chunks import Chunks
 from .chunks.tokchunks import TokChunks
 
