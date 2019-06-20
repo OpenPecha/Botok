@@ -130,6 +130,16 @@ class SylComponents:
             return self.ambiguous[syl]
         else:
             return syl, 'x'
+    
+    def normalize_dadrag(self, syl):
+        #
+        components = self.get_parts(syl)
+        if type(components) == list or not components:
+            if syl[-1] == 'ད':
+                components = self.get_parts(syl[:-1])
+                if components and isinstance(components, tuple):
+                    return syl[:-1]
+        return syl
 
     def get_mingzhi(self, syl):
         """
@@ -139,6 +149,12 @@ class SylComponents:
         """
         components = self.get_parts(syl)
         if type(components) == list or not components:
+            if syl[-1] == 'ད':
+                components = self.get_parts(syl[:-1])
+                if type(components) == list or not components:
+                    return None
+                else:
+                    return self.mingzhis[components[0]]
             return None
         else:
             return self.mingzhis[components[0]]
