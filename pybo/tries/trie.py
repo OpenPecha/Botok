@@ -5,7 +5,7 @@ from pathlib import Path
 
 from .basictrie import BasicTrie, Node
 from ..chunks.chunks import TokChunks
-from ..vars import OOV, TSEK, NAMCHE, SHAD, HASH
+from ..vars import OOV, TSEK, NAMCHE, HASH
 
 
 class Trie(BasicTrie):
@@ -78,7 +78,7 @@ class Trie(BasicTrie):
                     self.inflect_n_modify_trie(l)
 
                 elif category == 'lexica_skrt':
-                    self.inflect_n_modify_trie(l)
+                    self.inflect_n_modify_trie(l, skrt=True)
 
                 elif category == 'deactivate':
                     self.inflect_n_modify_trie(l, deactivate=True)
@@ -96,7 +96,7 @@ class Trie(BasicTrie):
                     raise SyntaxError('category is one of: lexica_bo, lexica_skrt, '
                                       'pos, lemmas, frequencies, deactivate')
 
-    def inflect_n_modify_trie(self, word, deactivate=False):
+    def inflect_n_modify_trie(self, word, deactivate=False, skrt=False):
         """
         Add or deactivate to the trie all the affixed versions of the word
         :param word: a word without ending tsek
@@ -107,7 +107,14 @@ class Trie(BasicTrie):
             if deactivate:
                 self.deactivate(infl)
             else:
-                self.add(infl, data=data)
+                if skrt:
+                    if data is None:
+                        data = {'skrt': True}
+                    else:
+                        data.update({'skrt': True})
+                    self.add(infl, data=data)
+                else:
+                    self.add(infl, data=data)
 
     def inflect_n_add_data(self, line, info):
         word, data = self.__parse_line(line)

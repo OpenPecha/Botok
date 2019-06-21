@@ -35,17 +35,18 @@ class BoSyl(SylComponents):
                  otherwise   : <syl>
         """
         if self.is_affixable(syl):
-            affixed = []
             aa = False
             if syl.endswith('འ'):
-                aa = True
                 syl = syl[:-1]
+                aa = True
 
+            affixed = []
             for a in self.affixes.keys():
-                metadata = self.affixes[a]
-
+                metadata = {}
+                metadata.update(self.affixes[a])
                 metadata.update({'aa': aa})
-                affixed.append((syl+a, metadata))
+                affixed.append((syl + a, metadata))
             return affixed
+
         else:
             return None

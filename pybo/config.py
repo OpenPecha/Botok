@@ -19,7 +19,7 @@ default_config = dedent('''\
         - &oral1 lexica_bo/oral_corpus_1.txt
         - &oral2 lexica_bo/oral_corpus_2.txt
         - &oral3 lexica_bo/oral_corpus_3.txt
-        - &record lexica_bo/recordings_4.txt
+        - &oral4 lexica_bo/recordings_4.txt
         - &part lexica_bo/particles.txt
         - &mgd lexica_bo/mgd.txt
         - &verbs lexica_bo/verbs.txt
@@ -27,15 +27,15 @@ default_config = dedent('''\
         - &skrt lexica_skrt/lexica_skrt.txt
       pos_files:
         - &soas pos/TiDC_corpus.txt
+        - &partpos pos/particles.txt
       freq_files:
         - &freq_mgd frequencies/mgd.txt
         - &tc frequencies/tc.txt
       profiles:
         empty: []
         tsikchen: [*ancient, *except, *uncomp, *tsikchen, *soas, *part]
-        POS: [*ancient, *except, *uncomp, *tsikchen, *soas, *part]
-        PP: [*part]
-        GMD: [*ancient, *except, *uncomp, *tsikchen, *mgd,*verbs, *soas, *skrt, *freq_mgd, *part]''')
+        POS: [*ancient, *except, *uncomp, *tsikchen, *soas, *part, *partpos]
+        GMD: [*ancient, *except, *uncomp, *tsikchen, *mgd,*verbs, *soas, *skrt, *freq_mgd, *part, *partpos]''')
 
 
 class Config:
