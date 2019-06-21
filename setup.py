@@ -42,7 +42,7 @@ setuptools.setup(
         "License :: OSI Approved :: Apache Software License",
         "Natural Language :: Tibetan"
     ],
-    package_data={'pybo': ['resources/*', 'resources/trie/*', 'resources/frequency/*', 'resources/lemmas/*', 'resources/rules/*', 'resources/sanskrit/*']},
+    package_data={'pybo': ['resources/*', 'resources/lexica_bo/*', 'resources/frequencies/*', 'resources/lemmas/*', 'resources/rules/*', 'resources/lexica_skrt/*']},
     python_requires='>=3.6',
     # setup_requires=["pytest-runner"],
     tests_require=["pytest"],

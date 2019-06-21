@@ -37,6 +37,7 @@ class BasicTrie:
         return self.head.children[key]
 
     def add(self, word, data=None):
+        # adding the word
         current_node = self.head
         word_finished = True
 
@@ -55,9 +56,10 @@ class BasicTrie:
                 i += 1
 
         current_node.leaf = True
+
+        # adding data to the node
         if data:
-            if current_node.data is None:
-                current_node.data = dict()
+            assert isinstance(data, dict)
             current_node.data.update(data)
 
     def walk(self, char, current_node=None):
@@ -95,7 +97,7 @@ class BasicTrie:
         else:
             return {'exists': exists, 'data': current_node.data}
 
-    def add_data_to_word(self, word, data, overwrite=True):
+    def add_data(self, word, data, overwrite=True):
         """Adds data to words.
 
         :param word: word to add
@@ -130,7 +132,7 @@ class BasicTrie:
                     added = True
         return added
 
-    def deactivate_word(self, word, rev=False):
+    def deactivate(self, word, rev=False):
         """Makes word not findable (words are found only when the leaf value is True)
 
         :param word: word to deactivate

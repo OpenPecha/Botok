@@ -14,26 +14,20 @@ class WordTokenizer:
     Convenience class to tokenize a given string.
 
     """
-    def __init__(self, profile, toadd_filenames=None, todel_filenames=None, lemma_folder=None, ignore_chars=None):
+    def __init__(self, profile, modifs=None, mode='internal', ignore_chars=None):
         """
         :param profile: profile for building the trie. (see config.yaml)
         """
-        self.config_profile = Config("pybo.yaml")
+        config = Config()
+        main, custom = config.get_tok_data_paths(profile, modifs=modifs, mode=mode)
         self.ignore_chars = ignore_chars
-        self.lt = LemmatizeTokens(lemma_folder=lemma_folder)
-        self.tok = Tokenize(Trie(BoSyl(),
-                                 profile=profile,
-                                 toadd_filenames=toadd_filenames,
-                                 todel_filenames=todel_filenames,
-                                 config=self.config_profile
-                                 )
-                            )
+        profile = mode if mode == 'custom' else profile  # trie will be named custom if mode is custom
+        self.tok = Tokenize(Trie(BoSyl, profile, main_data=main, custom_data=custom))
 
-    def tokenize(self, string, split_affixes=True, lemmatize=True, debug=False):
+    def tokenize(self, string, split_affixes=True, debug=False):
         """
         :param string: to be tokenized
         :param split_affixes: separates the affixed particles into seperate tokens if True
-        :param lemmatize: adds the lemma for every token
         :param debug: print debug info while parsing
         :return: list of pybo.tokenizers.Token objects
         """
@@ -45,8 +39,5 @@ class WordTokenizer:
 
         # merge pa/po/ba/bo tokens with previous ones
         MergeDagdra().merge(tokens)
-
-        if lemmatize:
-            self.lt.lemmatize(tokens)
 
         return tokens

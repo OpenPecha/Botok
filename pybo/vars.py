@@ -23,7 +23,7 @@ CharMarkers = IntEnum('CharMarkers', [
     'SYMBOL',
     'IN_SYL_MARK',
     'NON_BO_NON_SKRT',
-    # sanskrit
+    # lexica_skrt
     'SKRT_CONS',
     'SKRT_SUB_CONS',
     'SKRT_VOW',

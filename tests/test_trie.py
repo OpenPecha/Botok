@@ -3,21 +3,33 @@ from pathlib import Path
 from pybo import BasicTrie, Trie, Config
 from pybo import BoSyl
 
-# uses py.test
+config = Config()
 
 
-def test_pybotrie():
-    bt = Trie(BoSyl, 'empty', config=Config("pybo.yaml"))
+def test_createtrie():
+    profile = 'empty'
+    main, custom = config.get_tok_data_paths(profile)
+    bt = Trie(BoSyl, profile, main, custom)
+
+    # the lexica_bo works as expected. but the add() method should never be used directly:
+    # it does not inflect entries, so the tokenizer won't work as expected.
+    bt.add('གྲུབ་མཐའ་', {'POS': 'NOUN'})
+    assert bt.has_word('གྲུབ་མཐའི་') == {'exists': False, 'data': {'_': {}}}
+    assert bt.has_word('གྲུབ་མཐའ་') == {'exists': True, 'data': {'_': {}, 'POS': 'NOUN'}}
+
+
+def test_build_trie():
+    profile = 'POS'
+    main, custom = config.get_tok_data_paths(profile)
+    bt = Trie(BoSyl, profile, main, custom)
     bt.rebuild_trie()
-    bt.add('གྲུབ་མཐའ་', 'pos-tag')
-    assert bt.has_word('གྲུབ་མཐའི་') == {'exists': False}
-    assert bt.has_word('གྲུབ་མཐའ་') == {'exists': True, 'data': 'pos-tag'}
+    pass
 
 
 def test_affixed_entries():
-    bt = Trie(BoSyl, 'empty', config=Config("pybo.yaml"))
+    bt = Trie(BoSyl, config, 'empty')
     bt.inflect_n_add('གྲུབ་མཐའ་', 'NOUN')  # adds all inflected forms
-    bt.inflect_n_add('བཀྲ་ཤིས་', 'NOUN')  # only adds one entry in the trie
+    bt.inflect_n_add('བཀྲ་ཤིས་', 'NOUN')  # only adds one entry in the lexica_bo
     assert bt.has_word('བཀྲ་ཤིས་') == {'data': 'NOUNᛃᛃᛃ', 'exists': True}
     assert bt.has_word('བཀྲ་ཤིསའི་') == {'exists': False}
     assert bt.has_word('གྲུབ་མཐའ་') == {'data': 'NOUNᛃᛃᛃ', 'exists': True}
@@ -30,28 +42,23 @@ def test_affixed_entries():
     assert bt.has_word('གྲུབ་མཐའིའོ་') == {'data': 'NOUNᛃgi+oᛃ4ᛃaa', 'exists': True}
 
 
-def test_trie():
-    trie = BasicTrie()
-    words = 'hello goo good goodbye help gerald gold tea ted team to too tom stan standard money'
-    for w in words.split():
-        trie.add(w)
-    assert trie.has_word('goodbye') == {'data': None, 'exists': True}
+
 
 
 def test_building_trie():
-    bt = Trie(BoSyl, 'pytib', config=Config("pybo.yaml"))
+    bt = Trie(BoSyl, config, 'pytib')
     bt.rebuild_trie()
     assert bt.has_word('བཀྲ་ཤིས་') == {'data': 'NOUNᛃᛃᛃ', 'exists': True}
     assert bt.has_word('ཤིས་') == {'data': 'VERBᛃᛃᛃ', 'exists': True}
 
 
 def test_deactivate_trie_entries():
-    trie = Trie(BoSyl, 'empty', config=Config("pybo.yaml"))
+    trie = Trie(BoSyl, config, 'empty')
     trie.rebuild_trie()
     word = 'བཀྲ་ཤིས་'
     trie.add(word)
     assert trie.has_word(word)
-    trie.deactivate_word(word)
+    trie.deactivate(word)
     assert trie.has_word(word) == {'exists': False}
 
     trie.rebuild_trie()

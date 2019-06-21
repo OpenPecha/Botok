@@ -5,17 +5,17 @@ from .sylcomponents import SylComponents
 class BoSyl(SylComponents):
     def __init__(self):
         SylComponents.__init__(self)
-        self.affixes = {'ར': {'len': 1, 'affix': 'la'},
-                        'ས': {'len': 1, 'affix': 'gis'},
-                        'འི': {'len': 2, 'affix': 'gi'},
-                        'འམ': {'len': 2, 'affix': 'am'},
-                        'འང': {'len': 2, 'affix': 'ang'},
-                        'འོ': {'len': 2, 'affix': 'o'},
-                        'འིའོ': {'len': 4, 'affix': 'gi+o'},
-                        'འིའམ': {'len': 4, 'affix': 'gi+am'},
-                        'འིའང': {'len': 4, 'affix': 'gi+ang'},
-                        'འོའམ': {'len': 4, 'affix': 'o+am'},
-                        'འོའང': {'len': 4, 'affix': 'o+ang'}
+        self.affixes = {'ར': {'len': 1, 'type': 'la'},
+                        'ས': {'len': 1, 'type': 'gis'},
+                        'འི': {'len': 2, 'type': 'gi'},
+                        'འམ': {'len': 2, 'type': 'am'},
+                        'འང': {'len': 2, 'type': 'ang'},
+                        'འོ': {'len': 2, 'type': 'o'},
+                        'འིའོ': {'len': 4, 'type': 'gi+o'},
+                        'འིའམ': {'len': 4, 'type': 'gi+am'},
+                        'འིའང': {'len': 4, 'type': 'gi+ang'},
+                        'འོའམ': {'len': 4, 'type': 'o+am'},
+                        'འོའང': {'len': 4, 'type': 'o+ang'}
                         }
 
     def is_affixable(self, syl):
@@ -31,7 +31,7 @@ class BoSyl(SylComponents):
     def get_all_affixed(self, syl):
         """
         :param syl: syl to be affixed
-        :return: if affixable: [(<syl+affixed>, {'len': int, 'affix': str, 'aa': bool}), (..., ...)]
+        :return: if affixable: [(<syl+affixed>, {'len': int, 'type': str, 'aa': bool}), (..., ...)]
                  otherwise   : <syl>
         """
         if self.is_affixable(syl):
@@ -48,4 +48,4 @@ class BoSyl(SylComponents):
                 affixed.append((syl+a, metadata))
             return affixed
         else:
-            return syl
+            return None

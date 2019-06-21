@@ -194,7 +194,7 @@ def main():
     tok_folder = Path('output/tokenized')
     tokenize_folder(mark_skrt_nonwords)
     get_oov_nonword_types('#', 'nonwords')
-    get_oov_nonword_types('$', 'sanskrit')
+    get_oov_nonword_types('$', 'lexica_skrt')
     # create_concs(nonword)
 
 

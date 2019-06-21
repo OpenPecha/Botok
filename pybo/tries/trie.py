@@ -4,37 +4,35 @@ import pickle
 from pathlib import Path
 
 from .basictrie import BasicTrie, Node
-from ..vars import AFFIX_SEP, OOV, TSEK, NAMCHE, SHAD, HASH
+from ..chunks.chunks import TokChunks
+from ..vars import OOV, TSEK, NAMCHE, SHAD, HASH
 
 
 class Trie(BasicTrie):
-    def __init__(self, bosyl, profile='pytib', build=False, toadd_filenames=None, todel_filenames=None, config=None):
+    def __init__(self, bosyl, profile, main_data, custom_data, build=False):
         BasicTrie.__init__(self)
-        if toadd_filenames is None:
-            toadd_filenames = []
-        if todel_filenames is None:
-            todel_filenames = []
         self.bosyl = bosyl()
-        self.profile = profile
+        self.main_data = main_data
+        self.custom_data = custom_data
         self.pickled_file = Path(profile + '_trie.pickled')
-        self.toadd_filenames = toadd_filenames
-        self.todel_filenames = todel_filenames
-        self.config_trie = config
         self.load_or_build_trie(build)
+        self.tmp_inflected = dict()  # tmp to inflect only once, even if a word appears in many files.
+
+    def rebuild_trie(self):
+        self.head = Node()
+        self.load_or_build_trie(build=True)
 
     def load_or_build_trie(self, build):
-        if build or not Path(self.pickled_file).exists():
-            self.build_trie()
+        if build or not self.pickled_file.exists():
+            self._build_trie()
         else:
-            self.load_trie()
+            self._load_trie()
 
-        # add and deactivate the custom entries on the fly, at each instanciation
-        for f in self.toadd_filenames:
-            self.__add_one_file(Path(f))
-        for f in self.todel_filenames:
-            self.deactivate_wordlist(f)
+        # add and deactivate the custom entries in memory (will not be written)
+        self._populate_trie(self.custom_data)
+        self.tmp_inflected = dict()
 
-    def load_trie(self):
+    def _load_trie(self):
         print('Loading Trie...', end=' ')
         start = time.time()
         with self.pickled_file.open('rb') as f:
@@ -42,153 +40,135 @@ class Trie(BasicTrie):
         end = time.time()
         print('({:.0f}s.)'.format(end - start))
 
-    def rebuild_trie(self):
-        self.head = Node()
-        self.build_trie()
-
-    def build_trie(self):
+    def _build_trie(self):
         """
         """
         print('Building Trie...', end=' ')
         start = time.time()
-
-        for f in self.config_trie.get_tokenizer_profile(self.profile):
-            print()
-
-            ins_s = "data"
-            data_s = False
-            resource_directory = 'trie'
-            if f.startswith("~"):
-                if f[1] == "p":
-                    data_s = True
-                if f[1] == "f":
-                    resource_directory = 'frequency'
-                    ins_s = "freq"
-                    data_s = True
-                elif f[1] == "s":
-                    resource_directory = 'sanskrit'
-                    ins_s = "skrt"
-                f = f[2:]
-            full_path = Path(__file__).parent.parent / 'resources' / resource_directory / f
-            self.__add_one_file(full_path, ins=ins_s, data_only=data_s)
+        self._populate_trie(self.main_data)
 
         with self.pickled_file.open('wb') as f:
             pickle.dump(self.head, f, pickle.HIGHEST_PROTOCOL)
         end = time.time()
         print('({:.0f} s.)'.format(end - start))
 
-    def __add_one_file(self, in_file, ins="data", data_only=False):
+    def _populate_trie(self, files):
+        # first populate the trie with words
+        lexica = (d for d in files if d.startswith('lexica'))
+        for l in lexica:
+            for f in files[l]:
+                self._add_one_file(f, l)
+
+        # then add data to the added words
+        rest = (d for d in files if not d.startswith('lexica'))
+        for r in rest:
+            for f in files[r]:
+                self._add_one_file(f, r)
+
+    def _add_one_file(self, in_file, category):
         """
         files can have comments starting with #
         spaces and empty lines are trimmed
         a single space(breaks if more than one), a comma or a tab can be used as separators
-
-        :param in_file: file to be processed
-        :type in_file: Path object
-        :param data_only:
         """
-        if ins == "skrt":
-            with in_file.open('r', encoding='utf-8-sig') as f:
-                lines = [line.rstrip('\n') for line in f.readlines()]
+        with in_file.open('r', encoding='utf-8-sig') as f:
+            lines = self.__clean_lines(f)
+            for l in lines:
+                if category == 'lexica_bo':
+                    self.inflect_n_modify_trie(l)
 
-            for line in lines:
-                if line:
-                    word = line
+                elif category == 'lexica_skrt':
+                    self.inflect_n_modify_trie(l)
 
-                sep = "" if word[-1] == NAMCHE else TSEK
-                self.add(word + sep)
-        else:
-            with in_file.open('r', encoding='utf-8-sig') as f:
-                lines = [line.rstrip('\n') for line in f.readlines()]
+                elif category == 'deactivate':
+                    self.inflect_n_modify_trie(l, deactivate=True)
 
-            for line in lines:
-                if HASH in line:
-                    comment_idx = line.index(HASH)
-                    line = line[:comment_idx]
+                elif category == 'lemmas':
+                    self.inflect_n_add_data(l, 'lemma')
 
-                line = line.strip()
+                elif category == 'pos':
+                    self.inflect_n_add_data(l, 'pos')
 
-                if line:
-                    if '\t' in line:
-                        word, pos = line.split('\t')
-                    elif ',' in line:
-                        word, pos = line.split(',')
-                    elif ' ' in line:
-                        if line.count(' ') > 1:
-                            break
-                        word, pos = line.split(' ')
-                    else:
-                        word, pos = line, OOV
+                elif category == 'frequencies':
+                    self.inflect_n_add_data(l, 'freq')
 
-                    deactivate = False
-                    if word[0] == '-':
-                        word = word[1:]
-                        deactivate = True
+                else:
+                    raise SyntaxError('category is one of: lexica_bo, lexica_skrt, '
+                                      'pos, lemmas, frequencies, deactivate')
 
-                    word = word.rstrip(SHAD)  # strip any ending shad
-
-                    self.inflect_n_add(word, pos, ins, data_only, deactivate)
-
-    def inflect_n_add(self, word, data, deactivate=False, overwrite=True):
+    def inflect_n_modify_trie(self, word, deactivate=False):
         """
-        Add to the trie all the affixed versions of the word
+        Add or deactivate to the trie all the affixed versions of the word
         :param word: a word without ending tsek
-        :param pos: initial POS
+        :param deactivate: switch to add or deactivate a word
         """
-        # add/deactivate word as is
-        self.modify_tree(word, data, deactivate=deactivate, overwrite=overwrite)
+        inflected = self._get_inflected(word)
+        for infl, data in inflected:
+            if deactivate:
+                self.deactivate(infl)
+            else:
+                self.add(infl, data=data)
 
-        # add/deactivate inflected forms
-        if word.endswith(TSEK):
-            word = word[:-1]
-        beginning, last_syl = self.split_at_last_syl(word)
+    def inflect_n_add_data(self, line, info):
+        word, data = self.__parse_line(line)
+        data = data.strip()
+        if info == 'freq':
+            data = int(data)
+        inflected = self._get_inflected(word)
+        for infl, _ in inflected:
+            self.add_data(infl, {info: data})
 
-        if self.bosyl.is_affixable(last_syl):
-            affixed = self.bosyl.get_all_affixed(last_syl)
-            for a in affixed:
-                a[1].update(data)  # adds affix, len and aa
-                inflected_word = beginning + a[0] + TSEK
-                self.modify_tree(inflected_word, a[1], deactivate=deactivate, overwrite=overwrite)
+    def _get_inflected(self, word):
+        """
+        gets the clean syls using TokChunks(), then inflects the last syl using BoSyl.get_all_affixed()
 
-    def modify_tree(self, word, data, deactivate=False, overwrite=True):
-        if not deactivate:
-            self.add_data_to_word(word, data, overwrite=overwrite)
+        :return: list of (<inflected word>, <affixation data>)
+        """
+        if word in self.tmp_inflected:
+            return self.tmp_inflected[word]
+
+        syls = TokChunks(word).get_syls()
+        assert len(syls) >= 1
+        inflected = [(self.__join_syls(syls), None)]
+        affixed = self.bosyl.get_all_affixed(syls[-1])
+        if affixed:
+            for infl, data in affixed:
+                infl_word = self.__join_syls(syls[:-1] + [infl])
+                inflected.append((infl_word, {'affixation': data}))
+
+        self.tmp_inflected[word] = inflected
+        return inflected
+
+    @staticmethod
+    def __join_syls(syls):
+        return ''.join([syl if syl[-1] == NAMCHE else syl + TSEK for syl in syls])
+
+    @staticmethod
+    def __clean_lines(f):
+        # cuts off comments, then strips empty lines
+        lines = (
+            line[:line.index(HASH)] if HASH in line else line
+            for line in f.readlines()
+        )
+        return (l for l in lines if l)
+
+    @staticmethod
+    def __parse_line(line):
+        """
+        enables support of '\t', ',', '-' and ' ' as separator.
+        """
+        if '\t' in line:
+            assert line.count('\t') == 1
+            word, pos = line.split('\t')
+        elif ',' in line:
+            assert line.count(',') == 1
+            word, pos = line.split(',')
+        elif '-' in line:
+            assert line.count('-') == 1
+            word, pos = line.split('-')
+        elif ' ' in line:
+            assert line.count(' ') == 1
+            word, pos = line.split(' ')
         else:
-            self.deactivate_word(word)
-
-    def split_at_last_syl(self, word):
-        if word.count(TSEK) >= 1:
-            tsek_idx = word.rindex(TSEK)
-            return word[:tsek_idx+1], word[tsek_idx+1:]
-        else:
-            return '', word
-
-    def deactivate_inflected(self, word):
-        self.deactivate_word(word)
-
-        if word.endswith(TSEK):
-            word = word[:-1]
-
-        beginning, last_syl = self.split_at_last_syl(word)
-
-        if self.bosyl.is_affixable(last_syl):
-            affixed = self.bosyl.get_all_affixed(last_syl)
-            for a in affixed:
-                affixed_word = beginning + a[0] + TSEK
-                self.deactivate_word(affixed_word)
-
-    def deactivate_wordlist(self, f):
-        """
-
-        :param f: filename of wordlist
-        """
-        with Path(f).open('r', encoding='utf-8-sig') as f:
-            words = [line.rstrip('\n') for line in f.readlines()]
-
-        # cleanup the entries
-        # TODO: also remove non-breaking tseks. maybe centralize in a method such cleanup
-        words = [word.rstrip(SHAD) for word in words]
-        words = [word + TSEK if not word.endswith(TSEK) else word for word in words]
-
-        for word in words:
-            self.deactivate_inflected(word)
+            word, pos = line, OOV
+        return word, pos

@@ -20,6 +20,12 @@ def test_components():
     assert sc.get_mingzhi('ཁྱེའུར') == 'འ'
     # None if more than one solution from get_parts() (not yet encountered)
 
+    # support for dadrag
+    assert sc.get_mingzhi('ཀུནད') == 'ཀ'
+
+    # dadrag normalize
+    assert sc.normalize_dadrag('ཀུནད') == 'ཀུན'
+
     # C) get_info()
     # 1. 'dadrag'
     # A syllable that historically received a "da" second suffix.
