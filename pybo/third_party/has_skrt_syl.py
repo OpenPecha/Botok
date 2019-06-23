@@ -21,7 +21,7 @@ def is_skrt(syl):
     return re.search(regex1, syl) or re.search(regex2, syl) or re.search(regex3, syl)
 
 
-def is_skrt_word(word):
+def has_skrt_syl(word):
     """Uses is_skrt() to check for sanskrit syllables
 
     """

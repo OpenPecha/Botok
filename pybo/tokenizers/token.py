@@ -5,15 +5,12 @@ from ..vars import AFFIX_SEP, TSEK, AA_TSEK
 class Token:
 
     def __init__(self):
-        self.content = ''
-        self.phono = ''
+        self.text = ''
         self.char_types = None
         self.aa_word = None
         self.papo_word = None
         self.lemma = ''
         self.chunk_type = None
-        self.type = None
-        self.char_groups = None
         self.start = 0
         self.len = None
         self.syls = None
@@ -25,29 +22,24 @@ class Token:
         self.skrt = False
         self._ = {}  # dict for any user specific data
 
-    def __getitem__(self, item):
-        mapping = {'content': self.content,
-                   'phono': self.phono,
-                   'char_types': self.char_types,
-                   'aa_word': self.aa_word,
-                   'papo_word': self.papo_word,
-                   'lemma': self.lemma,
-                   'chunk_type': self.chunk_type,
-                   'type': self.type,
-                   'char_groups': self.char_groups,
-                   'start': self.start,
-                   'len': self.len,
-                   'syls': self.syls,
-                   'tag': self.tag,
-                   'pos': self.pos,
-                   'affix': self.affix,
-                   'affixed': self.affixed,
-                   'skrt': self.skrt,
-                   'freq': self.freq,
-                   'cleaned_content': self.cleaned_content,
-                   'unaffixed_word': self.unaffixed_word}
+    def __getitem__(self, attr):
+        # allows to access attributes with the Token['attr'] syntax, besides the Token.attr default
+        try:
+            return self.__getattribute__(attr)
+        except AttributeError:
+            raise AttributeError('does not have attribute: ' + attr)
 
-        return mapping[item] if item in mapping else None
+    def __setitem__(self, key, value):
+        # enforces not to add any extra attribute. Token._ should be used for any custom data
+        if hasattr(self, key):
+            if key != '_':
+                self.__dict__[key] = value
+            else:
+                if not isinstance(value, dict):
+                    raise TypeError('only dicts are accepted for Token._')
+                self.__dict__[key].update(value)
+        else:
+            raise AttributeError("Token objects don't have " + key + ' as attribute')
 
     def get_pos_n_aa(self):
         if self.pos == '':
@@ -60,14 +52,14 @@ class Token:
                 self.pos = self.tag
 
     @property
-    def cleaned_content(self):
+    def text_cleaned(self):
         """
         Will append a TSEK to every syllable except syllables that host
         an affix.
 
         """
         if self.syls:
-            cleaned = TSEK.join([''.join([self.content[idx] for idx in syl]) for syl in self.syls])
+            cleaned = TSEK.join([''.join([self.text[idx] for idx in syl]) for syl in self.syls])
             if self.affixed and not self.affix:
                 return cleaned
             else:
@@ -76,49 +68,44 @@ class Token:
             return ''
 
     @property
-    def unaffixed_word(self):
+    def text_unaffixed(self):
         if self.aa_word and (not self.affix and self.affixed):
-            if self.cleaned_content.endswith(TSEK):
-                return self.cleaned_content[:-1] + AA_TSEK
+            if self.text_cleaned.endswith(TSEK):
+                return self.text_cleaned[:-1] + AA_TSEK
             else:
-                return self.cleaned_content + AA_TSEK
+                return self.text_cleaned + AA_TSEK
         elif self.tag.count(AFFIX_SEP) == 3:
             _, _, affix_len, aa = self.tag.split(AFFIX_SEP)
             if affix_len:
                 affix_len = int(affix_len)
-                if self.cleaned_content.endswith(TSEK):
+                if self.text_cleaned.endswith(TSEK):
                     if aa:
-                        return self.cleaned_content[:-affix_len - 1] + AA_TSEK
+                        return self.text_cleaned[:-affix_len - 1] + AA_TSEK
                     else:
-                        return self.cleaned_content[:-affix_len - 1] + TSEK
+                        return self.text_cleaned[:-affix_len - 1] + TSEK
                 else:
                     if aa:
-                        return self.cleaned_content[:-affix_len] + AA_TSEK
+                        return self.text_cleaned[:-affix_len] + AA_TSEK
                     else:
-                        return self.cleaned_content[:-affix_len] + TSEK
+                        return self.text_cleaned[:-affix_len] + TSEK
 
-        if self.cleaned_content and not self.cleaned_content.endswith(TSEK):
-            return self.cleaned_content + TSEK
+        if self.text_cleaned and not self.text_cleaned.endswith(TSEK):
+            return self.text_cleaned + TSEK
         else:
-            return self.cleaned_content
+            return self.text_cleaned
 
     def __repr__(self):
-        out = 'content: "{}"'.format(self.content)
-        if self.cleaned_content:
-            out += '\ncleaned_content: "{}"'.format(self.cleaned_content)
-        if self.unaffixed_word:
-            out += '\nunaffixed_word: "{}"'.format(self.unaffixed_word)
+        out = 'content: "{}"'.format(self.text)
+        if self.text_cleaned:
+            out += '\ncleaned_content: "{}"'.format(self.text_cleaned)
+        if self.text_unaffixed:
+            out += '\nunaffixed_word: "{}"'.format(self.text_unaffixed)
         if self.lemma:
             out += '\nlemma: "{}"'.format(self.lemma)
-        if self.phono:
-            out += '\nphono: /{}/'.format(self.phono)
-        # out += '\nchar_types: |' + '|'.join([char_markers_rev[self.char_groups[idx]]
-        #                                      for idx in sorted(self.char_groups.keys())])+'|'
-        out += '\ntype: ' + self.type
         out += '\nstart: ' + str(self.start)
         out += '\nlen: ' + str(self.len)
         if self.syls and self.syls != []:
-            out += '\nsyls (' + ' '.join([''.join([self.content[char] for char in syl])
+            out += '\nsyls (' + ' '.join([''.join([self.text[char] for char in syl])
                                    for syl in self.syls]) + '): ' + str(self.syls)
         if self.tag:
             out += '\ntag: {}'.format(self.tag)

@@ -56,16 +56,18 @@ class TokChunks(Chunks):
     """
     def __init__(self, string, ignore_chars=None):
         Chunks.__init__(self, string, ignore_chars=ignore_chars)
+        self.chunks = None
 
     def serve_syls_to_trie(self):
         chunks = []
         for chunk in self.make_chunks():
             if chunk[0] == c.TEXT:
-                text_chars = self.__get_text_chars(chunk[1], chunk[1]+chunk[2])
-                chunks.append((text_chars, chunk))
+                text_idxs = self.__get_text_chars(chunk[1], chunk[1]+chunk[2])
+                syl = [self.bs.string[i] for i in text_idxs]
+                chunks.append((syl, chunk))
             else:
                 chunks.append((None, chunk))
-        return chunks
+        self.chunks = chunks
 
     def get_syls(self):
         syls = []

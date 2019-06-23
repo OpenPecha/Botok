@@ -4,6 +4,10 @@ from re import search
 
 from .token import Token
 from ..vars import AFFIX_SEP, NAMCHE, TSEK
+from ..vars import chunk_values as u
+from ..vars import char_values as a
+from ..vars import CharMarkers as A
+from ..third_party.has_skrt_syl import has_skrt_syl
 
 
 class Tokenize:
@@ -31,6 +35,7 @@ class Tokenize:
         current_node = None
         went_to_max = False
 
+        self.pre_processed.serve_syls_to_trie()
         c_idx = 0
         while c_idx < len(self.pre_processed.chunks):
             has_decremented = False
@@ -40,11 +45,7 @@ class Tokenize:
             # 1. CHUNK IS SYLLABLE
             if chunk[0]:
                 # syl is extracted from input string, tsek added for the trie
-                syl = [self.pre_processed.string[idx] for idx in chunk[0]]
-                if chunk[0][-1] < pre_processed.len - 1 and self.pre_processed.string[chunk[0][-1]+1] == NAMCHE:
-                    syl += [NAMCHE]
-                else:
-                    syl += [TSEK]
+                syl = chunk[0] + [TSEK] if chunk[0][-1] != NAMCHE else chunk[0]
                 self.debug(debug, syl)
 
                 # >>> WALKING THE TRIE >>>
@@ -55,14 +56,14 @@ class Tokenize:
                         self.debug(debug, syl[s_idx])
                         current_node = self.trie.walk(syl[s_idx], current_node)
                         if current_node and current_node.is_match():
-                            match_data[c_idx] = (current_node.data, current_node.freq, current_node.skrt)
+                            match_data[c_idx] = current_node.data
 
                     # continuing to walk
                     elif current_node and current_node.can_walk():
                         self.debug(debug, syl[s_idx])
                         current_node = self.trie.walk(syl[s_idx], current_node)
                         if current_node and current_node.is_match():
-                            match_data[c_idx] = (current_node.data, current_node.freq, current_node.skrt)
+                            match_data[c_idx] = current_node.data
                 # <<<<<<<<<<<<<<<<<<<<<<<<
 
                         elif not current_node:
@@ -113,7 +114,7 @@ class Tokenize:
                     else:
                         syls.append(c_idx)
                         # end of input and the end of syllable is reached
-                        if c_idx == len(pre_processed.chunks) - 1 and s_idx == len(syl):
+                        if c_idx == len(self.pre_processed.chunks) - 1 and s_idx == len(syl):
                             c_idx = self.add_found_word_or_non_word(c_idx, match_data, syls, tokens, has_decremented)
                             match_data = {}
                             syls = []
@@ -130,13 +131,13 @@ class Tokenize:
                     current_node = None
                     continue
 
-                tokens.append(self.chunks_to_token([c_idx]))
+                tokens.append(self.chunks_to_token(self.pre_processed.chunks[c_idx], {}))
 
             # END OF INPUT
             # if we reached end of input and there is a non-max-match
             if len(self.pre_processed.chunks) - 1 == c_idx:
                 if any(match_data.values()) and current_node and not current_node.leaf:
-                    c_idx = self.add_found_word_or_non_word(c_idx, match_data, syls, tokens)
+                    c_idx = self.add_found_word_or_non_word(c_idx, match_data[c_idx], syls, tokens)
                     syls = []
                     current_node = None
                 if has_decremented:
@@ -146,7 +147,7 @@ class Tokenize:
 
         # a potential token was left
         if syls:
-            self.add_found_word_or_non_word(c_idx, match_data, syls, tokens)
+            self.add_found_word_or_non_word(c_idx, match_data[c_idx], syls, tokens)
 
         self.pre_processed = None
 
@@ -155,17 +156,14 @@ class Tokenize:
     def add_found_word_or_non_word(self, c_idx, match_data, syls, tokens, has_decremented=False):
         # there is a match
         if c_idx in match_data.keys():
-            tokens.append(self.chunks_to_token(syls, tag=match_data[c_idx][0], freq=match_data[c_idx][1], skrt=match_data[c_idx][2]))
+            tokens.append(self.chunks_to_token(syls, match_data[c_idx]))
         elif any(match_data.values()):
             non_max_idx = sorted(match_data.keys())[-1]
             non_max_syls = []
             for syl in syls:
                 if syl <= non_max_idx:
                     non_max_syls.append(syl)
-            tokens.append(self.chunks_to_token(non_max_syls,
-                                               tag=match_data[non_max_idx][0],
-                                               freq=match_data[non_max_idx][1],
-                                               skrt=match_data[non_max_idx][2]))
+            tokens.append(self.chunks_to_token(non_max_syls, match_data[non_max_idx]))
             c_idx = non_max_idx
         else:
             # add first syl in syls as non-word
@@ -174,11 +172,14 @@ class Tokenize:
             # decrement chunk-idx for a new attempt to find a match
             if syls:
                 c_idx -= len(syls[1:]) - 1
-            if has_decremented or (c_idx < len(self.pre_processed.chunks) and self.pre_processed.chunks[c_idx][0] == None)  or len(syls) > 1:
+            if has_decremented \
+               or (c_idx < len(self.pre_processed.chunks)
+                   and self.pre_processed.chunks[c_idx][0] is None) \
+               or len(syls) > 1:
                 c_idx -= 1
         return c_idx
 
-    def chunks_to_token(self, syls, tag=None, freq=None, skrt=None, ttype=None):
+    def chunks_to_token(self, syls, data, ttype=None):
         if len(syls) == 1:
             # chunk format: ([char_idx1, char_idx2, ...], (type, start_idx, len_idx))
             token_syls = [self.pre_processed.chunks[syls[0]][0]]
@@ -188,7 +189,7 @@ class Tokenize:
             if ttype:
                 token_type = ttype
 
-            return self.create_token(token_type, token_start, token_length, token_syls, tag, freq, skrt)
+            return self.create_token(token_type, token_start, token_length, token_syls, data)
         elif len(syls) > 1:
             token_syls = [self.pre_processed.chunks[idx][0] for idx in syls]
             token_type = self.pre_processed.chunks[syls[-1]][1][0]
@@ -199,11 +200,11 @@ class Tokenize:
             if ttype:
                 token_type = ttype
 
-            return self.create_token(token_type, token_start, token_length, token_syls, tag, freq, skrt)
+            return self.create_token(token_type, token_start, token_length, token_syls, data)
         else:
-            return None  # should raise an error instead?
+            raise ValueError(str(syls) + 'should contain at least 1 token')
 
-    def create_token(self, ttype, start, length, syls, tag=None, freq=None, skrt=None):
+    def create_token(self, ttype, start, length, syls, data):
         """
         :param ttype: token type
         :param start: start index in input string
@@ -215,83 +216,28 @@ class Tokenize:
         :return: a Token object with all the above information
         """
         token = Token()
-        token.content = self.pre_processed.string[start:start+length]
-        token.chunk_type = ttype
-        token.type = token.chunk_markers[ttype]
+        token.text = self.pre_processed.bs.string[start:start + length]
+        token.chunk_type = u[ttype]
         token.start = start
         token.len = length
         if syls != [None]:
-            token.syls = []
-            for syl in syls:
-                token.syls.append([i-start for i in syl])
-        if not tag:
-            token.tag = token.chunk_markers[ttype]
-        else:
-            if type(tag) == int:
-                token.tag = token.chunk_markers[tag]
-            else:
-                token.tag = tag
-        if token.tag:
-            token.get_pos_n_aa()
-        if AFFIX_SEP in token.tag and AFFIX_SEP * 3 not in token.tag:
-            token.affix = True
-            token.affixed = True
-        token.char_groups = self.pre_processed.export_groups(start, length, for_substring=True)
-        token.char_types = [token.char_markers[token.char_groups[idx]] for idx in sorted(token.char_groups.keys())]
-        if skrt:
-            token.skrt = True
-        else:
-            token.skrt = self.sanskrit(token)
-        if freq:
-            token.freq = freq
-        else:
-            token.freq = None
+            token.syls = syls
+        char_groups = self.pre_processed.bs.export_groups(start, length, for_substring=True)
+        token.char_types = [a[char_groups[idx]] for idx in sorted(char_groups.keys())]
+        for k, v in data.items():
+            token[k] = v
+        token.skrt = self.is_sanskrit(char_groups, token.text)
+        # token.freq = data['freq'] if 'freq' in data else None
+        # token.pos = data['pos'] if 'pos' in data else None
         return token
 
-    def sanskrit(self, token):
-        return self._has_skrt_syl(token) or self._has_skrt_char(token)
+    def is_sanskrit(self, char_groups, word):
+        return self._has_skrt_char(char_groups) or has_skrt_syl(word)
 
-    def _has_skrt_char(self, token):
-        return self.pre_processed.SKRT_VOW in token.char_groups.values() or \
-               self.pre_processed.SKRT_CONS in token.char_groups.values() or \
-               self.pre_processed.SKRT_SUB_CONS in token.char_groups.values()
-
-    def _has_skrt_syl(self, token):
-        """
-        Generates the pre-processed syl str, then tests whether it is a
-        Sanskrit syl.
-
-        :param token: token to test
-        :return: True if the token contains a Sanskrit syllable, False otherwise
-        """
-        def is_skrt_syl(syl):
-            """
-            Checks whether a given syllable is Sanskrit.
-            Uses the regexes of Paul Hackett from his Visual Basic script
-
-            :param syl: syllable__ to test
-            :return: True if it is Sanskrit, False otherwise
-
-            .. note:: the original comments are preserved
-            .. Todo:: find source
-            """
-            # Now do Sanskrit: Skt.vowels, [g|d|b|dz]+_h, hr, shr, Skt
-            regex1 = r"([ཀ-ཬཱ-྅ྐ-ྼ]{0,}[ཱཱཱིུ-ཹཻཽ-ྃ][ཀ-ཬཱ-྅ྐ-ྼ]{0,}|[ཀ-ཬཱ-྅ྐ-ྼ]{0,}[གཌདབཛྒྜྡྦྫ][ྷ][ཀ-ཬཱ-྅ྐ-ྼ]{0,}|" \
-                     r"[ཀ-ཬཱ-྅ྐ-ྼ]{0,}[ཤཧ][ྲ][ཀ-ཬཱ-྅ྐ-ྼ]{0,}|" \
-                     r"[ཀ-ཬཱ-྅ྐ-ྼ]{0,}[གྷཊ-ཎདྷབྷཛྷཥཀྵ-ཬཱཱཱིུ-ཹཻཽ-ྃྒྷྚ-ྞྡྷྦྷྫྷྵྐྵ-ྼ][ཀ-ཬཱ-྅ྐ-ྼ]{0,})"
-            # more Sanskrit: invalid superscript-subscript pairs
-            regex2 = r"([ཀ-ཬཱ-྅ྐ-ྼ]{0,}[ཀཁགང-ཉཏ-དན-བམ-ཛཝ-ཡཤཧཨ][ྐ-ྫྷྮ-ྰྴ-ྼ][ཀ-ཬཱ-྅ྐ-ྼ]{0,})"
-            # tsa-phru mark used in Chinese transliteration
-            regex3 = r"([ཀ-ཬཱ-྅ྐ-ྼ]{0,}[༹][ཀ-ཬཱ-྅ྐ-ྼ]{0,})"
-            return search(regex1, syl) or search(regex2, syl) or search(regex3, syl)
-
-        has_skrt = False
-        if token.syls:
-            for syl in token.syls:
-                clean_syl = ''.join([token.content[s] for s in syl])
-                if is_skrt_syl(clean_syl):
-                    has_skrt = True
-        return has_skrt
+    def _has_skrt_char(self, char_groups):
+        return A.SKRT_VOW in char_groups.values() or \
+               A.SKRT_CONS in char_groups.values() or \
+               A.SKRT_SUB_CONS in char_groups.values()
 
     @staticmethod
     def debug(debug, to_print):
