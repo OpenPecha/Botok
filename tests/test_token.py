@@ -16,11 +16,11 @@ def test_token():
     for k, v in attrs.items():
         t[k] = v
     assert str(t) == dedent("""\
-                            content: "test"
-                            start: 0
-                            len: 4
+                            text: "test"
                             pos: NOUN
                             freq: 123
+                            start: 0
+                            len: 4
                             
                             """)
 

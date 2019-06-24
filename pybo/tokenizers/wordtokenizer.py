@@ -58,7 +58,7 @@ class WordTokenizer:
     def _get_default_lemma(token_list):
         for token in token_list:
             if not token.lemma:
-                if token.affix:
+                if token.affix and not token.affix_host:
                     part = ''.join([''.join(syl) for syl in token.syls])
                     token.lemma = part_lemmas[part] + TSEK
                 else:

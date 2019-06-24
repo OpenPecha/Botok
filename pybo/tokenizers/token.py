@@ -6,7 +6,7 @@ class Token:
 
     def __init__(self):
         self.text = ''
-        self.char_types = None
+        self.char_types = []
         self.has_merged_dagdra = None
         self.lemma = ''
         self.chunk_type = None
@@ -72,8 +72,10 @@ class Token:
 
         if self.affix_host and not self.affix:
             return unaffixed
-        else:
+        elif unaffixed:
             return unaffixed + TSEK
+        else:
+            return ''
 
     def __repr__(self):
         out = 'text: "{}"\n'.format(self.text)
@@ -85,8 +87,10 @@ class Token:
             out += 'lemma: "{}"\n'.format(self.lemma)
         if self.syls and self.syls != []:
             out += 'syls: ["' + '", "'.join([''.join(syl) for syl in self.syls]) + '"]\n'
-        out += 'char_types: |' + '|'.join(self.char_types) + '|\n'
-        out += 'chunk_type: {}\n'.format(self.chunk_type)
+        if self.char_types:
+            out += 'char_types: |' + '|'.join(self.char_types) + '|\n'
+        if self.chunk_type:
+            out += 'chunk_type: {}\n'.format(self.chunk_type)
         if self.pos:
             out += 'pos: {}\n'.format(self.pos)
         if self.freq:

@@ -20,7 +20,7 @@ print(', '.join(tagged))
 
 ### Extract the cleaned version of the tokens
 
-cleaned = [w.cleaned_content for w in tokens if w.cleaned_content]
+cleaned = [w.text_cleaned for w in tokens if w.text_cleaned]
 print(' '.join(cleaned))
 # ཤི་ བཀྲ་ཤིས་ བདེ་ལེགས་ བཀྲ་ཤིས་ བདེ་ལེགས་ ཀཀ་
 

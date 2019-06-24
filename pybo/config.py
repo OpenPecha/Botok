@@ -24,7 +24,7 @@ default_config = dedent('''\
         - &mgd lexica_bo/mgd.txt
         - &verbs lexica_bo/verbs.txt
       skrt_files:
-        - &skrt lexica_skrt/lexica_skrt.txt
+        - &skrt lexica_skrt/sanskrit.txt
       pos_files:
         - &soas pos/TiDC_corpus.txt
         - &partpos pos/particles.txt

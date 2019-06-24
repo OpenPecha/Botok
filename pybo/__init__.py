@@ -5,7 +5,6 @@ from .chunks.chunks import Chunks, TokChunks
 
 from .modifytokens.adjusttokens import AdjustTokens
 from .modifytokens.cqlmatcher import CQLMatcher
-from .modifytokens.lemmatizetokens import LemmatizeTokens
 from .modifytokens.mergedagdra import MergeDagdra
 from .modifytokens.mergingmatcher import MergingMatcher
 from .modifytokens.replacingmatcher import ReplacingMatcher

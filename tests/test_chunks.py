@@ -26,9 +26,9 @@ def test_chunks():
 
 def test_tokchunks():
     c = TokChunks(string)
-
+    c.serve_syls_to_trie()
     # generate what the tokenizer will ingest
-    chunks = c.serve_syls_to_trie()
+    chunks = c.chunks
     assert chunks == [(None, (105, 0, 2)),
                       ([2, 3, 4], (104, 2, 4)),          # syllable 1
                       ([6, 7, 8], (104, 6, 4)),          # syllable 2
