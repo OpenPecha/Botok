@@ -1,12 +1,23 @@
-from .tokenize import Tokenize
-from pybo.modifytokens.splitaffixed import SplitAffixed
-from pybo.modifytokens.mergedagdra import MergeDagdra
-from pybo.modifytokens.lemmatizetokens import LemmatizeTokens
+# coding: utf8
+from pathlib import Path
+import yaml
 
+from .tokenize import Tokenize
+from ..modifytokens.splitaffixed import SplitAffixed
+from ..modifytokens.mergedagdra import MergeDagdra
 from ..tries.trie import Trie
 from ..chunks.chunks import TokChunks
 from ..textunits.bosyl import BoSyl
 from ..config import Config
+from ..vars import TSEK
+
+part_lemmas = {}
+filename = Path(__file__).parent.parent / 'resources' / 'lemmas' / 'particles.yaml'
+with filename.open('r', encoding='utf-8-sig') as f:
+    parsed_yaml = yaml.load(f.read(), Loader=yaml.SafeLoader)
+    for lemma, forms in parsed_yaml.items():
+        for form in forms:
+            part_lemmas[form] = lemma
 
 
 class WordTokenizer:
@@ -38,6 +49,17 @@ class WordTokenizer:
             SplitAffixed().split(tokens)
 
         # merge pa/po/ba/bo tokens with previous ones
-        MergeDagdra().merge(tokens)
+        # MergeDagdra().merge(tokens)
 
+        self._get_default_lemma(tokens)
         return tokens
+
+    @staticmethod
+    def _get_default_lemma(token_list):
+        for token in token_list:
+            if not token.lemma:
+                if token.affix:
+                    part = ''.join([''.join(syl) for syl in token.syls])
+                    token.lemma = part_lemmas[part] + TSEK
+                else:
+                    token.lemma = token.text_unaffixed

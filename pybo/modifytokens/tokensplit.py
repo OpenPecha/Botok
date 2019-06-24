@@ -24,8 +24,7 @@ class TokenSplit:
         self.idx = split_idx
 
     def split(self):
-        if len(self.token.syls) > 1:
-            self.__find_idx()
+        if len(self.token.syls_idx) > 1:
             self.split_on_idx()
             self.replace_attrs()
 
@@ -43,48 +42,35 @@ class TokenSplit:
         self.first = copy.deepcopy(self.token)
         self.second = copy.deepcopy(self.token)
         self.__split_contents()
-        self.__split_char_groups()
         self.__split_indices()
-        self.__split_syls()
-
-    def __find_idx(self):
-        self.idx = self.token.syls[self.idx][0]
+        self.__split_syls_idx()
+        self.__split_char_types()
 
     def __split_contents(self):
-        content = self.first.content
-        self.first.content = content[0:self.idx]
-        self.second.content = content[self.idx:]
+        text = self.first.text
+        self.first.text = text[0:self.idx]
+        self.second.text = text[self.idx:]
 
-    def __split_char_groups(self):
-        # split in two
-        c_g_1, c_g_2 = {}, {}
-        for idx, group in self.first.char_groups.items():
-            if idx < self.idx:
-                c_g_1[idx] = group
-            else:
-                c_g_2[idx] = group
-
-        # set indices to start from 0 for the second part
-        c_g_2 = {n: c_g_2[i] for n, i in enumerate(sorted(c_g_2))}
-
-        self.first.char_groups = c_g_1
-        self.second.char_groups = c_g_2
+    def __split_char_types(self):
+        char_types = self.first.char_types
+        self.first.char_types = char_types[:self.idx]
+        self.second.char_types = char_types[self.idx:]
 
     def __split_indices(self):
-        self.first.len = len(self.first.content)
-        self.second.len = len(self.second.content)
+        self.first.len = len(self.first.text)
+        self.second.len = len(self.second.text)
         self.second.start = self.second.start + self.idx
 
-    def __split_syls(self):
-        syls = self.first.syls
+    def __split_syls_idx(self):
+        syls = self.first.syls_idx
         # empty syls
-        self.first.syls = []
-        self.second.syls = []
+        self.first.syls_idx = []
+        self.second.syls_idx = []
 
         if syls:
             for syl in syls:
                 if syl[-1] < self.idx:
-                    self.first.syls.append(syl)
+                    self.first.syls_idx.append(syl)
 
                 else:
                     # separate the syl in two
@@ -97,6 +83,6 @@ class TokenSplit:
 
                     # add them if non-empty
                     if part1:
-                        self.first.syls.append(part1)
+                        self.first.syls_idx.append(part1)
                     if part2:
-                        self.second.syls.append(part2)
+                        self.second.syls_idx.append(part2)

@@ -76,7 +76,7 @@ class Config:
                 f.write(default_config)
 
         with self.filename.open('r', encoding='utf-8-sig') as g:
-            self.config = yaml.load(g.read(), Loader=yaml.FullLoader)
+            self.config = yaml.load(g.read(), Loader=yaml.SafeLoader)
 
     def get_tok_data_paths(self, profile, modifs=None, mode='internal'):
         main_profile = defaultdict(list)

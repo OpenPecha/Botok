@@ -62,8 +62,7 @@ class TokChunks(Chunks):
         chunks = []
         for chunk in self.make_chunks():
             if chunk[0] == c.TEXT:
-                text_idxs = self.__get_text_chars(chunk[1], chunk[1]+chunk[2])
-                syl = [self.bs.string[i] for i in text_idxs]
+                syl = self.__get_text_chars(chunk[1], chunk[1]+chunk[2])
                 chunks.append((syl, chunk))
             else:
                 chunks.append((None, chunk))

@@ -15,14 +15,14 @@ class Trie(BasicTrie):
         self.main_data = main_data
         self.custom_data = custom_data
         self.pickled_file = Path(profile + '_trie.pickled')
-        self.load_or_build_trie(build)
         self.tmp_inflected = dict()  # tmp to inflect only once, even if a word appears in many files.
+        self.load_or_build_trie(build)
 
     def rebuild_trie(self):
         self.head = Node()
         self.load_or_build_trie(build=True)
 
-    def load_or_build_trie(self, build):
+    def load_or_build_trie(self, build=False):
         if build or not self.pickled_file.exists():
             self._build_trie()
         else:
@@ -103,6 +103,9 @@ class Trie(BasicTrie):
         :param deactivate: switch to add or deactivate a word
         """
         inflected = self._get_inflected(word)
+        if not inflected:
+            return
+
         for infl, data in inflected:
             if deactivate:
                 self.deactivate(infl)
@@ -122,6 +125,9 @@ class Trie(BasicTrie):
         if info == 'freq':
             data = int(data)
         inflected = self._get_inflected(word)
+        if not inflected:
+            return
+
         for infl, _ in inflected:
             self.add_data(infl, {info: data})
 
@@ -135,7 +141,9 @@ class Trie(BasicTrie):
             return self.tmp_inflected[word]
 
         syls = TokChunks(word).get_syls()
-        assert len(syls) >= 1
+        if not syls:
+            return None
+
         inflected = [(self.__join_syls(syls), None)]
         affixed = self.bosyl.get_all_affixed(syls[-1])
         if affixed:

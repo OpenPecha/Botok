@@ -45,20 +45,20 @@ for a in dir(tokens):
 tokens[0]
 
 # 4.2. accessing content in all tokens
-[t.content for t in tokens]
+[t.text for t in tokens]
 
-# 4.3. accessing tags in all tokens
-[t.tag for t in tokens]
+# 4.3. accessing pos in all tokens
+[t.pos for t in tokens]
 
 # 4.4. accessing tags that are nouns in all tokens
-[t.content for t in tokens if t.tag == 'NOUNᛃᛃᛃ']
+[t.text for t in tokens if t.pos == 'NOUN']
 
 # 4.5. separating content based on tags and compiling into one list
 
-tags = set([t.tag for t in tokens])
+pos = set([t.pos for t in tokens])
 l = []
-for tag in tags:
-    l.append([t.content for t in tokens if t.tag == tag])
+for p in pos:
+    l.append([t.text for t in tokens if t.pos == t])
 
 # -------------------------
 

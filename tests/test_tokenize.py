@@ -13,18 +13,19 @@ def test_tokenize():
     tok.trie.inflect_n_add_data('མཐའ་\tNOUN', 'pos')
     tokens = tok.tokenize(TokChunks('མཐའི་བཀྲ་ཤིས། ཀཀ abc མཐའི་རྒྱ་མཚོ་'))
     expected = dedent("""\
-                    text: "བཀྲ་ཤིས"
-                    text_cleaned: "བཀྲ་ཤིས་"
-                    text_unaffixed: "བཀྲ་ཤིས་"
-                    syls: ["བཀྲ", "ཤིས"]
-                    char_types: |CONS|CONS|SUB_CONS|TSEK|CONS|VOW|CONS|
-                    chunk_type: TEXT
-                    pos: NOUN
-                    freq: 17500
-                    start: 5
-                    len: 7
-
-                    """)
+                        text: "བཀྲ་ཤིས"
+                        text_cleaned: "བཀྲ་ཤིས་"
+                        text_unaffixed: "བཀྲ་ཤིས་"
+                        syls: ["བཀྲ", "ཤིས"]
+                        char_types: |CONS|CONS|SUB_CONS|TSEK|CONS|VOW|CONS|
+                        chunk_type: TEXT
+                        pos: NOUN
+                        freq: 17500
+                        syls_idx: [[0, 1, 2], [4, 5, 6]]
+                        start: 5
+                        len: 7
+                        
+                        """)
     str(tokens[0])
     assert str(tokens[1]) == expected
     assert tokens[2].text == '། '

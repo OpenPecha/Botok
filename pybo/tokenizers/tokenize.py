@@ -41,7 +41,8 @@ class Tokenize:
             # 1. CHUNK IS SYLLABLE
             if chunk[0]:
                 # syl is extracted from input string, tsek added for the trie
-                syl = chunk[0] + [TSEK] if chunk[0][-1] != NAMCHE else chunk[0]
+                syl = [self.pre_processed.bs.string[c] for c in chunk[0]]  # get letters
+                syl = syl + [TSEK] if syl[-1] != NAMCHE else syl  # add tsek
                 self.debug(debug, syl)
 
                 # >>> WALKING THE TRIE >>>
@@ -217,7 +218,7 @@ class Tokenize:
         token.start = start
         token.len = length
         if syls != [None]:
-            token.syls = syls
+            token.syls_idx = [[s - start for s in syl] for syl in syls]
         char_groups = self.pre_processed.bs.export_groups(start, length, for_substring=True)
         token.char_types = [a[char_groups[idx]] for idx in sorted(char_groups.keys())]
         for k, v in data.items():

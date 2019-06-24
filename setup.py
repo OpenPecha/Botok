@@ -44,7 +44,6 @@ setuptools.setup(
     ],
     package_data={'pybo': ['resources/*', 'resources/lexica_bo/*', 'resources/frequencies/*', 'resources/lemmas/*', 'resources/rules/*', 'resources/lexica_skrt/*']},
     python_requires='>=3.6',
-    # setup_requires=["pytest-runner"],
     tests_require=["pytest"],
     install_requires=[
         'pyyaml',

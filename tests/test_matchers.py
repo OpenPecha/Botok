@@ -6,8 +6,8 @@ rules_path = Path(__file__).parent / "resources" / "rules"
 
 input_str = ' མཐའི་རྒྱ་མཚོའི་གླིང་། ཤི་བཀྲ་ཤིས་  tr བདེ་་ལེ གས། བཀྲ་ཤིས་བདེ་ལེགས་ཀཀ'
 tok = WordTokenizer('POS')
-tok.tok.trie.rebuild_trie()
-tokens = tok.tokenize(input_str)
+# tok.tok.trie.rebuild_trie()
+tokens = tok.tokenize(input_str, split_affixes=False)
 
 
 def test_cql_query():

@@ -12,7 +12,7 @@ class Token:
         self.chunk_type = None
         self.start = 0
         self.len = None
-        self.syls = None
+        self.syls_idx = None
         self.tag = ''  # to remove
         self.pos = ''
         self.affixation = {}
@@ -41,15 +41,9 @@ class Token:
         else:
             raise AttributeError("Token objects don't have " + key + ' as attribute')
 
-    # def get_pos_n_aa(self):
-    #     if self.pos == '':
-    #         if AFFIX_SEP in self.tag:
-    #             parts = self.tag.split(AFFIX_SEP)
-    #             self.pos = parts[0]
-    #             if not self.aa_word and parts[-1] == 'aa':
-    #                 self.aa_word = True
-    #         else:
-    #             self.pos = self.tag
+    @property
+    def syls(self):
+        return [[self.text[s] for s in syl] for syl in self.syls_idx] if self.syls_idx else ''
 
     @property
     def text_cleaned(self):
@@ -70,7 +64,7 @@ class Token:
     @property
     def text_unaffixed(self):
         unaffixed = TSEK.join([''.join(syl) for syl in self.syls]) if self.syls else ''
-        if self.affixation:
+        if self.affixation and self.affix_host:
             unaffixed = unaffixed[:-self.affixation['len']]
 
             if self.affixation['aa']:
@@ -105,6 +99,8 @@ class Token:
             out += 'affix_host: {}\n'.format(self.affix_host)
         if self.has_merged_dagdra:
             out += 'has_merged_dagdra: {}\n'.format(self.has_merged_dagdra)
+        if self.syls_idx:
+            out += 'syls_idx: {}\n'.format(self.syls_idx)
         out += 'start: {}\n'.format(self.start)
         out += 'len: {}\n'.format(self.len)
         if self._:
