@@ -24,13 +24,10 @@ class TokenSplit:
         self.idx = split_idx
 
     def split(self):
-        if len(self.token.syls_idx) > 1:
-            self.split_on_idx()
-            self.replace_attrs()
+        self.split_on_idx()
+        self.replace_attrs()
 
-            return self.first, self.second
-        else:
-            return [self.token]
+        return self.first, self.second
 
     def replace_attrs(self):
         if self.token_changes:
