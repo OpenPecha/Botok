@@ -4,35 +4,36 @@
 
 ## Overview
 
-pybo is a word tokenizer for the Tibetan language entirely written in Python. pybo takes in chuncks of text, and returns lists of words. It provides an easy-to-use, high-performance tokenization pipeline that can be adapted either as a stand-alone solution or compliment.
+pybo is a word tokenizer for the Tibetan language written in Python. pybo takes in chunks of text and returns lists of words. It provides an easy-to-use, high-performance tokenization pipeline that can serve as a stand-alone solution or be adapted as a compliment.
 
-## Getting Started 
+
+## Getting started
 
     pip install pybo
     
-Or if you for some reason want to install from the latest Master branch:
+Or to install from the latest master branch:
 
     pip install git+https://github.com/Esukhia/pybo.git
 
-## Use 
+## How to use pybo
 
 #### To initiate the tokenizer together with part-of-speech capability: 
 
-    # initialize the tokenizer
+    # Initialize the tokenizer
     tok = bo.BoTokenizer('POS')
     
-    # read in some Tibetan text
+    # Feed it some Tibetan text
     input_str = '༄༅། །རྒྱ་གར་སྐད་དུ། བོ་དྷི་སཏྭ་ཙརྻ་ཨ་བ་ཏ་ར། བོད་སྐད་དུ། བྱང་ཆུབ་སེམས་དཔའི་སྤྱོད་པ་ལ་འཇུག་པ། །སངས་རྒྱས་དང་བྱང་ཆུབ་སེམས་དཔའ་ཐམས་ཅད་ལ་ཕྱག་འཚལ་ལོ། །བདེ་གཤེགས་ཆོས་ཀྱི་སྐུ་མངའ་སྲས་བཅས་དང༌། །ཕྱག་འོས་ཀུན་ལའང་གུས་པར་ཕྱག་འཚལ་ཏེ། །བདེ་གཤེགས་སྲས་ཀྱི་སྡོམ་ལ་འཇུག་པ་ནི། །ལུང་བཞིན་མདོར་བསྡུས་ནས་ནི་བརྗོད་པར་བྱ། །'
     
-    # run the tokenizer
+    # Run the tokenizer
     tokens = tok.tokenize(input_str)
     
 #### Now in 'tokens' you have an iterable where each token consist of several meta-data:
 
-    # access the first token in the iterable
+    # Access the first token in the iterable
     tokens[0]
 
-This will yield:
+This yields:
 
     content: "༄༅། "
     char_types: |punct|punct|punct|space|
@@ -50,25 +51,25 @@ notes:
  - `syls` is a list of cleaned syllables, each syllable being represented as a list of indices.
 Each index leads to a constituting character within the input string. 
 
-#### In case you want to access all words in a list: 
+#### How to access all the words in a list 
 
     # iterate through the tokens object to get all the words in a list
     [t.content for t in tokens]
 
-#### Or just get all the nouns that were used in the text
+#### How to get all the nouns in a text
 
     # extract nouns from the tokens
     [t.content for t in tokens if t.tag == 'NOUNᛃᛃᛃ']
     
 These examples highlight the basic principle of accessing attributes within each token object. 
 
-## Acknowledgement
+## Acknowledgements
 
 **pybo** is an open source library for Tibetan NLP.
 
 We are always open to cooperation in introducing new features, tool integrations and testing solutions.
 
-Many thanks to companies and organizations who supported the development of pybo, especially:
+Many thanks to the companies and organizations who have supported pybo's development, especially:
 
 * [Khyentse Foundation](https://khyentsefoundation.org) for contributing USD22,000 to kickstart the project 
 * The [Barom/Esukhia canon project](http://www.barom.org) for sponsoring training data curation
