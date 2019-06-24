@@ -20,8 +20,8 @@ class LemmatizeTokens:
 
     def lemmatize(self, token_list):
         for token in token_list:
-            if token.unaffixed_word:
-                no_tsek = token.unaffixed_word.rstrip(TSEK)
+            if token.text_unaffixed:
+                no_tsek = token.text_unaffixed.rstrip(TSEK)
                 if no_tsek in self.particles and token.pos == 'PART':
                     token.lemma = self.particles[no_tsek] + TSEK
 
@@ -29,7 +29,7 @@ class LemmatizeTokens:
                     token.lemma = self.lemmas[no_tsek] + TSEK
 
                 else:
-                    token.lemma = token.unaffixed_word
+                    token.lemma = token.text_unaffixed
 
     @staticmethod
     def parse_lemma_file(filename):

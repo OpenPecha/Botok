@@ -22,7 +22,7 @@ class MergeDagdra:
             pass
         elif len(tokens) == 2:
             token0, token1 = tokens
-            if token1.cleaned_content in papo:
+            if token1.text_cleaned in papo:
                 # split token containing the affixed particle
                 merged = self.merge_with_previous_token(token0, token1)
                 del tokens[1]
@@ -45,5 +45,5 @@ class MergeDagdra:
 
     def merge_with_previous_token(self, token0, token1):
         merged = TokenMerge(token0, token1).merge()
-        merged.papo_word = True
+        merged.has_merged_dagdra = True
         return merged

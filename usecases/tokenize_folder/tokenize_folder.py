@@ -38,7 +38,7 @@ def get_tokenized_string(tokens):
         elif t.type != 'syl':
             out.append(t.content)
         else:
-            out.append(t.unaffixed_word)
+            out.append(t.text_unaffixed)
     return out
 
 

@@ -1,12 +1,10 @@
 # coding: utf-8
-
-from re import search
-
 from .token import Token
-from ..vars import AFFIX_SEP, NAMCHE, TSEK
+from ..vars import NAMCHE, TSEK
 from ..vars import chunk_values as u
 from ..vars import char_values as a
 from ..vars import CharMarkers as A
+from ..vars import WordMarkers as w
 from ..third_party.has_skrt_syl import has_skrt_syl
 
 
@@ -17,8 +15,6 @@ class Tokenize:
     def __init__(self, trie):
         self.pre_processed = None
         self.trie = trie
-        self.WORD = 1000
-        self.OOV = 1001
 
     def tokenize(self, pre_processed, debug=False):
         """
@@ -28,6 +24,7 @@ class Tokenize:
         :return: a list of Token objects
         """
         self.pre_processed = pre_processed
+        self.pre_processed.serve_syls_to_trie()
         tokens = []
         syls = []
         match_data = {}  # keys: c_idx, values: trie data (for last and second-last matches)
@@ -35,7 +32,6 @@ class Tokenize:
         current_node = None
         went_to_max = False
 
-        self.pre_processed.serve_syls_to_trie()
         c_idx = 0
         while c_idx < len(self.pre_processed.chunks):
             has_decremented = False
@@ -97,7 +93,7 @@ class Tokenize:
                     # non-word syls are turned into independant tokens
                     non_word = [c_idx]
                     # This syllabe does not exist in the Trie
-                    tokens.append(self.chunks_to_token(non_word, "non-word"))
+                    tokens.append(self.chunks_to_token(non_word, {}, ttype=w.NON_WORD.name))
                     match_data = {}
                     syls = []
 
@@ -131,7 +127,7 @@ class Tokenize:
                     current_node = None
                     continue
 
-                tokens.append(self.chunks_to_token(self.pre_processed.chunks[c_idx], {}))
+                tokens.append(self.chunks_to_token([c_idx], {}))
 
             # END OF INPUT
             # if we reached end of input and there is a non-max-match
@@ -167,7 +163,7 @@ class Tokenize:
             c_idx = non_max_idx
         else:
             # add first syl in syls as non-word
-            tokens.append(self.chunks_to_token([syls[0]], self.OOV))
+            tokens.append(self.chunks_to_token([syls[0]], {}, ttype=w.OOV.name))
 
             # decrement chunk-idx for a new attempt to find a match
             if syls:
@@ -187,7 +183,7 @@ class Tokenize:
             token_start = self.pre_processed.chunks[syls[0]][1][1]
             token_length = self.pre_processed.chunks[syls[0]][1][2]
             if ttype:
-                token_type = ttype
+                data['pos'] = ttype
 
             return self.create_token(token_type, token_start, token_length, token_syls, data)
         elif len(syls) > 1:
@@ -198,7 +194,7 @@ class Tokenize:
             for i in syls:
                 token_length += self.pre_processed.chunks[i][1][2]
             if ttype:
-                token_type = ttype
+                data['pos'] = ttype
 
             return self.create_token(token_type, token_start, token_length, token_syls, data)
         else:
@@ -227,8 +223,9 @@ class Tokenize:
         for k, v in data.items():
             token[k] = v
         token.skrt = self.is_sanskrit(char_groups, token.text)
-        # token.freq = data['freq'] if 'freq' in data else None
-        # token.pos = data['pos'] if 'pos' in data else None
+        if 'affixation' in data:
+            token.affix_host = True
+            token.affix = True
         return token
 
     def is_sanskrit(self, char_groups, word):

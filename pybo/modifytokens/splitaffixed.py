@@ -1,6 +1,5 @@
 # coding: utf-8
 from ..tokenizers.token import Token
-from ..vars import AFFIX_SEP
 
 
 class SplitAffixed:
@@ -82,7 +81,7 @@ class SplitAffixed:
 
         # un-affixed token object
         t = Token()
-        t.content = token_content
+        t.text = token_content
         t.chunk_type = token.chunk_type
         t.type = token.type
         t.start = token_start
@@ -94,14 +93,14 @@ class SplitAffixed:
         t.char_groups = token_char_groups
         t.char_types = token_char_types
         t.affix = False
-        t.affixed = True
+        t.affix_host = True
         if aa:
             t.aa_word = True
         t.get_pos_n_aa()
 
         # affix token object
         a = Token()
-        a.content = affix_content
+        a.text = affix_content
         a.chunk_type = token.chunk_type
         a.type = token.type
         a.start = affix_start
@@ -112,7 +111,7 @@ class SplitAffixed:
         a.char_groups = affix_char_groups
         a.char_types = affix_char_types
         a.affix = True
-        a.affixed = False
+        a.affix_host = False
         a.get_pos_n_aa()
 
         return t, a

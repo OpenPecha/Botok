@@ -1,5 +1,5 @@
 # coding: utf-8
-from ..vars import AFFIX_SEP, TSEK, AA_TSEK
+from ..vars import TSEK, AA_TSEK, AA
 
 
 class Token:
@@ -7,17 +7,17 @@ class Token:
     def __init__(self):
         self.text = ''
         self.char_types = None
-        self.aa_word = None
-        self.papo_word = None
+        self.has_merged_dagdra = None
         self.lemma = ''
         self.chunk_type = None
         self.start = 0
         self.len = None
         self.syls = None
-        self.tag = ''
+        self.tag = ''  # to remove
         self.pos = ''
+        self.affixation = {}
         self.affix = False
-        self.affixed = False
+        self.affix_host = False
         self.freq = None
         self.skrt = False
         self._ = {}  # dict for any user specific data
@@ -41,15 +41,15 @@ class Token:
         else:
             raise AttributeError("Token objects don't have " + key + ' as attribute')
 
-    def get_pos_n_aa(self):
-        if self.pos == '':
-            if AFFIX_SEP in self.tag:
-                parts = self.tag.split(AFFIX_SEP)
-                self.pos = parts[0]
-                if not self.aa_word and parts[-1] == 'aa':
-                    self.aa_word = True
-            else:
-                self.pos = self.tag
+    # def get_pos_n_aa(self):
+    #     if self.pos == '':
+    #         if AFFIX_SEP in self.tag:
+    #             parts = self.tag.split(AFFIX_SEP)
+    #             self.pos = parts[0]
+    #             if not self.aa_word and parts[-1] == 'aa':
+    #                 self.aa_word = True
+    #         else:
+    #             self.pos = self.tag
 
     @property
     def text_cleaned(self):
@@ -59,8 +59,8 @@ class Token:
 
         """
         if self.syls:
-            cleaned = TSEK.join([''.join([self.text[idx] for idx in syl]) for syl in self.syls])
-            if self.affixed and not self.affix:
+            cleaned = TSEK.join([''.join(syl) for syl in self.syls])
+            if self.affix_host and not self.affix:
                 return cleaned
             else:
                 return cleaned + TSEK
@@ -69,61 +69,47 @@ class Token:
 
     @property
     def text_unaffixed(self):
-        if self.aa_word and (not self.affix and self.affixed):
-            if self.text_cleaned.endswith(TSEK):
-                return self.text_cleaned[:-1] + AA_TSEK
-            else:
-                return self.text_cleaned + AA_TSEK
-        elif self.tag.count(AFFIX_SEP) == 3:
-            _, _, affix_len, aa = self.tag.split(AFFIX_SEP)
-            if affix_len:
-                affix_len = int(affix_len)
-                if self.text_cleaned.endswith(TSEK):
-                    if aa:
-                        return self.text_cleaned[:-affix_len - 1] + AA_TSEK
-                    else:
-                        return self.text_cleaned[:-affix_len - 1] + TSEK
-                else:
-                    if aa:
-                        return self.text_cleaned[:-affix_len] + AA_TSEK
-                    else:
-                        return self.text_cleaned[:-affix_len] + TSEK
+        unaffixed = TSEK.join([''.join(syl) for syl in self.syls]) if self.syls else ''
+        if self.affixation:
+            unaffixed = unaffixed[:-self.affixation['len']]
 
-        if self.text_cleaned and not self.text_cleaned.endswith(TSEK):
-            return self.text_cleaned + TSEK
+            if self.affixation['aa']:
+                unaffixed += AA
+
+        if self.affix_host and not self.affix:
+            return unaffixed
         else:
-            return self.text_cleaned
+            return unaffixed + TSEK
 
     def __repr__(self):
-        out = 'content: "{}"'.format(self.text)
+        out = 'text: "{}"\n'.format(self.text)
         if self.text_cleaned:
-            out += '\ncleaned_content: "{}"'.format(self.text_cleaned)
+            out += 'text_cleaned: "{}"\n'.format(self.text_cleaned)
         if self.text_unaffixed:
-            out += '\nunaffixed_word: "{}"'.format(self.text_unaffixed)
+            out += 'text_unaffixed: "{}"\n'.format(self.text_unaffixed)
         if self.lemma:
-            out += '\nlemma: "{}"'.format(self.lemma)
-        out += '\nstart: ' + str(self.start)
-        out += '\nlen: ' + str(self.len)
+            out += 'lemma: "{}"\n'.format(self.lemma)
         if self.syls and self.syls != []:
-            out += '\nsyls (' + ' '.join([''.join([self.text[char] for char in syl])
-                                   for syl in self.syls]) + '): ' + str(self.syls)
-        if self.tag:
-            out += '\ntag: {}'.format(self.tag)
+            out += 'syls: ["' + '", "'.join([''.join(syl) for syl in self.syls]) + '"]\n'
+        out += 'char_types: |' + '|'.join(self.char_types) + '|\n'
+        out += 'chunk_type: {}\n'.format(self.chunk_type)
         if self.pos:
-            out += '\npos: {}'.format(self.pos)
-        if self.affix:
-            out += '\naffix: {}'.format(self.affix)
-        if self.affixed:
-            out += '\naffixed: {}'.format(self.affixed)
-        if self.aa_word:
-            out += '\naa_word: {}'.format(self.aa_word)
-        if self.skrt:
-            out += "\nskrt: {}".format(self.skrt)
+            out += 'pos: {}\n'.format(self.pos)
         if self.freq:
-            out += '\nfreq: {}'.format(self.freq)
+            out += 'freq: {}\n'.format(self.freq)
+        if self.skrt:
+            out += "skrt: {}\n".format(self.skrt)
+        if self.affix:
+            out += 'affix: {}\n'.format(self.affix)
+        if self.affix_host:
+            out += 'affix_host: {}\n'.format(self.affix_host)
+        if self.has_merged_dagdra:
+            out += 'has_merged_dagdra: {}\n'.format(self.has_merged_dagdra)
+        out += 'start: {}\n'.format(self.start)
+        out += 'len: {}\n'.format(self.len)
         if self._:
             out += '\n'
             for k, v in self._.items():
                 out += "_{}: {}\n".format(k, v)
-        out += '\n\n'
+        out += '\n'
         return out

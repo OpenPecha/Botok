@@ -1,11 +1,12 @@
 # coding: utf-8
 from enum import IntEnum
 
-AFFIX_SEP = 'ᛃ'
 OOV = 'OOV'
+NON_WORD = 'NON_WORD'
 TSEK = '་'
 NAMCHE = 'ཿ'
 SHAD = '།'
+AA = 'འ'
 AA_TSEK = 'འ་'
 HASH = '#'
 
@@ -59,6 +60,7 @@ chunk_values = {c.value: c.name for c in ChunkMarkers}
 
 WordMarkers = IntEnum('WordMarkers', [
     'WORD',
-    'OOV'
+    'OOV',
+    'NON_WORD'
 ], start=1000)
 word_values = {w.value: w.name for w in WordMarkers}
