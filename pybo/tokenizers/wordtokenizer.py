@@ -58,6 +58,11 @@ class WordTokenizer:
     @staticmethod
     def _get_default_lemma(token_list):
         for t in token_list:
+            # pass any token that is not a word
+            if not t.text_unaffixed:
+                continue
+
+            # otherwise, check whether the aa needs to be added and if a tsek should be added
             if not t.lemma:
                 if t.affix and not t.affix_host:
                     part = ''.join([''.join(syl) for syl in t.syls])
