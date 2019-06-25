@@ -32,6 +32,7 @@ class Chunks(ChunkFramework):
         chunks = self.pipe_chunk(chunks, self.syllabify, c.BO.value, c.TEXT.value)
         chunks = self.pipe_chunk(chunks, self.chunk_cjk, c.OTHER.value, c.CJK.value)
         chunks = self.pipe_chunk(chunks, self.chunk_latin, c.OTHER.value, c.LATIN.value)
+        chunks = self.merge_skippable_punct(chunks)
         if not indices:
             return self.get_chunked(chunks, gen=gen)
         return chunks

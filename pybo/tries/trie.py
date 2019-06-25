@@ -156,7 +156,7 @@ class Trie(BasicTrie):
 
     @staticmethod
     def __join_syls(syls):
-        return ''.join([syl if syl[-1] == NAMCHE else syl + TSEK for syl in syls])
+        return ''.join([syl if syl.endswith(NAMCHE) else syl + TSEK for syl in syls])
 
     @staticmethod
     def __clean_lines(f):

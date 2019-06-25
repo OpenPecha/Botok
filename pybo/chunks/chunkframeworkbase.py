@@ -28,8 +28,8 @@ class ChunkFrameworkBase:
                         inc += 1
                         previous = chunks[num - 1 - inc]
 
-                    new = (previous[0], previous[1], current[1] + current[2])
-                    chunks[num - 1 - inc] = (previous[0], previous[1], current[1] + current[2])
+                    new = (previous[0], previous[1], previous[2] + current[2])
+                    chunks[num - 1 - inc] = (previous[0], previous[1], previous[2] + current[2])
                     del chunks[num]
                     num -= 1
 
@@ -127,29 +127,29 @@ class ChunkFrameworkBase:
     def merge_skippable_punct(self, chunks):
         i = 0
         while i <= len(chunks) - 1:
-            ind = chunks[i]
+            current = chunks[i]
             # first element
-            if i == 0 and len(chunks) - 1 >= 1 and ind[0] == u.PUNCT:
+            if i == 0 and len(chunks) - 1 >= 1:
                 to_del = True
-                for char_idx in range(ind[1], ind[1] + ind[2]):
+                for char_idx in range(current[1], current[1] + current[2]):
                     if not self.__is_skippable_punct(char_idx):
                         to_del = False
 
                 if to_del:
-                    new_chunk = (chunks[i + 1][0], ind[1], chunks[i + 1][2])
+                    new_chunk = (chunks[i + 1][0], current[1], chunks[i + 1][1] + chunks[i + 1][2])
                     chunks[i + 1] = new_chunk
                     del chunks[i]
                     i -= 1
 
             # remaining ones
-            if i - 1 >= 0 and ind[0] == u.PUNCT:
+            if i - 1 >= 0:
                 to_del = True
-                for char_idx in range(ind[1], ind[1] + ind[2]):
+                for char_idx in range(current[1], current[1] + current[2]):
                     if not self.__is_skippable_punct(char_idx):
                         to_del = False
 
                 if to_del:
-                    new_chunk = (chunks[i - 1][0], chunks[i - 1][1], chunks[i - 1][2] + ind[2])
+                    new_chunk = (chunks[i - 1][0], chunks[i - 1][1], current[2] + chunks[i - 1][2])
                     chunks[i - 1] = new_chunk
                     del chunks[i]
                     i -= 1

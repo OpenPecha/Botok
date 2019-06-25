@@ -147,7 +147,7 @@ class SylComponents:
         """
         components = self.get_parts(syl)
         if type(components) == list or not components:
-            if syl[-1] == 'ད':
+            if syl and syl[-1] == 'ད':
                 components = self.get_parts(syl[:-1])
                 if type(components) == list or not components:
                     return None

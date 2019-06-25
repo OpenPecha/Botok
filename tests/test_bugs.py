@@ -6,9 +6,9 @@ def test_multiple_spaces():
     bo_string = Chunks('ཤི ས་ཤི  ས་')
     chunks = bo_string.make_chunks()
     chunks = bo_string.get_readable(chunks)
-    assert ('TEXT', 'ཤི ས་') == chunks[0]
-    assert ('TEXT', 'ཤི  ས་') == chunks[1]
-    assert 2 == len(chunks)
+    assert chunks[0] == ('TEXT', 'ཤི ས་')
+    assert chunks[1] == ('TEXT', 'ཤི  ས་')
+    assert len(chunks) == 2
 
 
 def test_bug1():
@@ -57,3 +57,15 @@ def test_many_tseks_in_syllable():
                         ('TEXT', 'ཤིས་'),
                         ('TEXT', 'བདེ་'),
                         ('TEXT', 'ལེགས')]
+
+
+def test_shad_in_syllable():
+    input_str = ' tr བདེ་་ལེ གས། བཀྲ་'
+    ck = Chunks(input_str)
+    chunks = ck.make_chunks()
+    readable = ck.get_readable(chunks)
+    assert readable == [('LATIN', ' tr '),
+                        ('TEXT', 'བདེ་་'),
+                        ('TEXT', 'ལེ གས'),
+                        ('PUNCT', '། '),
+                        ('TEXT', 'བཀྲ་')]

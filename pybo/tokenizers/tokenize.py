@@ -24,7 +24,6 @@ class Tokenize:
         :return: a list of Token objects
         """
         self.pre_processed = pre_processed
-        self.pre_processed.serve_syls_to_trie()
         tokens = []
         syls = []
         match_data = {}  # keys: c_idx, values: trie data (for last and second-last matches)

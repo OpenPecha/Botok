@@ -44,6 +44,7 @@ class WordTokenizer:
         :return: list of pybo.tokenizers.Token objects
         """
         preprocessed = TokChunks(string, ignore_chars=self.ignore_chars)
+        preprocessed.serve_syls_to_trie()
         tokens = self.tok.tokenize(preprocessed, debug=debug)
 
         if split_affixes:

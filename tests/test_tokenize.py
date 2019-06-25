@@ -11,7 +11,9 @@ def test_tokenize():
     tok.trie.inflect_n_add_data('བཀྲ་ཤིས་\t17500', 'freq')
     tok.trie.inflect_n_modify_trie('མཐའ་')
     tok.trie.inflect_n_add_data('མཐའ་\tNOUN', 'pos')
-    tokens = tok.tokenize(TokChunks('མཐའི་བཀྲ་ཤིས། ཀཀ abc མཐའི་རྒྱ་མཚོ་'))
+    preproc = TokChunks('མཐའི་བཀྲ་ཤིས། ཀཀ abc མཐའི་རྒྱ་མཚོ་')
+    preproc.serve_syls_to_trie()
+    tokens = tok.tokenize(preproc)
     expected = dedent("""\
                         text: "བཀྲ་ཤིས"
                         text_cleaned: "བཀྲ་ཤིས་"
@@ -39,7 +41,9 @@ def test_non_max2():
     tok.trie.inflect_n_modify_trie('བཀྲ་ཤིས་')
     tok.trie.inflect_n_add_data('བཀྲ་ཤིས་\tNOUN', 'pos')
     tok.trie.inflect_n_modify_trie('བཀྲ་ཤིས་བདེ་ལེགས།')  # to ensure we're not in a maximal match
-    tokens = tok.tokenize(TokChunks('བཀྲ་ཤིས་བདེ་བཀྲ་'))
+    preproc = TokChunks('བཀྲ་ཤིས་བདེ་བཀྲ་')
+    preproc.serve_syls_to_trie()
+    tokens = tok.tokenize(preproc)
     assert tokens[0].text == 'བཀྲ་ཤིས་'
     assert tokens[0].pos == 'NOUN'
     assert tokens[1].text == 'བདེ་'
@@ -54,6 +58,8 @@ def test_non_max_end_of_string():
     tok = Tokenize(Trie(BoSyl, profile, main, custom))
     tok.trie.inflect_n_modify_trie('བཀྲ་ཤིས་')
     tok.trie.inflect_n_modify_trie('བཀྲ་ཤིས་བདེ་ལེགས།')  # to ensure we're not in a maximal match
-    tokens = tok.tokenize(TokChunks('བཀྲ་ཤིས་བདེ་'))
+    preproc = TokChunks('བཀྲ་ཤིས་བདེ་')
+    preproc.serve_syls_to_trie()
+    tokens = tok.tokenize(preproc)
     assert tokens[0].text == 'བཀྲ་ཤིས་'
     assert tokens[1].text == 'བདེ་'
