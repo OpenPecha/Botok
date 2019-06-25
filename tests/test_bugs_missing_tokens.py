@@ -184,12 +184,10 @@ def test_missing_token30():
     assert [t.text for t in tokens] == ['བཀྲ་', 'མ', '།']
 
 
-# Has to be corrected together with the DICT file
-"""def test_missing_token31():
-    # པར
+def test_missing_token31():
     input_str = "གདོད་པར་བྱ"
     tokens = tok.tokenize(input_str, split_affixes=False)
-    assert [t.text for t in tokens] == ['གདོད་', 'པ', 'ར་', 'བྱ']"""
+    assert [t.text for t in tokens] == ['གདོད་', 'པར་', 'བྱ']
 
 
 def test_missing_token32():
@@ -252,12 +250,10 @@ def test_missing_token41():
     assert [t.text for t in tokens] == ['གཏུམ་', 'བྱེད་', 'དང་']
 
 
-# Has to be corrected together with the DICT file
-"""def test_missing_token42():
-    # བས
+def test_missing_token42():
     input_str = "ཞིབ་བས་སྦལ།"
     tokens = tok.tokenize(input_str, split_affixes=False)
-    assert [t.text for t in tokens] == ['ཞིབ་', 'བ', 'ས་', 'སྦལ', '།']"""
+    assert [t.text for t in tokens] == ['ཞིབ་', 'བས་', 'སྦལ', '།']
 
 
 def test_missing_token43():
@@ -296,7 +292,6 @@ def test_missing_token48():
     assert [t.text for t in tokens] == ['ནུ་', 'ཧེ་རུ་']
 
 
-# TODO: expected is ['བརྩེགས་', 'རྣམ་པ', 'ར་'], yet the data contain 'རྣམ་པར་'
 def test_missing_token49():
     input_str = "བརྩེགས་རྣམ་པར་"
     tokens = tok.tokenize(input_str, split_affixes=False)

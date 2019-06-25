@@ -28,7 +28,8 @@ class ChunkFrameworkBase:
                         inc += 1
                         previous = chunks[num - 1 - inc]
 
-                    chunks[num - 1 - inc] = (previous[0], previous[1], previous[2] + current[2])
+                    new = (previous[0], previous[1], current[1] + current[2])
+                    chunks[num - 1 - inc] = (previous[0], previous[1], current[1] + current[2])
                     del chunks[num]
                     num -= 1
 
@@ -123,6 +124,41 @@ class ChunkFrameworkBase:
         chunks = self.merge_spaces(chunks)
         return self.merge_similar_chunks(chunks)
 
+    def merge_skippable_punct(self, chunks):
+        i = 0
+        while i <= len(chunks) - 1:
+            ind = chunks[i]
+            # first element
+            if i == 0 and len(chunks) - 1 >= 1 and ind[0] == u.PUNCT:
+                to_del = True
+                for char_idx in range(ind[1], ind[1] + ind[2]):
+                    if not self.__is_skippable_punct(char_idx):
+                        to_del = False
+
+                if to_del:
+                    new_chunk = (chunks[i + 1][0], ind[1], chunks[i + 1][2])
+                    chunks[i + 1] = new_chunk
+                    del chunks[i]
+                    i -= 1
+
+            # remaining ones
+            if i - 1 >= 0 and ind[0] == u.PUNCT:
+                to_del = True
+                for char_idx in range(ind[1], ind[1] + ind[2]):
+                    if not self.__is_skippable_punct(char_idx):
+                        to_del = False
+
+                if to_del:
+                    new_chunk = (chunks[i - 1][0], chunks[i - 1][1], chunks[i - 1][2] + ind[2])
+                    chunks[i - 1] = new_chunk
+                    del chunks[i]
+                    i -= 1
+            i += 1
+        return self.merge_similar_chunks(chunks)
+
+    def __is_skippable_punct(self, char_idx):
+        return self.bs.base_structure[char_idx] == a.TSEK or self.__is_space(char_idx)
+
     def merge_spaces(self, chunks):
         return self.merge_chunks(chunks, self.__is_space_mergeable)
 
@@ -139,7 +175,8 @@ class ChunkFrameworkBase:
     def merge_similar_chunks(self, chunks):
         return self.merge_chunks(chunks, self.__is_similar_chunks)
 
-    def __is_similar_chunks(self, previous, current):
+    @staticmethod
+    def __is_similar_chunks(previous, current):
         # the chunk markers of both are similar.
         return previous[0] != u.TEXT.value and current[0] != u.TEXT.value and previous[0] == current[0]
 
@@ -162,7 +199,8 @@ class ChunkFrameworkBase:
             return ((i, self.bs.string[start:start + length]) for i, start, length in indices)
         return [(i, self.bs.string[start:start + length]) for i, start, length in indices]
 
-    def get_markers(self, indices):
+    @staticmethod
+    def get_markers(indices):
         """
         Replaces the int representation of the chunk-mark by its str counterpart.
 

@@ -25,19 +25,13 @@ class Chunks(ChunkFramework):
 
     def make_chunks(self, indices=True, gen=False):
         chunks = self.chunk_bo_chars()
-        chunks = self.clean_chunks(chunks)
         chunks = self.pipe_chunk(chunks, self.chunk_punct, to_chunk_marker=c.BO.value, yes=c.PUNCT.value)
-        chunks = self.clean_chunks(chunks)
         chunks = self.pipe_chunk(chunks, self.chunk_symbol, c.BO.value, c.SYM.value)
-        chunks = self.clean_chunks(chunks)
         chunks = self.pipe_chunk(chunks, self.chunk_number, c.BO.value, c.NUM.value)
-        chunks = self.clean_chunks(chunks)
+        chunks = self.merge_skippable_punct(chunks)  # to ensure we have correctly built syllables
         chunks = self.pipe_chunk(chunks, self.syllabify, c.BO.value, c.TEXT.value)
-        chunks = self.clean_chunks(chunks)
         chunks = self.pipe_chunk(chunks, self.chunk_cjk, c.OTHER.value, c.CJK.value)
-        chunks = self.clean_chunks(chunks)
         chunks = self.pipe_chunk(chunks, self.chunk_latin, c.OTHER.value, c.LATIN.value)
-        chunks = self.clean_chunks(chunks)
         if not indices:
             return self.get_chunked(chunks, gen=gen)
         return chunks

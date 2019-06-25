@@ -1,6 +1,5 @@
-from pathlib import Path
-
-from pybo import BasicTrie, Trie, Config
+# coding: utf8
+from pybo import Trie, Config
 from pybo import BoSyl
 
 config = Config()
