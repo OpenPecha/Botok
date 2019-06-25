@@ -8,7 +8,7 @@ from .modifytokens.cqlmatcher import CQLMatcher
 from .modifytokens.mergedagdra import MergeDagdra
 from .modifytokens.mergingmatcher import MergingMatcher
 from .modifytokens.replacingmatcher import ReplacingMatcher
-from .modifytokens.splitaffixed import SplitAffixed
+from .modifytokens.splitaffixed import split_affixed
 from .modifytokens.splittingmatcher import SplittingMatcher
 from .modifytokens.tokenmerge import TokenMerge
 from .modifytokens.tokensplit import TokenSplit

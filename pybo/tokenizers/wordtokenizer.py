@@ -3,7 +3,7 @@ from pathlib import Path
 import yaml
 
 from .tokenize import Tokenize
-from ..modifytokens.splitaffixed import SplitAffixed
+from ..modifytokens.splitaffixed import split_affixed
 from ..modifytokens.mergedagdra import MergeDagdra
 from ..tries.trie import Trie
 from ..chunks.chunks import TokChunks
@@ -48,7 +48,7 @@ class WordTokenizer:
         tokens = self.tok.tokenize(preprocessed, debug=debug)
 
         if split_affixes:
-            SplitAffixed().split(tokens)
+            split_affixed(tokens)
 
         # merge pa/po/ba/bo tokens with previous ones
         # MergeDagdra().merge(tokens)
