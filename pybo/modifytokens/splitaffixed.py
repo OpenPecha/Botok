@@ -21,7 +21,7 @@ class SplitAffixed:
             if tokens[t].affixation:
                 # split token containing the affixed particle
                 split_idx = tokens[t].syls_idx[-1][-tokens[t].affixation['len']]
-                changes = '[affix="False" & affixation="None"] ' \
+                changes = '[affix="False"] ' \
                           '[pos="PART" & affix_host="False" & skrt="False" & freq="None"]'
                 ts = TokenSplit(tokens[t], split_idx, token_changes=changes)
                 token1, token2 = ts.split()

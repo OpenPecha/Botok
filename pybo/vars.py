@@ -7,7 +7,6 @@ TSEK = '་'
 NAMCHE = 'ཿ'
 SHAD = '།'
 AA = 'འ'
-AA_TSEK = 'འ་'
 HASH = '#'
 
 CharMarkers = IntEnum('CharMarkers', [

@@ -9,7 +9,8 @@ from ..tries.trie import Trie
 from ..chunks.chunks import TokChunks
 from ..textunits.bosyl import BoSyl
 from ..config import Config
-from ..vars import TSEK
+from ..vars import TSEK, AA
+from ..vars import ChunkMarkers as c
 
 part_lemmas = {}
 filename = Path(__file__).parent.parent / 'resources' / 'lemmas' / 'particles.yaml'
@@ -61,5 +62,7 @@ class WordTokenizer:
                 if t.affix and not t.affix_host:
                     part = ''.join([''.join(syl) for syl in t.syls])
                     t.lemma = part_lemmas[part] + TSEK
+                elif not t.affix and t.affix_host:
+                    t.lemma = t.text_unaffixed + AA + TSEK if t.affixation['aa'] else t.text_unaffixed + TSEK
                 else:
                     t.lemma = t.text_unaffixed if t.text_unaffixed.endswith(TSEK) else t.text_unaffixed + TSEK

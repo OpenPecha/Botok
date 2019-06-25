@@ -1,5 +1,5 @@
 # coding: utf-8
-from ..vars import TSEK, AA_TSEK, AA
+from ..vars import TSEK, AA
 
 
 class Token:
@@ -64,13 +64,13 @@ class Token:
     @property
     def text_unaffixed(self):
         unaffixed = TSEK.join([''.join(syl) for syl in self.syls]) if self.syls else ''
-        if self.affixation and self.affix_host:
+        if self.affixation and self.affix_host and self.affix:
             unaffixed = unaffixed[:-self.affixation['len']]
 
             if self.affixation['aa']:
                 unaffixed += AA
 
-        if self.affix_host and not self.affix:
+        if self.affixation and self.affix_host and not self.affix:
             return unaffixed
         elif unaffixed:
             return unaffixed + TSEK

@@ -42,6 +42,7 @@ class TokenSplit:
         self.__split_indices()
         self.__split_syls_idx()
         self.__split_char_types()
+        self.__split_affixation()
 
     def __split_contents(self):
         text = self.first.text
@@ -83,3 +84,8 @@ class TokenSplit:
                         self.first.syls_idx.append(part1)
                     if part2:
                         self.second.syls_idx.append(part2)
+
+    def __split_affixation(self):
+        del self.first.affixation['len']
+        del self.first.affixation['type']
+        del self.second.affixation['aa']
