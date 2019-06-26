@@ -10,7 +10,6 @@ from ..chunks.chunks import TokChunks
 from ..textunits.bosyl import BoSyl
 from ..config import Config
 from ..vars import TSEK, AA
-from ..vars import ChunkMarkers as c
 
 part_lemmas = {}
 filename = Path(__file__).parent.parent / 'resources' / 'lemmas' / 'particles.yaml'
@@ -64,7 +63,7 @@ class WordTokenizer:
                 continue
 
             # otherwise, check whether the aa needs to be added and if a tsek should be added
-            if not t.lemma:
+            if not t.lemma and t.pos != 'NON_WORD':
                 if t.affix and not t.affix_host:
                     part = ''.join([''.join(syl) for syl in t.syls])
                     t.lemma = part_lemmas[part] + TSEK

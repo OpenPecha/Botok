@@ -4,7 +4,7 @@ from pybo import *
 
 
 def test_get_default_lemma():
-    input_str = 'བཀྲ་ཤིས་བདེ་ལེགས། མཐའི་རྒྱ་མཚོར་གནས་སོ།། །།'
+    input_str = 'བཀྲ་ཤིས་བདེ་ལེགས། མཐའི་རྒྱ་མཚོར་གནས་སོ།། །།ཀཀ'
     profile = 'POS'
 
     # reconstitute all the pieces that WordTokenizer gathers
@@ -91,10 +91,15 @@ def test_get_default_lemma():
                                 len: 3
                                 
                                 """)
-    assert tokens[3].lemma == 'གི་'
+    assert tokens[4].lemma == 'གི་'
 
     # for regular words, Token.text_unaffixed is simply copied
     assert tokens[0].lemma == 'བཀྲ་ཤིས་'
+
+    # non-words do not have lemmas
+    assert tokens[10].lemma == ''
+    assert tokens[10].text_cleaned == 'ཀཀ་'
+    assert tokens[10].text_unaffixed == 'ཀཀ་'
 
     # Token objects whose chunk_type is not 'TEXT' will be attributed no lemma.
     # text_unaffixed and text_cleaned are also empty. Token.text must be retrieved
