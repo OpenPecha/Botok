@@ -1,7 +1,6 @@
 from pybo import *
 
 tok = WordTokenizer('GMD')
-# tok.tok.trie.rebuild_trie()
 
 
 def test_missing_token1():

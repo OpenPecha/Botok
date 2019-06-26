@@ -1,3 +1,4 @@
+# coding: utf8
 from textwrap import dedent
 from pytest import raises
 

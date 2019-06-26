@@ -33,7 +33,7 @@ class MergeDagdra:
                 if t + 1 >= len(tokens) - 1:
                     break
                 token0, token1 = tokens[t], tokens[t+1]
-                if token0.type == 'syl' and token1.type == 'syl' \
+                if token0.chunk_type == 'TEXT' and token1.chunk_type == 'TEXT' \
                         and token1.lemma in papo:
                     # split token containing the affixed particle
                     merged = self.merge_with_previous_token(token0, token1)

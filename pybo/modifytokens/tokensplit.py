@@ -86,6 +86,7 @@ class TokenSplit:
                         self.second.syls_idx.append(part2)
 
     def __split_affixation(self):
-        del self.first.affixation['len']
-        del self.first.affixation['type']
-        del self.second.affixation['aa']
+        if self.token.affixation:
+            del self.first.affixation['len']
+            del self.first.affixation['type']
+            del self.second.affixation['aa']

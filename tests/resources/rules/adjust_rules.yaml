@@ -5,12 +5,12 @@
 # repla: [match_query, replace_idx, replace_query]
 
 
-# - repla: ['[cleaned_content="བར་"] [cleaned_content="དུ་མ་"] [cleaned_content="ཆོད་"]', 2, '[pos="PART"]']
-# - split: ['[cleaned_content="བར་"] [cleaned_content="དུ་མ་"] [cleaned_content="ཆོད་"]', 2, 1, '[pos="PART"] [pos="PART"]']
-# - merge: ['[cleaned_content="བར་"] [cleaned_content="དུ་"] [cleaned_content="མ་"] [cleaned_content="ཆོད་"]', 1, '[pos="PART"]']
+# - repla: ['[text_cleaned="བར་"] [text_cleaned="དུ་མ་"] [text_cleaned="ཆོད་"]', 2, '[pos="PART"]']
+# - split: ['[text_cleaned="བར་"] [text_cleaned="དུ་མ་"] [text_cleaned="ཆོད་"]', 2, 1, '[pos="PART"] [pos="PART"]']
+# - merge: ['[text_cleaned="བར་"] [text_cleaned="དུ་"] [text_cleaned="མ་"] [text_cleaned="ཆོད་"]', 1, '[pos="PART"]']
 
-- repla: ['[cleaned_content="ལ་ལ་"] [cleaned_content="ལ་ལ་"]', 1, '[pos="PART"]']
-- repla: ['[cleaned_content="ལ་ལ་"] [cleaned_content="ལ་ལ་"]', 2, '[pos="PART"]']
-- split: ['[cleaned_content="ལ་ལ་"] [cleaned_content="ལ་ལ་"]', 1, 1, '[pos="PART"] [pos="PART"]']
-- split: ['[cleaned_content="ལ་"] [cleaned_content="ལ་"] [cleaned_content="ལ་ལ་"]', 3, 1, '[pos="PART"] [pos="PART"]']
-- merge: ['[cleaned_content="ལ་"] [cleaned_content="ལ་"] [cleaned_content="ལ་"] [cleaned_content="ལ་"]', 2, '[pos="PART"]']
+- repla: ['[text_cleaned="ལ་ལ་"] [text_cleaned="ལ་ལ་"]', 1, '[pos="PART"]']
+- repla: ['[text_cleaned="ལ་ལ་"] [text_cleaned="ལ་ལ་"]', 2, '[pos="PART"]']
+- split: ['[text_cleaned="ལ་ལ་"] [text_cleaned="ལ་ལ་"]', 1, 2, '[pos="PART"] [pos="PART"]']
+- split: ['[text_cleaned="ལ་"] [text_cleaned="ལ་"] [text_cleaned="ལ་ལ་"]', 3, 2, '[pos="PART"] [pos="PART"]']
+- merge: ['[text_cleaned="ལ་"] [text_cleaned="ལ་"] [text_cleaned="ལ་"] [text_cleaned="ལ་"]', 2, '[pos="PART"]']

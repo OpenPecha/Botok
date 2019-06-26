@@ -1,3 +1,4 @@
+# coding: utf8
 from pybo import *
 from textwrap import dedent
 

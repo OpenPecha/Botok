@@ -50,7 +50,7 @@ class WordTokenizer:
             split_affixed(tokens)
 
         # merge pa/po/ba/bo tokens with previous ones
-        # MergeDagdra().merge(tokens)
+        MergeDagdra().merge(tokens)
 
         self._get_default_lemma(tokens)
         return tokens
