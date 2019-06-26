@@ -196,7 +196,7 @@ class TokenExpression(object):
         match = False
         for _, attribexpr in enumerate(self):
             annottype = attribexpr.attribute
-            if annottype == 'text': annottype = 'word'
+            # if annottype == 'text': annottype = 'word'  # commented because pybo's text attribute is "text"
             if attribexpr.operator == "!=":
                 negate = True
             elif attribexpr.operator == "=":
