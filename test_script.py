@@ -58,13 +58,13 @@ tokens[0]
 pos = set([t.pos for t in tokens])
 l = []
 for p in pos:
-    l.append([t.text for t in tokens if t.pos == t])
+    l.append([t.text for t in tokens if t.pos])
 
 # -------------------------
 
 # 5. VALIDITY TESTING
 
 # 5.1. length of output
-expected = 13
+expected = 9
 if len(l) != expected:
     raise ValidityError('Test 5.1. failed with list length ' + str(len(l)) + ' instead of the expected ' + str(expected))
