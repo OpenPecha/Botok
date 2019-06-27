@@ -13,17 +13,5 @@ install:
 before_script:
  - sleep 1 # this is just a placeholder
 script:
- - coverage run --source=pybo ./tests/test_basictrie.py
- - coverage run --source=pybo ./tests/test_bostring.py
- - coverage run --source=pybo ./tests/test_bosyl.py
- - coverage run --source=pybo ./tests/test_chunkframework.py
- - coverage run --source=pybo ./tests/test_chunks.py
- - coverage run --source=pybo ./tests/test_config.py
- - coverage run --source=pybo ./tests/test_matchers.py
- - coverage run --source=pybo ./tests/test_splitaffixed.py
- - coverage run --source=pybo ./tests/test_sylcomponents.py
- - coverage run --source=pybo ./tests/test_token.py
- - coverage run --source=pybo ./tests/test_tokenize.py
- - coverage run --source=pybo ./tests/test_trie.py
- - coverage run --source=pybo ./tests/test_wordtokenizer.py
+ - coverage run --source=pybo ./test_script.py
 after_success: coveralls
