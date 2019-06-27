@@ -32,4 +32,4 @@ from .tries.trie import Trie
 from .config import Config
 from .vars import *
 
-VERSION = "0.4.3"
+VERSION = "0.5.0"

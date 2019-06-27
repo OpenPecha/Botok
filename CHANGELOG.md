@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.5.0](https://github.com/Esukhia/pybo/releases/tag/v0.5.0) - 20190627
+### Changed
+ * Whole refactorisation of pybo's existing features. (Pipeline is not yet refactored)
+ * A lot of renaming to clarify things
+ * General cleanup of all files and re-organization into folders each containing the files
+ * Attribute names of Token objects are changed
+### Fixed
+ * various bugs, like the how many transparent chars(spaces and tseks) can be inside a syllable
+### Added
+ * Tests for each file showcasing the expected behaviour (tests for matchers are still the same as before)
+
 ## [0.4.3](https://github.com/Esukhia/pybo/releases/tag/v0.4.3) - 20190517
 ### Fixed
  * bugfix: the yaml warning is fixed
