@@ -14,8 +14,10 @@ before_script:
  - sleep 1 # this is just a placeholder
  - git clone https://github.com/Esukhia/pybo pybo_pybo
  - echo $PWD
+ - ls -l
  - cd pybo_pybo
  - echo $PWD
+ - ls -l
 script:
  - coverage run --source=pybo ./test_script.py
 after_success: coveralls
