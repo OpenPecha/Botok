@@ -766,7 +766,7 @@ assert tokens[2].text_unaffixed == '' == tokens[2].text_cleaned
 from pybo import *
 from pathlib import Path
 
-rules_path = Path(__file__).parent / "resources" / "rules"
+rules_path = Path(__file__).parent / "tests" / "resources" / "rules"
 
 
 input_str = ' མཐའི་རྒྱ་མཚོའི་གླིང་། ཤི་བཀྲ་ཤིས་  tr བདེ་་ལེ གས། བཀྲ་ཤིས་བདེ་ལེགས་ཀཀ'
