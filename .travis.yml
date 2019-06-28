@@ -13,7 +13,9 @@ install:
 before_script:
  - sleep 1 # this is just a placeholder
  - git clone https://github.com/Esukhia/pybo pybo_pybo
+ - echo $PWD
  - cd pybo_pybo
+ - echo $PWD
 script:
  - coverage run --source=pybo ./test_script.py
 after_success: coveralls
