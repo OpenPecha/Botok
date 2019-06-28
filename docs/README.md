@@ -1,5 +1,3 @@
-<a href="https://esukhia.github.io/pybo/" > <img src=https://user-images.githubusercontent.com/17675331/60292845-a66b6400-9950-11e9-883b-27d366863e3b.png width=150> </a>
-
 # PYBO - Tibetan NLP in Python
 [![Build Status](https://travis-ci.org/Esukhia/pybo.svg?branch=master)](https://travis-ci.org/Esukhia/pybo)  [![Coverage Status](https://coveralls.io/repos/github/Esukhia/pybo/badge.svg?branch=master)](https://coveralls.io/github/Esukhia/pybo?branch=master)
 
