@@ -12,6 +12,7 @@ install:
  - pip3 install coveralls
 before_script:
  - sleep 1 # this is just a placeholder
+ - git clone https://github.com/Esukhia/pybo
 script:
  - coverage run --source=pybo ./test_script.py
 after_success: coveralls
