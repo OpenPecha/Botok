@@ -440,7 +440,9 @@ assert isinstance(main['pos'][0], Path)
 
 # custom files to overwrite the existing trie can be added as follows
 assert len(custom) == 0
-main, custom = config.get_tok_data_paths('POS', modifs=Path(__file__).parent / 'pybo/tests/trie_data/')
+p = Path(__file__).parent / 'tests/trie_data/'
+print(p)
+main, custom = config.get_tok_data_paths('POS', modifs=p)
 assert [c for c in custom] == ['lexica_bo', 'lemmas'] == [t.parts[-1] for t in Path(Path(__file__).parent / 'pybo/tests/trie_data/').glob('*')]
 
 # overwriting the main profile
