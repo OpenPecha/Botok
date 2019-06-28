@@ -97,39 +97,3 @@ class NFA(object):
         for i in range(0,l):
             for length in self.run(sequence[i:], False, debug):
                 yield sequence[i:i+length]
-
-    def __iter__(self):
-        return iter(self._states(self.initialstate))
-
-    def _states(self, state, processedstates=[]): #pylint: disable=dangerous-default-value
-        """Iterate over all states in no particular order"""
-        processedstates.append(state)
-
-        for nextstate in state.epsilon:
-            if not nextstate in processedstates:
-                self._states(nextstate, processedstates)
-
-        for _, nextstate in state.transitions:
-            if not nextstate in processedstates:
-                self._states(nextstate, processedstates)
-
-        return processedstates
-
-    def __repr__(self):
-        out = []
-        for state in self:
-            staterep = repr(state)
-            if state is self.initialstate:
-                staterep += " (INITIAL)"
-            for nextstate in state.epsilon:
-                nextstaterep = repr(nextstate)
-                if nextstate.final:
-                    nextstaterep += " (FINAL)"
-                out.append( staterep + " -e-> " + nextstaterep )
-            for item, _, nextstate in state.transitions:
-                nextstaterep = repr(nextstate)
-                if nextstate.final:
-                    nextstaterep += " (FINAL)"
-                out.append( staterep + " -(" + repr(item) + ")-> " + nextstaterep )
-
-        return "\n".join(out)
