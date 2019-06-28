@@ -28,23 +28,3 @@ class CQLMatcher:
             if i + slice_len <= len(tokens_list) and self.query(tokens_list[i:i + slice_len + 1]):
                 matches.append((i, i + slice_len))
         return matches
-
-
-if __name__ == '__main__':
-    test = [{'word': 'This',
-             'lemma': 'this',
-             'tag': 'Det'},
-            {'word': 'is',
-             'lemma': 'be',
-             'tag': 'Verb'},
-            {'word': 'it',
-             'lemma': 'it',
-             'tag': 'Pron'},
-            {'word': '.',
-             'lemma': '.',
-             'tag': 'Punct'}]
-    q = '[lemma="this" & tag="Det"] [tag!="ADJ"]'
-
-    matcher = CQLMatcher(q)
-    matched = matcher.match(test)
-    print(matched)

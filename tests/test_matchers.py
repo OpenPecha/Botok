@@ -19,6 +19,26 @@ def test_cql_query():
     assert q
 
 
+def test_dummy_cql():
+    test = [{'word': 'This',
+             'lemma': 'this',
+             'tag': 'Det'},
+            {'word': 'is',
+             'lemma': 'be',
+             'tag': 'Verb'},
+            {'word': 'it',
+             'lemma': 'it',
+             'tag': 'Pron'},
+            {'word': '.',
+             'lemma': '.',
+             'tag': 'Punct'}]
+    q = '[lemma="this" & tag="Det"] [tag!="ADJ"]'
+
+    matcher = CQLMatcher(q)
+    matched = matcher.match(test)
+    assert matched == [(0, 1)]
+
+
 def test_cql():
     query = '[pos="NOUN" & text!=""] []'
     matcher = CQLMatcher(query)
