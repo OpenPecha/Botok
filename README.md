@@ -1,4 +1,4 @@
-<a href="https://esukhia.github.io/pybo/" > <img src=https://user-images.githubusercontent.com/17675331/60292845-a66b6400-9950-11e9-883b-27d366863e3b.png width=150> </a>
+<a href="https://pybo.readthedocs.io/en/latest/overview/getstarted.html" > <img src=https://user-images.githubusercontent.com/17675331/60292845-a66b6400-9950-11e9-883b-27d366863e3b.png width=150> </a>
 
 # PYBO - Tibetan NLP in Python
 [![Build Status](https://travis-ci.org/Esukhia/pybo.svg?branch=master)](https://travis-ci.org/Esukhia/pybo)  [![Coverage Status](https://coveralls.io/repos/github/Esukhia/pybo/badge.svg?branch=master)](https://coveralls.io/github/Esukhia/pybo?branch=master)
@@ -21,7 +21,7 @@ Or to install from the latest master branch:
 #### To initiate the tokenizer together with part-of-speech capability: 
 
     # Initialize the tokenizer
-    tok = bo.BoTokenizer('POS')
+    tok = bo.WordTokenizer('POS')
     
     # Feed it some Tibetan text
     input_str = '༄༅། །རྒྱ་གར་སྐད་དུ། བོ་དྷི་སཏྭ་ཙརྻ་ཨ་བ་ཏ་ར། བོད་སྐད་དུ། བྱང་ཆུབ་སེམས་དཔའི་སྤྱོད་པ་ལ་འཇུག་པ། །སངས་རྒྱས་དང་བྱང་ཆུབ་སེམས་དཔའ་ཐམས་ཅད་ལ་ཕྱག་འཚལ་ལོ། །བདེ་གཤེགས་ཆོས་ཀྱི་སྐུ་མངའ་སྲས་བཅས་དང༌། །ཕྱག་འོས་ཀུན་ལའང་གུས་པར་ཕྱག་འཚལ་ཏེ། །བདེ་གཤེགས་སྲས་ཀྱི་སྡོམ་ལ་འཇུག་པ་ནི། །ལུང་བཞིན་མདོར་བསྡུས་ནས་ནི་བརྗོད་པར་བྱ། །'
@@ -36,15 +36,14 @@ Or to install from the latest master branch:
 
 This yields:
 
-    content: "༄༅། "
-    char_types: |punct|punct|punct|space|
-    type: punct
+    text: "༄༅། "
+    char_types: |PUNCT|PUNCT|PUNCT|SPACE|
+    chunk_type: PUNCT
     start: 0
     len: 4
     syls: None
-    tag: punct
-    pos: punct
-    skr: "False"
+    pos: PUNCT
+    skrt: False
     freq: 0
     
 notes:
