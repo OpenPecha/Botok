@@ -25,7 +25,7 @@ class WordTokenizer:
     Convenience class to tokenize a given string.
 
     """
-    def __init__(self, profile, modifs=None, mode='internal', ignore_chars=None):
+    def __init__(self, profile='POS', modifs=None, mode='internal', ignore_chars=None):
         """
         :param profile: profile for building the trie. (see config.yaml)
         """
