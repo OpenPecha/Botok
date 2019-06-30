@@ -21,7 +21,7 @@ def word_tok(text: str, profile: str) -> List[PyboToken]:
     return tok.tokenize(text)
 
 
-@lru_cache  # <--- make sure that the trie is only built once then kept in memory
+@lru_cache(maxsize=None)  # <--- make sure that the trie is only built once then kept in memory
 def get_wordtokenizer(profile):
     return WordTokenizer(profile)
 
