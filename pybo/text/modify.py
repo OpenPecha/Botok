@@ -64,4 +64,4 @@ def words_raw_text(tokens: List[PyboToken]) -> List[str]:
 
 
 def chunks_raw_text(tokens: List[(str, str)]) -> List[str]:
-    return [chunk for _, chunk in tokens]
+    return [t[1] for t in tokens]
