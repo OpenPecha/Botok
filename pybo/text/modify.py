@@ -10,11 +10,11 @@ PyboToken = NewType('PyboToken', Token)
 
 def is_mistake(token):
     exceptions = ['\n']
-    if token.type == 'syl' or token.type == 'non-bo':
+    if token.type == 'TEXT' or token.type == 'NON_BO':
         if (not token.skrt
             and not has_skrt_syl(token.text_cleaned)) \
            and \
-            (token.pos == 'oov'
+            (token.pos == 'OOV'
              or token.pos == 'non-word'
              or token.type == 'non-bo') \
            and token.content not in exceptions:
@@ -22,7 +22,7 @@ def is_mistake(token):
     return False
 
 
-def pybo_error_concs(tokens: List[PyboToken], left=5, right=5) -> DefaultDict[str, List[str]]:
+def words_error_concs(tokens: List[PyboToken], left=5, right=5) -> DefaultDict[str, List[str]]:
     mistakes = defaultdict(list)
     for num, t in enumerate(tokens):
         if is_mistake(t):
@@ -42,7 +42,7 @@ def pybo_error_concs(tokens: List[PyboToken], left=5, right=5) -> DefaultDict[st
     return mistakes
 
 
-def pybo_error_types(tokens: List[PyboToken]) -> DefaultDict[str, int]:
+def words_error_types(tokens: List[PyboToken]) -> DefaultDict[str, int]:
     mistakes = defaultdict(int)
     for num, t in enumerate(tokens):
         if is_mistake(t):
@@ -51,7 +51,7 @@ def pybo_error_types(tokens: List[PyboToken]) -> DefaultDict[str, int]:
     return mistakes
 
 
-def pybo_raw_types(tokens: List[PyboToken]) -> DefaultDict[str, int]:
+def words_raw_types(tokens: List[PyboToken]) -> DefaultDict[str, int]:
     types = defaultdict(int)
     for t in tokens:
         occ = t.text.replace('\n', '\\n')
@@ -59,5 +59,9 @@ def pybo_raw_types(tokens: List[PyboToken]) -> DefaultDict[str, int]:
     return types
 
 
-def pybo_raw_content(tokens: List[PyboToken]) -> List[str]:
+def words_raw_text(tokens: List[PyboToken]) -> List[str]:
     return [t.text for t in tokens]
+
+
+def chunks_raw_text(tokens: List[(str, str)]) -> List[str]:
+    return [chunk for _, chunk in tokens]

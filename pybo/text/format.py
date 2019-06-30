@@ -3,6 +3,7 @@ from typing import List, DefaultDict, Tuple
 
 
 def plaintext(tokens: List[str], sep=' ') -> str:
+    tokens = [t.replace(' ', '_') for t in tokens]
     return sep.join(tokens)
 
 

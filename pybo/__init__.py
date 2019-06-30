@@ -13,8 +13,8 @@ from .modifytokens.splittingmatcher import SplittingMatcher
 from .modifytokens.tokenmerge import TokenMerge
 from .modifytokens.tokensplit import TokenSplit
 
-from .pipeline.pipelinebase import PipelineBase
-from .pipeline.pipeline import Pipeline
+from .text.pipelinebase import PipelineBase
+from .text.text import Text
 
 from .textunits.bostring import BoString
 from .textunits.bosyl import BoSyl

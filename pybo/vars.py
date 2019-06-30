@@ -1,5 +1,5 @@
 # coding: utf-8
-from enum import IntEnum
+from enum import IntEnum, Enum
 
 OOV = 'OOV'
 NON_WORD = 'NON_WORD'
@@ -63,3 +63,5 @@ WordMarkers = IntEnum('WordMarkers', [
     'NON_WORD'
 ], start=1000)
 word_values = {w.value: w.name for w in WordMarkers}
+
+Ids = Enum('Ids', ['name', 'profile', 'prep', 'tok', 'mod', 'form'])
