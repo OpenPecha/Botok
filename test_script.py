@@ -639,14 +639,14 @@ assert bt.has_word('གྲུབ་མཐའི་') == {'exists': True,
 bt.inflect_n_modify_trie('ཀ་ར་', skrt=True)
 assert bt.has_word('ཀ་རར་') == {'exists': True,
                               'data': {'_': {},
-                                       'affixation': {'len': 1, 'type': 'la', 'aa': False},
-                                       'skrt': True}}  # arrives here because skrt was True
+                              'affixation': {'len': 1, 'type': 'la', 'aa': False},
+                              'skrt': True}}  # arrives here because skrt was True
 
 bt.inflect_n_add_data('གྲུབ་མཐའ་\t532', 'freq')  # 'freq' is hard-coded in Trie, just as 'lemma' and 'pos' are
 assert bt.has_word('གྲུབ་མཐའི་') == {'exists': True,
                                 'data': {'_': {},
-                                         'affixation': {'len': 2, 'type': 'gi', 'aa': True},
-                                         'freq': 532}}  # freq is an int
+                                'affixation': {'len': 2, 'type': 'gi', 'aa': True},
+                                'freq': 532}}  # freq is an int
 
 # just like add() was not meant to be used directly, deactivate() is not
 bt.deactivate('ཀ་ར་')
@@ -890,132 +890,3 @@ token_list = tok.tokenize('བཀྲ་ཤིས་-པའོ།')
 token_list = [t for t in token_list if t.text != '-']  # remove the "-" inserted to ensure we have two tokens
 mp.merge(token_list)
 assert len(token_list) == 3 and token_list[0].text == 'བཀྲ་ཤིས་པ'
-
-##########################################################################################################
-# tests for cql.py adapted from https://github.com/proycon/pynlpl/blob/master/pynlpl/tests/cql.py
-##########################################################################################################
-
-tokens = [
-    {
-        'word': 'This',
-        'lemma': 'this',
-        'pos': 'det',
-    },
-    {
-        'word': 'is',
-        'lemma': 'be',
-        'pos': 'v',
-    },
-    {
-        'word': 'a',
-        'lemma': 'a',
-        'pos': 'det',
-    },
-    {
-        'word': 'first',
-        'lemma': 'first',
-        'pos': 'a',
-    },
-    {
-        'word': 'test',
-        'lemma': 'test',
-        'pos': 'n',
-    },
-    {
-        'word': 'of',
-        'lemma': 'dit',
-        'pos': 'prep',
-    },
-    {
-        'word': 'the',
-        'lemma': 'the',
-        'pos': 'det',
-    },
-    {
-        'word': 'new',
-        'lemma': 'new',
-        'pos': 'a',
-    },
-    {
-        'word': 'module',
-        'lemma': 'module',
-        'pos': 'n',
-    },
-    {
-        'word': '.',
-        'lemma': '.',
-        'pos': 'punc',
-    },
-]
-from pybo.third_party.pynpl import cql
-
-# def test1(self):
-q = cql.Query("\"the\"")
-result = q(tokens)
-assert 1 == len(result) #one result
-assert 1 == len(result[0]) #result 1 consists of one word
-assert "the" == result[0][0]['word']
-
-# def test2(self):
-q = cql.Query("[ pos = \"det\" ]")
-result = q(tokens)
-assert 3 == len(result)
-assert "This" == result[0][0]['word']
-assert "a" == result[1][0]['word']
-assert "the" == result[2][0]['word']
-
-# def test3(self):
-q = cql.Query("[ pos = \"det\" ] [ pos = \"a\" ] [ pos = \"n\" ]")
-result = q(tokens)
-assert 2 == len(result)
-assert "a" == result[0][0]['word']
-assert "first" == result[0][1]['word']
-assert "test" == result[0][2]['word']
-assert "the" == result[1][0]['word']
-assert "new" == result[1][1]['word']
-assert "module" == result[1][2]['word']
-
-# def test4(self):
-q = cql.Query("[ pos = \"det\" ] [ pos = \"a\" ]? [ pos = \"n\" ]")
-result = q(tokens)
-assert 2 == len(result)
-assert "a" == result[0][0]['word']
-assert "first" == result[0][1]['word']
-assert "test" == result[0][2]['word']
-assert "the" == result[1][0]['word']
-assert "new" == result[1][1]['word']
-assert "module" == result[1][2]['word']
-
-# def test5(self):
-q = cql.Query("[ pos = \"det\" ] []? [ pos = \"n\" ]")
-result = q(tokens)
-assert 2 == len(result)
-assert "a" == result[0][0]['word']
-assert "first" == result[0][1]['word']
-assert "test" == result[0][2]['word']
-assert "the" == result[1][0]['word']
-assert "new" == result[1][1]['word']
-assert "module" == result[1][2]['word']
-
-# def test6(self):
-q = cql.Query("[ pos = \"det\" ] []+ [ pos = \"n\" ]")
-result = q(tokens)
-assert 2 == len(result)
-assert "a" == result[0][0]['word']
-assert "first" == result[0][1]['word']
-assert "test" == result[0][2]['word']
-assert "the" == result[1][0]['word']
-assert "new" == result[1][1]['word']
-assert "module" == result[1][2]['word']
-
-# def test7(self):
-q = cql.Query("[ pos = \"det\" ] []* [ pos = \"n\" ]")
-result = q(tokens)
-assert 2 == len(result)
-assert "a" == result[0][0]['word']
-assert "first" == result[0][1]['word']
-assert "test" == result[0][2]['word']
-assert "the" == result[1][0]['word']
-assert "new" == result[1][1]['word']
-assert "module" == result[1][2]['word']
-

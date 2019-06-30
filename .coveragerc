@@ -1,0 +1,5 @@
+# .coveragerc to control coverage.py
+[run]
+omit =
+    pybo/third_party/pynpl/cql.py
+    pybo/third_party/pynpl/fsa.py
