@@ -1,6 +1,3 @@
-# PYBO - Tibetan NLP in Python
-[![Build Status](https://travis-ci.org/Esukhia/pybo.svg?branch=master)](https://travis-ci.org/Esukhia/pybo)  [![Coverage Status](https://coveralls.io/repos/github/Esukhia/pybo/badge.svg?branch=master)](https://coveralls.io/github/Esukhia/pybo?branch=master)
-
 ## Overview
 
 pybo is a word tokenizer for the Tibetan language written in Python. pybo takes in chunks of text and returns lists of words. It provides an easy-to-use, high-performance tokenization pipeline that can serve as a stand-alone solution or be adapted as a compliment.
