@@ -1,5 +1,5 @@
 # coding: utf-8
-from typing import List, DefaultDict, NewType
+from typing import List, DefaultDict, NewType, Tuple
 from collections import defaultdict
 
 from ..third_party.has_skrt_syl import has_skrt_syl
@@ -63,5 +63,5 @@ def words_raw_text(tokens: List[PyboToken]) -> List[str]:
     return [t.text for t in tokens]
 
 
-def chunks_raw_text(tokens: List[(str, str)]) -> List[str]:
-    return [t[1] for t in tokens]
+def chunks_raw_text(tokens: List[Tuple[str, str]]) -> List[str]:
+    return [chunk for _, chunk in tokens]
