@@ -64,6 +64,8 @@ class Text:
             if out_file:
                 assert isinstance(out_file, Path)
                 self.out_file = out_file
+            else:
+                self.out_file = None
         elif isinstance(input, Path):
             if not out_file:
                 self.out_file = Path.cwd() / f'{input.stem}_pybo{input.suffix}'
@@ -108,20 +110,20 @@ class Text:
 
     @staticmethod
     def __create_pipeline(preprocessor, tokenizer, modifier, formatter, wordtok_profile=None):
-        profile = {Ids.name: {}}
-        pipes = {}
+        profile = {}
+        pipes = {'prep': {}, 'tok': {}, 'mod': {}, 'form': {}}
         for a, b, c in [('prep', Ids.prep, preprocessor), ('tok', Ids.tok, tokenizer), ('mod', Ids.mod, modifier),
                         ('form', Ids.form, formatter)]:
             if isinstance(c, FunctionType):
                 pipes[a].update({b: c})
-                profile[Ids.name][a] = b
+                profile[a] = b
             elif isinstance(c, str):
-                profile[Ids.name][a] = c
+                profile[a] = c
                 assert c in builtin_pipes[a]
                 pipes[a][c] = builtin_pipes[a][c]
             else:
                 raise SyntaxError('Should be either a function or a string')
 
         if wordtok_profile and isinstance(wordtok_profile, str):
-            profile[Ids.name]['wordtok_profile'] = wordtok_profile
+            profile['wordtok_profile'] = wordtok_profile
         return profile, pipes

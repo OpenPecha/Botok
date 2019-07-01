@@ -33,24 +33,24 @@ class Trie(BasicTrie):
         self.tmp_inflected = dict()
 
     def _load_trie(self):
-        print('Loading Trie...', end=' ')
+        print('Loading Trie...', end=' ', flush=True)
         start = time.time()
         with self.pickled_file.open('rb') as f:
             self.head = pickle.load(f)
         end = time.time()
-        print('({:.0f}s.)'.format(end - start))
+        print('({:.0f}s.)'.format(end - start), flush=True)
 
     def _build_trie(self):
         """
         """
-        print('Building Trie...', end=' ')
+        print('Building Trie...', end=' ', flush=True)
         start = time.time()
         self._populate_trie(self.main_data)
 
         with self.pickled_file.open('wb') as f:
             pickle.dump(self.head, f, pickle.HIGHEST_PROTOCOL)
         end = time.time()
-        print('({:.0f} s.)'.format(end - start))
+        print('({:.0f} s.)'.format(end - start), flush=True)
 
     def _populate_trie(self, files):
         # first populate the trie with words

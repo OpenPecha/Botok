@@ -25,7 +25,7 @@ class PipelineBase:
 
         self.config = Config('pybo.yaml')
 
-        self.parse_profile(self.config.config['pipeline'][profile])
+        self.parse_profile(profile)
 
     def pipe_str(self, text: str) -> str:
         # a. preprocessing
