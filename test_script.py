@@ -659,3 +659,65 @@ token_list = [t for t in token_list if t.text != '-']  # remove the "-" inserted
 mp.merge(token_list)
 len(token_list)
 token_list[0].text
+
+
+##########################################################################################################
+# test_text.py
+##########################################################################################################
+
+
+in_str = "ལེ གས། བཀྲ་ཤིས་མཐའི་ ༆ ཤི་བཀྲ་ཤིས་  tr བདེ་་ལེ གས། བཀྲ་ཤིས་བདེ་ལེགས་༡༢༣ཀཀ། མཐའི་རྒྱ་མཚོར་གནས་པའི་ཉས་ཆུ་འཐུང་།། །།མཁའ།"
+
+
+# def test_simple_usage():
+# instanciating the Text object
+t = Text(in_str)
+
+# get builtin properties
+t.tokenize_chunks_plaintext
+
+t.tokenize_on_spaces
+
+t.tokenize_words_raw_text
+
+t_lines = Text(in_str + '\n' + in_str)
+t_lines.tokenize_words_raw_lines
+
+# note: see in the console that the trie was only loaded once: lru_cache ensures we only load it once,
+# even over different instances of Text class
+
+t.list_word_types
+# calculates the frequency of words in the text
+
+# now, run Text on a file. (using tokenize_chunks_plaintext property to test the feature because it is fast)
+in_file = Path(__file__).parent / "tests" / "resources" / 'test_file_to_tokenize.txt'
+t = Text(in_file)
+t.tokenize_chunks_plaintext
+out_file = in_file.parent / (in_file.stem + '_pybo' + in_file.suffix)  # see inside code for naming convention
+assert out_file.is_file()
+# the file has been written
+
+# def test_advanced_features():
+########################################
+# 1. instanciating with a custom profile
+t = Text(in_str, tok_params={'profile': 'GMD'})
+t.tokenize_words_raw_text
+
+# instanciating with a custom profile. tok_params can receive all the supported arguments of WordTokenizer
+tt = Text(in_str, tok_params={'profile': 'GMD', 'modifs': Path(__file__).parent / 'tests' / 'trie_data'})
+tt.tokenize_words_raw_text
+
+#############################
+# 2. adding a custom pipeline
+def custom_tokenizer(string):
+    return string.split(' ')  # simply reimplementing the space-tokenizer
+
+def custom_modifier(tokens):
+    return ['__' + t + '__' for t in tokens]
+
+def custom_formatter(tokens):
+    return '\n'.join(tokens)
+
+t = Text(in_str)
+t.custom_pipeline('dummy', custom_tokenizer, custom_modifier, custom_formatter)
+# note how you pass the names of the functions you declare, without parens

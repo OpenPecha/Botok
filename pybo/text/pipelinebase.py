@@ -29,32 +29,32 @@ class PipelineBase:
             text = self.pipes['prep'][self.prep](text)
 
         # b. tokenizing
-        if self.tok_params:
+        if isinstance(self.tok, str) and 'word' in self.tok and self.tok_params:
+            modifs = self.tok_params['modifs'] if 'modifs' in self.tok_params else None
+            mode = self.tok_params['mode'] if 'mode' in self.tok_params else 'internal'
             elts = self.pipes['tok'][self.tok](text,
                                                self.tok_params['profile'],
-                                               modifs=self.tok_params['modifs'],
-                                               mode=self.tok_params['mode'])
+                                               modifs=modifs,
+                                               mode=mode)
         else:
             elts = self.pipes['tok'][self.tok](text)
 
-        # c. processing
-        proc = self.pipes['mod'][self.mod]
-        if self.mod.endswith('concs'):
-            elts = proc(elts, left=self.left, right=self.right)
+        # c. modifying
+        mod = self.pipes['mod'][self.mod]
+        if isinstance(self.mod, str) and self.mod.endswith('concs'):
+            elts = mod(elts, left=self.left, right=self.right)
         else:
-            elts = proc(elts)
+            elts = mod(elts)
 
         # d. formatting
         elts = self.pipes['form'][self.form](elts)
 
         return elts
 
-    def pipe_file(self, filename: str, out_folder: str):
+    def pipe_file(self, filename: str, out_file: str):
         in_file = Path(filename)
-        out_dir = Path(out_folder)
+        out_file = Path(out_file)
         assert in_file.is_file()
-        out_dir.mkdir(exist_ok=True)
-        out_file = out_dir / in_file.name
 
         with in_file.open(encoding='utf-8-sig') as f:
             dump = f.read()

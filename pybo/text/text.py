@@ -107,7 +107,7 @@ class Text:
     @property
     def list_word_types(self):
         config = {'profile': 'GMD'}
-        return self.__process('basic_keeps_lines', 'chunk_tok', 'words_raw_types', 'stats_types', tok_params=config)
+        return self.__process('basic_keeps_lines', 'word_tok', 'words_raw_types', 'stats_types', tok_params=config)
 
     def custom_pipeline(self, preprocessor, tokenizer, modifier, formatter, tok_params=None):
         """
@@ -116,10 +116,10 @@ class Text:
         return self.__process(preprocessor, tokenizer, modifier, formatter, tok_params)
 
     def __process(self, preprocessor, tokenizer, modifier, formatter, tok_params=None):
-        if self.tok_params:
-            tok_params.update(self.tok_params)
+        if tok_params:
+            self.tok_params.update(tok_params)
 
-        profile, pipes = self.__create_pipeline(preprocessor, tokenizer, modifier, formatter, tok_params)
+        profile, pipes = self.__create_pipeline(preprocessor, tokenizer, modifier, formatter, self.tok_params)
         pipeline = PipelineBase(profile, pipes=pipes)
 
         if self.out_file:
