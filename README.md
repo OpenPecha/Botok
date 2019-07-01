@@ -1,7 +1,7 @@
 <a href="https://pybo.readthedocs.io/en/latest/overview/getstarted.html" > <img src=https://user-images.githubusercontent.com/17675331/60292845-a66b6400-9950-11e9-883b-27d366863e3b.png width=150> </a>
 
 # PYBO - Tibetan NLP in Python
-[![Build Status](https://travis-ci.org/Esukhia/pybo.svg?branch=master)](https://travis-ci.org/Esukhia/pybo)  [![Coverage Status](https://coveralls.io/repos/github/Esukhia/pybo/badge.svg?branch=master&kill_cache=1)](https://coveralls.io/github/Esukhia/pybo?branch=master)
+[![Build Status](https://travis-ci.org/Esukhia/pybo.svg?branch=master)](https://travis-ci.org/Esukhia/pybo)  [![Coverage Status](https://coveralls.io/repos/github/Esukhia/pybo/badge.svg?branch=master&kill_cache=1)](https://coveralls.io/github/Esukhia/pybo?branch=master) ![GitHub release](https://img.shields.io/github/release/Esukhia/pybo.svg)
 
 ## Overview
 
