@@ -17,4 +17,5 @@ script:
  - coverage run --source=pybo ./test_script.py
  - cd tests/
  - python3 -m pytest
+ - cd ../
 after_success: coveralls
