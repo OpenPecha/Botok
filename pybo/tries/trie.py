@@ -2,6 +2,7 @@
 import time
 import pickle
 from pathlib import Path
+import yaml
 
 from .basictrie import BasicTrie, Node
 from ..chunks.chunks import TokChunks
@@ -120,6 +121,32 @@ class Trie(BasicTrie):
                     self.add(infl, data=data)
 
     def inflect_n_add_data(self, line, info):
+        if info == 'lemma':
+            loaded = yaml.safe_load(line)
+            pairs = []
+            for lemma, forms in loaded.items():
+                # clean lemma. if there is no tibetan text, lemma is left as-is
+                l_syls = TokChunks(lemma).get_syls()
+                if l_syls:
+                    lemma = self.__join_syls(l_syls)
+
+                for f in forms:
+                    pairs.append((f, lemma))
+        else:
+            pairs = [self.__parse_line(line)]
+
+        for word, data in pairs:
+            data = data.strip()
+            if info == 'freq':
+                data = int(data)
+            inflected = self._get_inflected(word)
+            if not inflected:
+                return
+
+            for infl, _ in inflected:
+                self.add_data(infl, {info: data})
+
+    def inflect_n_add_lemmas(self, line, info):
         word, data = self.__parse_line(line)
         data = data.strip()
         if info == 'freq':

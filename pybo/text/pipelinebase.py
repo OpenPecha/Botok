@@ -13,11 +13,11 @@ class PipelineBase:
 
         self.left = 5
         self.right = 5
-        self.prof = None
+        self.tok_params = None
         self.filename = None  # for an advanced mode, to show what conc comes from which file
 
         self.args_list = {'prep', 'tok', 'mod', 'form',  # components
-                          'wordtok_profile',                # pybo
+                          'tok_params',                  # pybo
                           'left', 'right',               # concs
                           'filename'}                    # others
 
@@ -29,8 +29,11 @@ class PipelineBase:
             text = self.pipes['prep'][self.prep](text)
 
         # b. tokenizing
-        if self.prof:
-            elts = self.pipes['tok'][self.tok](text, self.prof)
+        if self.tok_params:
+            elts = self.pipes['tok'][self.tok](text,
+                                               self.tok_params['profile'],
+                                               modifs=self.tok_params['modifs'],
+                                               mode=self.tok_params['mode'])
         else:
             elts = self.pipes['tok'][self.tok](text)
 
@@ -71,8 +74,8 @@ class PipelineBase:
                 self.mod = v
             elif arg == 'form':
                 self.form = v
-            elif arg == 'wordtok_profile':
-                self.prof = v
+            elif arg == 'tok_params':
+                self.tok_params = v
             elif arg == 'left':
                 self.left = v
             elif arg == 'right':

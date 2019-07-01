@@ -52,14 +52,26 @@ class Text:
         - subclassing Text class
         - creating a new @property method like the built in ones while providing your own arguments to self.__process()
     """
-    def __init__(self, input, out_file=None):
+    def __init__(self, input, out_file=None, tok_params=None):
         """
         if input == str: return a string
         if input == Path:
                             1. out_file != None: write to given Path object
                             2. out_file == None: write to cwd and append "_pybo" to file name
+
+        custom_tok: settings for building the custom tokenizer: see docstring of Config class in config.py
         """
         self.input = input
+
+        self.tok_params = {'profile': None, 'modifs': None, 'mode': 'internal'}
+        if tok_params:
+            # check that provided tok_params is well formatted
+            assert isinstance(tok_params, dict)
+            assert 'profile' in list(tok_params)
+            for arg in tok_params:
+                assert arg in ['profile', 'modifs', 'mode']
+            self.tok_params.update(tok_params)
+
         if isinstance(input, str):
             if out_file:
                 assert isinstance(out_file, Path)
@@ -68,7 +80,7 @@ class Text:
                 self.out_file = None
         elif isinstance(input, Path):
             if not out_file:
-                self.out_file = Path.cwd() / f'{input.stem}_pybo{input.suffix}'
+                self.out_file = input.parent / f'{input.stem}_pybo{input.suffix}'
             else:
                 self.out_file = out_file
         else:
@@ -80,11 +92,13 @@ class Text:
 
     @property
     def tokenize_words_raw_text(self):
-        return self.__process('basic_cleanup', 'word_tok', 'words_raw_text', 'plaintext', wordtok_profile='GMD')
+        config = {'profile': 'GMD'}
+        return self.__process('basic_cleanup', 'word_tok', 'words_raw_text', 'plaintext', tok_params=config)
 
     @property
     def tokenize_words_raw_lines(self):
-        return self.__process('basic_keeps_lines', 'word_tok', 'words_raw_text', 'plaintext', wordtok_profile='GMD')
+        config = {'profile': 'GMD'}
+        return self.__process('basic_keeps_lines', 'word_tok', 'words_raw_text', 'plaintext', tok_params=config)
 
     @property
     def tokenize_chunks_plaintext(self):
@@ -92,24 +106,29 @@ class Text:
 
     @property
     def list_word_types(self):
-        return self.__process('basic_keeps_lines', 'chunk_tok', 'words_raw_types', 'stats_types', wordtok_profile='GMD')
+        config = {'profile': 'GMD'}
+        return self.__process('basic_keeps_lines', 'chunk_tok', 'words_raw_types', 'stats_types', tok_params=config)
 
-    def custom_pipeline(self, preprocessor, tokenizer, modifier, formatter, wordtok_profile=None):
+    def custom_pipeline(self, preprocessor, tokenizer, modifier, formatter, tok_params=None):
         """
         every pipe should be either the name of an existing pipe as found in builtin_pipes or a function
         """
-        return self.__process(preprocessor, tokenizer, modifier, formatter, wordtok_profile)
+        return self.__process(preprocessor, tokenizer, modifier, formatter, tok_params)
 
-    def __process(self, preprocessor, tokenizer, modifier, formatter, wordtok_profile=None):
-        profile, pipes = self.__create_pipeline(preprocessor, tokenizer, modifier, formatter, wordtok_profile)
+    def __process(self, preprocessor, tokenizer, modifier, formatter, tok_params=None):
+        if self.tok_params:
+            tok_params.update(self.tok_params)
+
+        profile, pipes = self.__create_pipeline(preprocessor, tokenizer, modifier, formatter, tok_params)
         pipeline = PipelineBase(profile, pipes=pipes)
+
         if self.out_file:
             return pipeline.pipe_file(self.input, self.out_file)
         else:
             return pipeline.pipe_str(self.input)
 
     @staticmethod
-    def __create_pipeline(preprocessor, tokenizer, modifier, formatter, wordtok_profile=None):
+    def __create_pipeline(preprocessor, tokenizer, modifier, formatter, tok_params=None):
         profile = {}
         pipes = {'prep': {}, 'tok': {}, 'mod': {}, 'form': {}}
         for a, b, c in [('prep', Ids.prep, preprocessor), ('tok', Ids.tok, tokenizer), ('mod', Ids.mod, modifier),
@@ -124,6 +143,6 @@ class Text:
             else:
                 raise SyntaxError('Should be either a function or a string')
 
-        if wordtok_profile and isinstance(wordtok_profile, str):
-            profile['wordtok_profile'] = wordtok_profile
+        if tok_params:
+            profile['tok_params'] = tok_params
         return profile, pipes

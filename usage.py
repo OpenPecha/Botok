@@ -1,11 +1,13 @@
+from pathlib import Path
+
 from pybo import *
 
 
 ###########################################
 in_str = "ལེ གས། བཀྲ་ཤིས་མཐའི་ ༆ ཤི་བཀྲ་ཤིས་  tr བདེ་་ལེ གས། བཀྲ་ཤིས་བདེ་ལེགས་༡༢༣ཀཀ། མཐའི་རྒྱ་མཚོར་གནས་པའི་ཉས་ཆུ་འཐུང་།། །།མཁའ།"
-t = Text(in_str)
+t = Text(in_str, tok_params={'profile': 'GMD'})
 tokens = t.tokenize_words_raw_text
-tt = Text(in_str)
+tt = Text(in_str, tok_params={'profile': 'GMD', 'modifs': Path(__file__).parent / 'tests' / 'trie_data'})
 ttokens = tt.tokenize_words_raw_text
 print(tokens)
 print(ttokens)

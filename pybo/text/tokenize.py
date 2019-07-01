@@ -16,14 +16,14 @@ def space_tok(text: str) -> List[str]:
     return text.split(' ')
 
 
-def word_tok(text: str, profile: str) -> List[PyboToken]:
-    tok = get_wordtokenizer(profile)
+def word_tok(text: str, profile, modifs=None, mode='internal') -> List[PyboToken]:
+    tok = get_wordtokenizer(profile, modifs, mode)
     return tok.tokenize(text)
 
 
 @lru_cache(maxsize=None)  # <--- make sure that the trie is only built once then kept in memory
-def get_wordtokenizer(profile):
-    return WordTokenizer(profile)
+def get_wordtokenizer(profile, modifs, mode):
+    return WordTokenizer(profile, modifs=modifs, mode=mode)
 
 
 def chunk_tok(text: str) -> List[str]:

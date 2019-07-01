@@ -14,7 +14,7 @@ from ..vars import TSEK, AA
 part_lemmas = {}
 filename = Path(__file__).parent.parent / 'resources' / 'lemmas' / 'particles.yaml'
 with filename.open('r', encoding='utf-8-sig') as f:
-    parsed_yaml = yaml.load(f.read(), Loader=yaml.SafeLoader)
+    parsed_yaml = yaml.safe_load(f.read())
     for lemma, forms in parsed_yaml.items():
         for form in forms:
             part_lemmas[form] = lemma
