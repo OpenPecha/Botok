@@ -64,4 +64,4 @@ WordMarkers = IntEnum('WordMarkers', [
 ], start=1000)
 word_values = {w.value: w.name for w in WordMarkers}
 
-Ids = Enum('Ids', ['name', 'profile', 'prep', 'tok', 'mod', 'form'])
+Ids = Enum('Ids', ['profile', 'prep', 'tok', 'mod', 'form'])
