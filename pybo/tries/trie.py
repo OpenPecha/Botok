@@ -146,18 +146,6 @@ class Trie(BasicTrie):
             for infl, _ in inflected:
                 self.add_data(infl, {info: data})
 
-    def inflect_n_add_lemmas(self, line, info):
-        word, data = self.__parse_line(line)
-        data = data.strip()
-        if info == 'freq':
-            data = int(data)
-        inflected = self._get_inflected(word)
-        if not inflected:
-            return
-
-        for infl, _ in inflected:
-            self.add_data(infl, {info: data})
-
     def _get_inflected(self, word):
         """
         gets the clean syls using TokChunks(), then inflects the last syl using BoSyl.get_all_affixed()

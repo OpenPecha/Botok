@@ -459,7 +459,8 @@ config = Config()
 
 # def test_createtrie():
 profile = 'empty'
-main, custom = config.get_tok_data_paths(profile)
+modifs = Path(__file__).parent / "tests" / "trie_data"
+main, custom = config.get_tok_data_paths(profile, modifs=modifs)
 bt = Trie(BoSyl, profile, main, custom)
 
 # the trie works as expected. but the add() method should never be used directly:
