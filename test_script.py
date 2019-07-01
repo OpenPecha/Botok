@@ -721,3 +721,7 @@ def custom_formatter(tokens):
 t = Text(in_str)
 t.custom_pipeline('dummy', custom_tokenizer, custom_modifier, custom_formatter)
 # note how you pass the names of the functions you declare, without parens
+
+t.custom_pipeline('dummy', 'word_tok', 'words_error_concs', 'basic_concs')
+
+t.custom_pipeline('dummy', 'word_tok', 'words_error_types', 'stats_types')

@@ -19,8 +19,9 @@ def test_config():
     # custom files to overwrite the existing trie can be added as follows
     assert len(custom) == 0
     main, custom = config.get_tok_data_paths('POS', modifs='trie_data/')
-    assert [c for c in custom] == ['lexica_bo', 'lemmas'] == [t.parts[-1] for t in Path('trie_data/').glob('*')]
+    expected = sorted(['lexica_bo', 'pos', 'deactivate', 'lemmas', 'frequencies', 'lexica_skrt'])
+    assert expected == sorted([c for c in custom]) == sorted([t.parts[-1] for t in Path('trie_data/').glob('*')])
 
     # overwriting the main profile
     main, custom = config.get_tok_data_paths('trie_data/', mode='custom')
-    assert [m for m in main] == ['lexica_bo', 'lemmas']
+    assert expected == sorted([m for m in main])

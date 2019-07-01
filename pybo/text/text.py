@@ -62,15 +62,16 @@ class Text:
         custom_tok: settings for building the custom tokenizer: see docstring of Config class in config.py
         """
         self.input = input
+        if tok_params is None:
+            self.tok_params = {'profile': 'POS', 'modifs': None, 'mode': 'internal'}
 
-        self.tok_params = {'profile': None, 'modifs': None, 'mode': 'internal'}
-        if tok_params:
+        else:
             # check that provided tok_params is well formatted
             assert isinstance(tok_params, dict)
             assert 'profile' in list(tok_params)
             for arg in tok_params:
                 assert arg in ['profile', 'modifs', 'mode']
-            self.tok_params.update(tok_params)
+            self.tok_params = tok_params
 
         if isinstance(input, str):
             if out_file:
@@ -118,7 +119,7 @@ class Text:
     def __process(self, preprocessor, tokenizer, modifier, formatter, tok_params=None):
         if tok_params:
             for k, v in tok_params.items():
-                if k not in self.tok_params:
+                if k not in self.tok_params or self.tok_params[k] is None:
                     self.tok_params[k] = v
 
         profile, pipes = self.__create_pipeline(preprocessor, tokenizer, modifier, formatter, self.tok_params)

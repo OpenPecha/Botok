@@ -20,14 +20,14 @@ def test_simple_usage():
     # re-joins with a space, so it seems to only have replaces multiple spaces by single space (done in preprocessing)
 
     words = t.tokenize_words_raw_text
-    assert words == 'ལེ_གས །_ བཀྲ་ཤིས་ མཐ འི་ _༆_ ཤི་ བཀྲ་ཤིས་_ tr_ བདེ་་ལེ_གས །_ བཀྲ་ཤིས་བདེ་ལེགས་ ༡༢༣ ཀཀ །_ མཐ འི་ རྒྱ་མཚོ ར་ གནས་པ འི་ ཉ ས་ ཆུ་ འཐུང་ །།_།། མཁའ །'
+    assert words == 'ལེ_གས །_ བཀྲ་ཤིས་ མཐ འི་ _༆_ ཤི་ བཀྲ་ཤིས་_ tr_ བདེ་་ལེ_གས །_ བཀྲ་ཤིས་ བདེ་ལེགས་ ༡༢༣ ཀཀ །_ མཐ འི་ རྒྱ་མཚོ ར་ གནས་པ འི་ ཉ ས་ ཆུ་ འཐུང་ །།_།། མཁའ །'
     # replaces all spaces in the input with "_" so the output is splittable with a space
 
     t_lines = Text(in_str + '\n' + in_str)
     with_lines = t_lines.tokenize_words_raw_lines
     assert with_lines == dedent("""\
-        ལེ_གས །_ བཀྲ་ཤིས་ མཐ འི་ _༆_ ཤི་ བཀྲ་ཤིས་__ tr_ བདེ་་ལེ_གས །_ བཀྲ་ཤིས་བདེ་ལེགས་ ༡༢༣ ཀཀ །_ མཐ འི་ རྒྱ་མཚོ ར་ གནས་པ འི་ ཉ ས་ ཆུ་ འཐུང་ །།_།། མཁའ །
-         ལེ_གས །_ བཀྲ་ཤིས་ མཐ འི་ _༆_ ཤི་ བཀྲ་ཤིས་__ tr_ བདེ་་ལེ_གས །_ བཀྲ་ཤིས་བདེ་ལེགས་ ༡༢༣ ཀཀ །_ མཐ འི་ རྒྱ་མཚོ ར་ གནས་པ འི་ ཉ ས་ ཆུ་ འཐུང་ །།_།། མཁའ །""")
+        ལེ_གས །_ བཀྲ་ཤིས་ མཐ འི་ _༆_ ཤི་ བཀྲ་ཤིས་__ tr_ བདེ་་ལེ_གས །_ བཀྲ་ཤིས་ བདེ་ལེགས་ ༡༢༣ ཀཀ །_ མཐ འི་ རྒྱ་མཚོ ར་ གནས་པ འི་ ཉ ས་ ཆུ་ འཐུང་ །།_།། མཁའ །
+         ལེ_གས །_ བཀྲ་ཤིས་ མཐ འི་ _༆_ ཤི་ བཀྲ་ཤིས་__ tr_ བདེ་་ལེ_གས །_ བཀྲ་ཤིས་ བདེ་ལེགས་ ༡༢༣ ཀཀ །_ མཐ འི་ རྒྱ་མཚོ ར་ གནས་པ འི་ ཉ ས་ ཆུ་ འཐུང་ །།_།། མཁའ །""")
     # keeps returns from the input (only do this if you know words are not split over two lines)
 
     # note: see in the console that the trie was only loaded once: lru_cache ensures we only load it once,
@@ -37,15 +37,15 @@ def test_simple_usage():
     assert types == dedent("""\
                             ། 	3
                             འི་	3
+                            བཀྲ་ཤིས་	2
                             མཐ	2
                             ལེ གས	1
-                            བཀྲ་ཤིས་	1
                              ༆ 	1
                             ཤི་	1
                             བཀྲ་ཤིས་  	1
                             tr 	1
                             བདེ་་ལེ གས	1
-                            བཀྲ་ཤིས་བདེ་ལེགས་	1
+                            བདེ་ལེགས་	1
                             ༡༢༣	1
                             ཀཀ	1
                             རྒྱ་མཚོ	1
@@ -111,3 +111,14 @@ def test_advanced_features():
                             __བཀྲ་ཤིས་བདེ་ལེགས་༡༢༣ཀཀ།__
                             __མཐའི་རྒྱ་མཚོར་གནས་པའི་ཉས་ཆུ་འཐུང་།།__
                             __།།མཁའ།__""")
+
+    # or use other pipes
+    tokens = t.custom_pipeline('dummy', 'word_tok', 'words_error_concs', 'basic_concs')
+    assert tokens == '"བདེ་་ལེ གས། བཀྲ་ཤིས་བདེ་ལེགས་༡༢༣"\tཀཀ\t"། མཐའི་རྒྱ་མཚོར་"\n"གནས་པའི་ཉས་ཆུ་"\tའཐུང་\t"།། །།མཁའ།"'
+    # two non-words found
+
+    tokens = t.custom_pipeline('dummy', 'word_tok', 'words_error_types', 'stats_types')
+    assert tokens == dedent("""\
+                            ཀཀ	1
+                            འཐུང་	1""")
+    # the same non-words as before

@@ -65,6 +65,7 @@ class PipelineBase:
             g.write(output)
 
     def parse_profile(self, pipeline):
+        self.is_valid_params(pipeline)
         for arg, v in pipeline.items():
             if arg == 'prep':
                 self.prep = v
