@@ -117,7 +117,9 @@ class Text:
 
     def __process(self, preprocessor, tokenizer, modifier, formatter, tok_params=None):
         if tok_params:
-            self.tok_params.update(tok_params)
+            for k, v in tok_params.items():
+                if k not in self.tok_params:
+                    self.tok_params[k] = v
 
         profile, pipes = self.__create_pipeline(preprocessor, tokenizer, modifier, formatter, self.tok_params)
         pipeline = PipelineBase(profile, pipes=pipes)
