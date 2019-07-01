@@ -1,8 +1,6 @@
 # coding: utf-8
 from pathlib import Path
 
-from ..config import Config
-
 
 class PipelineBase:
     def __init__(self, profile, pipes=None):
@@ -22,8 +20,6 @@ class PipelineBase:
                           'wordtok_profile',                # pybo
                           'left', 'right',               # concs
                           'filename'}                    # others
-
-        self.config = Config('pybo.yaml')
 
         self.parse_profile(profile)
 
