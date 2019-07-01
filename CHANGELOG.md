@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.6.0](https://github.com/Esukhia/pybo/releases/tag/v0.6.0) - 20190701
+### Changed
+ * refactoring the Pipeline class into the Text class. check test_text.py to have an overview of what it does.
+
 ## [0.5.1](https://github.com/Esukhia/pybo/releases/tag/v0.5.1) - 20190629
 ### Added
  * Added a default profile to WordTokenizer so the end user can simply import it and run it without thinking about anything else.
