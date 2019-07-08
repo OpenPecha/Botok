@@ -1,7 +1,11 @@
-<a href="https://pybo.readthedocs.io/en/latest/overview/getstarted.html" > <img src=https://user-images.githubusercontent.com/17675331/60292845-a66b6400-9950-11e9-883b-27d366863e3b.png width=150> </a>
+<a href="https://upload.wikimedia.org/wikipedia/en/transcoded/4/4e/Parrot_sketch.ogg/Parrot_sketch.ogg.mp3" > <img src=https://user-images.githubusercontent.com/17675331/60292845-a66b6400-9950-11e9-883b-27d366863e3b.png width=150> </a>
 
 # PYBO - Tibetan NLP in Python
 [![Build Status](https://travis-ci.org/Esukhia/pybo.svg?branch=master)](https://travis-ci.org/Esukhia/pybo)  [![Coverage Status](https://coveralls.io/repos/github/Esukhia/pybo/badge.svg?branch=master&kill_cache=1)](https://coveralls.io/github/Esukhia/pybo?branch=master) ![GitHub release](https://img.shields.io/github/release/Esukhia/pybo.svg)
+
+<div><div class="mediaContainer" style="width:220px"><audio id="mwe_player_0" controls="" preload="none" style="width:220px" class="kskin" data-durationhint="31.205238095238" data-startoffset="0" data-mwtitle="Parrot_sketch.ogg" data-mwprovider="local"><source src="//upload.wikimedia.org/wikipedia/en/4/4e/Parrot_sketch.ogg" type="audio/ogg; codecs=&quot;vorbis&quot;" data-title="Original Ogg file (47 kbps)" data-shorttitle="Ogg source" data-width="0" data-height="0" data-bandwidth="47057" /><source src="//upload.wikimedia.org/wikipedia/en/transcoded/4/4e/Parrot_sketch.ogg/Parrot_sketch.ogg.mp3" type="audio/mpeg" data-title="MP3" data-shorttitle="MP3" data-transcodekey="mp3" data-width="0" data-height="0" data-bandwidth="118288" /><track src="/w/api.php?action=timedtext&amp;title=File%3AParrot_sketch.ogg&amp;lang=en&amp;trackformat=srt" kind="subtitles" type="text/x-srt" srclang="en" label="English (en) subtitles" data-dir="ltr" /></audio></div></div>
+
+
 
 ## Overview
 
