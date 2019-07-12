@@ -1,0 +1,36 @@
+results = list of tokens
+pos = 0
+while pos <= len(syllables)
+    matches = find all matches at current pos
+    if no match:
+        append non-word to results
+    elif one match:
+        append word to results
+    elif many matches:
+    paths = walk all paths(pos, paths)
+    chosen path = path with most frequent words
+    append chosen path to results
+    adjust pos according to chosen path
+
+return results
+#########################################
+
+walk all paths(paths):
+    if all paths are at the same pos OR all paths are closed:
+        return paths
+
+    least advanced path = find the path that went least far (closed paths are not available anymore)
+    matches = find matches
+    if no matches:
+        close this path
+        walk all paths
+
+    elif one match:
+        grow this path with one word
+        increment pos
+        walk all paths
+
+    elif many matches:
+        choose the most frequent match
+        grow this path with best match
+        walk all paths
