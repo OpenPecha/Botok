@@ -106,3 +106,4 @@ contributors:
  * [Ngawang Trinley](https://github.com/ngawangtrinley)
  * [Mikko Kotila](https://github.com/mikkokotila)
  * [Tenzin](https://github.com/10zinten)
+ * Joyce Mackzenzie for reworking the logo
