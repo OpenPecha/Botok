@@ -1,5 +1,6 @@
 # coding: utf8
 from pathlib import Path
+from collections import defaultdict
 
 from pybo import Trie, Config
 from pybo import BoSyl
@@ -40,3 +41,15 @@ def test_createtrie():
     # just like add() was not meant to be used directly, deactivate() is not
     bt.deactivate('ཀ་ར་')
     assert bt.has_word('ཀ་རར་')['exists'] is True
+
+
+def test_multiple_words_per_entry():
+    profile = 'POS'
+    modifs = Path(__file__).parent / 'trie_data'
+    main, custom = config.get_tok_data_paths(profile, modifs=modifs)
+    bt = Trie(BoSyl, profile, main, custom)
+
+    bt.inflect_n_modify_trie('ལྟ།')
+    bt.inflect_n_add_data('ལྟ། VERB', 'pos')
+    bt.inflect_n_add_data('ལྟར། ADV', 'pos')
+    print()
