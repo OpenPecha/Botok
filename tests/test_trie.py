@@ -49,7 +49,7 @@ def test_multiple_words_per_entry():
     main, custom = config.get_tok_data_paths(profile, modifs=modifs)
     bt = Trie(BoSyl, profile, main, custom)
 
-    bt.inflect_n_modify_trie('ལྟ།')
-    bt.inflect_n_add_data('ལྟ། VERB', 'pos')
-    bt.inflect_n_add_data('ལྟར། ADV', 'pos')
+    res = bt.has_word('ལྟར་')
+    assert {'lemma': 'ལྟ་', 'pos': 'VERB', 'freq': 123, 'affixed': True} in res['data']['meanings']
+    assert {'lemma': 'ལྟར་', 'pos': 'ADV', 'freq': 456, 'affixed': False} in res['data']['meanings']
     print()

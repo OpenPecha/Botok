@@ -121,6 +121,7 @@ class Trie(BasicTrie):
     def inflect_n_add_data(self, line, freq_only=False):
         form, lemma, pos, freq = self.__parse_line(line)
         freq = int(freq) if freq else None
+        lemma = self.__join_syls(TokChunks(lemma).get_syls()) if lemma else None
 
         inflected = self._get_inflected(form)
         if not inflected:
@@ -131,8 +132,9 @@ class Trie(BasicTrie):
             for infl, _ in inflected:
                 self.add_data(infl, freq)
         else:
-            data = {k: v for k, v in [('lemma', lemma), ('pos', pos), ('freq', freq)] if v}
             for infl, _ in inflected:
+                affixed = True if _ else False
+                data = {k: v for k, v in [('lemma', lemma), ('pos', pos), ('freq', freq), ('affixed', affixed)] if v is not None}
                 self.add_data(infl, data)
 
     def _get_inflected(self, word):

@@ -1,8 +1,6 @@
 # inflected-form<TAB>lemma<TAB>pos<TAB>freq
 # the inflected form is mandatory, the other fields are optional.
-ལྟར།	ལྟ།
-ལྟར།		VERB
-ལྟར།			123
+ལྟ།	ལྟ།	VERB	123
 ལྟར།	ལྟར།	ADV	456
 བཀྲ་ཤིས།	བཀྲ་ཤིས།
 བཀྲིས།	བཀྲ་ཤིས།
