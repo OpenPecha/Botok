@@ -5,7 +5,7 @@ from pybo import BasicTrie
 def test_trie():
     trie = BasicTrie()
 
-    # populate the basic lexica_bo
+    # populate the basic trie
     words = 'hello goo good goodbye help gerald gold tea ted team to too tom stan standard money'
     for w in words.split():
         trie.add(w)
@@ -14,35 +14,30 @@ def test_trie():
     assert trie.has_word('goodbye') == {'data': {'_': {}}, 'exists': True}
 
     # add content to data
-    trie.add_data('goodbye', {'POS': 'NOUN'})
-    assert trie.has_word('goodbye') == {'data': {'_': {}, 'POS': 'NOUN'}, 'exists': True}
+    trie.add_data('goodbye', {'pos': 'NOUN'})
+    assert trie.has_word('goodbye') == {'exists': True, 'data': {'_': {}, 'meanings': [{'pos': 'NOUN'}]}}
 
-    # only adds key/value pairs to the existing dict. does not replace the data variable
-    trie.add_data('goodbye', {}, overwrite=True)
-    assert trie.has_word('goodbye') == {'data': {'_': {}, 'POS': 'NOUN'}, 'exists': True}
+    # adding an empty dict to show it does not replace existing content but updates it
+    trie.add_data('goodbye', {})
+    assert trie.has_word('goodbye') == {'exists': True, 'data': {'_': {}, 'meanings': [{'pos': 'NOUN'}]}}
 
     # by default, overwrites existing dict values
-    trie.add_data('goodbye', {'POS': 'VERB', 'lang': 'en'})
-    assert trie.has_word('goodbye') == {'data': {'_': {}, 'POS': 'VERB', 'lang': 'en'}, 'exists': True}
+    trie.add_data('goodbye', {'pos': 'VERB', 'lemma': 'goodbye'})
+    assert trie.has_word('goodbye') == {'exists': True, 'data': {'_': {}, 'meanings': [{'pos': 'NOUN'}, {'pos': 'VERB', 'lemma': 'goodbye'}]}}
 
-    # can be set to not overwrite
-    trie.add_data('goodbye', {'POS': 'NOUN'}, overwrite=False)
-    assert trie.has_word('goodbye') == {'data': {'_': {}, 'POS': 'VERB', 'lang': 'en'}, 'exists': True}
-
-    # deactivates an entry in the lexica_bo, only modifying the Node.leaf value (bool) to be efficient
+    # deactivates an entry, only modifying the Node.leaf value (bool) instead of removing it from the trie.
     trie.deactivate('goodbye')
-    assert trie.has_word('goodbye') == {'data': {'_': {}, 'POS': 'VERB', 'lang': 'en'}, 'exists': False}
+    assert trie.has_word('goodbye') == {'exists': False, 'data': {'_': {}, 'meanings': [{'pos': 'NOUN'}, {'pos': 'VERB', 'lemma': 'goodbye'}]}}
 
     # reactivates the entry
     trie.deactivate('goodbye', rev=True)
-    assert trie.has_word('goodbye') == {'data': {'_': {}, 'POS': 'VERB', 'lang': 'en'}, 'exists': True}
+    assert trie.has_word('goodbye') == {'exists': True, 'data': {'_': {}, 'meanings': [{'pos': 'NOUN'}, {'pos': 'VERB', 'lemma': 'goodbye'}]}}
 
-    # walk() is used to externalize the walking of the lexica_bo
-    node = trie.head  # getting to the root of the lexica_bo
+    # walk() is used to externalize the walking of the trie
+    current_node = None  # setting an empty variable for the current node
     for char in 'goodbye':
-        if char in node.children:
-            node = node[char]  # one step down the lexica_bo
+        current_node = trie.walk(char, current_node)
 
-    assert node.label == 'e'  # last char of the word
-    assert node.leaf == True  # we reached the end of a word
-    assert node.data == {'_': {}, 'POS': 'VERB', 'lang': 'en'}
+    assert current_node.label == 'e'  # last char of the word
+    assert current_node.leaf is True  # we reached the end of a word
+    assert current_node.data == {'_': {}, 'meanings': [{'pos': 'NOUN'}, {'pos': 'VERB', 'lemma': 'goodbye'}]}

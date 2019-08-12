@@ -20,11 +20,12 @@ default_config = dedent('''\
         - &oral2 lexica_bo/oral_corpus_2.txt
         - &oral3 lexica_bo/oral_corpus_3.txt
         - &oral4 lexica_bo/recordings_4.txt
-        - &part lexica_bo/particles.txt
         - &mgd lexica_bo/mgd.txt
         - &verbs lexica_bo/verbs.txt
       skrt_files:
         - &skrt lexica_skrt/sanskrit.txt
+      non_inflected:
+        - &part lexica_non_inflected/particles.txt
       lem-pos-freq_files:
         - &lpf_soas lem_pos_freq/TiDC_corpus.csv
         - &lpf_part lem_pos_freq/particles.csv
@@ -102,11 +103,12 @@ class Config:
         assert dirpath.is_dir()
         bo = dirpath / 'lexica_bo'
         skrt = dirpath / 'lexica_skrt'
+        non_infl = dirpath / 'lexica_non_inflected'
         lem_pos_freq = dirpath / 'lem_pos_freq'
         freq = dirpath / 'frequencies'
         deact = dirpath / 'deactivate'
 
-        for p in [bo, skrt, lem_pos_freq, freq, deact]:
+        for p in [bo, skrt, non_infl, lem_pos_freq, freq, deact]:
             if p.is_dir():
                 for el in list(p.glob('*.txt')) + list(p.glob('*.csv')):
                     el = Path(__file__).parent / 'resources' / Path(el)

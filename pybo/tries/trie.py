@@ -2,7 +2,6 @@
 import time
 import pickle
 from pathlib import Path
-import yaml
 import csv
 
 from .basictrie import BasicTrie, Node
@@ -79,6 +78,9 @@ class Trie(BasicTrie):
                 if category == 'lexica_bo':
                     self.inflect_n_modify_trie(l)
 
+                elif category == 'lexica_non_inflected':
+                    self.add_non_inflectible(l)
+
                 elif category == 'lexica_skrt':
                     self.inflect_n_modify_trie(l, skrt=True)
 
@@ -94,6 +96,14 @@ class Trie(BasicTrie):
                 else:
                     raise SyntaxError('category is one of: lexica_bo, lexica_skrt, '
                                       'pos, lemmas, frequencies, deactivate')
+
+    def add_non_inflectible(self, word):
+        syls = TokChunks(word).get_syls()
+        if not syls:
+            return None
+
+        infl = self.__join_syls(syls)
+        self.add(infl)
 
     def inflect_n_modify_trie(self, word, deactivate=False, skrt=False):
         """

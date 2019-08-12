@@ -49,10 +49,11 @@ class WordTokenizer:
         if split_affixes:
             split_affixed(tokens)
 
+        self._get_default_lemma(tokens)
+
         # merge pa/po/ba/bo tokens with previous ones
         MergeDagdra().merge(tokens)
 
-        self._get_default_lemma(tokens)
         return tokens
 
     @staticmethod
@@ -62,12 +63,17 @@ class WordTokenizer:
             if not t.text_unaffixed:
                 continue
 
+            if t.affix and not t.affix_host:
+                part = ''.join([''.join(syl) for syl in t.syls])
+                lemma = part_lemmas[part] + TSEK
+            elif not t.affix and t.affix_host:
+                lemma = t.text_unaffixed + AA + TSEK if t.affixation['aa'] else t.text_unaffixed + TSEK
+            else:
+                lemma = t.text_unaffixed if t.text_unaffixed.endswith(TSEK) else t.text_unaffixed + TSEK
+
             # otherwise, check whether the aa needs to be added and if a tsek should be added
-            if not t.lemma and t.pos != 'NON_WORD':
-                if t.affix and not t.affix_host:
-                    part = ''.join([''.join(syl) for syl in t.syls])
-                    t.lemma = part_lemmas[part] + TSEK
-                elif not t.affix and t.affix_host:
-                    t.lemma = t.text_unaffixed + AA + TSEK if t.affixation['aa'] else t.text_unaffixed + TSEK
-                else:
-                    t.lemma = t.text_unaffixed if t.text_unaffixed.endswith(TSEK) else t.text_unaffixed + TSEK
+            for m in t.meanings:
+                if 'lemma' not in m and ('pos' in m and m['pos'] != 'NON_WORD'):
+                    m['lemma'] = lemma
+            if not t.meanings:
+                t.meanings.append({'lemma': lemma})

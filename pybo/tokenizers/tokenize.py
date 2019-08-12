@@ -152,14 +152,18 @@ class Tokenize:
     def add_found_word_or_non_word(self, c_idx, match_data, syls, tokens, has_decremented=False):
         # there is a match
         if c_idx in match_data.keys():
-            tokens.append(self.chunks_to_token(syls, match_data[c_idx]))
+            data = match_data[c_idx]
+            ttype = w.OOV.name if 'meanings' not in data or len([True for m in data['meanings'] if 'pos' in m]) <= 0 else None
+            tokens.append(self.chunks_to_token(syls, data, ttype=ttype))
         elif any(match_data.values()):
             non_max_idx = sorted(match_data.keys())[-1]
             non_max_syls = []
             for syl in syls:
                 if syl <= non_max_idx:
                     non_max_syls.append(syl)
-            tokens.append(self.chunks_to_token(non_max_syls, match_data[non_max_idx]))
+            data = match_data[non_max_idx]
+            ttype = w.OOV.name if 'meanings' not in data or len([True for m in data['meanings'] if 'pos' in m]) <= 0 else None
+            tokens.append(self.chunks_to_token(non_max_syls, data, ttype=ttype))
             c_idx = non_max_idx
         else:
             # add first syl in syls as non-word
@@ -183,7 +187,12 @@ class Tokenize:
             token_start = self.pre_processed.chunks[syls[0]][1][1]
             token_length = self.pre_processed.chunks[syls[0]][1][2]
             if ttype:
-                data['pos'] = ttype
+                if 'meanings' not in data:
+                    data['meanings'] = [{'pos': ttype}]
+                else:
+                    for m in data['meanings']:
+                        if 'pos' not in m:
+                            m['pos'] = ttype
 
             return self.create_token(token_type, token_start, token_length, token_syls, data)
         elif len(syls) > 1:
@@ -194,7 +203,12 @@ class Tokenize:
             for i in syls:
                 token_length += self.pre_processed.chunks[i][1][2]
             if ttype:
-                data['pos'] = ttype
+                if 'meanings' not in data:
+                    data['meanings'] = [{'pos': ttype}]
+                else:
+                    for m in data['meanings']:
+                        if 'pos' not in m:
+                            m['pos'] = ttype
 
             return self.create_token(token_type, token_start, token_length, token_syls, data)
         else:
@@ -222,10 +236,7 @@ class Tokenize:
         token.char_types = [a[char_groups[idx]] for idx in sorted(char_groups.keys())]
         for k, v in data.items():
             token[k] = v
-        token.skrt = self.is_sanskrit(char_groups, token.text)
-        if 'affixation' in data:
-            token.affix_host = True
-            token.affix = True
+        token.skrt = self.is_sanskrit(char_groups, token.text) if not token.skrt else token.skrt
         return token
 
     def is_sanskrit(self, char_groups, word):
@@ -239,4 +250,4 @@ class Tokenize:
     @staticmethod
     def debug(debug, to_print):
         if debug:
-            print(to_print)
+            print(to_print, flush=True)
