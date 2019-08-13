@@ -14,8 +14,7 @@ def is_mistake(token):
         if (not token.skrt
             and not has_skrt_syl(token.text_cleaned)) \
            and \
-            (token.pos == 'OOV'
-             or token.pos == 'NON_WORD'
+            (len([True for m in token.meanings if 'pos' in m and (m['pos'] == 'OOV' or m['pos'] == 'NON_WORD')]) > 0
              or (token.chunk_type == 'LATIN'
                  or token.chunk_type == 'CJK'
                  or token.chunk_type == 'OTHER')) \

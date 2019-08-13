@@ -37,6 +37,7 @@ class BasicTrie:
         return self.head.children[key]
 
     def add(self, word, data=None):
+        print()
         # adding the word
         current_node = self.head
         word_finished = True
@@ -97,12 +98,11 @@ class BasicTrie:
         else:
             return {'exists': exists, 'data': current_node.data}
 
-    def add_data(self, word, data, overwrite=True):
+    def add_data(self, word, data):
         """Adds data to words.
 
         :param word: word to add
         :param data: dict of content to add
-        :param overwrite: write over existing content
         :return: True if any content added, False otherwise
         """
         if not word:
@@ -120,17 +120,34 @@ class BasicTrie:
         if not current_node.leaf:
             return False
 
-        # adding data if the data is absent or if overwrite == True
-        added = False
-        for k, v in data.items():
-            if k not in current_node.data:
-                current_node.data[k] = v
-                added = True
-            else:
-                if overwrite:
-                    current_node.data[k] = v
-                    added = True
+        # adding data
+        if isinstance(data, int):
+            current_node.data['form_freq'] = data
+            added = True
+        else:
+            if 'meanings' not in current_node.data:
+                current_node.data['meanings'] = []
+            added = self.add_meaning(current_node.data['meanings'], data)
         return added
+
+    def add_meaning(self, meanings, meaning):
+        if meanings:
+            for m in meanings:
+                if self.is_diff_meaning(meaning, m):
+                    meanings.append(meaning)
+                    return True
+            return False
+        else:
+            meanings.append(meaning)
+            return True
+
+    @staticmethod
+    def is_diff_meaning(m1, m2):
+        is_diff = False
+        for k, v in m1.items():
+            if k not in m2 or k in m2 and m2[k] != v:
+                is_diff = True
+        return is_diff
 
     def deactivate(self, word, rev=False):
         """Makes word not findable (words are found only when the leaf value is True)

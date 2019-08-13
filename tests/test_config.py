@@ -12,16 +12,17 @@ def test_config():
     # paths for trie content
     main, custom = config.get_tok_data_paths('POS')
     # each profile contains one or more sections
-    assert [m for m in main] == ['lexica_bo', 'pos']
+    assert [m for m in main] == ['lexica_bo', 'lexica_non_inflected', 'lem_pos_freq']
     # each element in a Path object leading to a resource file
-    assert isinstance(main['pos'][0], Path)
+    assert isinstance(main['lem_pos_freq'][0], Path)
 
     # custom files to overwrite the existing trie can be added as follows
+    modif_path = 'trie_data/'
     assert len(custom) == 0
-    main, custom = config.get_tok_data_paths('POS', modifs='trie_data/')
-    expected = sorted(['lexica_bo', 'pos', 'deactivate', 'lemmas', 'frequencies', 'lexica_skrt'])
-    assert expected == sorted([c for c in custom]) == sorted([t.parts[-1] for t in Path('trie_data/').glob('*')])
+    main, custom = config.get_tok_data_paths('POS', modifs=modif_path)
+    expected = sorted(['lexica_bo', 'deactivate', 'lem_pos_freq', 'frequencies', 'lexica_skrt'])
+    assert expected == sorted([c for c in custom]) == sorted([t.parts[-1] for t in Path(modif_path).glob('*')])
 
     # overwriting the main profile
-    main, custom = config.get_tok_data_paths('trie_data/', mode='custom')
+    main, custom = config.get_tok_data_paths(modif_path, mode='custom')
     assert expected == sorted([m for m in main])

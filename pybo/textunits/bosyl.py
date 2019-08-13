@@ -36,7 +36,7 @@ class BoSyl(SylComponents):
         """
         if self.is_affixable(syl):
             aa = False
-            if syl.endswith('འ'):
+            if syl.endswith('འ') and len(syl) > 1:
                 syl = syl[:-1]
                 aa = True
 

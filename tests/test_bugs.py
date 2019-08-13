@@ -1,6 +1,23 @@
 # coding: utf8
 from pybo import *
 
+tok = WordTokenizer('GMD')
+
+
+def test_split_token():
+    wt = WordTokenizer('empty')
+    wt.tok.trie.rebuild_trie()
+    wt.tok.trie.inflect_n_modify_trie('འ་')
+    assert not wt.tok.trie.has_word('ར་')['exists']
+
+
+def test_missing_meanings_n_bad_unaffixed():
+    input_str = "ཤུ་ཀ་ར་"
+    tokens = tok.tokenize(input_str, split_affixes=False)
+    assert [t.text for t in tokens] == ['ཤུ་ཀ་', 'ར་']
+    assert tokens[0].meanings
+    assert tokens[1].text_unaffixed == 'ར་'
+
 
 def test_multiple_spaces():
     bo_string = Chunks('ཤི ས་ཤི  ས་')
@@ -19,7 +36,6 @@ def test_bug1():
 
 
 def test_bug2():
-    tok = WordTokenizer('GMD')
     string = 'བྲ་གྲྀ་'
     tokens = tok.tokenize(string, debug=True)
     assert tokens

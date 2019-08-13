@@ -210,7 +210,7 @@ def test_missing_token34():
 def test_missing_token35():
     input_str = "ལྡང་པ་ན།"
     tokens = tok.tokenize(input_str, split_affixes=False)
-    assert [t.text for t in tokens] == ['ལྡང་', 'པ་', 'ན', '།']
+    assert [t.text for t in tokens] == ['ལྡང་པ་', 'ན', '།']
 
 
 def test_missing_token36():

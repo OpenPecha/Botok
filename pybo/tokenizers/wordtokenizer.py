@@ -1,6 +1,7 @@
 # coding: utf8
 from pathlib import Path
-import yaml
+import csv
+import random
 
 from .tokenize import Tokenize
 from ..modifytokens.splitaffixed import split_affixed
@@ -12,12 +13,12 @@ from ..config import Config
 from ..vars import TSEK, AA
 
 part_lemmas = {}
-filename = Path(__file__).parent.parent / 'resources' / 'lemmas' / 'particles.yaml'
+filename = Path(__file__).parent.parent / 'resources' / 'lem_pos_freq' / 'particles.csv'
 with filename.open('r', encoding='utf-8-sig') as f:
-    parsed_yaml = yaml.safe_load(f.read())
-    for lemma, forms in parsed_yaml.items():
-        for form in forms:
-            part_lemmas[form] = lemma
+    reader = csv.reader(f, delimiter='\t')
+    for row in list(reader)[1:]:
+        form, lemma, _ = row
+        part_lemmas[form] = lemma
 
 
 class WordTokenizer:
@@ -49,10 +50,12 @@ class WordTokenizer:
         if split_affixes:
             split_affixed(tokens)
 
+        self._get_default_lemma(tokens)
+        self._choose_default_meaning(tokens)
+
         # merge pa/po/ba/bo tokens with previous ones
         MergeDagdra().merge(tokens)
 
-        self._get_default_lemma(tokens)
         return tokens
 
     @staticmethod
@@ -62,12 +65,50 @@ class WordTokenizer:
             if not t.text_unaffixed:
                 continue
 
+            if t.affix and not t.affix_host:
+                part = ''.join([''.join(syl) for syl in t.syls])
+                lemma = part_lemmas[part] + TSEK
+            elif not t.affix and t.affix_host:
+                lemma = t.text_unaffixed + AA + TSEK if t.affixation['aa'] else t.text_unaffixed + TSEK
+            else:
+                lemma = t.text_unaffixed if t.text_unaffixed.endswith(TSEK) else t.text_unaffixed + TSEK
+
             # otherwise, check whether the aa needs to be added and if a tsek should be added
-            if not t.lemma and t.pos != 'NON_WORD':
-                if t.affix and not t.affix_host:
-                    part = ''.join([''.join(syl) for syl in t.syls])
-                    t.lemma = part_lemmas[part] + TSEK
-                elif not t.affix and t.affix_host:
-                    t.lemma = t.text_unaffixed + AA + TSEK if t.affixation['aa'] else t.text_unaffixed + TSEK
+            for m in t.meanings:
+                if 'lemma' not in m and ('pos' in m and m['pos'] != 'NON_WORD'):
+                    m['lemma'] = lemma
+            if not t.meanings:
+                t.meanings.append({'lemma': lemma})
+
+    @staticmethod
+    def _choose_default_meaning(token_list):
+        def choose_n_apply(meanings, t):
+            s = sorted(meanings, key=lambda x: len(x), reverse=True)
+            for a in ['pos', 'lemma', 'freq']:
+                if a in s[0]:
+                    t[a] = s[0][a]
+
+        for t in token_list:
+            if t.meanings:
+                # Categorize all meanings in three groups
+                affixed, non_affixed, no = [], [], []
+                for m in t.meanings:
+                    if 'affixed' in m:
+                        if m['affixed']:
+                            affixed.append(m)
+                        else:
+                            non_affixed.append(m)
+                    else:
+                        no.append(m)
+
+                # Decide what meaning to use as default
+                # get a meaning from either group in the following order: non_affixed, no, affixed
+                # take the one with the highest amount of attrs
+                if non_affixed:
+                    choose_n_apply(non_affixed, t)
+                elif no:
+                    choose_n_apply(no, t)
+                elif affixed:
+                    choose_n_apply(affixed, t)
                 else:
-                    t.lemma = t.text_unaffixed if t.text_unaffixed.endswith(TSEK) else t.text_unaffixed + TSEK
+                    raise ValueError('This should never happen.')

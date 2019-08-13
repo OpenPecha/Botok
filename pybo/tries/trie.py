@@ -2,7 +2,7 @@
 import time
 import pickle
 from pathlib import Path
-import yaml
+import csv
 
 from .basictrie import BasicTrie, Node
 from ..chunks.chunks import TokChunks
@@ -78,24 +78,32 @@ class Trie(BasicTrie):
                 if category == 'lexica_bo':
                     self.inflect_n_modify_trie(l)
 
+                elif category == 'lexica_non_inflected':
+                    self.add_non_inflectible(l)
+
                 elif category == 'lexica_skrt':
                     self.inflect_n_modify_trie(l, skrt=True)
 
                 elif category == 'deactivate':
                     self.inflect_n_modify_trie(l, deactivate=True)
 
-                elif category == 'lemmas':
-                    self.inflect_n_add_data(l, 'lemma')
-
-                elif category == 'pos':
-                    self.inflect_n_add_data(l, 'pos')
+                elif category == 'lem_pos_freq':
+                    self.inflect_n_add_data(l)
 
                 elif category == 'frequencies':
-                    self.inflect_n_add_data(l, 'freq')
+                    self.inflect_n_add_data(l, True)
 
                 else:
                     raise SyntaxError('category is one of: lexica_bo, lexica_skrt, '
                                       'pos, lemmas, frequencies, deactivate')
+
+    def add_non_inflectible(self, word):
+        syls = TokChunks(word).get_syls()
+        if not syls:
+            return None
+
+        infl = self.__join_syls(syls)
+        self.add(infl)
 
     def inflect_n_modify_trie(self, word, deactivate=False, skrt=False):
         """
@@ -120,31 +128,24 @@ class Trie(BasicTrie):
                 else:
                     self.add(infl, data=data)
 
-    def inflect_n_add_data(self, line, info):
-        if info == 'lemma':
-            loaded = yaml.safe_load(line)
-            pairs = []
-            for lemma, forms in loaded.items():
-                # clean lemma. if there is no tibetan text, lemma is left as-is
-                l_syls = TokChunks(lemma).get_syls()
-                if l_syls:
-                    lemma = self.__join_syls(l_syls)
+    def inflect_n_add_data(self, line, freq_only=False):
+        form, lemma, pos, freq = self.__parse_line(line)
+        freq = int(freq) if freq else None
+        lemma = self.__join_syls(TokChunks(lemma).get_syls()) if lemma else None
 
-                for f in forms:
-                    pairs.append((f, lemma))
-        else:
-            pairs = [self.__parse_line(line)]
+        inflected = self._get_inflected(form)
+        if not inflected:
+            return  # The entry is not Tibetan, so return doing nothing
 
-        for word, data in pairs:
-            data = data.strip()
-            if info == 'freq':
-                data = int(data)
-            inflected = self._get_inflected(word)
-            if not inflected:
-                return
-
+        if freq_only:
+            # add the frequencies directly in data
             for infl, _ in inflected:
-                self.add_data(infl, {info: data})
+                self.add_data(infl, freq)
+        else:
+            for infl, _ in inflected:
+                affixed = True if _ else False
+                data = {k: v for k, v in [('lemma', lemma), ('pos', pos), ('freq', freq), ('affixed', affixed)] if v is not None}
+                self.add_data(infl, data)
 
     def _get_inflected(self, word):
         """
@@ -185,20 +186,18 @@ class Trie(BasicTrie):
     @staticmethod
     def __parse_line(line):
         """
-        enables support of '\t', ',', '-' and ' ' as separator.
+        enables support of '\t' and ',' as separator.
         """
+        fields = [None, None, None, None]
         if '\t' in line:
-            assert line.count('\t') == 1
-            word, pos = line.split('\t')
+            sep = '\t'
         elif ',' in line:
-            assert line.count(',') == 1
-            word, pos = line.split(',')
-        elif '-' in line:
-            assert line.count('-') == 1
-            word, pos = line.split('-')
-        elif ' ' in line:
-            assert line.count(' ') == 1
-            word, pos = line.split(' ')
+            sep = ','
         else:
-            word, pos = line, OOV
-        return word, pos
+            fields[0] = line
+            fields[2] = OOV
+            return fields
+
+        for num, cell in enumerate(list(csv.reader([line], delimiter=sep))[0]):
+            fields[num] = cell if cell else None
+        return fields

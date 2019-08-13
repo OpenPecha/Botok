@@ -12,7 +12,7 @@ from textwrap import dedent
 
 trie = BasicTrie()
 
-# populate the basic lexica_bo
+# populate the basic trie
 words = 'hello goo good goodbye help gerald gold tea ted team to too tom stan standard money'
 for w in words.split():
     trie.add(w)
@@ -21,22 +21,18 @@ for w in words.split():
 trie.has_word('goodbye')
 
 # add content to data
-trie.add_data('goodbye', {'POS': 'NOUN'})
+trie.add_data('goodbye', {'pos': 'NOUN'})
 trie.has_word('goodbye')
 
-# only adds key/value pairs to the existing dict. does not replace the data variable
-trie.add_data('goodbye', {}, overwrite=True)
+# adding an empty dict to show it does not replace existing content but updates it
+trie.add_data('goodbye', {})
 trie.has_word('goodbye')
 
 # by default, overwrites existing dict values
-trie.add_data('goodbye', {'POS': 'VERB', 'lang': 'en'})
+trie.add_data('goodbye', {'pos': 'VERB', 'lemma': 'goodbye'})
 trie.has_word('goodbye')
 
-# can be set to not overwrite
-trie.add_data('goodbye', {'POS': 'NOUN'}, overwrite=False)
-trie.has_word('goodbye')
-
-# deactivates an entry in the lexica_bo, only modifying the Node.leaf value (bool) to be efficient
+# deactivates an entry, only modifying the Node.leaf value (bool) instead of removing it from the trie.
 trie.deactivate('goodbye')
 trie.has_word('goodbye')
 
@@ -44,15 +40,14 @@ trie.has_word('goodbye')
 trie.deactivate('goodbye', rev=True)
 trie.has_word('goodbye')
 
-# walk() is used to externalize the walking of the lexica_bo
-node = trie.head  # getting to the root of the lexica_bo
+# walk() is used to externalize the walking of the trie
+current_node = None  # setting an empty variable for the current node
 for char in 'goodbye':
-    if char in node.children:
-        node = node[char]  # one step down the lexica_bo
+    current_node = trie.walk(char, current_node)
 
-node.label
-node.leaf
-node.data
+current_node.label
+current_node.leaf
+current_node.data
 
 ##########################################################################################################
 # test_bostring.py
@@ -280,7 +275,7 @@ main, custom = config.get_tok_data_paths('POS')
 # each profile contains one or more sections
 [m for m in main]
 # each element in a Path object leading to a resource file
-assert isinstance(main['pos'][0], Path)
+isinstance(main['lem_pos_freq'][0], Path)
 
 # custom files to overwrite the existing trie can be added as follows
 len(custom)
@@ -300,11 +295,11 @@ main, custom = config.get_tok_data_paths(Path(__file__).parent / 'tests/trie_dat
 wt = WordTokenizer('empty')
 wt.tok.trie.rebuild_trie()
 wt.tok.trie.inflect_n_modify_trie('བདེ་བ་')
-wt.tok.trie.inflect_n_add_data('བདེ་བ་\tNOUN', 'pos')
+wt.tok.trie.inflect_n_add_data('བདེ་བ་\t\tNOUN')
 wt.tok.trie.inflect_n_modify_trie('གཏན་')
-wt.tok.trie.inflect_n_add_data('གཏན་\tNOUN', 'pos')
+wt.tok.trie.inflect_n_add_data('གཏན་\t\tNOUN')
 wt.tok.trie.inflect_n_modify_trie('གྱི་')
-wt.tok.trie.inflect_n_add_data('གྱི་\tPART', 'pos')
+wt.tok.trie.inflect_n_add_data('གྱི་\tགི\tPART')
 tokens = wt.tokenize('གཏན་གྱི་བདེ་བའི་རྒྱུ།', split_affixes=False)
 len(tokens)
 tokens[2].text
@@ -392,10 +387,9 @@ profile = 'empty'
 main, custom = Config().get_tok_data_paths(profile)
 tok = Tokenize(Trie(BoSyl, profile, main, custom))
 tok.trie.inflect_n_modify_trie('བཀྲ་ཤིས་')
-tok.trie.inflect_n_add_data('བཀྲ་ཤིས་\tNOUN', 'pos')
-tok.trie.inflect_n_add_data('བཀྲ་ཤིས་\t17500', 'freq')
+tok.trie.inflect_n_add_data('བཀྲ་ཤིས་\t\tNOUN\t17500')
 tok.trie.inflect_n_modify_trie('མཐའ་')
-tok.trie.inflect_n_add_data('མཐའ་\tNOUN', 'pos')
+tok.trie.inflect_n_add_data('མཐའ་\t\tNOUN')
 preproc = TokChunks('མཐའི་བཀྲ་ཤིས། ཀཀ abc མཐའི་རྒྱ་མཚོ་')
 preproc.serve_syls_to_trie()
 tokens = tok.tokenize(preproc)
@@ -404,10 +398,9 @@ expected = dedent("""\
                     text_cleaned: "བཀྲ་ཤིས་"
                     text_unaffixed: "བཀྲ་ཤིས་"
                     syls: ["བཀྲ", "ཤིས"]
+                    meanings: | pos: NOUN, freq: 17500, affixed: False |
                     char_types: |CONS|CONS|SUB_CONS|TSEK|CONS|VOW|CONS|
                     chunk_type: TEXT
-                    pos: NOUN
-                    freq: 17500
                     syls_idx: [[0, 1, 2], [4, 5, 6]]
                     start: 5
                     len: 7
@@ -424,17 +417,17 @@ profile = 'empty'
 main, custom = Config().get_tok_data_paths(profile)
 tok = Tokenize(Trie(BoSyl, profile, main, custom))
 tok.trie.inflect_n_modify_trie('བཀྲ་ཤིས་')
-tok.trie.inflect_n_add_data('བཀྲ་ཤིས་\tNOUN', 'pos')
+tok.trie.inflect_n_add_data('བཀྲ་ཤིས་\t\tNOUN')
 tok.trie.inflect_n_modify_trie('བཀྲ་ཤིས་བདེ་ལེགས།')  # to ensure we're not in a maximal match
 preproc = TokChunks('བཀྲ་ཤིས་བདེ་བཀྲ་')
 preproc.serve_syls_to_trie()
 tokens = tok.tokenize(preproc)
 tokens[0].text
-tokens[0].pos
+tokens[0]['meanings'][0]['pos']
 tokens[1].text
-tokens[1].pos
+tokens[1]['meanings'][0]['pos']
 tokens[2].text
-tokens[2].pos
+tokens[2]['meanings'][0]['pos']
 
 
 # def test_non_max_end_of_string():
@@ -465,7 +458,8 @@ bt = Trie(BoSyl, profile, main, custom)
 
 # the trie works as expected. but the add() method should never be used directly:
 # it does not inflect entries, so the tokenizer won't work as expected.
-bt.add('གྲུབ་མཐའ་', {'POS': 'NOUN'})
+# be careful only to use it with words that can't ever be inflected, like case particles.
+bt.add('གྲུབ་མཐའ་', {'pos': 'NOUN'})
 bt.has_word('གྲུབ་མཐའི་')
 
 # use inflect_n_modify_trie() instead, to add entries
@@ -476,12 +470,22 @@ bt.has_word('གྲུབ་མཐའི་')
 bt.inflect_n_modify_trie('ཀ་ར་', skrt=True)
 bt.has_word('ཀ་རར་')
 
-bt.inflect_n_add_data('གྲུབ་མཐའ་\t532', 'freq')  # 'freq' is hard-coded in Trie, just as 'lemma' and 'pos' are
+bt.inflect_n_add_data('གྲུབ་མཐའ་\t\t\t532',
+                      freq_only=True)  # 'freq' is hard-coded in Trie, just as 'lemma' and 'pos' are
 bt.has_word('གྲུབ་མཐའི་')
 
 # just like add() was not meant to be used directly, deactivate() is not
+# instead, use bt.inflect_n_modify_trie("word", deactivate=True)
 bt.deactivate('ཀ་ར་')
 bt.has_word('ཀ་རར་')['exists']
+
+profile = 'POS'
+main, custom = config.get_tok_data_paths(profile, modifs=modifs)
+bt = Trie(BoSyl, profile, main, custom)
+
+res = bt.has_word('ལྟར་')
+res['data']['meanings']
+res['data']['meanings']
 
 ##########################################################################################################
 # test_wordtokenizer.py
@@ -502,14 +506,14 @@ split_affixed(tokens)
 # if __get_default_lemma() is not run, only the lemmas coming from the lemma folder will be included
 # in the Token objects.
 str(tokens[3])
-tokens[3].lemma
+tokens[3]['meanings'][0]
 
 str(tokens[4])
 
-tokens[4].lemma
+tokens[4]['meanings'][0]
 
 # regular words also have no lemmas
-tokens[0].lemma
+tokens[0]['meanings'][0]
 
 # doing the same thing using WordTokenizer, which will apply its __get_default_lemma() method
 # the profile is the same, so no lemma comes from the trie content files.
@@ -518,17 +522,17 @@ tokens = wt.tokenize(input_str)
 
 # the lemma is Token.text_unaffixed with an extra འ and/or a tsek where required
 str(tokens[3])
-tokens[3].lemma
+tokens[3]['meanings'][0]['lemma']
 
 # for particles, WordTokenizer reads the lemmas from a file and attributes them
 str(tokens[4])
-tokens[4].lemma
+tokens[4]['meanings'][0]['lemma']
 
 # for regular words, Token.text_unaffixed is simply copied
-tokens[0].lemma
+tokens[0]['meanings'][0]
 
 # non-words do not have lemmas
-tokens[10].lemma
+tokens[10]['meanings'][0]
 tokens[10].text_cleaned
 tokens[10].text_unaffixed
 
@@ -559,8 +563,25 @@ tokens = tok.tokenize(input_str, split_affixes=False)
 # def test_cql_query():
 query = '[text="ན"] []'
 q = Query(query)
-assert q
+q
 
+test = [{'word': 'This',
+         'lemma': 'this',
+         'tag': 'Det'},
+        {'word': 'is',
+         'lemma': 'be',
+         'tag': 'Verb'},
+        {'word': 'it',
+         'lemma': 'it',
+         'tag': 'Pron'},
+        {'word': '.',
+         'lemma': '.',
+         'tag': 'Punct'}]
+q = '[lemma="this" & tag="Det"] [tag!="ADJ"]'
+
+matcher = CQLMatcher(q)
+matched = matcher.match(test)
+matched
 
 # def test_cql():
 query = '[pos="NOUN" & text!=""] []'
@@ -579,7 +600,7 @@ first.pos
 # def test_token_merge():
 tm = TokenMerge(tokens[0], tokens[1])
 merged = tm.merge()
-assert merged
+merged
 
 
 # def test_match_split():
@@ -646,7 +667,7 @@ matcher = CQLMatcher('[pos="VERB"]')
 slices = matcher.match([token1, token2])
 
 
-# def test_papomerge():
+# def test_mergedagdra():
 token_list = tok.tokenize('བཀྲ་ཤིས་-པ་')
 token_list = [t for t in token_list if t.text != '-']  # remove the "-" inserted to ensure we have two tokens
 mp = MergeDagdra()
@@ -694,7 +715,8 @@ in_file = Path(__file__).parent / "tests" / "resources" / 'test_file_to_tokenize
 t = Text(in_file)
 t.tokenize_chunks_plaintext
 out_file = in_file.parent / (in_file.stem + '_pybo' + in_file.suffix)  # see inside code for naming convention
-assert out_file.is_file()
+out_file.is_file()
+out_file.read_text()
 # the file has been written
 
 # def test_advanced_features():

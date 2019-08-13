@@ -15,27 +15,29 @@ default_config = dedent('''\
         - &except lexica_bo/exceptions.txt
         - &uncomp lexica_bo/uncompound_lexicon.txt
         - &tsikchen lexica_bo/tsikchen.txt
+        - &dagdra lexica_bo/dagdra.txt
         - &oral0 lexica_bo/oral_corpus_0.txt
         - &oral1 lexica_bo/oral_corpus_1.txt
         - &oral2 lexica_bo/oral_corpus_2.txt
         - &oral3 lexica_bo/oral_corpus_3.txt
         - &oral4 lexica_bo/recordings_4.txt
-        - &part lexica_bo/particles.txt
         - &mgd lexica_bo/mgd.txt
         - &verbs lexica_bo/verbs.txt
       skrt_files:
         - &skrt lexica_skrt/sanskrit.txt
-      pos_files:
-        - &soas pos/TiDC_corpus.txt
-        - &partpos pos/particles.txt
+      non_inflected:
+        - &part lexica_non_inflected/particles.txt
+      lem-pos-freq_files:
+        - &lpf_soas lem_pos_freq/TiDC_corpus.csv
+        - &lpf_part lem_pos_freq/particles.csv
       freq_files:
         - &freq_mgd frequencies/mgd.txt
         - &tc frequencies/tc.txt
       profiles:
         empty: []
-        tsikchen: [*ancient, *except, *uncomp, *tsikchen, *soas, *part]
-        POS: [*ancient, *except, *uncomp, *tsikchen, *soas, *part, *partpos]
-        GMD: [*ancient, *except, *uncomp, *tsikchen, *mgd,*verbs, *soas, *skrt, *freq_mgd, *part, *partpos]''')
+        tsikchen: [*ancient, *except, *uncomp, *tsikchen, *part, *dagdra]
+        POS: [*ancient, *except, *uncomp, *tsikchen, *part, *lpf_soas, *lpf_part, *dagdra]
+        GMD: [*ancient, *except, *uncomp, *tsikchen, *mgd, *verbs, *skrt, *freq_mgd, *part, *lpf_soas, *lpf_part, *dagdra]''')
 
 
 class Config:
@@ -102,14 +104,14 @@ class Config:
         assert dirpath.is_dir()
         bo = dirpath / 'lexica_bo'
         skrt = dirpath / 'lexica_skrt'
-        pos = dirpath / 'pos'
-        lem = dirpath / 'lemmas'
+        non_infl = dirpath / 'lexica_non_inflected'
+        lem_pos_freq = dirpath / 'lem_pos_freq'
         freq = dirpath / 'frequencies'
         deact = dirpath / 'deactivate'
 
-        for p in [bo, skrt, pos, lem, freq, deact]:
+        for p in [bo, skrt, non_infl, lem_pos_freq, freq, deact]:
             if p.is_dir():
-                for el in list(p.glob('*.txt')) + list(p.glob('*.yaml')):
+                for el in list(p.glob('*.txt')) + list(p.glob('*.csv')):
                     el = Path(__file__).parent / 'resources' / Path(el)
                     paths[el.parts[-2]].append(el)
 
