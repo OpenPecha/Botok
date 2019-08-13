@@ -12,7 +12,7 @@ def test_config():
     # paths for trie content
     main, custom = config.get_tok_data_paths('POS')
     # each profile contains one or more sections
-    assert [m for m in main] == ['lexica_bo', 'lem_pos_freq']
+    assert [m for m in main] == ['lexica_bo', 'lexica_non_inflected', 'lem_pos_freq']
     # each element in a Path object leading to a resource file
     assert isinstance(main['lem_pos_freq'][0], Path)
 

@@ -37,6 +37,7 @@ class BasicTrie:
         return self.head.children[key]
 
     def add(self, word, data=None):
+        print()
         # adding the word
         current_node = self.head
         word_finished = True
@@ -119,7 +120,7 @@ class BasicTrie:
         if not current_node.leaf:
             return False
 
-        # adding data if the data is absent or if overwrite == True
+        # adding data
         if isinstance(data, int):
             current_node.data['form_freq'] = data
             added = True
@@ -143,10 +144,8 @@ class BasicTrie:
     @staticmethod
     def is_diff_meaning(m1, m2):
         is_diff = False
-        if m1 is None:
-            print()
         for k, v in m1.items():
-            if k in m2 and m2[k] != v:
+            if k not in m2 or k in m2 and m2[k] != v:
                 is_diff = True
         return is_diff
 

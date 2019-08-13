@@ -4,6 +4,13 @@ from pybo import *
 tok = WordTokenizer('GMD')
 
 
+def test_split_token():
+    wt = WordTokenizer('empty')
+    wt.tok.trie.rebuild_trie()
+    wt.tok.trie.inflect_n_modify_trie('འ་')
+    assert not wt.tok.trie.has_word('ར་')['exists']
+
+
 def test_missing_meanings_n_bad_unaffixed():
     input_str = "ཤུ་ཀ་ར་"
     tokens = tok.tokenize(input_str, split_affixes=False)

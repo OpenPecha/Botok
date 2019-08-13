@@ -15,6 +15,7 @@ default_config = dedent('''\
         - &except lexica_bo/exceptions.txt
         - &uncomp lexica_bo/uncompound_lexicon.txt
         - &tsikchen lexica_bo/tsikchen.txt
+        - &dagdra lexica_bo/dagdra.txt
         - &oral0 lexica_bo/oral_corpus_0.txt
         - &oral1 lexica_bo/oral_corpus_1.txt
         - &oral2 lexica_bo/oral_corpus_2.txt
@@ -34,9 +35,9 @@ default_config = dedent('''\
         - &tc frequencies/tc.txt
       profiles:
         empty: []
-        tsikchen: [*ancient, *except, *uncomp, *tsikchen, *part]
-        POS: [*ancient, *except, *uncomp, *tsikchen, *part, *lpf_soas, *lpf_part]
-        GMD: [*ancient, *except, *uncomp, *tsikchen, *mgd, *verbs, *skrt, *freq_mgd, *part, *lpf_soas, *lpf_part]''')
+        tsikchen: [*ancient, *except, *uncomp, *tsikchen, *part, *dagdra]
+        POS: [*ancient, *except, *uncomp, *tsikchen, *part, *lpf_soas, *lpf_part, *dagdra]
+        GMD: [*ancient, *except, *uncomp, *tsikchen, *mgd, *verbs, *skrt, *freq_mgd, *part, *lpf_soas, *lpf_part, *dagdra]''')
 
 
 class Config:

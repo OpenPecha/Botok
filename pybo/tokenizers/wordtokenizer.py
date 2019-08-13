@@ -1,6 +1,7 @@
 # coding: utf8
 from pathlib import Path
-import yaml
+import csv
+import random
 
 from .tokenize import Tokenize
 from ..modifytokens.splitaffixed import split_affixed
@@ -12,12 +13,12 @@ from ..config import Config
 from ..vars import TSEK, AA
 
 part_lemmas = {}
-# filename = Path(__file__).parent.parent / 'resources' / 'lemmas' / 'particles.yaml'
-# with filename.open('r', encoding='utf-8-sig') as f:
-#     parsed_yaml = yaml.safe_load(f.read())
-#     for lemma, forms in parsed_yaml.items():
-#         for form in forms:
-#             part_lemmas[form] = lemma
+filename = Path(__file__).parent.parent / 'resources' / 'lem_pos_freq' / 'particles.csv'
+with filename.open('r', encoding='utf-8-sig') as f:
+    reader = csv.reader(f, delimiter='\t')
+    for row in list(reader)[1:]:
+        form, lemma, _ = row
+        part_lemmas[form] = lemma
 
 
 class WordTokenizer:
@@ -50,6 +51,7 @@ class WordTokenizer:
             split_affixed(tokens)
 
         self._get_default_lemma(tokens)
+        self._choose_default_meaning(tokens)
 
         # merge pa/po/ba/bo tokens with previous ones
         MergeDagdra().merge(tokens)
@@ -77,3 +79,36 @@ class WordTokenizer:
                     m['lemma'] = lemma
             if not t.meanings:
                 t.meanings.append({'lemma': lemma})
+
+    @staticmethod
+    def _choose_default_meaning(token_list):
+        def choose_n_apply(meanings, t):
+            s = sorted(meanings, key=lambda x: len(x), reverse=True)
+            for a in ['pos', 'lemma', 'freq']:
+                if a in s[0]:
+                    t[a] = s[0][a]
+
+        for t in token_list:
+            if t.meanings:
+                # Categorize all meanings in three groups
+                affixed, non_affixed, no = [], [], []
+                for m in t.meanings:
+                    if 'affixed' in m:
+                        if m['affixed']:
+                            affixed.append(m)
+                        else:
+                            non_affixed.append(m)
+                    else:
+                        no.append(m)
+
+                # Decide what meaning to use as default
+                # get a meaning from either group in the following order: non_affixed, no, affixed
+                # take the one with the highest amount of attrs
+                if non_affixed:
+                    choose_n_apply(non_affixed, t)
+                elif no:
+                    choose_n_apply(no, t)
+                elif affixed:
+                    choose_n_apply(affixed, t)
+                else:
+                    raise ValueError('This should never happen.')

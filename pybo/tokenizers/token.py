@@ -19,6 +19,7 @@ class Token:
         self.affix = False
         self.affix_host = False
         self.form_freq = None
+        self.freq = None
         self.skrt = False
         self._ = {}  # dict for any user specific data
 
@@ -64,10 +65,10 @@ class Token:
     @property
     def text_unaffixed(self):
         unaffixed = TSEK.join([''.join(syl) for syl in self.syls]) if self.syls else ''
-        if self.affixation and len([True for m in self.meanings if 'affixed' in m and m['affixed']]) > 0:
+        if self.affixation and not self.affix and 'len' in self.affixation and len([True for m in self.meanings if 'affixed' in m and m['affixed']]) > 0:
             unaffixed = unaffixed[:-self.affixation['len']]
 
-            if unaffixed and self.affixation['aa']:
+            if unaffixed and 'aa' in self.affixation and self.affixation['aa']:
                 unaffixed += AA
 
         if self.affixation and self.affix_host and not self.affix:
@@ -85,6 +86,10 @@ class Token:
             out += 'text_unaffixed: "{}"\n'.format(self.text_unaffixed)
         if self.syls and self.syls != []:
             out += 'syls: ["' + '", "'.join([''.join(syl) for syl in self.syls]) + '"]\n'
+        if self.pos:
+            out += 'pos: {}\n'.format(self.pos)
+        if self.lemma:
+            out += 'lemma: {}\n'.format(self.lemma)
         if self.meanings:
             out += 'meanings: | ' + ' | '.join([', '.join([f'{k}: {v}' for k, v in m.items()]) for m in self.meanings]) + ' |\n'
         if self.char_types:
@@ -93,6 +98,8 @@ class Token:
             out += 'chunk_type: {}\n'.format(self.chunk_type)
         if self.form_freq:
             out += 'form_freq: {}\n'.format(self.form_freq)
+        if self.freq:
+            out += 'freq: {}\n'.format(self.freq)
         if self.skrt:
             out += "skrt: {}\n".format(self.skrt)
         if self.affix:

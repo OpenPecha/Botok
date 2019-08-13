@@ -44,16 +44,24 @@ def test_cql():
     matcher = CQLMatcher(query)
     slices = matcher.match(tokens)
     slice_strings = [tuple([tokens[i].text for i in range(start, end + 1)]) for start, end in slices]
-    assert slices == [(1, 2),
-                      (5, 6),
-                      (7, 8),
-                      (9, 10),
-                      (10, 11)]
-    assert slice_strings == [('རྒྱ་མཚོའི་', 'གླིང་'),
-                             ('བཀྲ་ཤིས་  ', 'tr '),
-                             ('བདེ་་ལེ གས', '། '),
-                             ('བཀྲ་ཤིས་', 'བདེ་ལེགས་'),
-                             ('བདེ་ལེགས་', 'ཀཀ')]
+    assert slices == [
+        (0, 1),
+        (1, 2),
+        (2, 3),
+        (5, 6),
+        (7, 8),
+        (9, 10),
+        (10, 11)
+    ]
+    assert slice_strings == [
+        (' མཐའི་', 'རྒྱ་མཚོའི་'),
+        ('རྒྱ་མཚོའི་', 'གླིང་'),
+        ('གླིང་', '། '),
+        ('བཀྲ་ཤིས་  ', 'tr '),
+        ('བདེ་་ལེ གས', '། '),
+        ('བཀྲ་ཤིས་', 'བདེ་ལེགས་'),
+        ('བདེ་ལེགས་', 'ཀཀ')
+    ]
 
 
 def test_token_split():
@@ -78,7 +86,7 @@ def test_match_split():
     sm = SplittingMatcher(match_query, replace_idx, split_idx, tokens, replace)
     split_tokens = sm.split_on_matches()
     assert len(tokens) == 12
-    assert len(split_tokens) == 17
+    assert len(split_tokens) == 19
 
 
 def test_match_merge():
@@ -89,7 +97,7 @@ def test_match_merge():
     mm = MergingMatcher(match_query, replace_idx, tokens, replace)
     merged_tokens = mm.merge_on_matches()
     assert len(tokens) == 12
-    assert len(merged_tokens) == 8
+    assert len(merged_tokens) == 7
 
 
 def test_match_replace():
@@ -100,7 +108,7 @@ def test_match_replace():
     ReplacingMatcher(match_query, replace_idx, tokens, replace).replace_on_matches()
     assert len(tokens) == 12
     assert tokens[1].pos == 'xxx'
-    assert tokens[2].pos == 'OTHER'
+    assert tokens[4].pos == 'VERB'
 
 
 def test_adjust_tokens():
@@ -135,7 +143,7 @@ def test_last_token():
     assert slices == [(1, 1)]
 
 
-def test_papomerge():
+def test_merge_dagdra():
     token_list = tok.tokenize('བཀྲ་ཤིས་-པ་')
     token_list = [t for t in token_list if t.text != '-']  # remove the "-" inserted to ensure we have two tokens
     mp = MergeDagdra()

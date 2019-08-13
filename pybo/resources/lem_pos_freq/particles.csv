@@ -1,4 +1,4 @@
-# form  lemma  pos
+# form	lemma	pos	freq
 གི	གི	PART
 ཀྱི	གི	PART
 གྱི	གི	PART
@@ -8,7 +8,9 @@
 ཀྱིས	གིས	PART
 གྱིས	གིས	PART
 ཡིས	གིས	PART
+ས	གིས	PART
 སུ	ལ	PART
+ར	ལ	PART
 རུ	ལ	PART
 ཏུ	ལ	PART
 ན	ལ	PART

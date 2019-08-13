@@ -1,5 +1,6 @@
 # coding: utf-8
 from .tokenmerge import TokenMerge
+from ..vars import TSEK
 
 
 class MergeDagdra:
@@ -33,8 +34,10 @@ class MergeDagdra:
                 if t + 1 >= len(tokens) - 1:
                     break
                 token0, token1 = tokens[t], tokens[t+1]
+                clean_word = token1.text_cleaned + TSEK \
+                    if not token1.text_cleaned.endswith(TSEK) else token1.text_cleaned
                 if token0.chunk_type == 'TEXT' and token1.chunk_type == 'TEXT' \
-                        and token1.lemma in papo:
+                        and clean_word in papo:
                     # split token containing the affixed particle
                     merged = self.merge_with_previous_token(token0, token1)
 
