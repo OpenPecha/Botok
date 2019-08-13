@@ -4,6 +4,21 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.6.1](https://github.com/Esukhia/pybo/releases/tag/v0.6.1) - 20190813
+### Fixed
+ * affixed particles were inflected
+ * pos, lemma and frequency are brought together: a single inflected form can be two different words, thus different POS and different frequency.
+ * various bugs related to the refactoring
+### Added
+ * support for more than one meaning for every trie entry (inflected form)
+
+A `meanings` attribute is added in the Token objects. They hold as many meanings as found in the trie data.
+A default meaning is chosen, then the `pos`, `lemma` and `freq` fields are copied from the `meanings` attribute to the attributes bearing these names.
+When only one meaning is available, it is chosen, otherwise, the meaning with the highest amount of attributes is chosen from the following groups, in this order:
+meanings that are unaffixed words, meanings that don't have the `affixed` attribute, meanings that are affixed words.
+
+ * adjustments required by the above in the different parts of pybo
+
 ## [0.6.0](https://github.com/Esukhia/pybo/releases/tag/v0.6.0) - 20190701
 ### Changed
  * refactoring the Pipeline class into the Text class. check test_text.py to have an overview of what it does.
