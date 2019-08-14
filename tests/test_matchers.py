@@ -2,12 +2,13 @@
 from pybo import *
 from pathlib import Path
 
+from helpers import pos_tok
+
 rules_path = Path(__file__).parent / "resources" / "rules"
 
 
 input_str = ' མཐའི་རྒྱ་མཚོའི་གླིང་། ཤི་བཀྲ་ཤིས་  tr བདེ་་ལེ གས། བཀྲ་ཤིས་བདེ་ལེགས་ཀཀ'
-tok = WordTokenizer('POS')
-tokens = tok.tokenize(input_str, split_affixes=False)
+tokens = pos_tok.tokenize(input_str, split_affixes=False)
 
 # IMPORTANT: all the tests have merely been adapted after refactorisation.
 # They should be split in tests per file that also show the expected behaviour of every matcher.
@@ -113,7 +114,7 @@ def test_match_replace():
 
 def test_adjust_tokens():
     string = 'ལ་ལ་ལ་ལ་ལ་བ་ཡོད།'
-    token_list = tok.tokenize(string, split_affixes=False)
+    token_list = pos_tok.tokenize(string, split_affixes=False)
     at = AdjustTokens(rules_folder=rules_path)
     adjusted = at.adjust(token_list)
     assert token_list[0].text == 'ལ་ལ་'
@@ -144,13 +145,13 @@ def test_last_token():
 
 
 def test_merge_dagdra():
-    token_list = tok.tokenize('བཀྲ་ཤིས་-པ་')
+    token_list = pos_tok.tokenize('བཀྲ་ཤིས་-པ་')
     token_list = [t for t in token_list if t.text != '-']  # remove the "-" inserted to ensure we have two tokens
     mp = MergeDagdra()
     mp.merge(token_list)
     assert len(token_list) == 1 and token_list[0].text == 'བཀྲ་ཤིས་པ་'
 
-    token_list = tok.tokenize('བཀྲ་ཤིས་-པའོ།')
+    token_list = pos_tok.tokenize('བཀྲ་ཤིས་-པའོ།')
     token_list = [t for t in token_list if t.text != '-']  # remove the "-" inserted to ensure we have two tokens
     mp.merge(token_list)
     assert len(token_list) == 3 and token_list[0].text == 'བཀྲ་ཤིས་པ'

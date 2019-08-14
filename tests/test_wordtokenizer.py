@@ -3,6 +3,8 @@ from textwrap import dedent
 
 from pybo import *
 
+from helpers import pos_tok
+
 
 def test_get_default_lemma():
     input_str = 'བཀྲ་ཤིས་བདེ་ལེགས། མཐའི་རྒྱ་མཚོར་གནས་སོ།། །།ཀཀ'
@@ -40,7 +42,6 @@ def test_get_default_lemma():
                                 text_unaffixed: "འི་"
                                 syls: ["འི"]
                                 pos: PART
-                                entries: | pos: NOUN, affixed: True |
                                 char_types: |CONS|VOW|TSEK|
                                 chunk_type: TEXT
                                 affix: True
@@ -49,15 +50,13 @@ def test_get_default_lemma():
                                 len: 3
                                 
                                 """)
-    assert 'lemma' not in tokens[4]['entries'][0]
 
     # regular words also have no lemmas
     assert 'lemma' not in tokens[0]['entries'][0]
 
     # doing the same thing using WordTokenizer, which will apply its __get_default_lemma() method
     # the profile is the same, so no lemma comes from the trie content files.
-    wt = WordTokenizer(profile)
-    tokens = wt.tokenize(input_str)
+    tokens = pos_tok.tokenize(input_str)
 
     # the lemma is Token.text_unaffixed with an extra འ and/or a tsek where required
     assert str(tokens[3]) == dedent('''\
@@ -84,9 +83,9 @@ def test_get_default_lemma():
                                 text_cleaned: "འི་"
                                 text_unaffixed: "འི་"
                                 syls: ["འི"]
-                                pos: NOUN
+                                pos: PART
                                 lemma: གི་
-                                entries: | pos: NOUN, affixed: True, lemma: གི་ |
+                                entries: | lemma: གི་ |
                                 char_types: |CONS|VOW|TSEK|
                                 chunk_type: TEXT
                                 affix: True
@@ -95,7 +94,6 @@ def test_get_default_lemma():
                                 len: 3
                                 
                                 """)
-    assert tokens[4]['entries'][0]['lemma'] == 'གི་'
 
     # for regular words, Token.text_unaffixed is simply copied
     assert tokens[0]['entries'][0]['lemma'] == 'བཀྲ་ཤིས་'

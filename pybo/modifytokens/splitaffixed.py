@@ -18,9 +18,11 @@ def split_affixed(tokens):
             # split token containing the affixed particle
             split_idx = tokens[t].syls_idx[-1][-tokens[t].affixation['len']]
             changes = '[affix_host="True"] ' \
-                      '[pos="PART" & affix="True" & skrt="False" & freq="None"]'
+                      '[pos="PART" & affix="True" & skrt="False" & freq="None" & entries="None"]'
             ts = TokenSplit(tokens[t], split_idx, token_changes=changes)
             token1, token2 = ts.split()
+            if token2.entries is None:
+                token2.entries = []
 
             # replace the original token with the two new ones
             tokens[t: t + 1] = [token1, token2]

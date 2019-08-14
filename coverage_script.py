@@ -510,15 +510,13 @@ tokens[3]['entries'][0]
 
 str(tokens[4])
 
-tokens[4]['entries'][0]
-
 # regular words also have no lemmas
 tokens[0]['entries'][0]
 
 # doing the same thing using WordTokenizer, which will apply its __get_default_lemma() method
 # the profile is the same, so no lemma comes from the trie content files.
-wt = WordTokenizer(profile)
-tokens = wt.tokenize(input_str)
+pos_tok = WordTokenizer(profile)
+tokens = pos_tok.tokenize(input_str)
 
 # the lemma is Token.text_unaffixed with an extra འ and/or a tsek where required
 str(tokens[3])
@@ -553,8 +551,7 @@ rules_path = Path(__file__).parent / "tests" / "resources" / "rules"
 
 
 input_str = ' མཐའི་རྒྱ་མཚོའི་གླིང་། ཤི་བཀྲ་ཤིས་  tr བདེ་་ལེ གས། བཀྲ་ཤིས་བདེ་ལེགས་ཀཀ'
-tok = WordTokenizer('POS')
-tokens = tok.tokenize(input_str, split_affixes=False)
+tokens = pos_tok.tokenize(input_str, split_affixes=False)
 
 # IMPORTANT: all the tests have merely been adapted after refactorisation.
 # They should be split in tests per file that also show the expected behaviour of every matcher.
@@ -639,7 +636,7 @@ tokens[2].pos
 
 # def test_adjust_tokens():
 string = 'ལ་ལ་ལ་ལ་ལ་བ་ཡོད།'
-token_list = tok.tokenize(string, split_affixes=False)
+token_list = pos_tok.tokenize(string, split_affixes=False)
 at = AdjustTokens(rules_folder=rules_path)
 adjusted = at.adjust(token_list)
 token_list[0].text
@@ -668,14 +665,14 @@ slices = matcher.match([token1, token2])
 
 
 # def test_mergedagdra():
-token_list = tok.tokenize('བཀྲ་ཤིས་-པ་')
+token_list = pos_tok.tokenize('བཀྲ་ཤིས་-པ་')
 token_list = [t for t in token_list if t.text != '-']  # remove the "-" inserted to ensure we have two tokens
 mp = MergeDagdra()
 mp.merge(token_list)
 len(token_list)
 token_list[0].text
 
-token_list = tok.tokenize('བཀྲ་ཤིས་-པའོ།')
+token_list = pos_tok.tokenize('བཀྲ་ཤིས་-པའོ།')
 token_list = [t for t in token_list if t.text != '-']  # remove the "-" inserted to ensure we have two tokens
 mp.merge(token_list)
 len(token_list)

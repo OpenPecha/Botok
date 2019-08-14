@@ -64,6 +64,7 @@ class WordTokenizer:
             if not t.text_unaffixed:
                 continue
 
+            # otherwise, check whether the aa needs to be added and if a tsek should be added
             if t.affix and not t.affix_host:
                 part = ''.join([''.join(syl) for syl in t.syls])
                 lemma = part_lemmas[part] + TSEK
@@ -72,7 +73,6 @@ class WordTokenizer:
             else:
                 lemma = t.text_unaffixed if t.text_unaffixed.endswith(TSEK) else t.text_unaffixed + TSEK
 
-            # otherwise, check whether the aa needs to be added and if a tsek should be added
             for m in t.entries:
                 if 'lemma' not in m and ('pos' in m and m['pos'] != 'NON_WORD'):
                     m['lemma'] = lemma

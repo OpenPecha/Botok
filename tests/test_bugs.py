@@ -1,7 +1,9 @@
 # coding: utf8
 from pybo import *
+import sys
 
-tok = WordTokenizer('GMD')
+sys.path.append('../')
+from helpers import gmd_tok
 
 
 def test_split_token():
@@ -13,7 +15,7 @@ def test_split_token():
 
 def test_missing_entries_n_bad_unaffixed():
     input_str = "ཤུ་ཀ་ར་"
-    tokens = tok.tokenize(input_str, split_affixes=False)
+    tokens = gmd_tok.tokenize(input_str, split_affixes=False)
     assert [t.text for t in tokens] == ['ཤུ་ཀ་', 'ར་']
     assert tokens[0].entries
     assert tokens[1].text_unaffixed == 'ར་'
@@ -37,7 +39,7 @@ def test_bug1():
 
 def test_bug2():
     string = 'བྲ་གྲྀ་'
-    tokens = tok.tokenize(string, debug=True)
+    tokens = gmd_tok.tokenize(string, debug=True)
     assert tokens
 
 
