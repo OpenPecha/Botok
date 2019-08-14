@@ -37,7 +37,6 @@ class BasicTrie:
         return self.head.children[key]
 
     def add(self, word, data=None):
-        print()
         # adding the word
         current_node = self.head
         word_finished = True

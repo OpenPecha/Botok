@@ -4,11 +4,17 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.6.3](https://github.com/Esukhia/pybo/releases/tag/v0.6.3) - 20190814
+### Fixed
+ * remove print() that was executed at every added word
+
 ## [0.6.2](https://github.com/Esukhia/pybo/releases/tag/v0.6.2) - 20190814
 ### Added
  * implemented sentence and paragraph tokenizers + Text properties
+ * meaning field in the entries attribute of Token objects
 ### Changed
  * reduced the amount of times WordTokenizers were loaded in the test suite (for Travis)
+ * improve names for higher consistency
 ### Fixed
  * a few remaining bugs from previous release
 
