@@ -2,10 +2,8 @@
 from typing import List, DefaultDict, NewType, Tuple
 from collections import defaultdict
 
+from .tokenize import PyboToken
 from ..third_party.has_skrt_syl import has_skrt_syl
-from ..tokenizers.token import Token
-
-PyboToken = NewType('PyboToken', Token)
 
 
 def is_mistake(token):
@@ -16,7 +14,7 @@ def is_mistake(token):
         if (not token.skrt
             and not has_skrt_syl(token.text_cleaned)) \
            and \
-            (token.alt_entries and len([True for m in token.entries if 'pos' in m and (m['pos'] == 'OOV' or m['pos'] == 'NON_WORD')]) > 0
+            (token.entries and len([True for m in token.entries if 'pos' in m and (m['pos'] == 'OOV' or m['pos'] == 'NON_WORD')]) > 0
              or (token.chunk_type == 'LATIN'
                  or token.chunk_type == 'CJK'
                  or token.chunk_type == 'OTHER')) \

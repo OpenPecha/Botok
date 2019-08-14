@@ -91,7 +91,7 @@ class Token:
         if self.lemma:
             out += 'lemma: {}\n'.format(self.lemma)
         if self.entries:
-            out += 'alt_entries: | ' + ' | '.join([', '.join([f'{k}: {v}' for k, v in m.items()]) for m in self.entries]) + ' |\n'
+            out += 'entries: | ' + ' | '.join([', '.join([f'{k}: {v}' for k, v in m.items()]) for m in self.entries]) + ' |\n'
         if self.char_types:
             out += 'char_types: |' + '|'.join(self.char_types) + '|\n'
         if self.chunk_type:
