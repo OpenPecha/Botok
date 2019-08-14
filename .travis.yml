@@ -13,8 +13,7 @@ install:
 before_script:
  - sleep 1 # this is just a placeholder
 script:
- - coverage run --source=pybo ./coverage_script.py
  - cd tests/
+ - coverage run --source=pybo ./coverage_script.py
  - python3 -m pytest
- - cd ../
 after_success: coveralls
