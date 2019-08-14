@@ -1,4 +1,4 @@
-# coding: utf-8
+ # coding: utf-8
 import time
 import pickle
 from pathlib import Path
@@ -87,15 +87,15 @@ class Trie(BasicTrie):
                 elif category == 'deactivate':
                     self.inflect_n_modify_trie(l, deactivate=True)
 
-                elif category == 'lem_pos_freq':
+                elif category == 'entry_data':
                     self.inflect_n_add_data(l)
 
-                elif category == 'frequencies':
+                elif category == 'frequency':
                     self.inflect_n_add_data(l, True)
 
                 else:
                     raise SyntaxError('category is one of: lexica_bo, lexica_skrt, '
-                                      'pos, lemmas, frequencies, deactivate')
+                                      'entry_data, frequency, deactivate')
 
     def add_non_inflectible(self, word):
         syls = TokChunks(word).get_syls()
@@ -129,7 +129,7 @@ class Trie(BasicTrie):
                     self.add(infl, data=data)
 
     def inflect_n_add_data(self, line, freq_only=False):
-        form, lemma, pos, freq = self.__parse_line(line)
+        form, lemma, pos, freq, meaning = self.__parse_line(line)
         freq = int(freq) if freq else None
         lemma = self.__join_syls(TokChunks(lemma).get_syls()) if lemma else None
 
@@ -144,7 +144,8 @@ class Trie(BasicTrie):
         else:
             for infl, _ in inflected:
                 affixed = True if _ else False
-                data = {k: v for k, v in [('lemma', lemma), ('pos', pos), ('freq', freq), ('affixed', affixed)] if v is not None}
+                data = {k: v for k, v in [('lemma', lemma), ('pos', pos), ('freq', freq),
+                                          ('meaning', meaning), ('affixed', affixed)] if v is not None}
                 self.add_data(infl, data)
 
     def _get_inflected(self, word):
@@ -188,7 +189,7 @@ class Trie(BasicTrie):
         """
         enables support of '\t' and ',' as separator.
         """
-        fields = [None, None, None, None]
+        fields = [None, None, None, None, None]
         if '\t' in line:
             sep = '\t'
         elif ',' in line:

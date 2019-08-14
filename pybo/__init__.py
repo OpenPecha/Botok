@@ -25,6 +25,7 @@ from .third_party.cqlparser import Query, parse_cql_query, replace_token_attribu
 from .tokenizers.token import Token
 from .tokenizers.tokenize import Tokenize
 from .tokenizers.wordtokenizer import WordTokenizer
+from .tokenizers.sentencetokenizer import sentence_tokenizer
 from .tokenizers.chunktokenizer import ChunkTokenizer
 
 from .tries.basictrie import BasicTrie

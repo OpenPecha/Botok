@@ -44,7 +44,7 @@ ChunkMarkers = IntEnum('ChunkMarkers', [
     'CJK',
     'OTHER',
     # tibetan textual content
-    'TEXT',  # replaces syl
+    'TEXT',
     # tibetan non-textual content
     'PUNCT',
     'NON_PUNCT',

@@ -15,7 +15,7 @@ class Token:
         self.syls_idx = None
         self.pos = ''
         self.affixation = {}
-        self.meanings = None
+        self.entries = None
         self.affix = False
         self.affix_host = False
         self.form_freq = None
@@ -65,7 +65,7 @@ class Token:
     @property
     def text_unaffixed(self):
         unaffixed = TSEK.join([''.join(syl) for syl in self.syls]) if self.syls else ''
-        if self.affixation and not self.affix and 'len' in self.affixation and len([True for m in self.meanings if 'affixed' in m and m['affixed']]) > 0:
+        if self.affixation and not self.affix and 'len' in self.affixation and len([True for m in self.entries if 'affixed' in m and m['affixed']]) > 0:
             unaffixed = unaffixed[:-self.affixation['len']]
 
             if unaffixed and 'aa' in self.affixation and self.affixation['aa']:
@@ -90,8 +90,8 @@ class Token:
             out += 'pos: {}\n'.format(self.pos)
         if self.lemma:
             out += 'lemma: {}\n'.format(self.lemma)
-        if self.meanings:
-            out += 'meanings: | ' + ' | '.join([', '.join([f'{k}: {v}' for k, v in m.items()]) for m in self.meanings]) + ' |\n'
+        if self.entries:
+            out += 'alt_entries: | ' + ' | '.join([', '.join([f'{k}: {v}' for k, v in m.items()]) for m in self.entries]) + ' |\n'
         if self.char_types:
             out += 'char_types: |' + '|'.join(self.char_types) + '|\n'
         if self.chunk_type:

@@ -153,7 +153,7 @@ class Tokenize:
         # there is a match
         if c_idx in match_data.keys():
             data = match_data[c_idx]
-            ttype = w.OOV.name if 'meanings' not in data or len([True for m in data['meanings'] if 'pos' in m]) <= 0 else None
+            ttype = w.OOV.name if 'entries' not in data or len([True for m in data['entries'] if 'pos' in m]) <= 0 else None
             tokens.append(self.chunks_to_token(syls, data, ttype=ttype))
         elif any(match_data.values()):
             non_max_idx = sorted(match_data.keys())[-1]
@@ -162,7 +162,7 @@ class Tokenize:
                 if syl <= non_max_idx:
                     non_max_syls.append(syl)
             data = match_data[non_max_idx]
-            ttype = w.OOV.name if 'meanings' not in data or len([True for m in data['meanings'] if 'pos' in m]) <= 0 else None
+            ttype = w.OOV.name if 'entries' not in data or len([True for m in data['entries'] if 'pos' in m]) <= 0 else None
             tokens.append(self.chunks_to_token(non_max_syls, data, ttype=ttype))
             c_idx = non_max_idx
         else:
@@ -187,10 +187,10 @@ class Tokenize:
             token_start = self.pre_processed.chunks[syls[0]][1][1]
             token_length = self.pre_processed.chunks[syls[0]][1][2]
             if ttype:
-                if 'meanings' not in data:
-                    data['meanings'] = [{'pos': ttype}]
+                if 'entries' not in data:
+                    data['entries'] = [{'pos': ttype}]
                 else:
-                    for m in data['meanings']:
+                    for m in data['entries']:
                         if 'pos' not in m:
                             m['pos'] = ttype
 
@@ -203,10 +203,10 @@ class Tokenize:
             for i in syls:
                 token_length += self.pre_processed.chunks[i][1][2]
             if ttype:
-                if 'meanings' not in data:
-                    data['meanings'] = [{'pos': ttype}]
+                if 'entries' not in data:
+                    data['entries'] = [{'pos': ttype}]
                 else:
-                    for m in data['meanings']:
+                    for m in data['entries']:
                         if 'pos' not in m:
                             m['pos'] = ttype
 

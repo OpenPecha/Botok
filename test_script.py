@@ -275,7 +275,7 @@ main, custom = config.get_tok_data_paths('POS')
 # each profile contains one or more sections
 [m for m in main]
 # each element in a Path object leading to a resource file
-isinstance(main['lem_pos_freq'][0], Path)
+isinstance(main['entry_data'][0], Path)
 
 # custom files to overwrite the existing trie can be added as follows
 len(custom)
@@ -398,7 +398,7 @@ expected = dedent("""\
                     text_cleaned: "བཀྲ་ཤིས་"
                     text_unaffixed: "བཀྲ་ཤིས་"
                     syls: ["བཀྲ", "ཤིས"]
-                    meanings: | pos: NOUN, freq: 17500, affixed: False |
+                    entries: | pos: NOUN, freq: 17500, affixed: False |
                     char_types: |CONS|CONS|SUB_CONS|TSEK|CONS|VOW|CONS|
                     chunk_type: TEXT
                     syls_idx: [[0, 1, 2], [4, 5, 6]]
@@ -423,11 +423,11 @@ preproc = TokChunks('བཀྲ་ཤིས་བདེ་བཀྲ་')
 preproc.serve_syls_to_trie()
 tokens = tok.tokenize(preproc)
 tokens[0].text
-tokens[0]['meanings'][0]['pos']
+tokens[0]['entries'][0]['pos']
 tokens[1].text
-tokens[1]['meanings'][0]['pos']
+tokens[1]['entries'][0]['pos']
 tokens[2].text
-tokens[2]['meanings'][0]['pos']
+tokens[2]['entries'][0]['pos']
 
 
 # def test_non_max_end_of_string():
@@ -484,8 +484,8 @@ main, custom = config.get_tok_data_paths(profile, modifs=modifs)
 bt = Trie(BoSyl, profile, main, custom)
 
 res = bt.has_word('ལྟར་')
-res['data']['meanings']
-res['data']['meanings']
+res['data']['entries']
+res['data']['entries']
 
 ##########################################################################################################
 # test_wordtokenizer.py
@@ -506,14 +506,14 @@ split_affixed(tokens)
 # if __get_default_lemma() is not run, only the lemmas coming from the lemma folder will be included
 # in the Token objects.
 str(tokens[3])
-tokens[3]['meanings'][0]
+tokens[3]['entries'][0]
 
 str(tokens[4])
 
-tokens[4]['meanings'][0]
+tokens[4]['entries'][0]
 
 # regular words also have no lemmas
-tokens[0]['meanings'][0]
+tokens[0]['entries'][0]
 
 # doing the same thing using WordTokenizer, which will apply its __get_default_lemma() method
 # the profile is the same, so no lemma comes from the trie content files.
@@ -522,17 +522,17 @@ tokens = wt.tokenize(input_str)
 
 # the lemma is Token.text_unaffixed with an extra འ and/or a tsek where required
 str(tokens[3])
-tokens[3]['meanings'][0]['lemma']
+tokens[3]['entries'][0]['lemma']
 
 # for particles, WordTokenizer reads the lemmas from a file and attributes them
 str(tokens[4])
-tokens[4]['meanings'][0]['lemma']
+tokens[4]['entries'][0]['lemma']
 
 # for regular words, Token.text_unaffixed is simply copied
-tokens[0]['meanings'][0]
+tokens[0]['entries'][0]
 
 # non-words do not have lemmas
-tokens[10]['meanings'][0]
+tokens[10]['entries'][0]
 tokens[10].text_cleaned
 tokens[10].text_unaffixed
 

@@ -114,11 +114,10 @@ def test_advanced_features():
 
     # or use other pipes
     tokens = t.custom_pipeline('dummy', 'word_tok', 'words_error_concs', 'basic_concs')
-    assert tokens == '"བདེ་་ལེ གས། བཀྲ་ཤིས་བདེ་ལེགས་༡༢༣"\tཀཀ\t"། མཐའི་རྒྱ་མཚོར་"\n"གནས་པའི་ཉས་ཆུ་"\tའཐུང་\t"།། །།མཁའ།"'
+    assert tokens == '"མཐའི་ ༆ ཤི་བཀྲ་ཤིས་  "	tr 	"བདེ་་ལེ གས། བཀྲ་ཤིས་བདེ་ལེགས་༡༢༣"\n' \
+                     '"བདེ་་ལེ གས། བཀྲ་ཤིས་བདེ་ལེགས་༡༢༣"	ཀཀ	"། མཐའི་རྒྱ་མཚོར་"\n"གནས་པའི་ཉས་ཆུ་"	འཐུང་	"།། །།མཁའ།"'
     # two non-words found
 
     tokens = t.custom_pipeline('dummy', 'word_tok', 'words_error_types', 'stats_types')
-    assert tokens == dedent("""\
-                            ཀཀ	1
-                            འཐུང་	1""")
+    assert tokens == 'tr 	1\nཀཀ	1\nའཐུང་	1'
     # the same non-words as before

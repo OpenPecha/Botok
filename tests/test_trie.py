@@ -44,5 +44,5 @@ def test_multiple_words_per_entry():
     bt = Trie(BoSyl, profile, main, custom)
 
     res = bt.has_word('ལྟར་')
-    assert {'lemma': 'ལྟ་', 'pos': 'VERB', 'freq': 123, 'affixed': True} in res['data']['meanings']
-    assert {'lemma': 'ལྟར་', 'pos': 'ADV', 'freq': 456, 'affixed': False} in res['data']['meanings']
+    assert {'lemma': 'ལྟ་', 'pos': 'VERB', 'freq': 123, 'affixed': True} in res['data']['entries']
+    assert {'lemma': 'ལྟར་', 'pos': 'ADV', 'freq': 456, 'affixed': False} in res['data']['entries']

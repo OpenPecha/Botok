@@ -10,11 +10,13 @@ PyboToken = NewType('PyboToken', Token)
 
 def is_mistake(token):
     exceptions = ['\n']
-    if token.chunk_type == 'TEXT' or token.chunk_type == 'NON_BO':
+    if token.chunk_type == 'TEXT' or (token.chunk_type == 'LATIN'
+                                                  or token.chunk_type == 'CJK'
+                                                  or token.chunk_type == 'OTHER'):
         if (not token.skrt
             and not has_skrt_syl(token.text_cleaned)) \
            and \
-            (len([True for m in token.meanings if 'pos' in m and (m['pos'] == 'OOV' or m['pos'] == 'NON_WORD')]) > 0
+            (token.alt_entries and len([True for m in token.entries if 'pos' in m and (m['pos'] == 'OOV' or m['pos'] == 'NON_WORD')]) > 0
              or (token.chunk_type == 'LATIN'
                  or token.chunk_type == 'CJK'
                  or token.chunk_type == 'OTHER')) \

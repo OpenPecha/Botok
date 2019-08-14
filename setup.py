@@ -42,8 +42,14 @@ setuptools.setup(
         "License :: OSI Approved :: Apache Software License",
         "Natural Language :: Tibetan"
     ],
-    package_data={'pybo': ['resources/*', 'resources/lexica_bo/*', 'resources/frequencies/*', 'resources/lem_pos_freq/*',
-                           'resources/lexica_non_inflected/*', 'resources/lemmas/*', 'resources/rules/*', 'resources/lexica_skrt/*']},
+    package_data={'pybo': ['resources/*',
+                           'resources/lexica_bo/*',
+                           'resources/frequency/*',
+                           'resources/entry_data/*',
+                           'resources/lexica_non_inflected/*',
+                           'resources/lemmas/*',
+                           'resources/rules/*',
+                           'resources/lexica_skrt/*']},
     python_requires='>=3.6',
     tests_require=["pytest"],
     install_requires=[

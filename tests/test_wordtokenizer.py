@@ -23,7 +23,7 @@ def test_get_default_lemma():
                                 text_cleaned: "མཐ"
                                 text_unaffixed: "མཐ"
                                 syls: ["མཐ"]
-                                meanings: | pos: NOUN, affixed: True |
+                                entries: | pos: NOUN, affixed: True |
                                 char_types: |CONS|CONS|
                                 chunk_type: TEXT
                                 affix_host: True
@@ -32,7 +32,7 @@ def test_get_default_lemma():
                                 len: 2
                                 
                                 """)
-    assert 'lemma' not in tokens[3]['meanings'][0]
+    assert 'lemma' not in tokens[3]['entries'][0]
 
     assert str(tokens[4]) == dedent("""\
                                 text: "འི་"
@@ -40,7 +40,7 @@ def test_get_default_lemma():
                                 text_unaffixed: "འི་"
                                 syls: ["འི"]
                                 pos: PART
-                                meanings: | pos: NOUN, affixed: True |
+                                entries: | pos: NOUN, affixed: True |
                                 char_types: |CONS|VOW|TSEK|
                                 chunk_type: TEXT
                                 affix: True
@@ -49,10 +49,10 @@ def test_get_default_lemma():
                                 len: 3
                                 
                                 """)
-    assert 'lemma' not in tokens[4]['meanings'][0]
+    assert 'lemma' not in tokens[4]['entries'][0]
 
     # regular words also have no lemmas
-    assert 'lemma' not in tokens[0]['meanings'][0]
+    assert 'lemma' not in tokens[0]['entries'][0]
 
     # doing the same thing using WordTokenizer, which will apply its __get_default_lemma() method
     # the profile is the same, so no lemma comes from the trie content files.
@@ -67,7 +67,7 @@ def test_get_default_lemma():
                                 syls: ["མཐ"]
                                 pos: NOUN
                                 lemma: མཐའ་
-                                meanings: | pos: NOUN, affixed: True, lemma: མཐའ་ |
+                                entries: | pos: NOUN, affixed: True, lemma: མཐའ་ |
                                 char_types: |CONS|CONS|
                                 chunk_type: TEXT
                                 affix_host: True
@@ -76,7 +76,7 @@ def test_get_default_lemma():
                                 len: 2
                                 
                                 ''')
-    assert tokens[3]['meanings'][0]['lemma'] == 'མཐའ་'
+    assert tokens[3]['entries'][0]['lemma'] == 'མཐའ་'
 
     # for particles, WordTokenizer reads the lemmas from a file and attributes them
     assert str(tokens[4]) == dedent("""\
@@ -86,7 +86,7 @@ def test_get_default_lemma():
                                 syls: ["འི"]
                                 pos: NOUN
                                 lemma: གི་
-                                meanings: | pos: NOUN, affixed: True, lemma: གི་ |
+                                entries: | pos: NOUN, affixed: True, lemma: གི་ |
                                 char_types: |CONS|VOW|TSEK|
                                 chunk_type: TEXT
                                 affix: True
@@ -95,13 +95,13 @@ def test_get_default_lemma():
                                 len: 3
                                 
                                 """)
-    assert tokens[4]['meanings'][0]['lemma'] == 'གི་'
+    assert tokens[4]['entries'][0]['lemma'] == 'གི་'
 
     # for regular words, Token.text_unaffixed is simply copied
-    assert tokens[0]['meanings'][0]['lemma'] == 'བཀྲ་ཤིས་'
+    assert tokens[0]['entries'][0]['lemma'] == 'བཀྲ་ཤིས་'
 
     # non-words do not have lemmas
-    assert 'lemma' not in tokens[10]['meanings'][0]
+    assert 'lemma' not in tokens[10]['entries'][0]
     assert tokens[10].text_cleaned == 'ཀཀ་'
     assert tokens[10].text_unaffixed == 'ཀཀ་'
 

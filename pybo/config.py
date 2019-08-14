@@ -28,11 +28,11 @@ default_config = dedent('''\
       non_inflected:
         - &part lexica_non_inflected/particles.txt
       lem-pos-freq_files:
-        - &lpf_soas lem_pos_freq/TiDC_corpus.csv
-        - &lpf_part lem_pos_freq/particles.csv
+        - &lpf_soas entry_data/TiDC_corpus.csv
+        - &lpf_part entry_data/particles.csv
       freq_files:
-        - &freq_mgd frequencies/mgd.txt
-        - &tc frequencies/tc.txt
+        - &freq_mgd frequency/mgd.txt
+        - &tc frequency/tc.txt
       profiles:
         empty: []
         tsikchen: [*ancient, *except, *uncomp, *tsikchen, *part, *dagdra]
@@ -48,7 +48,7 @@ class Config:
     2. setting mode='custom', a path to a custom content folder can be given in the profile argument.
 
     The custom folder must contain any combination of the following subdirs:
-                            lexica_bo, lexica_skrt, pos, lemmas, frequencies, deactivate
+                            lexica_bo, lexica_skrt, entry_data, frequency, deactivate
 
     - all folders are excepted to contain .txt files with a word a line, without ending tsek
     - pos should contain word-pos pairs in .txt files
@@ -60,8 +60,8 @@ class Config:
     def __init__(self, filename='pybo.yaml'):
         """Initialize the class
 
-        Converting the configuration file into a Python dictionnary object which
-        contains all the necesary parameters to set up Pybo properly.
+        Converting the configuration file into a Python dictionary object which
+        contains all the necessary parameters to set up Pybo properly.
 
         The text file has to respect the YAML writing rules.
         For more information: 'https://pyyaml.org/wiki/PyYAML'
@@ -105,8 +105,8 @@ class Config:
         bo = dirpath / 'lexica_bo'
         skrt = dirpath / 'lexica_skrt'
         non_infl = dirpath / 'lexica_non_inflected'
-        lem_pos_freq = dirpath / 'lem_pos_freq'
-        freq = dirpath / 'frequencies'
+        lem_pos_freq = dirpath / 'entry_data'
+        freq = dirpath / 'frequency'
         deact = dirpath / 'deactivate'
 
         for p in [bo, skrt, non_infl, lem_pos_freq, freq, deact]:

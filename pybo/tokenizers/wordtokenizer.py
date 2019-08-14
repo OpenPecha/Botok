@@ -1,7 +1,6 @@
 # coding: utf8
 from pathlib import Path
 import csv
-import random
 
 from .tokenize import Tokenize
 from ..modifytokens.splitaffixed import split_affixed
@@ -13,7 +12,7 @@ from ..config import Config
 from ..vars import TSEK, AA
 
 part_lemmas = {}
-filename = Path(__file__).parent.parent / 'resources' / 'lem_pos_freq' / 'particles.csv'
+filename = Path(__file__).parent.parent / 'resources' / 'entry_data' / 'particles.csv'
 with filename.open('r', encoding='utf-8-sig') as f:
     reader = csv.reader(f, delimiter='\t')
     for row in list(reader)[1:]:
@@ -51,7 +50,7 @@ class WordTokenizer:
             split_affixed(tokens)
 
         self._get_default_lemma(tokens)
-        self._choose_default_meaning(tokens)
+        self._choose_default_entry(tokens)
 
         # merge pa/po/ba/bo tokens with previous ones
         MergeDagdra().merge(tokens)
@@ -74,25 +73,25 @@ class WordTokenizer:
                 lemma = t.text_unaffixed if t.text_unaffixed.endswith(TSEK) else t.text_unaffixed + TSEK
 
             # otherwise, check whether the aa needs to be added and if a tsek should be added
-            for m in t.meanings:
+            for m in t.entries:
                 if 'lemma' not in m and ('pos' in m and m['pos'] != 'NON_WORD'):
                     m['lemma'] = lemma
-            if not t.meanings:
-                t.meanings.append({'lemma': lemma})
+            if not t.entries:
+                t.entries.append({'lemma': lemma})
 
     @staticmethod
-    def _choose_default_meaning(token_list):
-        def choose_n_apply(meanings, t):
-            s = sorted(meanings, key=lambda x: len(x), reverse=True)
+    def _choose_default_entry(token_list):
+        def choose_n_apply(entries, t):
+            s = sorted(entries, key=lambda x: len(x), reverse=True)
             for a in ['pos', 'lemma', 'freq']:
                 if a in s[0]:
                     t[a] = s[0][a]
 
         for t in token_list:
-            if t.meanings:
+            if t.entries:
                 # Categorize all meanings in three groups
                 affixed, non_affixed, no = [], [], []
-                for m in t.meanings:
+                for m in t.entries:
                     if 'affixed' in m:
                         if m['affixed']:
                             affixed.append(m)
