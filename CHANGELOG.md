@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.6.2](https://github.com/Esukhia/pybo/releases/tag/v0.6.2) - 20190814
+### Added
+ * implemented sentence and paragraph tokenizers + Text properties
+### Changed
+ * reduced the amount of times WordTokenizers were loaded in the test suite (for Travis)
+### Fixed
+ * a few remaining bugs from previous release
+
 ## [0.6.1](https://github.com/Esukhia/pybo/releases/tag/v0.6.1) - 20190813
 ### Fixed
  * affixed particles were inflected
