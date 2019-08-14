@@ -1,10 +1,20 @@
 # coding: utf-8
 from typing import List, DefaultDict, Tuple
 
+from .tokenize import PyboToken
+
 
 def plaintext(tokens: List[str], sep=' ') -> str:
     tokens = [t.replace(' ', '_') for t in tokens]
     return sep.join(tokens)
+
+
+def plaintext_sent_par(units: List[Tuple[int, List[PyboToken]]], sep='\n') -> str:
+    out = []
+    for u in units:
+        unit = ''.join([word.text for word in u[1]])
+        out.append(unit)
+    return sep.join(out)
 
 
 def basic_conc(concs: DefaultDict[str, List[str]], sep='\t', esc_context=True) -> str:

@@ -29,7 +29,8 @@ class PipelineBase:
             text = self.pipes['prep'][self.prep](text)
 
         # b. tokenizing
-        if isinstance(self.tok, str) and 'word' in self.tok and self.tok_params:
+        if isinstance(self.tok, str) and ('word' in self.tok or 'sentence' in self.tok or 'paragraph' in self.tok) \
+                and self.tok_params:
             modifs = self.tok_params['modifs'] if 'modifs' in self.tok_params else None
             mode = self.tok_params['mode'] if 'mode' in self.tok_params else 'internal'
             elts = self.pipes['tok'][self.tok](text,

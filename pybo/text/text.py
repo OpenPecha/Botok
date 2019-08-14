@@ -22,6 +22,8 @@ builtin_pipes = {
         'space_tok': space_tok,
         'word_tok': word_tok,
         'chunk_tok': chunk_tok,
+        'sentence_tok': sentence_tok,
+        'paragraph_tok': paragraph_tok,
     },
     # c. Modifiers
     'mod': {
@@ -36,6 +38,7 @@ builtin_pipes = {
     'form': {
         'dummy': lambda x: x,
         'plaintext': plaintext,
+        'plaintext_sent_par': plaintext_sent_par,
         'basic_concs': basic_conc,
         'stats_types': stats_types,
     }
@@ -104,6 +107,16 @@ class Text:
     @property
     def tokenize_chunks_plaintext(self):
         return self.__process('basic_keeps_lines', 'chunk_tok', 'chunks_raw_text', 'plaintext')
+
+    @property
+    def tokenize_sentences_plaintext(self):
+        config = {'profile': 'GMD'}
+        return self.__process('basic_cleanup', 'sentence_tok', 'dummy', 'plaintext_sent_par', tok_params=config)
+
+    @property
+    def tokenize_paragraph_plaintext(self):
+        config = {'profile': 'GMD'}
+        return self.__process('basic_cleanup', 'paragraph_tok', 'dummy', 'plaintext_sent_par', tok_params=config)
 
     @property
     def list_word_types(self):
