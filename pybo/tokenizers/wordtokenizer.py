@@ -82,7 +82,7 @@ class WordTokenizer:
     @staticmethod
     def _choose_default_entry(token_list):
         def choose_n_apply(entries, t):
-            s = sorted(entries, key=lambda x: len(x), reverse=True)
+            s = sorted(entries, key=len, reverse=True)
             for a in ['pos', 'lemma', 'freq']:
                 if a in s[0]:
                     t[a] = s[0][a]
