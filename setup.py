@@ -55,4 +55,9 @@ setuptools.setup(
     install_requires=[
         'pyyaml',
     ],
+    entry_points={
+        'console_scripts': [
+            'pybo=pybo.cli:cli',  # command=package.module:function
+        ],
+    },
 )
