@@ -3,7 +3,7 @@
 # variables used in the tests
 ending_particles = ['གོ་', 'ངོ་', 'དོ་', 'ནོ་', 'བོ་', 'མོ་', 'འོ་', 'རོ་', 'ལོ་', 'སོ་', 'ཏོ་']
 ending_words = ['ཅིག་', 'ཤོག་']
-ending_verbs = ['ཡིན་', 'ཡོད་', 'མིན་', 'མེད་', 'འགྱུར་', 'ལྡན་', 'བགྱི་', 'བྱ་']
+ending_verbs = ['ཡིན་', 'ཡོད་', 'མིན་', 'མེད་', 'འགྱུར་', 'ལྡན་', 'བགྱི་', 'བྱ་', 'བཞུགས་']
 te_particles = ['སྟེ་', 'ཏེ་', 'དེ་']  # separated because these seem to cut long sentences
 clause_boundaries = te_particles + ['ནས་', 'ན་']
 dagdra = ['པ་', 'བ་', 'པོ་', 'བོ་']
