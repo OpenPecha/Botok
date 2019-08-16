@@ -67,7 +67,8 @@ class WordTokenizer:
             # otherwise, check whether the aa needs to be added and if a tsek should be added
             if t.affix and not t.affix_host:
                 part = ''.join([''.join(syl) for syl in t.syls])
-                lemma = part_lemmas[part] + TSEK
+                lemma = part_lemmas[part] if part in part_lemmas else part
+                lemma += TSEK
             elif not t.affix and t.affix_host:
                 lemma = t.text_unaffixed + AA + TSEK if t.affixation['aa'] else t.text_unaffixed + TSEK
             else:

@@ -6,6 +6,11 @@ sys.path.append('../')
 from helpers import gmd_tok
 
 
+def test_keyerror_part_lemma():
+    tokens = gmd_tok.tokenize('ཕའིའོ།')
+    assert len(tokens) == 3
+
+
 def test_split_token():
     wt = WordTokenizer('empty')
     wt.tok.trie.rebuild_trie()
