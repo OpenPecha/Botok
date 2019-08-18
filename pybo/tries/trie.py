@@ -1,4 +1,4 @@
- # coding: utf-8
+# coding: utf-8
 import time
 import pickle
 from pathlib import Path
@@ -161,11 +161,11 @@ class Trie(BasicTrie):
         if not syls:
             return None
 
-        inflected = [(self.__join_syls(syls), None)]
+        inflected = [(syls, None)]
         affixed = self.bosyl.get_all_affixed(syls[-1])
         if affixed:
             for infl, data in affixed:
-                infl_word = self.__join_syls(syls[:-1] + [infl])
+                infl_word = syls[:-1] + [infl]
                 inflected.append((infl_word, {'affixation': data}))
 
         self.tmp_inflected[word] = inflected

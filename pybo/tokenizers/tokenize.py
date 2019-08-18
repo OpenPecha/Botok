@@ -32,120 +32,13 @@ class Tokenize:
         went_to_max = False
 
         c_idx = 0
-        while c_idx < len(self.pre_processed.chunks):
-            has_decremented = False
-            is_non_word = False
-            chunk = self.pre_processed.chunks[c_idx]
+        while c_idx <= len(self.pre_processed.chunks):
+            syl, chunk = self.pre_processed.chunks[c_idx]
+            syl = ''.join([self.pre_processed.bs.string[s] for s in syl])
+            self.debug(debug, syl)
 
-            # 1. CHUNK IS SYLLABLE
-            if chunk[0]:
-                # syl is extracted from input string, tsek added for the trie
-                syl = [self.pre_processed.bs.string[c] for c in chunk[0]]  # get letters
-                syl = syl + [TSEK] if syl[-1] != NAMCHE else syl  # add tsek
-                self.debug(debug, syl)
-
-                # >>> WALKING THE TRIE >>>
-                s_idx = 0
-                while s_idx <= len(syl)-1:
-                    # beginning of current syllable
-                    if s_idx == 0:
-                        self.debug(debug, syl[s_idx])
-                        current_node = self.trie.walk(syl[s_idx], current_node)
-                        if current_node and current_node.is_match():
-                            match_data[c_idx] = current_node.data
-
-                    # continuing to walk
-                    elif current_node and current_node.can_walk():
-                        self.debug(debug, syl[s_idx])
-                        current_node = self.trie.walk(syl[s_idx], current_node)
-                        if current_node and current_node.is_match():
-                            match_data[c_idx] = current_node.data
-                # <<<<<<<<<<<<<<<<<<<<<<<<
-
-                        elif not current_node:
-                            if syls:
-                                if not has_decremented:
-                                    c_idx -= 1
-                                    has_decremented = True
-                                went_to_max = True
-                            else:
-                                is_non_word = True
-
-                    # CAN'T CONTINUE WALKING
-                    else:
-                        # a. potential word(syls) is not empty
-                        if syls:
-                            # couldn't walk this syl until the end.
-                            # decrementing chunk-idx for a new attempt to find a match
-                            if not (has_decremented or went_to_max):
-                                c_idx -= 1
-                                has_decremented = True  # ensures we only decrement once per syl
-                            went_to_max = True
-
-                        # b. current word is empty
-                        else:
-                            # there is only a non-word
-                            is_non_word = True
-                    s_idx += 1
-
-                # FINISHED LOOPING OVER CURRENT SYL
-                if is_non_word:
-                    # non-word syls are turned into independant tokens
-                    non_word = [c_idx]
-                    # This syllabe does not exist in the Trie
-                    tokens.append(self.chunks_to_token(non_word, {}, ttype=w.NON_WORD.name))
-                    match_data = {}
-                    syls = []
-
-                else:
-                    if went_to_max:
-                        if not has_decremented:
-                            c_idx -= 1
-                        else:
-                            c_idx = self.add_found_word_or_non_word(c_idx, match_data, syls, tokens, has_decremented)
-                            match_data = {}
-                            syls = []
-                        went_to_max = False
-
-                    else:
-                        syls.append(c_idx)
-                        # end of input and the end of syllable is reached
-                        if c_idx == len(self.pre_processed.chunks) - 1 and s_idx == len(syl):
-                            c_idx = self.add_found_word_or_non_word(c_idx, match_data, syls, tokens, has_decremented)
-                            match_data = {}
-                            syls = []
-                            s_idx += 1
-
-            # 2. CHUNK IS NON-SYLLABLE
-            else:
-                # if there is a word that was not added
-                if syls:
-                    # the word to add ends at c_idx - 1 since we reached the non-syllable chunk
-                    c_idx = self.add_found_word_or_non_word(c_idx - 1, match_data, syls, tokens) + 1
-                    match_data = {}
-                    syls = []
-                    current_node = None
-                    continue
-
-                tokens.append(self.chunks_to_token([c_idx], {}))
-
-            # END OF INPUT
-            # if we reached end of input and there is a non-max-match
-            if len(self.pre_processed.chunks) - 1 == c_idx:
-                if any(match_data.values()) and current_node and not current_node.leaf:
-                    c_idx = self.add_found_word_or_non_word(c_idx, match_data[c_idx], syls, tokens)
-                    syls = []
-                    current_node = None
-                if has_decremented:
-                    c_idx -= 1
 
             c_idx += 1
-
-        # a potential token was left
-        if syls:
-            self.add_found_word_or_non_word(c_idx, match_data[c_idx], syls, tokens)
-
-        self.pre_processed = None
 
         return tokens
 

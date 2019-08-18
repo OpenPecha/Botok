@@ -81,9 +81,9 @@ class BasicTrie:
         # parse the word
         current_node = self.head
         exists = True
-        for letter in word:
-            if letter in current_node.children:
-                current_node = current_node.children[letter]
+        for syl in word:
+            if syl in current_node.children:
+                current_node = current_node.children[syl]
             else:
                 exists = False
                 break
@@ -109,9 +109,9 @@ class BasicTrie:
 
         # parse word
         current_node = self.head
-        for letter in word:
-            if letter in current_node.children:
-                current_node = current_node.children[letter]
+        for syl in word:
+            if syl in current_node.children:
+                current_node = current_node.children[syl]
             else:
                 return False
 
