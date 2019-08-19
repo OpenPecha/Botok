@@ -49,11 +49,13 @@ setuptools.setup(
                            'resources/lexica_non_inflected/*',
                            'resources/lemmas/*',
                            'resources/rules/*',
-                           'resources/lexica_skrt/*']},
+                           'resources/lexica_skrt/*',
+                           'resources/adjustment/*']},
     python_requires='>=3.6',
     tests_require=["pytest"],
     install_requires=[
         'pyyaml',
+        'click'
     ],
     entry_points={
         'console_scripts': [

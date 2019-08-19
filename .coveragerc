@@ -3,3 +3,4 @@
 omit =
     pybo/third_party/pynpl/cql.py
     pybo/third_party/pynpl/fsa.py
+    pybo/cli.py

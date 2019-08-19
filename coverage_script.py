@@ -547,7 +547,8 @@ tokens[2].text_cleaned
 from pybo import *
 from pathlib import Path
 
-rules_path = Path(__file__).parent / "tests" / "resources" / "rules"
+rules_path = Path(__file__).parent / "tests" / "resources"
+main, custom = Config().get_adj_data_paths('basic', rules_path)
 
 
 input_str = ' མཐའི་རྒྱ་མཚོའི་གླིང་། ཤི་བཀྲ་ཤིས་  tr བདེ་་ལེ གས། བཀྲ་ཤིས་བདེ་ལེགས་ཀཀ'
@@ -637,7 +638,7 @@ tokens[2].pos
 # def test_adjust_tokens():
 string = 'ལ་ལ་ལ་ལ་ལ་བ་ཡོད།'
 token_list = pos_tok.tokenize(string, split_affixes=False)
-at = AdjustTokens(rules_folder=rules_path)
+at = AdjustTokens(main=main, custom=custom)
 adjusted = at.adjust(token_list)
 token_list[0].text
 token_list[1].text
