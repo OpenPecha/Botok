@@ -14,7 +14,7 @@ def split_affixed(tokens):
         # check that splitting is possible (affixation attribute exists)
         # and that there is no meaning that has "affixed: False".
         # ie, check that the inflected form can't be the affixed form of a word and the unaffixed form of another word
-        if tokens[t].affixation and len([True for m in tokens[t].entries if 'affixed' in m and not m['affixed']]) == 0:
+        if tokens[t].affixation and not [True for m in tokens[t].entries if 'affixed' in m and not m['affixed']]:
             # split token containing the affixed particle
             split_idx = tokens[t].syls_idx[-1][-tokens[t].affixation['len']]
             changes = '[affix_host="True"] ' \

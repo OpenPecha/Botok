@@ -146,10 +146,10 @@ class SylComponents:
                     None if more than one solution from get_parts()
         """
         components = self.get_parts(syl)
-        if type(components) == list or not components:
+        if isinstance(components, list) or not components:
             if syl and syl[-1] == 'ད':
                 components = self.get_parts(syl[:-1])
-                if type(components) == list or not components:
+                if isinstance(components, list) or not components:
                     return None
                 else:
                     return self.mingzhis[components[0]]
@@ -187,7 +187,7 @@ class SylComponents:
 
 
 if __name__ == '__main__':
-    """ example of use """
+    # example of use
     sc = SylComponents()
     assert sc.get_parts('བཀྲིས') == ('བཀྲ', 'ིས')
     assert(sc.get_info('དེའིའམ') == 'thame')

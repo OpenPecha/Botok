@@ -18,7 +18,7 @@ def test_config():
 
     # custom files to overwrite the existing trie can be added as follows
     modif_path = 'trie_data/'
-    assert len(custom) == 0
+    assert not len(custom)
     main, custom = config.get_tok_data_paths('POS', modifs=modif_path)
     expected = sorted(['lexica_bo', 'deactivate', 'entry_data', 'frequency', 'lexica_skrt'])
     assert expected == sorted([c for c in custom])
