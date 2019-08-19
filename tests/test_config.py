@@ -21,8 +21,17 @@ def test_config():
     assert len(custom) == 0
     main, custom = config.get_tok_data_paths('POS', modifs=modif_path)
     expected = sorted(['lexica_bo', 'deactivate', 'entry_data', 'frequency', 'lexica_skrt'])
-    assert expected == sorted([c for c in custom]) == sorted([t.parts[-1] for t in Path(modif_path).glob('*')])
-
+    assert expected == sorted([c for c in custom])
+    expected1 = ['adjustment', 'deactivate', 'entry_data', 'frequency', 'lexica_bo', 'lexica_skrt']
+    assert expected1 == sorted([t.parts[-1] for t in Path(modif_path).glob('*')])
     # overwriting the main profile
     main, custom = config.get_tok_data_paths(modif_path, mode='custom')
     assert expected == sorted([m for m in main])
+
+
+def test_adj_config():
+    config = Config()
+    modif_path = 'trie_data'
+    main, custom = config.get_adj_data_paths('basic', modifs=modif_path)
+    assert 'rdr_basis.yaml' == ''.join([m.name for m in main])
+    assert 'test.yaml' == ''.join([c.name for c in custom])

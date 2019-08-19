@@ -37,7 +37,14 @@ default_config = dedent('''\
         empty: []
         tsikchen: [*ancient, *except, *uncomp, *tsikchen, *part, *dagdra]
         POS: [*ancient, *except, *uncomp, *tsikchen, *part, *lpf_soas, *lpf_part, *dagdra]
-        GMD: [*ancient, *except, *uncomp, *tsikchen, *mgd, *verbs, *skrt, *freq_mgd, *part, *lpf_soas, *lpf_part, *dagdra]''')
+        GMD: [*ancient, *except, *uncomp, *tsikchen, *mgd, *verbs, *skrt, *freq_mgd, *part, *lpf_soas, *lpf_part, *dagdra]
+
+    adjustments:
+      files:
+        - &rdr adjustment/rdr_basis.yaml
+      profiles:
+        empty: []
+        basic: [*rdr]''')
 
 
 class Config:
@@ -48,7 +55,7 @@ class Config:
     2. setting mode='custom', a path to a custom content folder can be given in the profile argument.
 
     The custom folder must contain any combination of the following subdirs:
-                            lexica_bo, lexica_skrt, entry_data, frequency, deactivate
+                            lexica_bo, lexica_skrt, entry_data, frequency, deactivate, adjustment
 
     - all folders are excepted to contain .txt files with a word a line, without ending tsek
     - pos should contain word-pos pairs in .txt files
@@ -89,17 +96,36 @@ class Config:
                 main_profile[el.parts[-2]].append(el)
 
         elif mode == 'custom':
-            self.__parse_dir(profile, main_profile)
+            self.__parse_tok_dir(profile, main_profile)
         else:
             raise ValueError('mode needs to be either "internal" or "custom".')
 
         user_modifs = defaultdict(list)
         if modifs:
-            self.__parse_dir(modifs, user_modifs)
+            self.__parse_tok_dir(modifs, user_modifs)
 
         return main_profile, user_modifs
 
-    def __parse_dir(self, dirpath, paths):
+    def get_adj_data_paths(self, profile, modifs=None, mode='internal'):
+        main = []
+        if mode == 'internal':
+            files = self.config['adjustments']['profiles'][profile]
+            for el in files:
+                el = Path(__file__).parent / 'resources' / Path(el)
+                main.append(el)
+
+        elif mode == 'custom':
+            self.__parse_adj_dir(profile, main)
+        else:
+            raise ValueError('mode needs to be either "internal" or "custom".')
+
+        custom = []
+        if modifs:
+            self.__parse_adj_dir(modifs, custom)
+
+        return main, custom
+
+    def __parse_tok_dir(self, dirpath, paths):
         dirpath = Path(dirpath).resolve()
         assert dirpath.is_dir()
         bo = dirpath / 'lexica_bo'
@@ -114,6 +140,15 @@ class Config:
                 for el in list(p.glob('*.txt')) + list(p.glob('*.csv')):
                     el = Path(__file__).parent / 'resources' / Path(el)
                     paths[el.parts[-2]].append(el)
+
+    def __parse_adj_dir(self, dirpath, paths):
+        dirpath = Path(dirpath).resolve()
+        assert dirpath.is_dir()
+        adjs = dirpath / 'adjustment'
+        if adjs.is_dir():
+            for el in adjs.glob('*.yaml'):
+                el = Path(__file__).parent / 'resources' / Path(el)
+                paths.append(el)
 
     def reset_default(self):
         """Resets the configuration file to the default values"""

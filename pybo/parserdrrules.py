@@ -12,6 +12,7 @@ op = " == "
 ccl_op = " = "
 cond_sep = " and "
 rule_sep = ' : '
+cql_rule_sep = ' & '
 level_sep = '\t'
 
 positive = [tag, word, next_tag, next_word, conclusion]
@@ -51,7 +52,7 @@ def format_rules(rules):
 
             if t in test:
                 conds = [f'{eq_table[tag]}={pos}' for tag, pos in test[t]]
-                slots.append('[' + ', '.join(conds) + ']')
+                slots.append('[' + cql_rule_sep.join(conds) + ']')
             else:
                 slots.append('[]')
         assert slot_zero_idx is not None

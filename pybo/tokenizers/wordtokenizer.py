@@ -5,6 +5,7 @@ import csv
 from .tokenize import Tokenize
 from ..modifytokens.splitaffixed import split_affixed
 from ..modifytokens.mergedagdra import MergeDagdra
+from ..modifytokens.adjusttokens import AdjustTokens
 from ..tries.trie import Trie
 from ..chunks.chunks import TokChunks
 from ..textunits.bosyl import BoSyl
@@ -25,15 +26,19 @@ class WordTokenizer:
     Convenience class to tokenize a given string.
 
     """
-    def __init__(self, profile='POS', modifs=None, mode='internal', ignore_chars=None):
+    def __init__(self, tok_profile='POS', tok_modifs=None, tok_mode='internal', ignore_chars=None,
+                 adj_profile='basic', adj_modifs=None, adj_mode='internal'):
         """
-        :param profile: profile for building the trie. (see config.yaml)
+        :param tok_profile: profile for building the trie. (see config.yaml)
         """
         config = Config()
-        main, custom = config.get_tok_data_paths(profile, modifs=modifs, mode=mode)
+        main, custom = config.get_tok_data_paths(tok_profile, modifs=tok_modifs, mode=tok_mode)
         self.ignore_chars = ignore_chars
-        profile = mode if mode == 'custom' else profile  # trie will be named custom if mode is custom
-        self.tok = Tokenize(Trie(BoSyl, profile, main_data=main, custom_data=custom))
+        tok_profile = tok_mode if tok_mode == 'custom' else tok_profile  # trie will be named custom if mode is custom
+        self.tok = Tokenize(Trie(BoSyl, tok_profile, main_data=main, custom_data=custom))
+
+        adj_main, adj_custom = config.get_adj_data_paths(adj_profile, modifs=adj_modifs, mode=adj_mode)
+        self.adj = AdjustTokens(main=adj_main, custom=adj_custom)
 
     def tokenize(self, string, split_affixes=True, debug=False):
         """
@@ -54,6 +59,9 @@ class WordTokenizer:
 
         # merge pa/po/ba/bo tokens with previous ones
         MergeDagdra().merge(tokens)
+
+        # do adjustments
+        self.adj.adjust(tokens)
 
         return tokens
 

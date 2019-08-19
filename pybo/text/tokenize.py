@@ -37,7 +37,7 @@ def paragraph_tok(text: str, profile, modifs=None, mode='internal') -> List[Tupl
 
 @lru_cache(maxsize=None)  # <--- make sure that the trie is only built once then kept in memory
 def get_wordtokenizer(profile, modifs, mode):
-    return WordTokenizer(profile, modifs=modifs, mode=mode)
+    return WordTokenizer(profile, tok_modifs=modifs, tok_mode=mode)
 
 
 def chunk_tok(text: str) -> List[str]:

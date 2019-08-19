@@ -7,10 +7,12 @@ from .replacingmatcher import ReplacingMatcher
 
 
 class AdjustTokens:
-    def __init__(self, rules_folder=None):
+    def __init__(self, main=None, custom=None):
         self.paths = []
-        if rules_folder:
-            self.paths.append(rules_folder)
+        if main:
+            self.paths.extend(main)
+        if custom:
+            self.paths.extend(custom)
         self.rules = []
         self.parse_rules()
 
@@ -34,6 +36,9 @@ class AdjustTokens:
         return token_list
 
     def parse_rules(self):
-        paths = [p for path in self.paths for p in path.glob('*.*')]
-        for rule_file in sorted(paths):
-            self.rules.extend(yaml.load(rule_file.read_text(encoding='utf-8-sig'), Loader=yaml.FullLoader))
+        """
+        Files are sorted before being applied. Thus, filenames
+        :return:
+        """
+        for rule_file in sorted(self.paths):
+            self.rules.extend(yaml.safe_load(rule_file.read_text(encoding='utf-8-sig')))

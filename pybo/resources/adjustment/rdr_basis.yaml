@@ -1,15 +1,9 @@
-# coding: utf8
-from pathlib import Path
-from textwrap import dedent
+# Syntax for the possible adjustment
+# ===================================
+# split: [match_query, replace_idx, split_idx, replace_query]
+# merge: [match_query, replace_idx, replace_query]
+# repla: [match_query, replace_idx, replace_query]
 
-from pybo import parse_rdr_rules
-
-
-def test_parse_rdr():
-    f_path = Path(Path(__file__).parent / 'resources/rdr_rules.txt')
-    dump = f_path.read_text()
-    res = parse_rdr_rules(dump)
-    expected = """\
  - repla: ['[pos="DET"] [pos="SCONJ"]', 2, '[pos="ADP"]']
  - repla: ['[pos="DET"] [pos="SCONJ" & text="སྟེ་"]', 2, '[pos="SCONJ"]']
  - repla: ['[pos="DET"] [pos="SCONJ" & text="ཅིང་"]', 2, '[pos="SCONJ"]']
@@ -27,5 +21,4 @@ def test_parse_rdr():
  - repla: ['[pos="NUM"] [pos="SCONJ" & text="སྟེ་"]', 2, '[pos="SCONJ"]']
  - repla: ['[pos="ADP"] [pos="SCONJ"]', 2, '[pos="NOUN"]']
  - repla: ['[pos="NOUN"] [pos="ADP"] [pos="SCONJ" & text="ནས་"]', 3, '[pos="ADP"]']
- - repla: ['[pos="ADP"] [pos="SCONJ" & text="ཏེ་"]', 2, '[pos="SCONJ"]']"""
-    assert res == expected
+ - repla: ['[pos="ADP"] [pos="SCONJ" & text="ཏེ་"]', 2, '[pos="SCONJ"]']
