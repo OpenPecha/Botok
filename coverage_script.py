@@ -287,6 +287,8 @@ main, custom = config.get_tok_data_paths('POS', modifs=Path(__file__).parent / '
 main, custom = config.get_tok_data_paths(Path(__file__).parent / 'tests/trie_data/', mode='custom')
 [m for m in main]
 
+config.get_adj_data_paths('basic', modifs=Path(__file__).parent / 'tests/trie_data/')
+
 ##########################################################################################################
 # test_splitaffixed.py
 ##########################################################################################################
@@ -761,3 +763,11 @@ t.custom_pipeline('dummy', custom_tokenizer, custom_modifier, custom_formatter)
 t.custom_pipeline('dummy', 'word_tok', 'words_error_concs', 'basic_concs')
 
 t.custom_pipeline('dummy', 'word_tok', 'words_error_types', 'stats_types')
+
+
+##########################################################################################################
+# test_rdr_parser.py
+##########################################################################################################
+
+f_path = Path(Path(__file__).parent / 'tests/resources/rdr_rules.txt')
+res = parse_rdr_rules(f_path.read_text())
