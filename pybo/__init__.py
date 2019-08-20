@@ -37,4 +37,4 @@ from .parserdrrules import parse_rdr_rules
 from .config import Config
 from .vars import *
 
-VERSION = "0.6.5"
+VERSION = "0.6.6"

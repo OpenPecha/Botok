@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.6.6](https://github.com/Esukhia/pybo/releases/tag/v0.6.6) - 20190820
+
+### Added
+ * RDR rules parser to convert them into pybo's CQL ReplaceMatcher format
+ * integrate it in WordTokenizer and Config (same options as for the trie data and profiles)
+ * add a CLI option using parse_rdr_rules().
+
 ## [0.6.5](https://github.com/Esukhia/pybo/releases/tag/v0.6.5) - 20190816
 ### Fixed
  * particles not in the list were bugging
