@@ -41,6 +41,27 @@ def test_dummy_cql():
     assert matched == [(0, 1)]
 
 
+def test_regex_in_cql_query():
+    test = [{'word': 'This',
+             'lemma': 'this',
+             'tag': 'Det'},
+            {'word': 'is',
+             'lemma': 'be',
+             'tag': 'Verb'},
+            {'word': 'it',
+             'lemma': 'it',
+             'tag': 'Pron'},
+            {'word': '.',
+             'lemma': '.',
+             'tag': 'Punct'}]
+    q = '[lemma="[^\n\s]+s" & tag="Det"] [tag!="ADJ"]'
+
+    matcher = CQLMatcher(q)
+    matched = matcher.match(test)
+    expected = [test[m]['word'] for match in matched for m in match]
+    assert expected == ['This', 'is']
+
+
 def test_cql():
     query = '[pos="NOUN" & text!=""] []'
     matcher = CQLMatcher(query)
