@@ -2,7 +2,7 @@
 from .pynpl.cql import Query
 
 
-__all__ = ['Query', 'parse_cql_query', 'replace_token_attributes']
+__all__ = ["Query", "parse_cql_query", "replace_token_attributes"]
 
 
 def parse_cql_query(query, numerals=True, booleans=True):
@@ -18,6 +18,7 @@ def parse_cql_query(query, numerals=True, booleans=True):
                 keys == Token.attributes and
                 values == content of the expected Token.attributes
     """
+
     def str2int(string):
         try:
             return int(string)
@@ -25,7 +26,7 @@ def parse_cql_query(query, numerals=True, booleans=True):
             return string
 
     def str2bool(string):
-        b = {'True': True, 'False': False, 'None': None}
+        b = {"True": True, "False": False, "None": None}
         if string in b:
             return b[string]
         else:

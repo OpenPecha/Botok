@@ -1,7 +1,7 @@
 #
 # Original copyright notice:
 #
-#---------------------------------------------------------------
+# ---------------------------------------------------------------
 # PyNLPl - Finite State Automata
 #   by Maarten van Gompel
 #   Centre for Language Studies
@@ -14,7 +14,7 @@
 #
 #   Licensed under GPLv3
 #
-#----------------------------------------------------------------
+# ----------------------------------------------------------------
 #
 # This file is modified and reditstributed here under APL2 with
 # with written permission from the original author
@@ -25,20 +25,21 @@ import sys
 
 class State(object):
     def __init__(self, **kwargs):
-        if 'epsilon' in kwargs:
-            self.epsilon = kwargs['epsilon'] # epsilon-closure (lis of states)
+        if "epsilon" in kwargs:
+            self.epsilon = kwargs["epsilon"]  # epsilon-closure (lis of states)
         else:
-            self.epsilon = [] # epsilon-closure
-        if 'transitions' in kwargs:
-            self.transitions = kwargs['transitions']
+            self.epsilon = []  # epsilon-closure
+        if "transitions" in kwargs:
+            self.transitions = kwargs["transitions"]
         else:
-            self.transitions = [] #(matchitem, matchfunction(value), state)
-        if 'final' in kwargs:
-            self.final = bool(kwargs['final']) # ending state
+            self.transitions = []  # (matchitem, matchfunction(value), state)
+        if "final" in kwargs:
+            self.final = bool(kwargs["final"])  # ending state
         else:
             self.final = False
-        self.transitioned = None #will be a tuple (state, matchitem) indicating how this state was reached
-
+        self.transitioned = (
+            None
+        )  # will be a tuple (state, matchitem) indicating how this state was reached
 
 
 class NFA(object):
@@ -47,23 +48,28 @@ class NFA(object):
     def __init__(self, initialstate):
         self.initialstate = initialstate
 
-    def run(self, sequence, mustmatchall=False,debug=False):
+    def run(self, sequence, mustmatchall=False, debug=False):
         def add(state, states):
             """add state and recursively add epsilon transitions"""
             assert isinstance(state, State)
             if state in states:
                 return
             states.add(state)
-            for eps in state.epsilon: #recurse into epsilon transitions
+            for eps in state.epsilon:  # recurse into epsilon transitions
                 add(eps, states)
 
         current_states = set()
         add(self.initialstate, current_states)
-        if debug: print("Starting run, current states: ", repr(current_states),file=sys.stderr)
+        if debug:
+            print(
+                "Starting run, current states: ", repr(current_states), file=sys.stderr
+            )
 
         for offset, value in enumerate(sequence):
-            if not current_states: break
-            if debug: print("Value: ", repr(value),file=sys.stderr)
+            if not current_states:
+                break
+            if debug:
+                print("Value: ", repr(value), file=sys.stderr)
             next_states = set()
             for state in current_states:
                 for matchitem, matchfunction, trans_state in state.transitions:
@@ -72,28 +78,30 @@ class NFA(object):
                         add(trans_state, next_states)
 
             current_states = next_states
-            if debug: print("Current states: ", repr(current_states),file=sys.stderr)
+            if debug:
+                print("Current states: ", repr(current_states), file=sys.stderr)
             if not mustmatchall:
                 for s in current_states:
                     if s.final:
-                        if debug: print("Final state reached",file=sys.stderr)
-                        yield offset+1
+                        if debug:
+                            print("Final state reached", file=sys.stderr)
+                        yield offset + 1
 
         if mustmatchall:
             for s in current_states:
                 if s.final:
-                    if debug: print("Final state reached",file=sys.stderr)
-                    yield offset+1
-
+                    if debug:
+                        print("Final state reached", file=sys.stderr)
+                    yield offset + 1
 
     def match(self, sequence):
         try:
-            return next(self.run(sequence,True)) == len(sequence)
+            return next(self.run(sequence, True)) == len(sequence)
         except StopIteration:
             return False
 
     def find(self, sequence, debug=False):
         l = len(sequence)
-        for i in range(0,l):
+        for i in range(0, l):
             for length in self.run(sequence[i:], False, debug):
-                yield sequence[i:i+length]
+                yield sequence[i : i + length]

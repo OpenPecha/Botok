@@ -7,7 +7,7 @@
 class Node:
     def __init__(self, label=None, leaf=False, data=None):
         if data is None:
-            data = {'_': {}}  # the dict in '_' is for user-data
+            data = {"_": {}}  # the dict in '_' is for user-data
         self.label = label
         self.leaf = leaf
         self.data = data
@@ -93,9 +93,9 @@ class BasicTrie:
                 exists = False
 
         if exists:
-            return {'exists': exists, 'data': current_node.data}
+            return {"exists": exists, "data": current_node.data}
         else:
-            return {'exists': exists, 'data': current_node.data}
+            return {"exists": exists, "data": current_node.data}
 
     def add_data(self, word, data):
         """Adds data to words.
@@ -121,12 +121,12 @@ class BasicTrie:
 
         # adding data
         if isinstance(data, int):
-            current_node.data['form_freq'] = data
+            current_node.data["form_freq"] = data
             added = True
         else:
-            if 'entries' not in current_node.data:
-                current_node.data['entries'] = []
-            added = self.add_meaning(current_node.data['entries'], data)
+            if "entries" not in current_node.data:
+                current_node.data["entries"] = []
+            added = self.add_meaning(current_node.data["entries"], data)
         return added
 
     def add_meaning(self, meanings, meaning):

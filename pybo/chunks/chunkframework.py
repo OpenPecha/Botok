@@ -157,23 +157,33 @@ class ChunkFramework(ChunkFrameworkBase):
         :param char_idx: index of the character to test
         :type char_idx: int
         """
-        return self.bs.base_structure[char_idx] != a.OTHER \
-            and self.bs.base_structure[char_idx] != a.LATIN \
+        return (
+            self.bs.base_structure[char_idx] != a.OTHER
+            and self.bs.base_structure[char_idx] != a.LATIN
             and self.bs.base_structure[char_idx] != a.CJK
+        )
 
     def chunk_latin(self, start=None, end=None, yes=u.LATIN.value, no=u.OTHER.value):
         return self.chunk_using(self.__is_latin, start, end, yes, no)
 
     def __is_latin(self, char_idx):
-        return self.bs.base_structure[char_idx] == a.LATIN or self.bs.base_structure[char_idx] == a.TRANSPARENT
+        return (
+            self.bs.base_structure[char_idx] == a.LATIN
+            or self.bs.base_structure[char_idx] == a.TRANSPARENT
+        )
 
     def chunk_cjk(self, start=None, end=None, yes=u.CJK.value, no=u.OTHER.value):
         return self.chunk_using(self.__is_cjk, start, end, yes, no)
 
     def __is_cjk(self, char_idx):
-        return self.bs.base_structure[char_idx] == a.CJK or self.bs.base_structure[char_idx] == a.TRANSPARENT
+        return (
+            self.bs.base_structure[char_idx] == a.CJK
+            or self.bs.base_structure[char_idx] == a.TRANSPARENT
+        )
 
-    def chunk_punct(self, start=None, end=None, yes=u.PUNCT.value, no=u.NON_PUNCT.value):
+    def chunk_punct(
+        self, start=None, end=None, yes=u.PUNCT.value, no=u.NON_PUNCT.value
+    ):
         """
         Chunks input into Tibetan text("punct") or non-Tibetan("non-punct").
 
@@ -187,22 +197,30 @@ class ChunkFramework(ChunkFrameworkBase):
         Tests whether the character at the given index is a Tibetan punctuation or not.
         """
         # if a tsek or a space is right after
-        if char_idx \
-                and (self.bs.base_structure[char_idx-1] == a.SYMBOL
-                     or self.bs.base_structure[char_idx-1] == a.NUMERAL
-                     or self.bs.base_structure[char_idx-1] == a.OTHER
-                     or self.bs.base_structure[char_idx-1] == a.NORMAL_PUNCT
-                     or self.bs.base_structure[char_idx-1] == a.SPECIAL_PUNCT
-                     or self.bs.base_structure[char_idx-1] == a.TSEK
-                     or self.bs.base_structure[char_idx - 1] == a.TRANSPARENT) \
-                and (self.bs.base_structure[char_idx] == a.TSEK
-                     or self.bs.base_structure[char_idx] == a.TRANSPARENT
-                     or self.bs.base_structure[char_idx] == a.NORMAL_PUNCT):
+        if (
+            char_idx
+            and (
+                self.bs.base_structure[char_idx - 1] == a.SYMBOL
+                or self.bs.base_structure[char_idx - 1] == a.NUMERAL
+                or self.bs.base_structure[char_idx - 1] == a.OTHER
+                or self.bs.base_structure[char_idx - 1] == a.NORMAL_PUNCT
+                or self.bs.base_structure[char_idx - 1] == a.SPECIAL_PUNCT
+                or self.bs.base_structure[char_idx - 1] == a.TSEK
+                or self.bs.base_structure[char_idx - 1] == a.TRANSPARENT
+            )
+            and (
+                self.bs.base_structure[char_idx] == a.TSEK
+                or self.bs.base_structure[char_idx] == a.TRANSPARENT
+                or self.bs.base_structure[char_idx] == a.NORMAL_PUNCT
+            )
+        ):
             return True
 
-        return self.bs.base_structure[char_idx] == a.NORMAL_PUNCT \
-            or self.bs.base_structure[char_idx] == a.SPECIAL_PUNCT \
+        return (
+            self.bs.base_structure[char_idx] == a.NORMAL_PUNCT
+            or self.bs.base_structure[char_idx] == a.SPECIAL_PUNCT
             or self.bs.base_structure[char_idx] == a.TRANSPARENT
+        )
 
     def chunk_symbol(self, start=None, end=None, yes=u.SYM.value, no=u.NON_SYM.value):
         """
@@ -217,8 +235,10 @@ class ChunkFramework(ChunkFrameworkBase):
         """
         Tests whether the character at the given index is a Tibetan symbols or not.
         """
-        return self.bs.base_structure[char_idx] == a.SYMBOL \
+        return (
+            self.bs.base_structure[char_idx] == a.SYMBOL
             or self.bs.base_structure[char_idx] == a.TRANSPARENT
+        )
 
     def chunk_number(self, start=None, end=None, yes=u.NUM.value, no=u.NON_NUM.value):
         """
@@ -233,10 +253,14 @@ class ChunkFramework(ChunkFrameworkBase):
         """
         Tests whether the character at the given index is a number  or not.
         """
-        return self.bs.base_structure[char_idx] == a.NUMERAL \
+        return (
+            self.bs.base_structure[char_idx] == a.NUMERAL
             or self.bs.base_structure[char_idx] == a.TRANSPARENT
+        )
 
-    def chunk_spaces(self, start=None, end=None, yes=u.SPACE.value, no=u.NON_SPACE.value):
+    def chunk_spaces(
+        self, start=None, end=None, yes=u.SPACE.value, no=u.NON_SPACE.value
+    ):
         """
         Chunks input into any valid Unicode spaces("space") or something else("non-space").
 
@@ -263,7 +287,11 @@ class ChunkFramework(ChunkFrameworkBase):
         indices = self.chunk(start, end, self.__is_tsek_or_long_skrt_vowel)
         for num, i in enumerate(indices):
             if i[0] and num - 1 >= 0 and not indices[num - 1][0]:
-                indices[num - 1] = (indices[num - 1][0], indices[num - 1][1], indices[num - 1][2] + i[2])
+                indices[num - 1] = (
+                    indices[num - 1][0],
+                    indices[num - 1][1],
+                    indices[num - 1][2] + i[2],
+                )
 
         return [(yes, i[1], i[2]) for i in indices if not i[0]]
 
@@ -273,5 +301,7 @@ class ChunkFramework(ChunkFrameworkBase):
         Used as test to find syllable boundaries by ``syllabify()``.
         ::note:
         """
-        return self.bs.base_structure[char_idx] == a.TSEK or \
-            self.bs.base_structure[char_idx] == a.SKRT_LONG_VOW
+        return (
+            self.bs.base_structure[char_idx] == a.TSEK
+            or self.bs.base_structure[char_idx] == a.SKRT_LONG_VOW
+        )

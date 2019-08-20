@@ -7,12 +7,12 @@ from pathlib import Path
 import setuptools
 from pkg_resources import parse_version
 
-assert(parse_version(setuptools.__version__) >= parse_version("38.6.0"))
+assert parse_version(setuptools.__version__) >= parse_version("38.6.0")
 
 
 def read(fname):
     p = Path(__file__).parent / fname
-    with p.open(encoding='utf-8') as f:
+    with p.open(encoding="utf-8") as f:
         return f.read()
 
 
@@ -26,11 +26,11 @@ setuptools.setup(
     keywords="nlp computational_linguistics search ngrams language_models linguistics toolkit tibetan",
     url="https://github.com/Esukhia/pybo",
     packages=setuptools.find_packages(),
-    long_description=read('README.md'),
+    long_description=read("README.md"),
     long_description_content_type="text/markdown",
     project_urls={
-        'Source': 'https://github.com/Esukhia/pybo',
-        'Tracker': 'https://github.com/Esukhia/pybo/issues',
+        "Source": "https://github.com/Esukhia/pybo",
+        "Tracker": "https://github.com/Esukhia/pybo/issues",
     },
     classifiers=[
         "Development Status :: 3 - Alpha",
@@ -40,26 +40,25 @@ setuptools.setup(
         "Intended Audience :: Developers",
         "Intended Audience :: Science/Research",
         "License :: OSI Approved :: Apache Software License",
-        "Natural Language :: Tibetan"
+        "Natural Language :: Tibetan",
     ],
-    package_data={'pybo': ['resources/*',
-                           'resources/lexica_bo/*',
-                           'resources/frequency/*',
-                           'resources/entry_data/*',
-                           'resources/lexica_non_inflected/*',
-                           'resources/lemmas/*',
-                           'resources/rules/*',
-                           'resources/lexica_skrt/*',
-                           'resources/adjustment/*']},
-    python_requires='>=3.6',
+    package_data={
+        "pybo": [
+            "resources/*",
+            "resources/lexica_bo/*",
+            "resources/frequency/*",
+            "resources/entry_data/*",
+            "resources/lexica_non_inflected/*",
+            "resources/lemmas/*",
+            "resources/rules/*",
+            "resources/lexica_skrt/*",
+            "resources/adjustment/*",
+        ]
+    },
+    python_requires=">=3.6",
     tests_require=["pytest"],
-    install_requires=[
-        'pyyaml',
-        'click'
-    ],
+    install_requires=["pyyaml", "click"],
     entry_points={
-        'console_scripts': [
-            'pybo=pybo.cli:cli',  # command=package.module:function
-        ],
+        "console_scripts": ["pybo=pybo.cli:cli"]  # command=package.module:function
     },
 )

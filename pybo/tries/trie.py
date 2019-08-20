@@ -1,4 +1,4 @@
- # coding: utf-8
+# coding: utf-8
 import time
 import pickle
 from pathlib import Path
@@ -15,8 +15,10 @@ class Trie(BasicTrie):
         self.bosyl = bosyl()
         self.main_data = main_data
         self.custom_data = custom_data
-        self.pickled_file = Path(profile + '_trie.pickled')
-        self.tmp_inflected = dict()  # tmp to inflect only once, even if a word appears in many files.
+        self.pickled_file = Path(profile + "_trie.pickled")
+        self.tmp_inflected = (
+            dict()
+        )  # tmp to inflect only once, even if a word appears in many files.
         self.load_or_build_trie(build)
 
     def rebuild_trie(self):
@@ -34,34 +36,34 @@ class Trie(BasicTrie):
         self.tmp_inflected = dict()
 
     def _load_trie(self):
-        print('Loading Trie...', end=' ', flush=True)
+        print("Loading Trie...", end=" ", flush=True)
         start = time.time()
-        with self.pickled_file.open('rb') as f:
+        with self.pickled_file.open("rb") as f:
             self.head = pickle.load(f)
         end = time.time()
-        print('({:.0f}s.)'.format(end - start), flush=True)
+        print("({:.0f}s.)".format(end - start), flush=True)
 
     def _build_trie(self):
         """
         """
-        print('Building Trie...', end=' ', flush=True)
+        print("Building Trie...", end=" ", flush=True)
         start = time.time()
         self._populate_trie(self.main_data)
 
-        with self.pickled_file.open('wb') as f:
+        with self.pickled_file.open("wb") as f:
             pickle.dump(self.head, f, pickle.HIGHEST_PROTOCOL)
         end = time.time()
-        print('({:.0f} s.)'.format(end - start), flush=True)
+        print("({:.0f} s.)".format(end - start), flush=True)
 
     def _populate_trie(self, files):
         # first populate the trie with words
-        lexica = (d for d in files if d.startswith('lexica'))
+        lexica = (d for d in files if d.startswith("lexica"))
         for l in lexica:
             for f in files[l]:
                 self._add_one_file(f, l)
 
         # then add data to the added words
-        rest = (d for d in files if not d.startswith('lexica'))
+        rest = (d for d in files if not d.startswith("lexica"))
         for r in rest:
             for f in files[r]:
                 self._add_one_file(f, r)
@@ -72,30 +74,32 @@ class Trie(BasicTrie):
         spaces and empty lines are trimmed
         a single space(breaks if more than one), a comma or a tab can be used as separators
         """
-        with in_file.open('r', encoding='utf-8-sig') as f:
+        with in_file.open("r", encoding="utf-8-sig") as f:
             lines = self.__clean_lines(f)
             for l in lines:
-                if category == 'lexica_bo':
+                if category == "lexica_bo":
                     self.inflect_n_modify_trie(l)
 
-                elif category == 'lexica_non_inflected':
+                elif category == "lexica_non_inflected":
                     self.add_non_inflectible(l)
 
-                elif category == 'lexica_skrt':
+                elif category == "lexica_skrt":
                     self.inflect_n_modify_trie(l, skrt=True)
 
-                elif category == 'deactivate':
+                elif category == "deactivate":
                     self.inflect_n_modify_trie(l, deactivate=True)
 
-                elif category == 'entry_data':
+                elif category == "entry_data":
                     self.inflect_n_add_data(l)
 
-                elif category == 'frequency':
+                elif category == "frequency":
                     self.inflect_n_add_data(l, True)
 
                 else:
-                    raise SyntaxError('category is one of: lexica_bo, lexica_skrt, '
-                                      'entry_data, frequency, deactivate')
+                    raise SyntaxError(
+                        "category is one of: lexica_bo, lexica_skrt, "
+                        "entry_data, frequency, deactivate"
+                    )
 
     def add_non_inflectible(self, word):
         syls = TokChunks(word).get_syls()
@@ -121,9 +125,9 @@ class Trie(BasicTrie):
             else:
                 if skrt:
                     if data is None:
-                        data = {'skrt': True}
+                        data = {"skrt": True}
                     else:
-                        data.update({'skrt': True})
+                        data.update({"skrt": True})
                     self.add(infl, data=data)
                 else:
                     self.add(infl, data=data)
@@ -144,8 +148,17 @@ class Trie(BasicTrie):
         else:
             for infl, _ in inflected:
                 affixed = True if _ else False
-                data = {k: v for k, v in [('lemma', lemma), ('pos', pos), ('freq', freq),
-                                          ('meaning', meaning), ('affixed', affixed)] if v is not None}
+                data = {
+                    k: v
+                    for k, v in [
+                        ("lemma", lemma),
+                        ("pos", pos),
+                        ("freq", freq),
+                        ("meaning", meaning),
+                        ("affixed", affixed),
+                    ]
+                    if v is not None
+                }
                 self.add_data(infl, data)
 
     def _get_inflected(self, word):
@@ -166,21 +179,20 @@ class Trie(BasicTrie):
         if affixed:
             for infl, data in affixed:
                 infl_word = self.__join_syls(syls[:-1] + [infl])
-                inflected.append((infl_word, {'affixation': data}))
+                inflected.append((infl_word, {"affixation": data}))
 
         self.tmp_inflected[word] = inflected
         return inflected
 
     @staticmethod
     def __join_syls(syls):
-        return ''.join([syl if syl.endswith(NAMCHE) else syl + TSEK for syl in syls])
+        return "".join([syl if syl.endswith(NAMCHE) else syl + TSEK for syl in syls])
 
     @staticmethod
     def __clean_lines(f):
         # cuts off comments, then strips empty lines
         lines = (
-            line[:line.index(HASH)] if HASH in line else line
-            for line in f.readlines()
+            line[: line.index(HASH)] if HASH in line else line for line in f.readlines()
         )
         return (l for l in lines if l)
 
@@ -190,10 +202,10 @@ class Trie(BasicTrie):
         enables support of '\t' and ',' as separator.
         """
         fields = [None, None, None, None, None]
-        if '\t' in line:
-            sep = '\t'
-        elif ',' in line:
-            sep = ','
+        if "\t" in line:
+            sep = "\t"
+        elif "," in line:
+            sep = ","
         else:
             fields[0] = line
             fields[2] = OOV

@@ -42,6 +42,7 @@ class BoString:
                 Be sure to create the corresponding constants in ``__init__()`` and the corresponding
                 entries in ``__init__().char_markers``.
     """
+
     def __init__(self, string, ignore_chars=None):
         if ignore_chars is None:
             ignore_chars = []
@@ -59,7 +60,11 @@ class BoString:
             char = self.string[i]
             cat = get_char_category(char)
             if char in self.ignore_chars:
-                self.base_structure[i] = a.TRANSPARENT.value  # spaces chars are allowed anywhere, thus ignored
+                self.base_structure[
+                    i
+                ] = (
+                    a.TRANSPARENT.value
+                )  # spaces chars are allowed anywhere, thus ignored
             else:
                 self.base_structure[i] = cat
 
@@ -88,9 +93,15 @@ class BoString:
 
         """
         if for_substring:
-            return {n: self.base_structure[i] for n, i in enumerate(range(start_idx, start_idx + slice_len))}
+            return {
+                n: self.base_structure[i]
+                for n, i in enumerate(range(start_idx, start_idx + slice_len))
+            }
         else:
-            return {i: self.base_structure[i] for i in range(start_idx, start_idx + slice_len)}
+            return {
+                i: self.base_structure[i]
+                for i in range(start_idx, start_idx + slice_len)
+            }
 
     def get_categories(self, struct=None):
         if struct is None or not isinstance(struct, dict):

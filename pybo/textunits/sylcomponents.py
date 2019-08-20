@@ -5,7 +5,7 @@ import json
 from pathlib import Path
 
 data_path = Path(__file__).parent.parent / "resources" / "SylComponents.json"
-with data_path.open('r', encoding='utf-8-sig') as f:
+with data_path.open("r", encoding="utf-8-sig") as f:
     data = json.loads(f.read())
 
 
@@ -13,23 +13,24 @@ class SylComponents:
     """
     Provides information about a syllable
     """
+
     def __init__(self):
         # check for possible dadrag https://github.com/eroux/tibetan-spellchecker/blob/master/doc/second-suffix-da.md
         # roots is an import from root + rareC and wazurC and suffixes is the 'AB' entry from  suffixes.json
-        self.dadrag = data['dadrag']
-        self.roots = data['roots']
-        self.suffixes = data['suffixes']
-        self.Csuffixes = data['Csuffixes']
+        self.dadrag = data["dadrag"]
+        self.roots = data["roots"]
+        self.suffixes = data["suffixes"]
+        self.Csuffixes = data["Csuffixes"]
 
         # all dicts from https://github.com/eroux/tibetan-spellchecker/tree/master/syllables
-        self.special = data['special']
-        self.wazurs = data['wazurs']
+        self.special = data["special"]
+        self.wazurs = data["wazurs"]
         self.exceptions = self.special + self.wazurs
-        self.ambiguous = data['ambiguous']
+        self.ambiguous = data["ambiguous"]
 
-        self.m_roots = data['m_roots']
-        self.m_exceptions = data['m_exceptions']
-        self.m_wazurs = data['m_wazurs']
+        self.m_roots = data["m_roots"]
+        self.m_exceptions = data["m_exceptions"]
+        self.m_wazurs = data["m_wazurs"]
         self.mingzhis = self.m_roots.copy()
         self.mingzhis.update(self.m_exceptions)
         self.mingzhis.update(self.m_wazurs)
@@ -62,22 +63,22 @@ class SylComponents:
             # find all possible suffixes
             suffix = []
             if l_s > 1:
-                if syl[l_s - 1:] in self.suffixes:
-                    suffix.append(syl[l_s - 1:])
-                if syl[l_s - 2:] in self.suffixes:
-                    suffix.append(syl[l_s - 2:])
-                if syl[l_s - 3:] in self.suffixes:
-                    suffix.append(syl[l_s - 3:])
-                if syl[l_s - 4:] in self.suffixes:
-                    suffix.append(syl[l_s - 4:])
-                if syl[l_s - 5:] in self.suffixes:
-                    suffix.append(syl[l_s - 5:])
+                if syl[l_s - 1 :] in self.suffixes:
+                    suffix.append(syl[l_s - 1 :])
+                if syl[l_s - 2 :] in self.suffixes:
+                    suffix.append(syl[l_s - 2 :])
+                if syl[l_s - 3 :] in self.suffixes:
+                    suffix.append(syl[l_s - 3 :])
+                if syl[l_s - 4 :] in self.suffixes:
+                    suffix.append(syl[l_s - 4 :])
+                if syl[l_s - 5 :] in self.suffixes:
+                    suffix.append(syl[l_s - 5 :])
 
             # deal with all the C roots
             # print(self.syl, root)
-            if root != [] and self.roots[root[0]] == 'C':
+            if root != [] and self.roots[root[0]] == "C":
                 if root[0] == syl:
-                    return root[0], ''
+                    return root[0], ""
                 else:
                     for s in suffix:
                         if s in self.Csuffixes and root[0] + s == syl:
@@ -90,7 +91,7 @@ class SylComponents:
                 for r in root:
                     for s in suffix:
                         # unexpected འ་
-                        if self.roots[r] == 'A' and s == 'འ' and r + s == syl:
+                        if self.roots[r] == "A" and s == "འ" and r + s == syl:
                             # print(r, roots[r])
                             return None
                         else:
@@ -111,8 +112,8 @@ class SylComponents:
                 for r in root:
                     if r in self.roots and r == syl:
                         # if syllable is valid without suffix + without aa
-                        if self.roots[r] != 'NB' and (r, '') not in solutions:
-                            solutions.append((r, ''))
+                        if self.roots[r] != "NB" and (r, "") not in solutions:
+                            solutions.append((r, ""))
                 if solutions != []:
                     if len(solutions) > 1:
                         return solutions
@@ -127,13 +128,13 @@ class SylComponents:
         elif syl in self.ambiguous:
             return self.ambiguous[syl]
         else:
-            return syl, 'x'
+            return syl, "x"
 
     def normalize_dadrag(self, syl):
         #
         components = self.get_parts(syl)
         if type(components) == list or not components:
-            if syl[-1] == 'ད':
+            if syl[-1] == "ད":
                 components = self.get_parts(syl[:-1])
                 if components and isinstance(components, tuple):
                     return syl[:-1]
@@ -147,7 +148,7 @@ class SylComponents:
         """
         components = self.get_parts(syl)
         if isinstance(components, list) or not components:
-            if syl and syl[-1] == 'ད':
+            if syl and syl[-1] == "ད":
                 components = self.get_parts(syl[:-1])
                 if isinstance(components, list) or not components:
                     return None
@@ -172,9 +173,16 @@ class SylComponents:
             return None
         else:
             if syl in self.dadrag:
-                return 'dadrag'
-            elif re.search(mingzhi + '([ྱྲླྭྷ]?[ིེོུ]?(འ?[ིོུ]?ར?ས?|(འ[མང])|(འོའ[མང])|(འིའ[ོམང])))$', syl) is not None:
-                return 'thame'
+                return "dadrag"
+            elif (
+                re.search(
+                    mingzhi
+                    + "([ྱྲླྭྷ]?[ིེོུ]?(འ?[ིོུ]?ར?ས?|(འ[མང])|(འོའ[མང])|(འིའ[ོམང])))$",
+                    syl,
+                )
+                is not None
+            ):
+                return "thame"
             else:
                 return syl
 
@@ -183,12 +191,12 @@ class SylComponents:
         :param syl: a string without tsek or other punct
         :return: True if the syllabe is affixable or is already affixed, False otherwise
         """
-        return self.get_info(syl) == 'thame'
+        return self.get_info(syl) == "thame"
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # example of use
     sc = SylComponents()
-    assert sc.get_parts('བཀྲིས') == ('བཀྲ', 'ིས')
-    assert(sc.get_info('དེའིའམ') == 'thame')
-    assert(sc.get_info('དེའི') == 'thame')
+    assert sc.get_parts("བཀྲིས") == ("བཀྲ", "ིས")
+    assert sc.get_info("དེའིའམ") == "thame"
+    assert sc.get_info("དེའི") == "thame"

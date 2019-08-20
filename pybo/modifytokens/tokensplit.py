@@ -16,6 +16,7 @@ class TokenSplit:
         - token.syls        : syls are redistributed and split if necessary
 
     """
+
     def __init__(self, token, split_idx, token_changes=None):
         self.token = token
         self.first = None
@@ -46,13 +47,13 @@ class TokenSplit:
 
     def __split_contents(self):
         text = self.first.text
-        self.first.text = text[0:self.idx]
-        self.second.text = text[self.idx:]
+        self.first.text = text[0 : self.idx]
+        self.second.text = text[self.idx :]
 
     def __split_char_types(self):
         char_types = self.first.char_types
-        self.first.char_types = char_types[:self.idx]
-        self.second.char_types = char_types[self.idx:]
+        self.first.char_types = char_types[: self.idx]
+        self.second.char_types = char_types[self.idx :]
 
     def __split_indices(self):
         self.first.len = len(self.first.text)
@@ -87,6 +88,6 @@ class TokenSplit:
 
     def __split_affixation(self):
         if self.token.affixation:
-            del self.first.affixation['len']
-            del self.first.affixation['type']
-            del self.second.affixation['aa']
+            del self.first.affixation["len"]
+            del self.first.affixation["type"]
+            del self.second.affixation["aa"]

@@ -6,7 +6,7 @@ from pybo import parse_rdr_rules
 
 
 def test_parse_rdr():
-    f_path = Path(Path(__file__).parent / 'resources/rdr_rules.txt')
+    f_path = Path(Path(__file__).parent / "resources/rdr_rules.txt")
     dump = f_path.read_text()
     res = parse_rdr_rules(dump)
     expected = """\

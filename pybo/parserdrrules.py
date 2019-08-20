@@ -11,28 +11,30 @@ conclusion = "object.conclusion"
 op = " == "
 ccl_op = " = "
 cond_sep = " and "
-rule_sep = ' : '
-cql_rule_sep = ' & '
-level_sep = '\t'
+rule_sep = " : "
+cql_rule_sep = " & "
+level_sep = "\t"
 
 positive = [tag, word, next_tag, next_word, conclusion]
 negative = [prev_tag, prev_word]
 eq_table = {
-    tag: 'pos',
-    prev_tag: 'pos',
-    next_tag: 'pos',
-    conclusion: 'pos',
-    word: 'text',
-    prev_word: 'text',
-    next_word: 'text'
+    tag: "pos",
+    prev_tag: "pos",
+    next_tag: "pos",
+    conclusion: "pos",
+    word: "text",
+    prev_word: "text",
+    next_word: "text",
 }
 
 
 def parse_rdr_rules(string):
     cql = format_rules(find_rules(find_levels(string)))
     repl = " - repla: ['{match_cql}', {replace_index}, '{replace_cql}']"
-    repls = [repl.format(match_cql=a, replace_index=b, replace_cql=c) for a, b, c in cql]
-    return '\n'.join(repls)
+    repls = [
+        repl.format(match_cql=a, replace_index=b, replace_cql=c) for a, b, c in cql
+    ]
+    return "\n".join(repls)
 
 
 def format_rules(rules):
@@ -51,24 +53,24 @@ def format_rules(rules):
                 slot_zero_idx = num + 1
 
             if t in test:
-                conds = [f'{eq_table[tag]}={pos}' for tag, pos in test[t]]
-                slots.append('[' + cql_rule_sep.join(conds) + ']')
+                conds = [f"{eq_table[tag]}={pos}" for tag, pos in test[t]]
+                slots.append("[" + cql_rule_sep.join(conds) + "]")
             else:
-                slots.append('[]')
+                slots.append("[]")
         assert slot_zero_idx is not None
-        return ' '.join(slots), slot_zero_idx
+        return " ".join(slots), slot_zero_idx
 
     cql = []
     for rule in rules:
-        test_cql, idx = generate_cql(rule['test'])
-        ccl_cql, _ = generate_cql(rule['ccl'])
+        test_cql, idx = generate_cql(rule["test"])
+        ccl_cql, _ = generate_cql(rule["ccl"])
         cql.append((test_cql, idx, ccl_cql))
     return cql
 
 
 def find_levels(string):
     out = []
-    for line in string.split('\n'):
+    for line in string.split("\n"):
         count = 0
         while line[0] == level_sep:
             count += 1
@@ -98,12 +100,12 @@ def find_rules(lines):
             continue
 
         test = defaultdict(list)
-        for l in range(level+1):
+        for l in range(level + 1):
             for pos, t in state[l].items():
                 for u in t:
                     if u not in test[pos]:  # avoid duplicates
                         test[pos].append(u)
-        rules.append({'test': test, 'ccl': ccl})
+        rules.append({"test": test, "ccl": ccl})
     return rules
 
 
@@ -126,7 +128,7 @@ def parse_test(test):
                 attr = attr[:-1]
         for n in negative:
             if n in attr and len(attr) > len(n):
-                pos = - int(attr[-1])
+                pos = -int(attr[-1])
                 attr = attr[:-1]
         return attr, pos, tag
 

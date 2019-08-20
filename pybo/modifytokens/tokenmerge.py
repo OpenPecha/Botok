@@ -8,6 +8,7 @@ class TokenMerge:
     """
 
     """
+
     def __init__(self, token1, token2, token_changes=None):
         self.token1 = token1
         self.token2 = token2
@@ -52,8 +53,11 @@ class TokenMerge:
                     new_syl = [i + self.token1.len for i in syl]
 
                     # token1 is a host syllable and token2 its affixed syllable
-                    if first_syl and (self.token1.affix_host and not self.token1.affix) \
-                            and (not self.token2.affix_host and self.token2.affix):
+                    if (
+                        first_syl
+                        and (self.token1.affix_host and not self.token1.affix)
+                        and (not self.token2.affix_host and self.token2.affix)
+                    ):
                         self.merged.syls_idx[-1] += new_syl
                         self.merged.affix = True
                         first_syl = False
@@ -64,5 +68,5 @@ class TokenMerge:
         """
         Simply deletes any lemma in merged since the lemma of the merged token can't be guessed.
         """
-        if self.token1['lemma']:
+        if self.token1["lemma"]:
             self.merged.lemma = None

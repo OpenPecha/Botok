@@ -11,12 +11,16 @@ def paragraph_tokenizer(tokens):
     # join small sentences to form paragraphs
     i = 0
     while i < len(par_indices):
-        start, end, l = par_indices[i]['start'], par_indices[i]['end'], par_indices[i]['len']
+        start, end, l = (
+            par_indices[i]["start"],
+            par_indices[i]["end"],
+            par_indices[i]["len"],
+        )
         if i > 0 and l < threshold:
-            previous_len = par_indices[i - 1]['len']
+            previous_len = par_indices[i - 1]["len"]
             if l + previous_len < paragraph_max:
-                par_indices[i - 1]['end'] = par_indices[i]['end']
-                par_indices[i - 1]['len'] += par_indices[i]['len']
+                par_indices[i - 1]["end"] = par_indices[i]["end"]
+                par_indices[i - 1]["len"] += par_indices[i]["len"]
                 del par_indices[i]
                 i -= 1
         i += 1
@@ -24,7 +28,7 @@ def paragraph_tokenizer(tokens):
     # get tokens for each paragraph
     pars = []
     for par in par_indices:
-        start, end, l = par['start'], par['end'], par['len']
-        pars.append((l, tokens[start:end + 1]))
+        start, end, l = par["start"], par["end"], par["len"]
+        pars.append((l, tokens[start : end + 1]))
 
     return pars

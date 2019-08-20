@@ -20,15 +20,20 @@ class Chunks(ChunkFramework):
     .. note:: Following Tibetan usage, it does not consider space as a punctuation mark.
     Spaces get attached to the chunk preceding them.
     """
+
     def __init__(self, string, ignore_chars=None):
         ChunkFramework.__init__(self, string, ignore_chars=ignore_chars)
 
     def make_chunks(self, indices=True, gen=False):
         chunks = self.chunk_bo_chars()
-        chunks = self.pipe_chunk(chunks, self.chunk_punct, to_chunk_marker=c.BO.value, yes=c.PUNCT.value)
+        chunks = self.pipe_chunk(
+            chunks, self.chunk_punct, to_chunk_marker=c.BO.value, yes=c.PUNCT.value
+        )
         chunks = self.pipe_chunk(chunks, self.chunk_symbol, c.BO.value, c.SYM.value)
         chunks = self.pipe_chunk(chunks, self.chunk_number, c.BO.value, c.NUM.value)
-        chunks = self.merge_skippable_punct(chunks)  # to ensure we have correctly built syllables
+        chunks = self.merge_skippable_punct(
+            chunks
+        )  # to ensure we have correctly built syllables
         chunks = self.pipe_chunk(chunks, self.syllabify, c.BO.value, c.TEXT.value)
         chunks = self.pipe_chunk(chunks, self.chunk_cjk, c.OTHER.value, c.CJK.value)
         chunks = self.pipe_chunk(chunks, self.chunk_latin, c.OTHER.value, c.LATIN.value)
@@ -49,6 +54,7 @@ class TokChunks(Chunks):
             - the chunk itself
 
     """
+
     def __init__(self, string, ignore_chars=None):
         Chunks.__init__(self, string, ignore_chars=ignore_chars)
         self.chunks = None
@@ -57,7 +63,7 @@ class TokChunks(Chunks):
         chunks = []
         for chunk in self.make_chunks():
             if chunk[0] == c.TEXT:
-                syl = self.__get_text_chars(chunk[1], chunk[1]+chunk[2])
+                syl = self.__get_text_chars(chunk[1], chunk[1] + chunk[2])
                 chunks.append((syl, chunk))
             else:
                 chunks.append((None, chunk))
@@ -68,7 +74,7 @@ class TokChunks(Chunks):
         for chunk in self.make_chunks():
             if chunk[0] == c.TEXT:
                 char_idxs = self.__get_text_chars(chunk[1], chunk[1] + chunk[2])
-                syls.append(''.join([self.bs.string[i] for i in char_idxs]))
+                syls.append("".join([self.bs.string[i] for i in char_idxs]))
         return syls
 
     def __get_text_chars(self, start_idx, end_idx):
@@ -88,7 +94,8 @@ class TokChunks(Chunks):
         """
         Tests whether the character at the given index is part of the cleaned syllable or not.
         """
-        return (self.bs.base_structure[char_idx] != a.TSEK
-                and self.bs.base_structure[char_idx] != a.TRANSPARENT
-                and self.bs.base_structure[char_idx] != a.SKRT_LONG_VOW) \
-            or self.bs.base_structure[char_idx] == a.SKRT_LONG_VOW
+        return (
+            self.bs.base_structure[char_idx] != a.TSEK
+            and self.bs.base_structure[char_idx] != a.TRANSPARENT
+            and self.bs.base_structure[char_idx] != a.SKRT_LONG_VOW
+        ) or self.bs.base_structure[char_idx] == a.SKRT_LONG_VOW

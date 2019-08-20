@@ -29,7 +29,11 @@ class ChunkFrameworkBase:
                         previous = chunks[num - 1 - inc]
 
                     new = (previous[0], previous[1], previous[2] + current[2])
-                    chunks[num - 1 - inc] = (previous[0], previous[1], previous[2] + current[2])
+                    chunks[num - 1 - inc] = (
+                        previous[0],
+                        previous[1],
+                        previous[2] + current[2],
+                    )
                     del chunks[num]
                     num -= 1
 
@@ -136,7 +140,11 @@ class ChunkFrameworkBase:
                         to_del = False
 
                 if to_del:
-                    new_chunk = (chunks[i + 1][0], current[1], chunks[i + 1][1] + chunks[i + 1][2])
+                    new_chunk = (
+                        chunks[i + 1][0],
+                        current[1],
+                        chunks[i + 1][1] + chunks[i + 1][2],
+                    )
                     chunks[i + 1] = new_chunk
                     del chunks[i]
                     i -= 1
@@ -149,7 +157,11 @@ class ChunkFrameworkBase:
                         to_del = False
 
                 if to_del:
-                    new_chunk = (chunks[i - 1][0], chunks[i - 1][1], current[2] + chunks[i - 1][2])
+                    new_chunk = (
+                        chunks[i - 1][0],
+                        chunks[i - 1][1],
+                        current[2] + chunks[i - 1][2],
+                    )
                     chunks[i - 1] = new_chunk
                     del chunks[i]
                     i -= 1
@@ -178,7 +190,11 @@ class ChunkFrameworkBase:
     @staticmethod
     def __is_similar_chunks(previous, current):
         # the chunk markers of both are similar.
-        return previous[0] != u.TEXT.value and current[0] != u.TEXT.value and previous[0] == current[0]
+        return (
+            previous[0] != u.TEXT.value
+            and current[0] != u.TEXT.value
+            and previous[0] == current[0]
+        )
 
     def get_readable(self, indices, gen=False):
         out = self.get_markers(indices)
@@ -196,8 +212,13 @@ class ChunkFrameworkBase:
         :rtype: list of tuples each containing: a chunk-mark(int or str), a substring
         """
         if gen:
-            return ((i, self.bs.string[start:start + length]) for i, start, length in indices)
-        return [(i, self.bs.string[start:start + length]) for i, start, length in indices]
+            return (
+                (i, self.bs.string[start : start + length])
+                for i, start, length in indices
+            )
+        return [
+            (i, self.bs.string[start : start + length]) for i, start, length in indices
+        ]
 
     @staticmethod
     def get_markers(indices):

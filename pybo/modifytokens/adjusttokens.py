@@ -19,20 +19,24 @@ class AdjustTokens:
     def adjust(self, token_list):
         for rule in self.rules:
             operation = list(rule.keys())[0]
-            if operation == 'split':
+            if operation == "split":
                 match_query, replace_idx, split_idx, replace_query = rule[operation]
-                sm = SplittingMatcher(match_query, replace_idx, split_idx, token_list, replace_query)
+                sm = SplittingMatcher(
+                    match_query, replace_idx, split_idx, token_list, replace_query
+                )
                 token_list = sm.split_on_matches()
-            elif operation == 'merge':
+            elif operation == "merge":
                 match_query, replace_idx, replace_query = rule[operation]
                 mm = MergingMatcher(match_query, replace_idx, token_list, replace_query)
                 token_list = mm.merge_on_matches()
-            elif operation == 'repla':
+            elif operation == "repla":
                 match_query, replace_idx, replace_query = rule[operation]
-                rm = ReplacingMatcher(match_query, replace_idx, token_list, replace_query)
+                rm = ReplacingMatcher(
+                    match_query, replace_idx, token_list, replace_query
+                )
                 rm.replace_on_matches()
             else:
-                print('rule problem: ' + rule)
+                print("rule problem: " + rule)
         return token_list
 
     def parse_rules(self):
@@ -41,4 +45,4 @@ class AdjustTokens:
         :return:
         """
         for rule_file in sorted(self.paths):
-            self.rules.extend(yaml.safe_load(rule_file.read_text(encoding='utf-8-sig')))
+            self.rules.extend(yaml.safe_load(rule_file.read_text(encoding="utf-8-sig")))

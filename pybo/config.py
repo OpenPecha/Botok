@@ -8,7 +8,8 @@ from textwrap import dedent
 import yaml
 from collections import defaultdict
 
-default_config = dedent('''\
+default_config = dedent(
+    """\
     tokenizers:
       trie_files:
         - &ancient lexica_bo/ancient.txt
@@ -44,7 +45,8 @@ default_config = dedent('''\
         - &rdr adjustment/rdr_basis.yaml
       profiles:
         empty: []
-        basic: [*rdr]''')
+        basic: [*rdr]"""
+)
 
 
 class Config:
@@ -64,7 +66,8 @@ class Config:
     3. the modifs argument contains a dir path to a similar structure as above.
        the files will be used to update the trie on the fly.
     """
-    def __init__(self, filename='pybo.yaml'):
+
+    def __init__(self, filename="pybo.yaml"):
         """Initialize the class
 
         Converting the configuration file into a Python dictionary object which
@@ -81,21 +84,21 @@ class Config:
 
         # if the file doesn't exist, write it with the default values
         if not self.filename.is_file():
-            with self.filename.open('w', encoding='utf-8-sig') as f:
+            with self.filename.open("w", encoding="utf-8-sig") as f:
                 f.write(default_config)
 
-        with self.filename.open('r', encoding='utf-8-sig') as g:
+        with self.filename.open("r", encoding="utf-8-sig") as g:
             self.config = yaml.safe_load(g.read())
 
-    def get_tok_data_paths(self, profile, modifs=None, mode='internal'):
+    def get_tok_data_paths(self, profile, modifs=None, mode="internal"):
         main_profile = defaultdict(list)
-        if mode == 'internal':
-            files = self.config['tokenizers']['profiles'][profile]
+        if mode == "internal":
+            files = self.config["tokenizers"]["profiles"][profile]
             for el in files:
-                el = Path(__file__).parent / 'resources' / Path(el)
+                el = Path(__file__).parent / "resources" / Path(el)
                 main_profile[el.parts[-2]].append(el)
 
-        elif mode == 'custom':
+        elif mode == "custom":
             self.__parse_tok_dir(profile, main_profile)
         else:
             raise ValueError('mode needs to be either "internal" or "custom".')
@@ -106,15 +109,15 @@ class Config:
 
         return main_profile, user_modifs
 
-    def get_adj_data_paths(self, profile, modifs=None, mode='internal'):
+    def get_adj_data_paths(self, profile, modifs=None, mode="internal"):
         main = []
-        if mode == 'internal':
-            files = self.config['adjustments']['profiles'][profile]
+        if mode == "internal":
+            files = self.config["adjustments"]["profiles"][profile]
             for el in files:
-                el = Path(__file__).parent / 'resources' / Path(el)
+                el = Path(__file__).parent / "resources" / Path(el)
                 main.append(el)
 
-        elif mode == 'custom':
+        elif mode == "custom":
             self.__parse_adj_dir(profile, main)
         else:
             raise ValueError('mode needs to be either "internal" or "custom".')
@@ -128,29 +131,29 @@ class Config:
     def __parse_tok_dir(self, dirpath, paths):
         dirpath = Path(dirpath).resolve()
         assert dirpath.is_dir()
-        bo = dirpath / 'lexica_bo'
-        skrt = dirpath / 'lexica_skrt'
-        non_infl = dirpath / 'lexica_non_inflected'
-        lem_pos_freq = dirpath / 'entry_data'
-        freq = dirpath / 'frequency'
-        deact = dirpath / 'deactivate'
+        bo = dirpath / "lexica_bo"
+        skrt = dirpath / "lexica_skrt"
+        non_infl = dirpath / "lexica_non_inflected"
+        lem_pos_freq = dirpath / "entry_data"
+        freq = dirpath / "frequency"
+        deact = dirpath / "deactivate"
 
         for p in [bo, skrt, non_infl, lem_pos_freq, freq, deact]:
             if p.is_dir():
-                for el in list(p.glob('*.txt')) + list(p.glob('*.csv')):
-                    el = Path(__file__).parent / 'resources' / Path(el)
+                for el in list(p.glob("*.txt")) + list(p.glob("*.csv")):
+                    el = Path(__file__).parent / "resources" / Path(el)
                     paths[el.parts[-2]].append(el)
 
     def __parse_adj_dir(self, dirpath, paths):
         dirpath = Path(dirpath).resolve()
         assert dirpath.is_dir()
-        adjs = dirpath / 'adjustment'
+        adjs = dirpath / "adjustment"
         if adjs.is_dir():
-            for el in adjs.glob('*.yaml'):
-                el = Path(__file__).parent / 'resources' / Path(el)
+            for el in adjs.glob("*.yaml"):
+                el = Path(__file__).parent / "resources" / Path(el)
                 paths.append(el)
 
     def reset_default(self):
         """Resets the configuration file to the default values"""
-        with self.filename.open('w', encoding='utf-8-sig') as f:
+        with self.filename.open("w", encoding="utf-8-sig") as f:
             f.write(default_config)
