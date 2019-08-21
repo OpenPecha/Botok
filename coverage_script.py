@@ -806,4 +806,4 @@ t.custom_pipeline("dummy", "word_tok", "words_error_types", "stats_types")
 ##########################################################################################################
 
 f_path = Path(Path(__file__).parent / "tests/resources/rdr_rules.txt")
-res = parse_rdr_rules(f_path.read_text())
+res = rdr_2_replace_matcher(f_path.read_text())

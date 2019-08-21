@@ -28,7 +28,7 @@ eq_table = {
 }
 
 
-def parse_rdr_rules(string):
+def rdr_2_replace_matcher(string):
     cql = format_rules(find_rules(find_levels(string)))
     repl = " - repla: ['{match_cql}', {replace_index}, '{replace_cql}']"
     repls = [

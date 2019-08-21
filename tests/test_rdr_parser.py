@@ -2,13 +2,13 @@
 from pathlib import Path
 from textwrap import dedent
 
-from pybo import parse_rdr_rules
+from pybo import rdr_2_replace_matcher
 
 
 def test_parse_rdr():
     f_path = Path(Path(__file__).parent / "resources/rdr_rules.txt")
     dump = f_path.read_text()
-    res = parse_rdr_rules(dump)
+    res = rdr_2_replace_matcher(dump)
     expected = """\
  - repla: ['[pos="DET"] [pos="SCONJ"]', 2, '[pos="ADP"]']
  - repla: ['[pos="DET"] [pos="SCONJ" & text="སྟེ་"]', 2, '[pos="SCONJ"]']
