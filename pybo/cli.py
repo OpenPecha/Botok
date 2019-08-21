@@ -30,12 +30,20 @@ def tok_string(**kwargs):
 @click.argument("infile")
 def parse_rdr(**kwargs):
     infile = Path(kwargs["infile"])
+    outfile = infile.parent / (infile.stem + ".yaml")
+    manage_io(infile, outfile, parse_rdr_rules)
+
+
+def manage_io(infile, outfile, process):
+    """
+    Reads the content, applies the process passed and writes the output to outfile
+    """
+    infile = Path(infile)
     if not infile.is_file():
         raise FileExistsError(f"{infile} was not found.\nexiting...")
     dump = infile.read_text(encoding="utf-8-sig")
-    rdr = parse_rdr_rules(dump)
-    outfile = infile.parent / (infile.stem + ".yaml")
-    outfile.write_text(rdr, encoding="utf-8-sig")
+    processed = process(dump)
+    outfile.write_text(processed, encoding="utf-8-sig")
 
 
 if __name__ == "__main__":
