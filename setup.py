@@ -18,7 +18,7 @@ def read(fname):
 
 setuptools.setup(
     name="pybo",
-    version="0.6.6",  # also edit version in pybo/__init__.py
+    version="0.6.7",  # also edit version in pybo/__init__.py
     author="Esukhia development team",
     author_email="esukhiadev@gmail.com",
     description="Python utils for processing Tibetan",

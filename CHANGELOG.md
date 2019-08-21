@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.6.6](https://github.com/Esukhia/pybo/releases/tag/v0.6.6) - 20190821
+### Added
+ * batch regex from file + cli
+
 ## [0.6.6](https://github.com/Esukhia/pybo/releases/tag/v0.6.6) - 20190820
 ### Added
  * RDR rules parser to convert them into pybo's CQL ReplaceMatcher format
