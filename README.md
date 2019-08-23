@@ -18,13 +18,33 @@ Requires to have Python3 installed.
 
 #### Tokenizing a string
 
-<script id="asciicast-YUtKVD0MD6YjBmO6DYUTpaOFv" src="https://asciinema.org/a/YUtKVD0MD6YjBmO6DYUTpaOFv.js" async></script>
+```bash
+drupchen@drupchen:~$ pybo tok-string "༄༅། །རྒྱ་གར་སྐད་དུ། བོ་དྷི་སཏྭ་ཙརྻ་ཨ་བ་ཏ་ར། བོད་སྐད་དུ། བྱང་ཆུབ་སེམས་དཔའི་སྤྱོད་པ་ལ་འཇུག་པ། །
+སངས་རྒྱས་དང་བྱང་ཆུབ་སེམས་དཔའ་ཐམས་ཅད་ལ་ཕྱག་འཚལ་ལོ། །བདེ་གཤེགས་ཆོས་ཀྱི་སྐུ་མངའ་སྲས་བཅས་དང༌། །ཕྱག་འོས་ཀུན་ལའང་གུས་པར་ཕྱག་འཚལ་ཏེ། །བདེ་གཤེགས་
+སྲས་ཀྱི་སྡོམ་ལ་འཇུག་པ་ནི། །ལུང་བཞིན་མདོར་བསྡུས་ནས་ནི་བརྗོད་པར་བྱ། །"
+Loading Trie... (2s.)
+༄༅།_། རྒྱ་གར་ སྐད་ དུ །_ བོ་ དྷི་ སཏྭ་ ཙརྻ་ ཨ་བ་ ཏ་ ར །_ བོད་སྐད་ དུ །_ བྱང་ཆུབ་ སེམས་དཔ འི་ སྤྱོད་པ་ ལ་ འཇུག་པ །_། སངས་རྒྱས་ དང་ བྱང་ཆུབ་
+སེམས་དཔའ་ ཐམས་ཅད་ ལ་ ཕྱག་ འཚལ་ ལོ །_། བདེ་གཤེགས་ ཆོས་ ཀྱི་ སྐུ་ མངའ་ སྲས་ བཅས་ དང༌ །_། ཕྱག་འོས་ ཀུན་ ལ འང་ གུས་པ ར་ ཕྱག་ འཚལ་
+ཏེ །_། བདེ་གཤེགས་ སྲས་ ཀྱི་ སྡོམ་ ལ་ འཇུག་པ་ ནི །_། ལུང་ བཞིན་ མདོར་བསྡུས་ ནས་ ནི་ བརྗོད་པ ར་ བྱ །_།
+```
 
 #### Tokenizing a file
 Writes a file of the same name suffixed with `_pybo`
 
-<script id="asciicast-SwH265jZ3yAesZb7UUWADgh2J" src="https://asciinema.org/a/SwH265jZ3yAesZb7UUWADgh2J.js" async></script>
+```bash
+The file that will be tokenized:
+drupchen@drupchen:~$ head text.txt
+བཀྲ་ཤི་ས་བདེ་ལེགས་ཕུན་སུམ་ཚོགས། །རྟག་ཏུ་བདེ་བ་ཐོབ་པར་ཤོག། །
 
+drupchen@drupchen:~$ pybo tok-file text.txt
+parsing text.txt...
+Loading Trie... (2s.)
+done
+
+The output file:
+drupchen@drupchen:~$ head text_pybo.txt
+བཀྲ་ ཤི་ ས་ བདེ་ལེགས་ ཕུན་སུམ་ ཚོགས །_། རྟག་ ཏུ་ བདེ་བ་ ཐོབ་པ ར་ ཤོག །_།
+```
 ### pybo as a Python library
 
 ```python
