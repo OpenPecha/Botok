@@ -16,39 +16,14 @@ Requires to have Python3 installed.
 
     pip3 install pybo
 
-Or to install from the latest master branch:
-
-    pip3 install git+https://github.com/Esukhia/pybo.git
-
 #### Tokenizing a string
 
-```bash
-drupchen@drupchen:~$ pybo tok-string "༄༅། །རྒྱ་གར་སྐད་དུ། བོ་དྷི་སཏྭ་ཙརྻ་ཨ་བ་ཏ་ར། བོད་སྐད་དུ། བྱང་ཆུབ་སེམས་དཔའི་སྤྱོད་པ་ལ་འཇུག་པ། །
-སངས་རྒྱས་དང་བྱང་ཆུབ་སེམས་དཔའ་ཐམས་ཅད་ལ་ཕྱག་འཚལ་ལོ། །བདེ་གཤེགས་ཆོས་ཀྱི་སྐུ་མངའ་སྲས་བཅས་དང༌། །ཕྱག་འོས་ཀུན་ལའང་གུས་པར་ཕྱག་འཚལ་ཏེ། །བདེ་གཤེགས་
-སྲས་ཀྱི་སྡོམ་ལ་འཇུག་པ་ནི། །ལུང་བཞིན་མདོར་བསྡུས་ནས་ནི་བརྗོད་པར་བྱ། །"
-Loading Trie... (2s.)
-༄༅།_། རྒྱ་གར་ སྐད་ དུ །_ བོ་ དྷི་ སཏྭ་ ཙརྻ་ ཨ་བ་ ཏ་ ར །_ བོད་སྐད་ དུ །_ བྱང་ཆུབ་ སེམས་དཔ འི་ སྤྱོད་པ་ ལ་ འཇུག་པ །_། སངས་རྒྱས་ དང་ བྱང་ཆུབ་
-སེམས་དཔའ་ ཐམས་ཅད་ ལ་ ཕྱག་ འཚལ་ ལོ །_། བདེ་གཤེགས་ ཆོས་ ཀྱི་ སྐུ་ མངའ་ སྲས་ བཅས་ དང༌ །_། ཕྱག་འོས་ ཀུན་ ལ འང་ གུས་པ ར་ ཕྱག་ འཚལ་ 
-ཏེ །_། བདེ་གཤེགས་ སྲས་ ཀྱི་ སྡོམ་ ལ་ འཇུག་པ་ ནི །_། ལུང་ བཞིན་ མདོར་བསྡུས་ ནས་ ནི་ བརྗོད་པ ར་ བྱ །_།
-```
+[![asciicast](https://asciinema.org/a/YUtKVD0MD6YjBmO6DYUTpaOFv.svg)](https://asciinema.org/a/YUtKVD0MD6YjBmO6DYUTpaOFv)
 
 #### Tokenizing a file
 Writes a file of the same name suffixed with `_pybo`
 
-```bash
-The file that will be tokenized:
-drupchen@drupchen:~$ head text.txt
-བཀྲ་ཤི་ས་བདེ་ལེགས་ཕུན་སུམ་ཚོགས། །རྟག་ཏུ་བདེ་བ་ཐོབ་པར་ཤོག། །
-
-drupchen@drupchen:~$ pybo tok-file text.txt
-parsing text.txt...
-Loading Trie... (2s.)
-done
-
-The output file:
-drupchen@drupchen:~$ head text_pybo.txt
-བཀྲ་ ཤི་ ས་ བདེ་ལེགས་ ཕུན་སུམ་ ཚོགས །_། རྟག་ ཏུ་ བདེ་བ་ ཐོབ་པ ར་ ཤོག །_།
-```
+[![asciicast](https://asciinema.org/a/SwH265jZ3yAesZb7UUWADgh2J.svg)](https://asciinema.org/a/SwH265jZ3yAesZb7UUWADgh2J)
 
 ### pybo as a Python library
 
@@ -135,10 +110,6 @@ tr \n	1
 །	1
 ```
 
-### Advanced Usage
-
-```work in progress```
-
 ## Acknowledgements
 
 **pybo** is an open source library for Tibetan NLP.
@@ -170,12 +141,12 @@ twine upload dist/*
 
 The Python code is Copyright (C) 2019 Esukhia, provided under [Apache 2](LICENSE). 
 
-author: [Drupchen](https://github.com/drupchen)
-
 contributors:
+ * [Drupchen](https://github.com/drupchen)
  * [Élie Roux](https://github.com/eroux)
- * [Thubten Rinzin](https://github.com/thubtenrigzin)
- * [Ngawang Trinley](https://github.com/ngawangtrinley)
+* [Ngawang Trinley](https://github.com/ngawangtrinley)
  * [Mikko Kotila](https://github.com/mikkokotila)
+* [Thubten Rinzin](https://github.com/thubtenrigzin)
+
  * [Tenzin](https://github.com/10zinten)
  * Joyce Mackzenzie for reworking the logo
