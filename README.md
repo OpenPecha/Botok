@@ -10,6 +10,15 @@ pybo tokenizes Tibetan text into words.
 
 ### Basic usage
 
+
+#### Getting started
+
+    pip install pybo
+
+Or to install from the latest master branch:
+
+    pip install git+https://github.com/Esukhia/pybo.git
+
 #### Tokenizing a string
 
 ```bash
@@ -119,14 +128,6 @@ tr \n	1
 ### Advanced Usage
 
 ```work in progress```
-
-## Getting started
-
-    pip install pybo
-
-Or to install from the latest master branch:
-
-    pip install git+https://github.com/Esukhia/pybo.git
 
 ## Acknowledgements
 
