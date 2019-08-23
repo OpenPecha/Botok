@@ -36,12 +36,16 @@ Loading Trie... (2s.)
 Writes a file of the same name suffixed with `_pybo`
 
 ```bash
+The file that will be tokenized:
 drupchen@drupchen:~$ head text.txt
 བཀྲ་ཤི་ས་བདེ་ལེགས་ཕུན་སུམ་ཚོགས། །རྟག་ཏུ་བདེ་བ་ཐོབ་པར་ཤོག། །
+
 drupchen@drupchen:~$ pybo tok-file text.txt
 parsing text.txt...
 Loading Trie... (2s.)
 done
+
+The output file:
 drupchen@drupchen:~$ head text_pybo.txt
 བཀྲ་ ཤི་ ས་ བདེ་ལེགས་ ཕུན་སུམ་ ཚོགས །_། རྟག་ ཏུ་ བདེ་བ་ ཐོབ་པ ར་ ཤོག །_།
 ```
