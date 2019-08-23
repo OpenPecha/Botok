@@ -1,72 +1,132 @@
 <a target="_blank" rel="noopener noreferrer" href="http://www.montypython.net/sounds/sketches/exparrot.wav"> <img src=https://github.com/Esukhia/pybo/blob/master/pybo_logo.png width=150> </a>
 
 # PYBO - Tibetan NLP in Python
-[![Build Status](https://travis-ci.org/Esukhia/pybo.svg?branch=master)](https://travis-ci.org/Esukhia/pybo)  [![Coverage Status](https://coveralls.io/repos/github/Esukhia/pybo/badge.svg?branch=master)](https://coveralls.io/github/Esukhia/pybo?branch=master) ![GitHub release](https://img.shields.io/github/release/Esukhia/pybo.svg) [![CodeFactor](https://www.codefactor.io/repository/github/esukhia/pybo/badge)](https://www.codefactor.io/repository/github/esukhia/pybo)[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
-
-
-<div><div class="mediaContainer" style="width:220px"><audio id="mwe_player_0" controls="" preload="none" style="width:220px" class="kskin" data-durationhint="31.205238095238" data-startoffset="0" data-mwtitle="Parrot_sketch.ogg" data-mwprovider="local"><source src="//upload.wikimedia.org/wikipedia/en/4/4e/Parrot_sketch.ogg" type="audio/ogg; codecs=&quot;vorbis&quot;" data-title="Original Ogg file (47 kbps)" data-shorttitle="Ogg source" data-width="0" data-height="0" data-bandwidth="47057" /><source src="//upload.wikimedia.org/wikipedia/en/transcoded/4/4e/Parrot_sketch.ogg/Parrot_sketch.ogg.mp3" type="audio/mpeg" data-title="MP3" data-shorttitle="MP3" data-transcodekey="mp3" data-width="0" data-height="0" data-bandwidth="118288" /><track src="/w/api.php?action=timedtext&amp;title=File%3AParrot_sketch.ogg&amp;lang=en&amp;trackformat=srt" kind="subtitles" type="text/x-srt" srclang="en" label="English (en) subtitles" data-dir="ltr" /></audio></div></div>
-
+[![Build Status](https://travis-ci.org/Esukhia/pybo.svg?branch=master)](https://travis-ci.org/Esukhia/pybo)  [![Coverage Status](https://coveralls.io/repos/github/Esukhia/pybo/badge.svg?branch=master)](https://coveralls.io/github/Esukhia/pybo?branch=master) ![GitHub release](https://img.shields.io/github/release/Esukhia/pybo.svg) [![CodeFactor](https://www.codefactor.io/repository/github/esukhia/pybo/badge)](https://www.codefactor.io/repository/github/esukhia/pybo) [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://black.readthedocs.io/en/stable/)
 
 
 ## Overview
 
-pybo is a word tokenizer for the Tibetan language written in Python. pybo takes in chunks of text and returns lists of words. It provides an easy-to-use, high-performance tokenization pipeline that can serve as a stand-alone solution or be adapted as a complement.
+pybo tokenizes Tibetan text into words.
 
+### Basic usage
+
+#### Tokenizing a string
+
+```bash
+drupchen@drupchen:~$ pybo tok-string "༄༅། །རྒྱ་གར་སྐད་དུ། བོ་དྷི་སཏྭ་ཙརྻ་ཨ་བ་ཏ་ར། བོད་སྐད་དུ། བྱང་ཆུབ་སེམས་དཔའི་སྤྱོད་པ་ལ་འཇུག་པ། །
+སངས་རྒྱས་དང་བྱང་ཆུབ་སེམས་དཔའ་ཐམས་ཅད་ལ་ཕྱག་འཚལ་ལོ། །བདེ་གཤེགས་ཆོས་ཀྱི་སྐུ་མངའ་སྲས་བཅས་དང༌། །ཕྱག་འོས་ཀུན་ལའང་གུས་པར་ཕྱག་འཚལ་ཏེ། །བདེ་གཤེགས་
+སྲས་ཀྱི་སྡོམ་ལ་འཇུག་པ་ནི། །ལུང་བཞིན་མདོར་བསྡུས་ནས་ནི་བརྗོད་པར་བྱ། །"
+Loading Trie... (2s.)
+༄༅།_། རྒྱ་གར་ སྐད་ དུ །_ བོ་ དྷི་ སཏྭ་ ཙརྻ་ ཨ་བ་ ཏ་ ར །_ བོད་སྐད་ དུ །_ བྱང་ཆུབ་ སེམས་དཔ འི་ སྤྱོད་པ་ ལ་ འཇུག་པ །_། སངས་རྒྱས་ དང་ བྱང་ཆུབ་
+སེམས་དཔའ་ ཐམས་ཅད་ ལ་ ཕྱག་ འཚལ་ ལོ །_། བདེ་གཤེགས་ ཆོས་ ཀྱི་ སྐུ་ མངའ་ སྲས་ བཅས་ དང༌ །_། ཕྱག་འོས་ ཀུན་ ལ འང་ གུས་པ ར་ ཕྱག་ འཚལ་ 
+ཏེ །_། བདེ་གཤེགས་ སྲས་ ཀྱི་ སྡོམ་ ལ་ འཇུག་པ་ ནི །_། ལུང་ བཞིན་ མདོར་བསྡུས་ ནས་ ནི་ བརྗོད་པ ར་ བྱ །_།
+```
+
+#### Tokenizing a file
+Writes a file of the same name suffixed with `_pybo`
+
+```bash
+drupchen@drupchen:~$ pybo tok-file text.txt
+parsing text.txt...
+Loading Trie... (2s.)
+done
+```
+
+### pybo as a Python library
+
+```python
+>>> from pybo import Text 
+
+>>> # input is a multi-line input string
+>>> in_str = """ལེ གས། བཀྲ་ཤིས་མཐའི་ ༆ ཤི་བཀྲ་ཤིས་  tr 
+... བདེ་་ལེ གས། བཀྲ་ཤིས་བདེ་ལེགས་༡༢༣ཀཀ། 
+... མཐའི་རྒྱ་མཚོར་གནས་པའི་ཉས་ཆུ་འཐུང་།། །།མཁའ།"""
+
+
+### instanciating Text
+
+>>> t = Text(in_str)
+
+### properties will perform actions on the input string:
+### note: original spaces are replaced by underscores.
+
+>>> # chunks are meaningful groups of chars from the input string.
+... # see how punctuations, numerals, non-bo and syllables are all neatly grouped.
+>>> t.tokenize_chunks_plaintext
+'ལེ_གས །_ བཀྲ་ ཤིས་ མཐའི་ _༆_ ཤི་ བཀྲ་ ཤིས་__ tr_\n བདེ་་ ལེ_གས །_ བཀྲ་ ཤིས་ བདེ་ ལེགས་ ༡༢༣ ཀཀ །_\n མཐའི་ རྒྱ་ མཚོར་ གནས་ པའི་ ཉས་ ཆུ་ འཐུང་ །།_།། མཁའ །'
+
+>>> # could as well be acheived by in_str.split(' ')
+>>> t.tokenize_on_spaces
+'ལེ གས། བཀྲ་ཤིས་མཐའི་ ༆ ཤི་བཀྲ་ཤིས་ tr བདེ་་ལེ གས། བཀྲ་ཤིས་བདེ་ལེགས་༡༢༣ཀཀ། མཐའི་རྒྱ་མཚོར་གནས་པའི་ཉས་ཆུ་འཐུང་།། །།མཁའ།'
+
+>>> # segments in words.
+... # see how བདེ་་ལེ_གས was still recognized as a single word, even with the space and the double tsek.
+... # the affixed particles are separated from the hosting word: མཐ འི་ རྒྱ་མཚོ ར་ གནས་པ འི་ ཉ ས་
+>>> t.tokenize_words_raw_text
+Loading Trie... (2s.)
+'ལེ_གས །_ བཀྲ་ཤིས་ མཐ འི་ _༆_ ཤི་ བཀྲ་ཤིས་_ tr_ བདེ་་ལེ_གས །_ བཀྲ་ཤིས་ བདེ་ལེགས་ ༡༢༣ ཀཀ །_ མཐ འི་ རྒྱ་མཚོ ར་ གནས་པ འི་ ཉ ས་ ཆུ་ འཐུང་ །།_།། མཁའ །'
+>>> t.tokenize_words_raw_lines
+'ལེ_གས །_ བཀྲ་ཤིས་ མཐ འི་ _༆_ ཤི་ བཀྲ་ཤིས་__ tr_\n བདེ་་ལེ_གས །_ བཀྲ་ཤིས་ བདེ་ལེགས་ ༡༢༣ ཀཀ །_\n མཐ འི་ རྒྱ་མཚོ ར་ གནས་པ འི་ ཉ ས་ ཆུ་ འཐུང་ །།_།། མཁའ །'
+
+>>> # segments in words, then calculates the number of occurences of each word found
+... # by default, it counts in_str's substrings in the output, which is why we have བདེ་་ལེ གས	1, བདེ་ལེགས་	1
+... # this behaviour can easily be modified to take into account the words that pybo recognized instead (see advanced usage)
+>>> print(t.list_word_types)
+འི་	3
+། 	2
+བཀྲ་ཤིས་	2
+མཐ	2
+ལེ གས	1
+ ༆ 	1
+ཤི་	1
+བཀྲ་ཤིས་  	1
+tr \n	1
+བདེ་་ལེ གས	1
+བདེ་ལེགས་	1
+༡༢༣	1
+ཀཀ	1
+། \n	1
+རྒྱ་མཚོ	1
+ར་	1
+གནས་པ	1
+ཉ	1
+ས་	1
+ཆུ་	1
+འཐུང་	1
+།། །།	1
+མཁའ	1
+།	1
+
+>>> # processing a file instead of a string
+... # note all following operations can be applied to files
+>>> from pathlib import Path
+>>> in_file = Path.cwd() / 'test.txt'
+
+>>> # file content:
+>>> in_file.read_text()
+'བཀྲ་ཤིས་བདེ་ལེགས།།\n'
+
+>>> t = Text(in_file)
+>>> t.tokenize_chunks_plaintext
+
+>>> # checking an output file has been written:
+... # BOM is added by default so that notepad in Windows doesn't scramble the line breaks
+>>> out_file = Path.cwd() / 'test_pybo.txt'
+>>> out_file.read_text()
+'\ufeffབཀྲ་ ཤིས་ བདེ་ ལེགས །།'
+```
+
+### Advanced Usage
+
+```work in progress```
 
 ## Getting started
 
     pip install pybo
-    
+
 Or to install from the latest master branch:
 
     pip install git+https://github.com/Esukhia/pybo.git
-
-## How to use pybo
-
-#### To initiate the tokenizer together with part-of-speech capability: 
-
-    # Initialize the tokenizer
-    tok = bo.WordTokenizer('POS')
-    
-    # Feed it some Tibetan text
-    input_str = '༄༅། །རྒྱ་གར་སྐད་དུ། བོ་དྷི་སཏྭ་ཙརྻ་ཨ་བ་ཏ་ར། བོད་སྐད་དུ། བྱང་ཆུབ་སེམས་དཔའི་སྤྱོད་པ་ལ་འཇུག་པ། །སངས་རྒྱས་དང་བྱང་ཆུབ་སེམས་དཔའ་ཐམས་ཅད་ལ་ཕྱག་འཚལ་ལོ། །བདེ་གཤེགས་ཆོས་ཀྱི་སྐུ་མངའ་སྲས་བཅས་དང༌། །ཕྱག་འོས་ཀུན་ལའང་གུས་པར་ཕྱག་འཚལ་ཏེ། །བདེ་གཤེགས་སྲས་ཀྱི་སྡོམ་ལ་འཇུག་པ་ནི། །ལུང་བཞིན་མདོར་བསྡུས་ནས་ནི་བརྗོད་པར་བྱ། །'
-    
-    # Run the tokenizer
-    tokens = tok.tokenize(input_str)
-    
-#### Now in 'tokens' you have an iterable where each token consist of several meta-data:
-
-    # Access the first token in the iterable
-    tokens[0]
-
-This yields:
-
-    text: "༄༅། "
-    char_types: |PUNCT|PUNCT|PUNCT|SPACE|
-    chunk_type: PUNCT
-    start: 0
-    len: 4
-    syls: None
-    pos: PUNCT
-    skrt: False
-    freq: 0
-    
-notes:
- - `start` is the starting index of the current token in the input string.
- - `syls` is a list of cleaned syllables, each syllable being represented as a list of indices.
-Each index leads to a constituting character within the input string. 
-
-#### How to access all the words in a list 
-
-    # iterate through the tokens object to get all the words in a list
-    [t.content for t in tokens]
-
-#### How to get all the nouns in a text
-
-    # extract nouns from the tokens
-    [t.content for t in tokens if t.tag == 'NOUNᛃᛃᛃ']
-    
-These examples highlight the basic principle of accessing attributes within each token object. 
 
 ## Acknowledgements
 
