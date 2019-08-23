@@ -12,12 +12,13 @@ pybo tokenizes Tibetan text into words.
 
 
 #### Getting started
+Requires to have Python3 installed.
 
-    pip install pybo
+    pip3 install pybo
 
 Or to install from the latest master branch:
 
-    pip install git+https://github.com/Esukhia/pybo.git
+    pip3 install git+https://github.com/Esukhia/pybo.git
 
 #### Tokenizing a string
 
