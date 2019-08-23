@@ -18,12 +18,12 @@ Requires to have Python3 installed.
 
 #### Tokenizing a string
 
-[![asciicast](https://asciinema.org/a/YUtKVD0MD6YjBmO6DYUTpaOFv.svg)](https://asciinema.org/a/YUtKVD0MD6YjBmO6DYUTpaOFv)
+<script id="asciicast-YUtKVD0MD6YjBmO6DYUTpaOFv" src="https://asciinema.org/a/YUtKVD0MD6YjBmO6DYUTpaOFv.js" async></script>
 
 #### Tokenizing a file
 Writes a file of the same name suffixed with `_pybo`
 
-[![asciicast](https://asciinema.org/a/SwH265jZ3yAesZb7UUWADgh2J.svg)](https://asciinema.org/a/SwH265jZ3yAesZb7UUWADgh2J)
+<script id="asciicast-SwH265jZ3yAesZb7UUWADgh2J" src="https://asciinema.org/a/SwH265jZ3yAesZb7UUWADgh2J.js" async></script>
 
 ### pybo as a Python library
 
