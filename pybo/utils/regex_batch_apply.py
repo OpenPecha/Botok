@@ -8,13 +8,13 @@ def batch_apply_regex(string, pairs):
     return string
 
 
-def get_regex_pairs(lines, sep='\t-\t'):
+def get_regex_pairs(lines, sep="\t-\t"):
     regex_pairs = []
     clean_lines = _parse_lines(lines, sep)
 
     for line in clean_lines:
         find, replace = line.split(sep)
-        regex_pairs.append((r""+find, r""+replace))
+        regex_pairs.append((r"" + find, r"" + replace))
     return regex_pairs
 
 
@@ -22,8 +22,8 @@ def _parse_lines(lines, sep):
     cleaned = []
     for num, line in enumerate(lines):
         # remove comment lines and empty lines
-        if '#' in line:
-            line = line[:line.find('#')]
+        if "#" in line:
+            line = line[: line.find("#")]
 
         # strip non-content and screen all empty lines
         line = line.strip()
@@ -32,7 +32,7 @@ def _parse_lines(lines, sep):
 
         # ensure there is 1 and only 1 occurrence of sep
         if line.count(sep) != 1:
-            print(f'passing line {num + 1}: {line}.')
+            print(f"passing line {num + 1}: {line}.")
             continue
 
         cleaned.append(line)

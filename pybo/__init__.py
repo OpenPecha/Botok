@@ -39,4 +39,4 @@ from .utils.regex_batch_apply import get_regex_pairs, batch_apply_regex
 from .config import Config
 from .vars import *
 
-VERSION = "0.6.7"
+VERSION = "0.6.8"

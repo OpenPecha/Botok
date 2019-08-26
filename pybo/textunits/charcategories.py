@@ -6,7 +6,7 @@ from ..vars import CharMarkers as c
 
 # Get the categories of Tibetan characters from the csv file
 categories = defaultdict(list)
-table_path = Path(__file__).parent / "../resources/bo_uni_table.csv"
+table_path = Path(__file__).parent.parent / "resources/bo_uni_table.csv"
 for row in list(csv.reader(table_path.open(encoding="utf-8-sig")))[1:]:
     char = row[1].replace("—", "")
     cat = c[row[2]].value

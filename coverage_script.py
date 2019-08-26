@@ -45,9 +45,9 @@ current_node = None  # setting an empty variable for the current node
 for char in "goodbye":
     current_node = trie.walk(char, current_node)
 
-current_node.label
-current_node.leaf
-current_node.data
+print(current_node.label)
+print(current_node.leaf)
+print(current_node.data)
 
 ##########################################################################################################
 # test_bostring.py
@@ -60,28 +60,28 @@ m = CharMarkers
 bs = BoString(bo_str)
 
 idx = 0
-bo_str[idx]
-bs.base_structure[idx]
+print(bo_str[idx])
+print(bs.base_structure[idx])
 
 idx = 2
-bo_str[idx]
-bs.base_structure[idx]
+print(bo_str[idx])
+print(bs.base_structure[idx])
 
 idx = 7
-bo_str[idx]
-bs.base_structure[idx]
+print(bo_str[idx])
+print(bs.base_structure[idx])
 
 idx = 9
-bo_str[idx]
-bs.base_structure[idx]
+print(bo_str[idx])
+print(bs.base_structure[idx])
 
 idx = 13
-bo_str[idx]
-bs.base_structure[idx]
+print(bo_str[idx])
+print(bs.base_structure[idx])
 
 idx = 17
-bo_str[idx]
-bs.base_structure[idx]
+print(bo_str[idx])
+print(bs.base_structure[idx])
 
 ##########################################################################################################
 # test_bosyl.py
@@ -276,12 +276,12 @@ tokens = st.tokenize()
 config = Config()
 
 # default config filename
-config.filename.name
+print(config.filename.name)
 
 # paths for trie content
 main, custom = config.get_tok_data_paths("POS")
 # each profile contains one or more sections
-[m for m in main]
+print([m for m in main])
 # each element in a Path object leading to a resource file
 isinstance(main["entry_data"][0], Path)
 
@@ -290,14 +290,14 @@ len(custom)
 main, custom = config.get_tok_data_paths(
     "POS", modifs=Path(__file__).parent / "tests/trie_data/"
 )
-[c for c in custom]
-[t.parts[-1] for t in Path(Path(__file__).parent / "tests/trie_data/").glob("*")]
+print([c for c in custom])
+print([t.parts[-1] for t in Path(Path(__file__).parent / "tests/trie_data/").glob("*")])
 
 # overwriting the main profile
 main, custom = config.get_tok_data_paths(
     Path(__file__).parent / "tests/trie_data/", mode="custom"
 )
-[m for m in main]
+print([m for m in main])
 
 config.get_adj_data_paths("basic", modifs=Path(__file__).parent / "tests/trie_data/")
 
@@ -316,11 +316,11 @@ wt.tok.trie.inflect_n_modify_trie("གྱི་")
 wt.tok.trie.inflect_n_add_data("གྱི་\tགི\tPART")
 tokens = wt.tokenize("གཏན་གྱི་བདེ་བའི་རྒྱུ།", split_affixes=False)
 len(tokens)
-tokens[2].text
+print(tokens[2].text)
 tokens = wt.tokenize("གཏན་གྱི་བདེ་བའི་རྒྱུ།")
 len(tokens)
-tokens[2].text
-tokens[3].text
+print(tokens[2].text)
+print(tokens[3].text)
 
 ##########################################################################################################
 # test_sylcomponents.py
@@ -379,8 +379,8 @@ sc.is_thame("ང")
 t = Token()
 t.text = "test"
 # Token supports access to attributes in two ways (required for CQL found in third_party/cql.py)
-t.text
-t._
+print(t.text)
+print(t._)
 
 # setting existing attributes like dicts is supported
 attrs = {"pos": "NOUN", "freq": "123", "len": 4}
@@ -424,8 +424,8 @@ expected = dedent(
 )
 str(tokens[0])
 str(tokens[1])
-tokens[2].text
-tokens[2].chunk_type
+print(tokens[2].text)
+print(tokens[2].chunk_type)
 
 
 # def test_non_max2():
@@ -440,12 +440,12 @@ tok.trie.inflect_n_modify_trie(
 preproc = TokChunks("བཀྲ་ཤིས་བདེ་བཀྲ་")
 preproc.serve_syls_to_trie()
 tokens = tok.tokenize(preproc)
-tokens[0].text
-tokens[0]["entries"][0]["pos"]
-tokens[1].text
-tokens[1]["entries"][0]["pos"]
-tokens[2].text
-tokens[2]["entries"][0]["pos"]
+print(tokens[0].text)
+print(tokens[0]["entries"][0]["pos"])
+print(tokens[1].text)
+print(tokens[1]["entries"][0]["pos"])
+print(tokens[2].text)
+print(tokens[2]["entries"][0]["pos"])
 
 
 # def test_non_max_end_of_string():
@@ -459,8 +459,8 @@ tok.trie.inflect_n_modify_trie(
 preproc = TokChunks("བཀྲ་ཤིས་བདེ་")
 preproc.serve_syls_to_trie()
 tokens = tok.tokenize(preproc)
-tokens[0].text
-tokens[1].text
+print(tokens[0].text)
+print(tokens[1].text)
 
 
 ##########################################################################################################
@@ -498,15 +498,15 @@ bt.has_word("གྲུབ་མཐའི་")
 # just like add() was not meant to be used directly, deactivate() is not
 # instead, use bt.inflect_n_modify_trie("word", deactivate=True)
 bt.deactivate("ཀ་ར་")
-bt.has_word("ཀ་རར་")["exists"]
+print(bt.has_word("ཀ་རར་")["exists"])
 
 profile = "POS"
 main, custom = config.get_tok_data_paths(profile, modifs=modifs)
 bt = Trie(BoSyl, profile, main, custom)
 
 res = bt.has_word("ལྟར་")
-res["data"]["entries"]
-res["data"]["entries"]
+print(res["data"]["entries"])
+print(res["data"]["entries"])
 
 ##########################################################################################################
 # test_wordtokenizer.py
@@ -527,12 +527,12 @@ split_affixed(tokens)
 # if __get_default_lemma() is not run, only the lemmas coming from the lemma folder will be included
 # in the Token objects.
 str(tokens[3])
-tokens[3]["entries"][0]
+print(tokens[3]["entries"][0])
 
 str(tokens[4])
 
 # regular words also have no lemmas
-tokens[0]["entries"][0]
+print(tokens[0]["entries"][0])
 
 # doing the same thing using WordTokenizer, which will apply its __get_default_lemma() method
 # the profile is the same, so no lemma comes from the trie content files.
@@ -541,24 +541,24 @@ tokens = pos_tok.tokenize(input_str)
 
 # the lemma is Token.text_unaffixed with an extra འ and/or a tsek where required
 str(tokens[3])
-tokens[3]["entries"][0]["lemma"]
+print(tokens[3]["entries"][0]["lemma"])
 
 # for particles, WordTokenizer reads the lemmas from a file and attributes them
 str(tokens[4])
-tokens[4]["entries"][0]["lemma"]
+print(tokens[4]["entries"][0]["lemma"])
 
 # for regular words, Token.text_unaffixed is simply copied
-tokens[0]["entries"][0]
+print(tokens[0]["entries"][0])
 
 # non-words do not have lemmas
-tokens[10]["entries"][0]
-tokens[10].text_cleaned
-tokens[10].text_unaffixed
+print(tokens[10]["entries"][0])
+print(tokens[10].text_cleaned)
+print(tokens[10].text_unaffixed)
 
 # Token objects whose chunk_type is not 'TEXT' will be attributed no lemma.
 # text_unaffixed and text_cleaned are also empty. Token.text must be retrieved
-tokens[2].text_unaffixed
-tokens[2].text_cleaned
+print(tokens[2].text_unaffixed)
+print(tokens[2].text_cleaned)
 
 ##########################################################################################################
 # test_matchers.py
@@ -582,7 +582,7 @@ tokens = pos_tok.tokenize(input_str, split_affixes=False)
 # def test_cql_query():
 query = '[text="ན"] []'
 q = Query(query)
-q
+print(q)
 
 test = [
     {"word": "This", "lemma": "this", "tag": "Det"},
@@ -594,7 +594,7 @@ q = '[lemma="this" & tag="Det"] [tag!="ADJ"]'
 
 matcher = CQLMatcher(q)
 matched = matcher.match(test)
-matched
+print(matched)
 
 # def test_cql():
 query = '[pos="NOUN" & text!=""] []'
@@ -612,14 +612,14 @@ ts = TokenSplit(
     token_changes='[chunk_type="SPACE" & pos="PUNCT" & affix_host="False"] []',
 )
 first, second = ts.split()
-first.chunk_type
-first.pos
+print(first.chunk_type)
+print(first.pos)
 
 
 # def test_token_merge():
 tm = TokenMerge(tokens[0], tokens[1])
 merged = tm.merge()
-merged
+print(merged)
 
 
 # def test_match_split():
@@ -652,8 +652,8 @@ replace = '[chunk_type="XXX" & pos="xxx"]'
 
 ReplacingMatcher(match_query, replace_idx, tokens, replace).replace_on_matches()
 len(tokens)
-tokens[1].pos
-tokens[2].pos
+print(tokens[1].pos)
+print(tokens[2].pos)
 
 
 # def test_adjust_tokens():
@@ -661,15 +661,15 @@ string = "ལ་ལ་ལ་ལ་ལ་བ་ཡོད།"
 token_list = pos_tok.tokenize(string, split_affixes=False)
 at = AdjustTokens(main=main, custom=custom)
 adjusted = at.adjust(token_list)
-token_list[0].text
-token_list[1].text
+print(token_list[0].text)
+print(token_list[1].text)
 
-adjusted[0].text
-adjusted[0].pos
-adjusted[1].text
-adjusted[1].pos
-adjusted[2].text
-adjusted[2].pos
+print(adjusted[0].text)
+print(adjusted[0].pos)
+print(adjusted[1].text)
+print(adjusted[1].pos)
+print(adjusted[2].text)
+print(adjusted[2].pos)
 
 
 # def test_last_token():
@@ -683,7 +683,7 @@ matcher = CQLMatcher('[pos="NOUN"]')
 slices = matcher.match([token1, token2])
 
 matcher = CQLMatcher('[pos="VERB"]')
-slices = matcher.match([token1, token2])
+print(matcher.match([token1, token2]))
 
 
 # def test_mergedagdra():
@@ -694,7 +694,7 @@ token_list = [
 mp = MergeDagdra()
 mp.merge(token_list)
 len(token_list)
-token_list[0].text
+print(token_list[0].text)
 
 token_list = pos_tok.tokenize("བཀྲ་ཤིས་-པའོ།")
 token_list = [
@@ -702,7 +702,7 @@ token_list = [
 ]  # remove the "-" inserted to ensure we have two tokens
 mp.merge(token_list)
 len(token_list)
-token_list[0].text
+print(token_list[0].text)
 
 
 ##########################################################################################################
@@ -718,25 +718,25 @@ in_str = "ལེ གས། བཀྲ་ཤིས་མཐའི་ ༆ ཤི་
 t = Text(in_str)
 
 # get builtin properties
-t.tokenize_chunks_plaintext
+print(t.tokenize_chunks_plaintext)
 
-t.tokenize_on_spaces
+print(t.tokenize_on_spaces)
 
-t.tokenize_words_raw_text
+print(t.tokenize_words_raw_text)
 
 t_lines = Text(in_str + "\n" + in_str)
-t_lines.tokenize_words_raw_lines
+print(t_lines.tokenize_words_raw_lines)
 
 # note: see in the console that the trie was only loaded once: lru_cache ensures we only load it once,
 # even over different instances of Text class
 
-t.list_word_types
+print(t.list_word_types)
 # calculates the frequency of words in the text
 
 # now, run Text on a file. (using tokenize_chunks_plaintext property to test the feature because it is fast)
 in_file = Path(__file__).parent / "tests" / "resources" / "test_file_to_tokenize.txt"
 t = Text(in_file)
-t.tokenize_chunks_plaintext
+print(t.tokenize_chunks_plaintext)
 out_file = in_file.parent / (
     in_file.stem + "_pybo" + in_file.suffix
 )  # see inside code for naming convention
@@ -758,15 +758,15 @@ text = (
     "རྒྱལ་པོས་ལེགས་པར་དཔྱད་ནས་སུ། །བདེན་པའི་ངག་ལས་"
 )
 t = Text(text)
-t.tokenize_sentences_plaintext
+print(t.tokenize_sentences_plaintext)
 
-t.tokenize_paragraph_plaintext
+print(t.tokenize_paragraph_plaintext)
 
 # def test_advanced_features():
 ########################################
 # 1. instanciating with a custom profile
 t = Text(in_str, tok_params={"profile": "GMD"})
-t.tokenize_words_raw_text
+print(t.tokenize_words_raw_text)
 
 # instanciating with a custom profile. tok_params can receive all the supported arguments of WordTokenizer
 tt = Text(
@@ -776,7 +776,7 @@ tt = Text(
         "modifs": Path(__file__).parent / "tests" / "trie_data",
     },
 )
-tt.tokenize_words_raw_text
+print(tt.tokenize_words_raw_text)
 
 #############################
 # 2. adding a custom pipeline
