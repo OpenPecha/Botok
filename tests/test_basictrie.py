@@ -1,5 +1,5 @@
 # coding: utf8
-from pybo import BasicTrie
+from botok import BasicTrie
 
 
 def test_trie():

@@ -1,5 +1,5 @@
 # coding: utf8
-from pybo import *
+from botok import *
 from pathlib import Path
 from pytest import raises
 from textwrap import dedent
@@ -565,7 +565,7 @@ print(tokens[2].text_cleaned)
 ##########################################################################################################
 
 # coding: utf8
-from pybo import *
+from botok import *
 from pathlib import Path
 
 rules_path = Path(__file__).parent / "tests" / "resources"

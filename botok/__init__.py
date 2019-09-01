@@ -32,9 +32,7 @@ from .tokenizers.chunktokenizer import ChunkTokenizer
 from .tries.basictrie import BasicTrie
 from .tries.trie import Trie
 
-from .rdr_utils.rdr_2_replace_matcher import rdr_2_replace_matcher
-
-from .utils.regex_batch_apply import get_regex_pairs, batch_apply_regex
+from .utils.rdr_2_replace_matcher import rdr_2_replace_matcher
 
 from .config import Config
 from .vars import *

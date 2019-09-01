@@ -1,5 +1,5 @@
 # coding: utf8
-from pybo import *
+from botok import *
 import sys
 
 sys.path.append("../")

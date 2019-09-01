@@ -22,8 +22,8 @@ class BoString:
 
     :Example:
 
-    >>> from pybo.textunits.bostring import BoString
-    >>> from pybo.vars import CharMarkers
+    >>> from botok.textunits.bostring import BoString
+    >>> from botok.vars import CharMarkers
 
     >>> bo_str = ' བཀྲ་ཤིས་  tr བདེ་ལེགས།'
     >>> bs = BoString(bo_str)

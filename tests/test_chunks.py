@@ -1,5 +1,5 @@
 # coding: utf8
-from pybo import Chunks, TokChunks, TSEK
+from botok import Chunks, TokChunks, TSEK
 
 string = (
     '༆ བཀྲ་ཤིས་བདེ་ལེགས།། །། 23PIEIUZLDVéjoldvép«»("«»%= ༪༫༝༜༛༚༇༆ ༡༢༣༠༩༨ '

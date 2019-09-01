@@ -2,8 +2,8 @@
 from pathlib import Path
 from collections import defaultdict
 
-from pybo import Trie, Config
-from pybo import BoSyl
+from botok import Trie, Config
+from botok import BoSyl
 
 config = Config()
 

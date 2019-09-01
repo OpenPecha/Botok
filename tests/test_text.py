@@ -2,7 +2,7 @@
 from textwrap import dedent
 from pathlib import Path
 
-from pybo import *
+from botok import *
 
 in_str = """ལེ གས། བཀྲ་ཤིས་མཐའི་ ༆ ཤི་བཀྲ་ཤིས་  tr 
 བདེ་་ལེ གས། བཀྲ་ཤིས་བདེ་ལེགས་༡༢༣ཀཀ། 
