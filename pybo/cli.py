@@ -15,7 +15,7 @@ from pybo import (
 def cli():
     pass
 
-
+# Tokenize file
 @cli.command()
 @click.argument("filename", type=click.Path(exists=True))
 def tok_file(**kwargs):
@@ -24,14 +24,14 @@ def tok_file(**kwargs):
     t.tokenize_words_raw_lines
     click.echo("done")
 
-
+# Tokenize string
 @cli.command()
 @click.argument("string")
 def tok_string(**kwargs):
     t = Text(kwargs["string"])
     click.echo(t.tokenize_words_raw_lines)
 
-
+# rdr_2_replace_matcher
 @cli.command()
 @click.argument("infile", type=click.Path(exists=True))
 def rdr2repl(**kwargs):
@@ -41,7 +41,7 @@ def rdr2repl(**kwargs):
     processed = rdr_2_replace_matcher(dump)
     outfile.write_text(processed, encoding="utf-8-sig")
 
-
+# FNR - Find and Replace with a list of regexes
 @cli.command()
 @click.argument('in-dir', type=click.Path(exists=True))
 @click.argument('regex-file', type=click.Path(exists=True))
@@ -63,7 +63,7 @@ def fnr(**kwargs):
         if not f.stem.startswith("_"):
             string = f.read_text(encoding="utf-8-sig")
             out = batch_apply_regex(string, rules)
-            name = f"_{regex_file.stem}__" + f.name
+            name = f"_{regex_file.stem}_" + f.name
             if out_dir:
                 outfile = out_dir / name
             else:
