@@ -52,8 +52,7 @@ def fnr(**kwargs):
     indir = Path(kwargs["in_dir"])
     regex_file = Path(kwargs["regex_file"])
     out_dir = Path(kwargs["out_dir"]) if kwargs["out_dir"] else None
-    if out_dir is not None:
-        Path(out_dir).mkdir(parents=True, exist_ok=True)
+
     if not indir.is_dir():
         click.echo("IN_DIR should be a folder, not a file.\nexiting...")
         exit(1)
@@ -71,6 +70,7 @@ def fnr(**kwargs):
             out = batch_apply_regex(string, rules)
             name = f"_{tag}_" + f.name
             if out_dir:
+                Path(out_dir).mkdir(parents=True, exist_ok=True)
                 outfile = out_dir / name
             else:
                 outfile = f.parent / name
