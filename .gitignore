@@ -1,6 +1,10 @@
 
 # Created by https://www.gitignore.io/api/macos,pydev,python,eclipse,pycharm+all,visualstudio,visualstudiocode
 
+# botok
+*.pickled
+**/botok.yaml
+
 # User data
 usecases/canon_concordancer/input
 usecases/canon_concordancer/output
@@ -558,9 +562,5 @@ paket-files/
 # should be stored in the .pubxml.user file.
 
 default.profile
-
-# pybo
-*.pickled
-**/pybo.yaml
 
 # End of https://www.gitignore.io/api/macos,pydev,python,eclipse,pycharm+all,visualstudio,visualstudiocode

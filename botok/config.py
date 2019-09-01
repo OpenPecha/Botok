@@ -1,6 +1,6 @@
 # coding: utf-8
 
-"""Configuration file to set up Pybo
+"""Configuration file to set up botok
 """
 
 from pathlib import Path
@@ -50,7 +50,7 @@ default_config = dedent(
 
 
 class Config:
-    """pybo config
+    """botok config
 
     1. by default, the profile is one of those in the config file.
 
@@ -67,11 +67,11 @@ class Config:
        the files will be used to update the trie on the fly.
     """
 
-    def __init__(self, filename="pybo.yaml"):
+    def __init__(self, filename="botok.yaml"):
         """Initialize the class
 
         Converting the configuration file into a Python dictionary object which
-        contains all the necessary parameters to set up Pybo properly.
+        contains all the necessary parameters to set up botok properly.
 
         The text file has to respect the YAML writing rules.
         For more information: 'https://pyyaml.org/wiki/PyYAML'

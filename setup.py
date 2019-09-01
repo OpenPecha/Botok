@@ -1,5 +1,5 @@
 #! /usr/bin/env python
-# -*- coding: utf8 -*-
+# coding: utf8
 
 from __future__ import print_function
 
@@ -17,20 +17,20 @@ def read(fname):
 
 
 setuptools.setup(
-    name="pybo",
-    version="0.6.8",  # also edit version in pybo/__init__.py
+    name="botok",
+    version="0.6.8",  # also edit version in botok/__init__.py
     author="Esukhia development team",
     author_email="esukhiadev@gmail.com",
-    description="Python utils for processing Tibetan",
+    description="Tibetan Word Tokenizer",
     license="Apache2",
-    keywords="nlp computational_linguistics search ngrams language_models linguistics toolkit tibetan",
-    url="https://github.com/Esukhia/pybo",
+    keywords="nlp computational_linguistics tibetan tokenizer token",
+    url="https://github.com/Esukhia/botok",
     packages=setuptools.find_packages(),
     long_description=read("README.md"),
     long_description_content_type="text/markdown",
     project_urls={
-        "Source": "https://github.com/Esukhia/pybo",
-        "Tracker": "https://github.com/Esukhia/pybo/issues",
+        "Source": "https://github.com/Esukhia/botok",
+        "Tracker": "https://github.com/Esukhia/botok/issues",
     },
     classifiers=[
         "Development Status :: 3 - Alpha",
@@ -43,7 +43,7 @@ setuptools.setup(
         "Natural Language :: Tibetan",
     ],
     package_data={
-        "pybo": [
+        "botok": [
             "resources/*",
             "resources/lexica_bo/*",
             "resources/frequency/*",
@@ -57,8 +57,5 @@ setuptools.setup(
     },
     python_requires=">=3.6",
     tests_require=["pytest"],
-    install_requires=["pyyaml", "click"],
-    entry_points={
-        "console_scripts": ["pybo=pybo.cli:cli"]  # command=package.module:function
-    },
+    install_requires=["pyyaml"],
 )

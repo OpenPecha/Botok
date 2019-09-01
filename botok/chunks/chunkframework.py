@@ -18,7 +18,7 @@ class ChunkFramework(ChunkFrameworkBase):
 
     :Example:
 
-    >>> from pybo.chunks.chunkframework import ChunkFramework
+    >>> from botok.chunks.chunkframework import ChunkFramework
 
     >>> bo_str = ' བཀྲ་ཤིས་  tr བདེ་ལེགས།'
     >>> bc = ChunkFramework(bo_str)

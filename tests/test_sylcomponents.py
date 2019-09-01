@@ -1,5 +1,5 @@
 # coding: utf8
-from pybo import SylComponents
+from botok import SylComponents
 
 
 def test_components():

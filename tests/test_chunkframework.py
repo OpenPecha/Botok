@@ -1,6 +1,6 @@
 # coding: utf8
-from pybo import ChunkFramework
-from pybo import ChunkMarkers as c
+from botok import ChunkFramework
+from botok import ChunkMarkers as c
 
 
 def test_bo_nonbo():

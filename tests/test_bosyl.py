@@ -1,5 +1,5 @@
 # coding: utf8
-from pybo import BoSyl
+from botok import BoSyl
 
 bs = BoSyl()
 

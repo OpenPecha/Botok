@@ -1,7 +1,7 @@
 # coding: utf8
 from textwrap import dedent
 
-from pybo import *
+from botok import *
 
 from helpers import pos_tok
 

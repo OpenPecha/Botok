@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from pybo import *
+from botok import *
 
 
 ###########################################

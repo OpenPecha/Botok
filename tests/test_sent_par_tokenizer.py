@@ -1,4 +1,4 @@
-from pybo import WordTokenizer, sentence_tokenizer, paragraph_tokenizer
+from botok import WordTokenizer, sentence_tokenizer, paragraph_tokenizer
 
 from helpers import pos_tok
 

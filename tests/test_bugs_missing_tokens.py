@@ -1,4 +1,4 @@
-from pybo import *
+from botok import *
 
 from helpers import gmd_tok
 

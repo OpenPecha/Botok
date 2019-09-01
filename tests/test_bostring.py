@@ -1,6 +1,6 @@
 # coding: utf8
-from pybo import BoString
-from pybo import CharMarkers as m
+from botok import BoString
+from botok import CharMarkers as m
 
 bo_str = "བཀྲ་ཤིས་ ༡༢༣ tr  就到 郊外玩བདེ་ལེགས།"
 

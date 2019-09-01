@@ -1,5 +1,5 @@
 # coding: utf8
-from pybo import *
+from botok import *
 from pathlib import Path
 
 from helpers import pos_tok

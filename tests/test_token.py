@@ -2,7 +2,7 @@
 from textwrap import dedent
 from pytest import raises
 
-from pybo import *
+from botok import *
 
 
 def test_token():

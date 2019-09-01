@@ -1,5 +1,5 @@
 # coding: utf8
-from pybo import Config
+from botok import Config
 from pathlib import Path
 
 
@@ -7,7 +7,7 @@ def test_config():
     config = Config()
 
     # default config filename
-    assert config.filename.name == "pybo.yaml"  # config.filename is a Path object
+    assert config.filename.name == "botok.yaml"  # config.filename is a Path object
 
     # paths for trie content
     main, custom = config.get_tok_data_paths("POS")
