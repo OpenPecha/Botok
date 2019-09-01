@@ -18,7 +18,7 @@ def read(fname):
 
 setuptools.setup(
     name="botok",
-    version="0.6.8",  # also edit version in botok/__init__.py
+    version="0.6.9",  # also edit version in botok/__init__.py
     author="Esukhia development team",
     author_email="esukhiadev@gmail.com",
     description="Tibetan Word Tokenizer",
