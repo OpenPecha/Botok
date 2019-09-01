@@ -25,8 +25,8 @@ def _parse_lines(lines, sep):
         if "#" in line:
             line = line[: line.find("#")]
 
-        # strip non-content and screen all empty lines
-        line = line.strip()
+        # strip line returns while keeping space chars and screen all empty lines
+        line = line.strip('\n\r')
         if not line:
             continue
 
