@@ -17,7 +17,7 @@ def test_simple_usage():
     chunks = t.tokenize_chunks_plaintext
     assert (
         chunks
-        == "ལེ_གས །_ བཀྲ་ ཤིས་ མཐའི་ _༆_ ཤི་ བཀྲ་ ཤིས་__ tr_ བདེ་་ ལེ_གས །_ བཀྲ་ ཤིས་ བདེ་ ལེགས་ ༡༢༣ ཀཀ །_ མཐའི་ རྒྱ་ མཚོར་ གནས་ པའི་ ཉས་ ཆུ་ འཐུང་ །།_།། མཁའ །"
+        == "ལེ_གས །_ བཀྲ་ ཤིས་ མཐའི་ _༆_ ཤི་ བཀྲ་ ཤིས་__ tr_\n བདེ་་ ལེ_གས །_ བཀྲ་ ཤིས་ བདེ་ ལེགས་ ༡༢༣ ཀཀ །_\n མཐའི་ རྒྱ་ མཚོར་ གནས་ པའི་ ཉས་ ཆུ་ འཐུང་ །།_།། མཁའ །"
     )
 
     spaces = t.tokenize_on_spaces
@@ -36,43 +36,42 @@ def test_simple_usage():
 
     t_lines = Text(in_str + "\n" + in_str)
     with_lines = t_lines.tokenize_words_raw_lines
-    assert with_lines == dedent(
-        """\
-        ལེ_གས །_ བཀྲ་ཤིས་ མཐ འི་ _༆_ ཤི་ བཀྲ་ཤིས་__ tr_ བདེ་་ལེ_གས །_ བཀྲ་ཤིས་ བདེ་ལེགས་ ༡༢༣ ཀཀ །_ མཐ འི་ རྒྱ་མཚོ ར་ གནས་པ འི་ ཉ ས་ ཆུ་ འཐུང་ །།_།། མཁའ །
-         ལེ_གས །_ བཀྲ་ཤིས་ མཐ འི་ _༆_ ཤི་ བཀྲ་ཤིས་__ tr_ བདེ་་ལེ_གས །_ བཀྲ་ཤིས་ བདེ་ལེགས་ ༡༢༣ ཀཀ །_ མཐ འི་ རྒྱ་མཚོ ར་ གནས་པ འི་ ཉ ས་ ཆུ་ འཐུང་ །།_།། མཁའ །"""
-    )
+    assert with_lines == "ལེ_གས །_ བཀྲ་ཤིས་ མཐ འི་ _༆_ ཤི་ བཀྲ་ཤིས་__ tr_\n " \
+            "བདེ་་ལེ_གས །_ བཀྲ་ཤིས་ བདེ་ལེགས་ ༡༢༣ ཀཀ །_\n " \
+            "མཐ འི་ རྒྱ་མཚོ ར་ གནས་པ འི་ ཉ ས་ ཆུ་ འཐུང་ །།_།། མཁའ །\n " \
+            "ལེ_གས །_ བཀྲ་ཤིས་ མཐ འི་ _༆_ ཤི་ བཀྲ་ཤིས་__ tr_\n " \
+            "བདེ་་ལེ_གས །_ བཀྲ་ཤིས་ བདེ་ལེགས་ ༡༢༣ ཀཀ །_\n " \
+            "མཐ འི་ རྒྱ་མཚོ ར་ གནས་པ འི་ ཉ ས་ ཆུ་ འཐུང་ །།_།། མཁའ །"
     # keeps returns from the input (only do this if you know words are not split over two lines)
 
     # note: see in the console that the trie was only loaded once: lru_cache ensures we only load it once,
     # even over different instances of Text class
 
     types = t.list_word_types
-    assert types == dedent(
-        """\
-                            ། 	3
-                            འི་	3
-                            བཀྲ་ཤིས་	2
-                            མཐ	2
-                            ལེ གས	1
-                             ༆ 	1
-                            ཤི་	1
-                            བཀྲ་ཤིས་  	1
-                            tr 	1
-                            བདེ་་ལེ གས	1
-                            བདེ་ལེགས་	1
-                            ༡༢༣	1
-                            ཀཀ	1
-                            རྒྱ་མཚོ	1
-                            ར་	1
-                            གནས་པ	1
-                            ཉ	1
-                            ས་	1
-                            ཆུ་	1
-                            འཐུང་	1
-                            །། །།	1
-                            མཁའ	1
-                            །	1"""
-    )
+    assert types == "འི་	3\n" \
+                    "། 	2\n" \
+                    "བཀྲ་ཤིས་	2\n" \
+                    "མཐ	2\n" \
+                    "ལེ གས	1\n" \
+                    " ༆ 	1\n" \
+                    "ཤི་	1\n" \
+                    "བཀྲ་ཤིས་  	1\n" \
+                    "tr \\n	1\n" \
+                    "བདེ་་ལེ གས	1\n" \
+                    "བདེ་ལེགས་	1\n" \
+                    "༡༢༣	1\n" \
+                    "ཀཀ	1\n" \
+                    "། \\n	1\n" \
+                    "རྒྱ་མཚོ	1\n" \
+                    "ར་	1\n" \
+                    "གནས་པ	1\n" \
+                    "ཉ	1\n" \
+                    "ས་	1\n" \
+                    "ཆུ་	1\n" \
+                    "འཐུང་	1\n" \
+                    "།། །།	1\n" \
+                    "མཁའ	1\n" \
+                    "།	1"
     # calculates the frequency of words in the text
 
     # now, run Text on a file. (using tokenize_chunks_plaintext property to test the feature because it is fast)
@@ -179,30 +178,28 @@ def test_advanced_features():
     )
     # note how you pass the names of the functions you declare, without parens
 
-    assert tokens == dedent(
-        """\
-                            __ལེ__
-                            __གས།__
-                            __བཀྲ་ཤིས་མཐའི་__
-                            __༆__
-                            __ཤི་བཀྲ་ཤིས་__
-                            ____
-                            __tr__
-                            __བདེ་་ལེ__
-                            __གས།__
-                            __བཀྲ་ཤིས་བདེ་ལེགས་༡༢༣ཀཀ།__
-                            __མཐའི་རྒྱ་མཚོར་གནས་པའི་ཉས་ཆུ་འཐུང་།།__
-                            __།།མཁའ།__"""
-    )
+    assert tokens == "__ལེ__\n" \
+                     "__གས།__\n" \
+                     "__བཀྲ་ཤིས་མཐའི་__\n" \
+                     "__༆__\n" \
+                     "__ཤི་བཀྲ་ཤིས་__\n" \
+                     "____\n" \
+                     "__tr__\n" \
+                     "__\nབདེ་་ལེ__\n" \
+                     "__གས།__\n" \
+                     "__བཀྲ་ཤིས་བདེ་ལེགས་༡༢༣ཀཀ།__\n" \
+                     "__\nམཐའི་རྒྱ་མཚོར་གནས་པའི་ཉས་ཆུ་འཐུང་།།__\n" \
+                     "__།།མཁའ།__"
 
     # or use other pipes
     tokens = t.custom_pipeline("dummy", "word_tok", "words_error_concs", "basic_concs")
     assert (
-        tokens == '"མཐའི་ ༆ ཤི་བཀྲ་ཤིས་  "	tr 	"བདེ་་ལེ གས། བཀྲ་ཤིས་བདེ་ལེགས་༡༢༣"\n'
-        '"བདེ་་ལེ གས། བཀྲ་ཤིས་བདེ་ལེགས་༡༢༣"	ཀཀ	"། མཐའི་རྒྱ་མཚོར་"\n"གནས་པའི་ཉས་ཆུ་"	འཐུང་	"།། །།མཁའ།"'
+        tokens == '"མཐའི་ ༆ ཤི་བཀྲ་ཤིས་  "	tr \\n	"བདེ་་ལེ གས། བཀྲ་ཤིས་བདེ་ལེགས་༡༢༣"\n"བདེ་་ལེ གས། བཀྲ་ཤིས་བདེ་ལེགས་༡༢༣"	ཀཀ	"། \nམཐའི་རྒྱ་མཚོར་"\n"གནས་པའི་ཉས་ཆུ་"	འཐུང་	"།། །།མཁའ།"'
     )
     # two non-words found
 
     tokens = t.custom_pipeline("dummy", "word_tok", "words_error_types", "stats_types")
-    assert tokens == "tr 	1\nཀཀ	1\nའཐུང་	1"
+    assert tokens == "tr \\n\t1\n" \
+                     "ཀཀ\t1\n" \
+                     "འཐུང་\t1"
     # the same non-words as before
