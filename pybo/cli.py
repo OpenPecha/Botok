@@ -45,16 +45,20 @@ def rdr2repl(**kwargs):
 @cli.command()
 @click.argument('in-dir', type=click.Path(exists=True))
 @click.argument('regex-file', type=click.Path(exists=True))
-@click.option('-o', '--out-dir', '--tag', type=click.Path(exists=True))
+@click.option('-o', '--out-dir', type=click.Path())
+@click.option('-t', '--tag')
 def fnr(**kwargs):
     # get the args
     indir = Path(kwargs["in_dir"])
     regex_file = Path(kwargs["regex_file"])
     out_dir = Path(kwargs["out_dir"]) if kwargs["out_dir"] else None
-    tag = Path(kwargs["tag"]) if kwargs["tag"] else regex_file.stem
+    Path(out_dir).mkdir(parents=True, exist_ok=True)
     if not indir.is_dir():
         click.echo("IN_DIR should be a folder, not a file.\nexiting...")
         exit(1)
+
+    # optional out file tag
+    tag = kwargs["tag"] if kwargs["tag"] else regex_file.stem
 
     # generate rules
     rules = get_regex_pairs(regex_file.open(encoding="utf-8-sig").readlines())
