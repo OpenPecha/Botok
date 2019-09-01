@@ -52,7 +52,8 @@ def fnr(**kwargs):
     indir = Path(kwargs["in_dir"])
     regex_file = Path(kwargs["regex_file"])
     out_dir = Path(kwargs["out_dir"]) if kwargs["out_dir"] else None
-    Path(out_dir).mkdir(parents=True, exist_ok=True)
+    if out_dir is not None:
+        Path(out_dir).mkdir(parents=True, exist_ok=True)
     if not indir.is_dir():
         click.echo("IN_DIR should be a folder, not a file.\nexiting...")
         exit(1)
