@@ -67,7 +67,7 @@ class Config:
        the files will be used to update the trie on the fly.
     """
 
-    def __init__(self, filename="botok.yaml"):
+    def __init__(self, filename="botok.yaml", conf_path=None):
         """Initialize the class
 
         Converting the configuration file into a Python dictionary object which
@@ -79,6 +79,8 @@ class Config:
         :param filename: Filename of the file with its extension
         """
         self.filename = Path(filename).resolve()
+        if conf_path:
+            self.filename = Path(conf_path) / self.filename
         if self.filename.suffix != ".yaml":
             raise Exception("Unrecognised file extension. It only supports .yaml files")
 

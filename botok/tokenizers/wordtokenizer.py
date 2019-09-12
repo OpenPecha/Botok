@@ -36,11 +36,12 @@ class WordTokenizer:
         adj_profile="basic",
         adj_modifs=None,
         adj_mode="internal",
+        conf_path=None,
     ):
         """
         :param tok_profile: profile for building the trie. (see config.yaml)
         """
-        config = Config()
+        config = Config(conf_path=conf_path)
         main, custom = config.get_tok_data_paths(
             tok_profile, modifs=tok_modifs, mode=tok_mode
         )
@@ -49,7 +50,13 @@ class WordTokenizer:
             tok_mode if tok_mode == "custom" else tok_profile
         )  # trie will be named custom if mode is custom
         self.tok = Tokenize(
-            Trie(BoSyl, tok_profile, main_data=main, custom_data=custom)
+            Trie(
+                BoSyl,
+                tok_profile,
+                main_data=main,
+                custom_data=custom,
+                pickle_path=conf_path,
+            )
         )
 
         adj_main, adj_custom = config.get_adj_data_paths(

@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.6.10](https://github.com/Esukhia/botok/releases/tag/v0.6.10) - 20190912
+### Added
+ * custom path for config files and pickle files
+
 ## [0.6.9](https://github.com/Esukhia/botok/releases/tag/v0.6.9) - 20190901
 ### Added
  * only the tokenizer's codebase is kept in botok repo. everything else is moved to the new pybo repo.

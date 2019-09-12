@@ -10,12 +10,16 @@ from ..vars import OOV, TSEK, NAMCHE, HASH
 
 
 class Trie(BasicTrie):
-    def __init__(self, bosyl, profile, main_data, custom_data, build=False):
+    def __init__(
+        self, bosyl, profile, main_data, custom_data, build=False, pickle_path=None
+    ):
         BasicTrie.__init__(self)
         self.bosyl = bosyl()
         self.main_data = main_data
         self.custom_data = custom_data
         self.pickled_file = Path(profile + "_trie.pickled")
+        if pickle_path:
+            self.pickled_file = Path(pickle_path) / self.pickled_file
         self.tmp_inflected = (
             dict()
         )  # tmp to inflect only once, even if a word appears in many files.
