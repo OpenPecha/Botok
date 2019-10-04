@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.6.11](https://github.com/Esukhia/botok/releases/tag/v0.6.11) - 20191004
+### Fixed
+ * before a space, ཀ ག ཤ eventually followed by a vowel is now treated as a syllable break
+### Added
+ * spaces_as_punct optional argument in WordTokenizer.tokenize().
+ Dakje Editor required to have spaces and \n in separate tokens instead of having them as transparent chars.
+
 ## [0.6.10](https://github.com/Esukhia/botok/releases/tag/v0.6.10) - 20190912
 ### Added
  * custom path for config files and pickle files
