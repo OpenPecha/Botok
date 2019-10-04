@@ -114,3 +114,14 @@ def test_get_default_lemma():
     # Token objects whose chunk_type is not 'TEXT' will be attributed no lemma.
     # text_unaffixed and text_cleaned are also empty. Token.text must be retrieved
     assert tokens[2].text_unaffixed == "" == tokens[2].text_cleaned
+
+
+def test_spaces_as_punct():
+    input_str = "བ ཀྲ་ཤིས་ བདེ་ལེགས། \nམཐའི་རྒྱ་མཚོར་ག ནས་སོ།། །།ཀཀ"
+    profile = "POS"
+    wt = WordTokenizer(tok_profile=profile)
+    tokens = wt.tokenize(input_str, spaces_as_punct=True)
+    assert tokens[0].text == "བ"
+    assert tokens[1].text == " "
+    assert tokens[2].text == "ཀྲ་"
+    assert tokens[7].text == " \n"

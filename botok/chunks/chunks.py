@@ -24,21 +24,27 @@ class Chunks(ChunkFramework):
     def __init__(self, string, ignore_chars=None):
         ChunkFramework.__init__(self, string, ignore_chars=ignore_chars)
 
-    def make_chunks(self, indices=True, gen=False):
+    def make_chunks(self, indices=True, gen=False, space_as_punct=False):
         chunks = self.chunk_bo_chars()
+        if space_as_punct:
+            chunks = self.pipe_chunk(
+                chunks, self.chunk_spaces, to_chunk_marker=c.BO.value, yes=c.PUNCT.value
+            )
         chunks = self.pipe_chunk(
             chunks, self.chunk_punct, to_chunk_marker=c.BO.value, yes=c.PUNCT.value
         )
         chunks = self.pipe_chunk(chunks, self.chunk_symbol, c.BO.value, c.SYM.value)
         chunks = self.pipe_chunk(chunks, self.chunk_number, c.BO.value, c.NUM.value)
-        chunks = self.merge_skippable_punct(
-            chunks
-        )  # to ensure we have correctly built syllables
+        if not space_as_punct:
+            chunks = self.merge_skippable_punct(
+                chunks
+            )  # ensure we have correctly built syls
         chunks = self.pipe_chunk(chunks, self.syllabify, c.BO.value, c.TEXT.value)
         chunks = self.pipe_chunk(chunks, self.adjust_syls, c.TEXT.value, c.TEXT.value)
         chunks = self.pipe_chunk(chunks, self.chunk_cjk, c.OTHER.value, c.CJK.value)
         chunks = self.pipe_chunk(chunks, self.chunk_latin, c.OTHER.value, c.LATIN.value)
-        chunks = self.merge_skippable_punct(chunks)
+        if not space_as_punct:
+            chunks = self.merge_skippable_punct(chunks)
         if not indices:
             return self.get_chunked(chunks, gen=gen)
         return chunks
@@ -56,13 +62,14 @@ class TokChunks(Chunks):
 
     """
 
-    def __init__(self, string, ignore_chars=None):
-        Chunks.__init__(self, string, ignore_chars=ignore_chars)
+    def __init__(self, string, ignore_chars=None, space_as_punct=False):
+        super().__init__(string, ignore_chars=ignore_chars)
         self.chunks = None
+        self.space_as_punct = space_as_punct
 
     def serve_syls_to_trie(self):
         chunks = []
-        for chunk in self.make_chunks():
+        for chunk in self.make_chunks(space_as_punct=self.space_as_punct):
             if chunk[0] == c.TEXT:
                 syl = self.__get_text_chars(chunk[1], chunk[1] + chunk[2])
                 chunks.append((syl, chunk))
@@ -72,7 +79,7 @@ class TokChunks(Chunks):
 
     def get_syls(self):
         syls = []
-        for chunk in self.make_chunks():
+        for chunk in self.make_chunks(space_as_punct=self.space_as_punct):
             if chunk[0] == c.TEXT:
                 char_idxs = self.__get_text_chars(chunk[1], chunk[1] + chunk[2])
                 syls.append("".join([self.bs.string[i] for i in char_idxs]))
