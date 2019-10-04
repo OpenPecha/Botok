@@ -71,15 +71,15 @@ def test_many_tseks_in_syllable():
     chunks = cb.syllabify()
     readable = cb.get_readable(chunks)
     assert readable == [
-        ('TEXT', ' ཤི་'),
-        ('TEXT', 'བཀྲ་'),
-        ('TEXT', 'ཤིས་'),
-        ('TEXT', '  བདེ་་'),
-        ('TEXT', 'ལ             ེ       གས་'),
-        ('TEXT', ' བཀྲ་'),
-        ('TEXT', 'ཤིས་'),
-        ('TEXT', 'བདེ་'),
-        ('TEXT', 'ལེགས'),
+        ("TEXT", " ཤི་"),
+        ("TEXT", "བཀྲ་"),
+        ("TEXT", "ཤིས་"),
+        ("TEXT", "  བདེ་་"),
+        ("TEXT", "ལ             ེ       གས་"),
+        ("TEXT", " བཀྲ་"),
+        ("TEXT", "ཤིས་"),
+        ("TEXT", "བདེ་"),
+        ("TEXT", "ལེགས"),
     ]
 
     chunks = cb.chunk_punct()
@@ -93,15 +93,15 @@ def test_many_tseks_in_syllable():
     chunks = ck.make_chunks()
     readable = ck.get_readable(chunks)
     assert readable == [
-        ('TEXT', ' ཤི་'),
-        ('TEXT', 'བཀྲ་'),
-        ('TEXT', 'ཤིས་  '),
-        ('TEXT', 'བདེ་་'),
-        ('TEXT', 'ལ             ེ       གས་ '),
-        ('TEXT', 'བཀྲ་'),
-        ('TEXT', 'ཤིས་'),
-        ('TEXT', 'བདེ་'),
-        ('TEXT', 'ལེགས'),
+        ("TEXT", " ཤི་"),
+        ("TEXT", "བཀྲ་"),
+        ("TEXT", "ཤིས་  "),
+        ("TEXT", "བདེ་་"),
+        ("TEXT", "ལ             ེ       གས་ "),
+        ("TEXT", "བཀྲ་"),
+        ("TEXT", "ཤིས་"),
+        ("TEXT", "བདེ་"),
+        ("TEXT", "ལེགས"),
     ]
 
 

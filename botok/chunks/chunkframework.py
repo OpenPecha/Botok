@@ -319,12 +319,12 @@ class ChunkFramework(ChunkFrameworkBase):
         :return:
         """
         indices = self.chunk(start, end, self.__is_transparent)
-        truc = self.bs.string[start: end]
+        truc = self.bs.string[start:end]
         for num, i in enumerate(indices):
-            chunk = self.bs.string[i[1]: i[1] + i[2]]
+            chunk = self.bs.string[i[1] : i[1] + i[2]]
             if len(indices) - 1 > num > 0 and indices[num][0]:
                 _, s, e = indices[num - 1]
-                text = self.bs.string[s:s + e]
+                text = self.bs.string[s : s + e]
                 if (
                     len(text) >= 2 and text[-1] in VOWELS and text[-2] in NO_SHAD_CONS
                 ) or (len(text) >= 1 and text[-1] in NO_SHAD_CONS):
@@ -334,7 +334,11 @@ class ChunkFramework(ChunkFrameworkBase):
                         indices[num - 1][2] + i[2],
                     )
                 else:
-                    indices[num - 1] = (indices[num - 1][0], indices[num - 1][1], indices[num - 1][2] + indices[num][2] + indices[num + 1][2])
+                    indices[num - 1] = (
+                        indices[num - 1][0],
+                        indices[num - 1][1],
+                        indices[num - 1][2] + indices[num][2] + indices[num + 1][2],
+                    )
                     indices[num + 1] = (None, indices[num + 1][1], indices[num + 1][2])
             elif indices[num][0] is False:
                 indices[num] = (yes, i[1], i[2])
