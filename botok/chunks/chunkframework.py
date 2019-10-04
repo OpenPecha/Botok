@@ -1,7 +1,6 @@
 # coding: utf8
 from .chunkframeworkbase import ChunkFrameworkBase
-from ..vars import CharMarkers as a
-from ..vars import ChunkMarkers as u
+from ..vars import CharMarkers as a, ChunkMarkers as u, VOWELS, NO_SHAD_CONS
 
 
 class ChunkFramework(ChunkFrameworkBase):
@@ -305,3 +304,47 @@ class ChunkFramework(ChunkFrameworkBase):
             self.bs.base_structure[char_idx] == a.TSEK
             or self.bs.base_structure[char_idx] == a.SKRT_LONG_VOW
         )
+
+    def adjust_syls(self, start=None, end=None, yes=u.TEXT.value):
+        """
+        if there is a space in the chunk:
+                test if the preceding is ཀ ག ཤ eventually followed by a vowel
+                test if both parts are valid syllables (Bosyl)
+                if tests pass:
+                        split in two syllables after space.
+        :param chunks:
+        :param start:
+        :param end:
+        :param yes:
+        :return:
+        """
+        indices = self.chunk(start, end, self.__is_transparent)
+        truc = self.bs.string[start: end]
+        for num, i in enumerate(indices):
+            chunk = self.bs.string[i[1]: i[1] + i[2]]
+            if len(indices) - 1 > num > 0 and indices[num][0]:
+                _, s, e = indices[num - 1]
+                text = self.bs.string[s:s + e]
+                if (
+                    len(text) >= 2 and text[-1] in VOWELS and text[-2] in NO_SHAD_CONS
+                ) or (len(text) >= 1 and text[-1] in NO_SHAD_CONS):
+                    indices[num - 1] = (
+                        yes,
+                        indices[num - 1][1],
+                        indices[num - 1][2] + i[2],
+                    )
+                else:
+                    indices[num - 1] = (indices[num - 1][0], indices[num - 1][1], indices[num - 1][2] + indices[num][2] + indices[num + 1][2])
+                    indices[num + 1] = (None, indices[num + 1][1], indices[num + 1][2])
+            elif indices[num][0] is False:
+                indices[num] = (yes, i[1], i[2])
+            elif (num == 0 or num == len(indices) - 1) and indices[num][0] is True:
+                indices[num] = (u.PUNCT.value, i[1], i[2])
+
+        # remove all chunks that were added
+        indices = [i for i in indices if i[0] is not True and i[0] is not None]
+
+        return indices if len(indices) > 1 else list()
+
+    def __is_transparent(self, char_idx):
+        return self.bs.base_structure[char_idx] == a.TRANSPARENT

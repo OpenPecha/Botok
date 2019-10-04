@@ -6,6 +6,23 @@ sys.path.append("../")
 from helpers import gmd_tok
 
 
+def test_no_shad_syllable():
+    in_str = "ཀ འདི་ ཤི དེ་ག རེད་དོ།"
+    bo_string = Chunks(in_str)
+    chunks = bo_string.make_chunks()
+    chunks = bo_string.get_readable(chunks)
+    assert chunks == [
+        ("TEXT", "ཀ "),
+        ("TEXT", "འདི་ "),
+        ("TEXT", "ཤི "),
+        ("TEXT", "དེ་"),
+        ("TEXT", "ག "),
+        ("TEXT", "རེད་"),
+        ("TEXT", "དོ"),
+        ("PUNCT", "།"),
+    ]
+
+
 def test_keyerror_part_lemma():
     tokens = gmd_tok.tokenize("ཕའིའོ།")
     assert len(tokens) == 3
@@ -27,11 +44,11 @@ def test_missing_entries_n_bad_unaffixed():
 
 
 def test_multiple_spaces():
-    bo_string = Chunks("ཤི ས་ཤི  ས་")
+    bo_string = Chunks("ཁྱོ ད་ད  ང་")
     chunks = bo_string.make_chunks()
     chunks = bo_string.get_readable(chunks)
-    assert chunks[0] == ("TEXT", "ཤི ས་")
-    assert chunks[1] == ("TEXT", "ཤི  ས་")
+    assert chunks[0] == ("TEXT", "ཁྱོ ད་")
+    assert chunks[1] == ("TEXT", "ད  ང་")
     assert len(chunks) == 2
 
 
@@ -54,15 +71,15 @@ def test_many_tseks_in_syllable():
     chunks = cb.syllabify()
     readable = cb.get_readable(chunks)
     assert readable == [
-        ("TEXT", " ཤི་"),
-        ("TEXT", "བཀྲ་"),
-        ("TEXT", "ཤིས་"),
-        ("TEXT", "  བདེ་་"),
-        ("TEXT", "ལ             ེ       གས་"),
-        ("TEXT", " བཀྲ་"),
-        ("TEXT", "ཤིས་"),
-        ("TEXT", "བདེ་"),
-        ("TEXT", "ལེགས"),
+        ('TEXT', ' ཤི་'),
+        ('TEXT', 'བཀྲ་'),
+        ('TEXT', 'ཤིས་'),
+        ('TEXT', '  བདེ་་'),
+        ('TEXT', 'ལ             ེ       གས་'),
+        ('TEXT', ' བཀྲ་'),
+        ('TEXT', 'ཤིས་'),
+        ('TEXT', 'བདེ་'),
+        ('TEXT', 'ལེགས'),
     ]
 
     chunks = cb.chunk_punct()
@@ -76,15 +93,15 @@ def test_many_tseks_in_syllable():
     chunks = ck.make_chunks()
     readable = ck.get_readable(chunks)
     assert readable == [
-        ("TEXT", " ཤི་"),
-        ("TEXT", "བཀྲ་"),
-        ("TEXT", "ཤིས་"),
-        ("TEXT", "  བདེ་་"),
-        ("TEXT", "ལ             ེ       གས་"),
-        ("TEXT", " བཀྲ་"),
-        ("TEXT", "ཤིས་"),
-        ("TEXT", "བདེ་"),
-        ("TEXT", "ལེགས"),
+        ('TEXT', ' ཤི་'),
+        ('TEXT', 'བཀྲ་'),
+        ('TEXT', 'ཤིས་  '),
+        ('TEXT', 'བདེ་་'),
+        ('TEXT', 'ལ             ེ       གས་ '),
+        ('TEXT', 'བཀྲ་'),
+        ('TEXT', 'ཤིས་'),
+        ('TEXT', 'བདེ་'),
+        ('TEXT', 'ལེགས'),
     ]
 
 

@@ -35,6 +35,7 @@ class Chunks(ChunkFramework):
             chunks
         )  # to ensure we have correctly built syllables
         chunks = self.pipe_chunk(chunks, self.syllabify, c.BO.value, c.TEXT.value)
+        chunks = self.pipe_chunk(chunks, self.adjust_syls, c.TEXT.value, c.TEXT.value)
         chunks = self.pipe_chunk(chunks, self.chunk_cjk, c.OTHER.value, c.CJK.value)
         chunks = self.pipe_chunk(chunks, self.chunk_latin, c.OTHER.value, c.LATIN.value)
         chunks = self.merge_skippable_punct(chunks)
