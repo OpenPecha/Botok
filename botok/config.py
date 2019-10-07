@@ -12,22 +12,22 @@ default_config = dedent(
     """\
     tokenizers:
       trie_files:
-        - &ancient lexica_bo/ancient.txt
-        - &except lexica_bo/exceptions.txt
-        - &uncomp lexica_bo/uncompound_lexicon.txt
-        - &tsikchen lexica_bo/tsikchen.txt
-        - &dagdra lexica_bo/dagdra.txt
-        - &oral0 lexica_bo/oral_corpus_0.txt
-        - &oral1 lexica_bo/oral_corpus_1.txt
-        - &oral2 lexica_bo/oral_corpus_2.txt
-        - &oral3 lexica_bo/oral_corpus_3.txt
-        - &oral4 lexica_bo/recordings_4.txt
-        - &mgd lexica_bo/mgd.txt
-        - &verbs lexica_bo/verbs.txt
+        - &ancient words_bo/ancient.txt
+        - &except words_bo/exceptions.txt
+        - &uncomp words_bo/uncompound_lexicon.txt
+        - &tsikchen words_bo/tsikchen.txt
+        - &dagdra words_bo/dagdra.txt
+        - &oral0 words_bo/oral_corpus_0.txt
+        - &oral1 words_bo/oral_corpus_1.txt
+        - &oral2 words_bo/oral_corpus_2.txt
+        - &oral3 words_bo/oral_corpus_3.txt
+        - &oral4 words_bo/recordings_4.txt
+        - &mgd words_bo/mgd.txt
+        - &verbs words_bo/verbs.txt
       skrt_files:
-        - &skrt lexica_skrt/sanskrit.txt
+        - &skrt words_skrt/sanskrit.txt
       non_inflected:
-        - &part lexica_non_inflected/particles.txt
+        - &part words_non_inflected/particles.txt
       lem-pos-freq_files:
         - &lpf_soas entry_data/TiDC_corpus.csv
         - &lpf_part entry_data/particles.csv
@@ -57,7 +57,7 @@ class Config:
     2. setting mode='custom', a path to a custom content folder can be given in the profile argument.
 
     The custom folder must contain any combination of the following subdirs:
-                            lexica_bo, lexica_skrt, entry_data, frequency, deactivate, adjustment
+                            words_bo, words_skrt, entry_data, frequency, deactivate, adjustment
 
     - all folders are excepted to contain .txt files with a word a line, without ending tsek
     - pos should contain word-pos pairs in .txt files
@@ -133,9 +133,9 @@ class Config:
     def __parse_tok_dir(self, dirpath, paths):
         dirpath = Path(dirpath).resolve()
         assert dirpath.is_dir()
-        bo = dirpath / "lexica_bo"
-        skrt = dirpath / "lexica_skrt"
-        non_infl = dirpath / "lexica_non_inflected"
+        bo = dirpath / "words_bo"
+        skrt = dirpath / "words_skrt"
+        non_infl = dirpath / "words_non_inflected"
         lem_pos_freq = dirpath / "entry_data"
         freq = dirpath / "frequency"
         deact = dirpath / "deactivate"
