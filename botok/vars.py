@@ -8,8 +8,9 @@ NAMCHE = "ཿ"
 SHAD = "།"
 AA = "འ"
 HASH = "#"
-VOWELS = ["ི", "ུ", "ེ", "ོ"]
+VOWELS = ["ི"]
 NO_SHAD_CONS = ["ཀ", "ག", "ཤ"]
+DAGDRA = ["པ་", "པོ་", "བ་", "བོ་"]
 
 CharMarkers = IntEnum(
     "CharMarkers",

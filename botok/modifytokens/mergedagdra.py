@@ -1,12 +1,11 @@
 # coding: utf-8
 from .tokenmerge import TokenMerge
-from ..vars import TSEK
+from ..vars import TSEK, DAGDRA
 
 
 class MergeDagdra:
     """
     A class to merge pa/po/ba/bo tokens in a token list produced by BoTokenizer
-
 
     """
 
@@ -19,12 +18,11 @@ class MergeDagdra:
 
         :param tokens: list of Token objects
         """
-        papo = ["པ་", "པོ་", "བ་", "བོ་"]
         if len(tokens) <= 1:
             pass
         elif len(tokens) == 2:
             token0, token1 = tokens
-            if token1.text_cleaned in papo:
+            if token1.text_cleaned in DAGDRA:
                 # split token containing the affixed particle
                 merged = self.merge_with_previous_token(token0, token1)
                 del tokens[1]
@@ -32,7 +30,7 @@ class MergeDagdra:
         else:
             t = 0
             while t <= len(tokens) - 1:
-                if t + 1 >= len(tokens) - 1:
+                if t + 1 > len(tokens) - 1:
                     break
                 token0, token1 = tokens[t], tokens[t + 1]
                 clean_word = (
@@ -43,14 +41,13 @@ class MergeDagdra:
                 if (
                     token0.chunk_type == "TEXT"
                     and token1.chunk_type == "TEXT"
-                    and clean_word in papo
+                    and clean_word in DAGDRA
                 ):
                     # split token containing the affixed particle
                     merged = self.merge_with_previous_token(token0, token1)
 
                     # replace the original token with the two new ones
-                    tokens[t : t + 2] = [merged]
-                    t += 1  # increment once more to account for the newly split token
+                    tokens[t: t + 2] = [merged]
                 t += 1
 
     def merge_with_previous_token(self, token0, token1):

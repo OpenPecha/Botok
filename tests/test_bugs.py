@@ -23,6 +23,26 @@ def test_no_shad_syllable():
     ]
 
 
+def test_segmentation_bug():
+    tokens = gmd_tok.tokenize("ལ་པོ་ལ་པོ་ལ་པོ་")
+    assert len(tokens) == 3
+
+    tokens = gmd_tok.tokenize("ལ་མོ་ལ་མོ་ལ་མོ་")
+    assert len(tokens) == 3
+
+    tokens = gmd_tok.tokenize("གྲོགས་པོ་གྲོགས་པོ་གྲོགས་པོ་")
+    assert len(tokens) == 3
+
+    tokens = gmd_tok.tokenize("བདག་པོ་བདག་པོ་བདག་པོ་དང་")
+    assert len(tokens) == 4
+
+    tokens = gmd_tok.tokenize("བདག་པོ་བདག་པོ་བདག་པོ་")
+    assert len(tokens) == 3
+
+    tokens = gmd_tok.tokenize("བདག་པོ་བདག་པོ་བདག་པོ་བདག་པོ་བདག་པོ་བདག་པོ་བདག་པོ་བདག་པོ་བདག་པོ་")
+    assert len(tokens) == 9
+
+
 def test_keyerror_part_lemma():
     tokens = gmd_tok.tokenize("ཕའིའོ།")
     assert len(tokens) == 3
