@@ -12,7 +12,7 @@ def test_config():
     # paths for trie content
     main, custom = config.get_tok_data_paths("POS")
     # each profile contains one or more sections
-    assert [m for m in main] == ["lexica_bo", "lexica_non_inflected", "entry_data"]
+    assert [m for m in main] == ["words_bo", "words_non_inflected", "entry_data"]
     # each element in a Path object leading to a resource file
     assert isinstance(main["entry_data"][0], Path)
 
@@ -21,7 +21,7 @@ def test_config():
     assert not len(custom)
     main, custom = config.get_tok_data_paths("POS", modifs=modif_path)
     expected = sorted(
-        ["lexica_bo", "deactivate", "entry_data", "frequency", "lexica_skrt"]
+        ["words_bo", "deactivate", "entry_data", "frequency", "words_skrt"]
     )
     assert expected == sorted([c for c in custom])
     expected1 = [
@@ -29,8 +29,8 @@ def test_config():
         "deactivate",
         "entry_data",
         "frequency",
-        "lexica_bo",
-        "lexica_skrt",
+        "words_bo",
+        "words_skrt",
     ]
     assert expected1 == sorted([t.parts[-1] for t in Path(modif_path).glob("*")])
     # overwriting the main profile

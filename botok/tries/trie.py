@@ -61,13 +61,13 @@ class Trie(BasicTrie):
 
     def _populate_trie(self, files):
         # first populate the trie with words
-        lexica = (d for d in files if d.startswith("lexica"))
-        for l in lexica:
+        words = (d for d in files if d.startswith("words"))
+        for l in words:
             for f in files[l]:
                 self._add_one_file(f, l)
 
         # then add data to the added words
-        rest = (d for d in files if not d.startswith("lexica"))
+        rest = (d for d in files if not d.startswith("words"))
         for r in rest:
             for f in files[r]:
                 self._add_one_file(f, r)
@@ -81,13 +81,13 @@ class Trie(BasicTrie):
         with in_file.open("r", encoding="utf-8-sig") as f:
             lines = self.__clean_lines(f)
             for l in lines:
-                if category == "lexica_bo":
+                if category == "words_bo":
                     self.inflect_n_modify_trie(l)
 
-                elif category == "lexica_non_inflected":
+                elif category == "words_non_inflected":
                     self.add_non_inflectible(l)
 
-                elif category == "lexica_skrt":
+                elif category == "words_skrt":
                     self.inflect_n_modify_trie(l, skrt=True)
 
                 elif category == "deactivate":
@@ -101,7 +101,7 @@ class Trie(BasicTrie):
 
                 else:
                     raise SyntaxError(
-                        "category is one of: lexica_bo, lexica_skrt, "
+                        "category is one of: words_bo, words_skrt, "
                         "entry_data, frequency, deactivate"
                     )
 
