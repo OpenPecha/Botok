@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.6.12](https://github.com/Esukhia/botok/releases/tag/v0.6.12) - 20191007
+### Fixed
+ * MergeDagdra (in WordTokenizer) does not jump words to merge anymore
+ * "lexica" changed to "words" in the resources' folder to improve readability.
+
 ## [0.6.11](https://github.com/Esukhia/botok/releases/tag/v0.6.11) - 20191004
 ### Fixed
  * before a space, ཀ ག ཤ eventually followed by a vowel is now treated as a syllable break
