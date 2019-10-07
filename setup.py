@@ -45,13 +45,13 @@ setuptools.setup(
     package_data={
         "botok": [
             "resources/*",
-            "resources/lexica_bo/*",
+            "resources/words_bo/*",
             "resources/frequency/*",
             "resources/entry_data/*",
-            "resources/lexica_non_inflected/*",
+            "resources/words_non_inflected/*",
             "resources/lemmas/*",
             "resources/rules/*",
-            "resources/lexica_skrt/*",
+            "resources/words_skrt/*",
             "resources/adjustment/*",
         ]
     },
