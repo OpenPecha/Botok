@@ -6,6 +6,12 @@ sys.path.append("../")
 from helpers import gmd_tok
 
 
+def test_num_lemmas_missing():
+    in_str = "སྟོང་ཕྲག་བརྒྱ་པ་སུམ་བརྒྱ་པ་བཅུ་པ་ལྔ་པ་"
+    tokens = gmd_tok.tokenize(in_str)
+    assert [t.lemma for t in tokens] == ['སྟོང་ཕྲག་བརྒྱ་པ་', 'སུམ་བརྒྱ་པ་', 'བཅུ་པ་', 'ལྔ་པ་']
+
+
 def test_no_shad_syllable():
     in_str = "ཀ འདི་ ཤི དེ་ག རེད་དོ།"
     bo_string = Chunks(in_str)

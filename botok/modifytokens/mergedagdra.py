@@ -53,4 +53,5 @@ class MergeDagdra:
     def merge_with_previous_token(self, token0, token1):
         merged = TokenMerge(token0, token1).merge()
         merged.has_merged_dagdra = True
+        merged.lemma = merged.text_cleaned
         return merged
