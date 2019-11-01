@@ -309,11 +309,11 @@ config.get_adj_data_paths("basic", modifs=Path(__file__).parent / "tests/trie_da
 wt = WordTokenizer("empty")
 wt.tok.trie.rebuild_trie()
 wt.tok.trie.inflect_n_modify_trie("བདེ་བ་")
-wt.tok.trie.inflect_n_add_data("བདེ་བ་\t\tNOUN")
+wt.tok.trie.inflect_n_add_data("བདེ་བ་\tNOUN")
 wt.tok.trie.inflect_n_modify_trie("གཏན་")
-wt.tok.trie.inflect_n_add_data("གཏན་\t\tNOUN")
+wt.tok.trie.inflect_n_add_data("གཏན་\tNOUN")
 wt.tok.trie.inflect_n_modify_trie("གྱི་")
-wt.tok.trie.inflect_n_add_data("གྱི་\tགི\tPART")
+wt.tok.trie.inflect_n_add_data("གྱི་\tPART\tགི")
 tokens = wt.tokenize("གཏན་གྱི་བདེ་བའི་རྒྱུ།", split_affixes=False)
 len(tokens)
 print(tokens[2].text)
@@ -401,9 +401,9 @@ profile = "empty"
 main, custom = Config().get_tok_data_paths(profile)
 tok = Tokenize(Trie(BoSyl, profile, main, custom))
 tok.trie.inflect_n_modify_trie("བཀྲ་ཤིས་")
-tok.trie.inflect_n_add_data("བཀྲ་ཤིས་\t\tNOUN\t17500")
+tok.trie.inflect_n_add_data("བཀྲ་ཤིས་\tNOUN\t\t\t17500")
 tok.trie.inflect_n_modify_trie("མཐའ་")
-tok.trie.inflect_n_add_data("མཐའ་\t\tNOUN")
+tok.trie.inflect_n_add_data("མཐའ་\tNOUN")
 preproc = TokChunks("མཐའི་བཀྲ་ཤིས། ཀཀ abc མཐའི་རྒྱ་མཚོ་")
 preproc.serve_syls_to_trie()
 tokens = tok.tokenize(preproc)
@@ -433,7 +433,7 @@ profile = "empty"
 main, custom = Config().get_tok_data_paths(profile)
 tok = Tokenize(Trie(BoSyl, profile, main, custom))
 tok.trie.inflect_n_modify_trie("བཀྲ་ཤིས་")
-tok.trie.inflect_n_add_data("བཀྲ་ཤིས་\t\tNOUN")
+tok.trie.inflect_n_add_data("བཀྲ་ཤིས་\tNOUN")
 tok.trie.inflect_n_modify_trie(
     "བཀྲ་ཤིས་བདེ་ལེགས།"
 )  # to ensure we're not in a maximal match
@@ -491,7 +491,7 @@ bt.inflect_n_modify_trie("ཀ་ར་", skrt=True)
 bt.has_word("ཀ་རར་")
 
 bt.inflect_n_add_data(
-    "གྲུབ་མཐའ་\t\t\t532", freq_only=True
+    "གྲུབ་མཐའ་\t\t\t\t532"
 )  # 'freq' is hard-coded in Trie, just as 'lemma' and 'pos' are
 bt.has_word("གྲུབ་མཐའི་")
 
