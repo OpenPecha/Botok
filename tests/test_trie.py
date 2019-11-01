@@ -39,14 +39,14 @@ def test_createtrie():
     }  # arrives here because skrt was True
 
     bt.inflect_n_add_data(
-        "གྲུབ་མཐའ་\t\t\t532", freq_only=True
+        "གྲུབ་མཐའ་\t\t\t\t532"
     )  # 'freq' is hard-coded in Trie, just as 'lemma' and 'pos' are
     assert bt.has_word("གྲུབ་མཐའི་") == {
         "exists": True,
         "data": {
             "_": {},
             "affixation": {"len": 2, "type": "gi", "aa": True},
-            "form_freq": 532,
+            'entries': [{'freq': 532, 'affixed': True}]
         },
     }  # freq is an int
 

@@ -96,13 +96,10 @@ class Trie(BasicTrie):
                 elif category == "entry_data":
                     self.inflect_n_add_data(l)
 
-                elif category == "frequency":
-                    self.inflect_n_add_data(l, True)
-
                 else:
                     raise SyntaxError(
-                        "category is one of: words_bo, words_skrt, "
-                        "entry_data, frequency, deactivate"
+                        "category is one of: words_bo, words_skrt,"
+                        "words_non_inflected, entry_data, deactivate"
                     )
 
     def add_non_inflectible(self, word):
@@ -136,8 +133,8 @@ class Trie(BasicTrie):
                 else:
                     self.add(infl, data=data)
 
-    def inflect_n_add_data(self, line, freq_only=False):
-        form, lemma, pos, freq, meaning = self.__parse_line(line)
+    def inflect_n_add_data(self, line):
+        form, pos, lemma, sense, freq = self.__parse_line(line)
         freq = int(freq) if freq else None
         lemma = self.__join_syls(TokChunks(lemma).get_syls()) if lemma else None
 
@@ -145,25 +142,20 @@ class Trie(BasicTrie):
         if not inflected:
             return  # The entry is not Tibetan, so return doing nothing
 
-        if freq_only:
-            # add the frequencies directly in data
-            for infl, _ in inflected:
-                self.add_data(infl, freq)
-        else:
-            for infl, _ in inflected:
-                affixed = True if _ else False
-                data = {
-                    k: v
-                    for k, v in [
-                        ("lemma", lemma),
-                        ("pos", pos),
-                        ("freq", freq),
-                        ("meaning", meaning),
-                        ("affixed", affixed),
-                    ]
-                    if v is not None
-                }
-                self.add_data(infl, data)
+        for infl, _ in inflected:
+            affixed = True if _ else False
+            data = {
+                k: v
+                for k, v in [
+                    ("lemma", lemma),
+                    ("pos", pos),
+                    ("freq", freq),
+                    ("sense", sense),
+                    ("affixed", affixed),
+                ]
+                if v is not None
+            }
+            self.add_data(infl, data)
 
     def _get_inflected(self, word):
         """

@@ -28,17 +28,16 @@ default_config = dedent(
         - &skrt words_skrt/sanskrit.txt
       non_inflected:
         - &part words_non_inflected/particles.txt
-      lem-pos-freq_files:
-        - &lpf_soas entry_data/TiDC_corpus.csv
-        - &lpf_part entry_data/particles.csv
-      freq_files:
-        - &freq_mgd frequency/mgd.txt
-        - &tc frequency/tc.txt
+      lem-pos-sense-freq_files:
+        - &lpsf_soas entry_data/TiDC_corpus.tsv
+        - &lpsf_part entry_data/particles.tsv
+        - &lpsf_mgd entry_data/mgd.tsv
+        - &lpsf_tc entry_data/tc.tsv
       profiles:
         empty: []
         tsikchen: [*ancient, *except, *uncomp, *tsikchen, *part, *dagdra]
-        POS: [*ancient, *except, *uncomp, *tsikchen, *part, *lpf_soas, *lpf_part, *dagdra]
-        GMD: [*ancient, *except, *uncomp, *tsikchen, *mgd, *verbs, *skrt, *freq_mgd, *part, *lpf_soas, *lpf_part, *dagdra]
+        POS: [*ancient, *except, *uncomp, *tsikchen, *part, *lpsf_soas, *lpsf_part, *lpsf_tc, *dagdra]
+        GMD: [*ancient, *except, *uncomp, *tsikchen, *mgd, *verbs, *skrt, *lpsf_mgd, *part, *lpsf_soas, *lpsf_part, *lpsf_tc, *dagdra]
 
     adjustments:
       files:
@@ -142,7 +141,7 @@ class Config:
 
         for p in [bo, skrt, non_infl, lem_pos_freq, freq, deact]:
             if p.is_dir():
-                for el in list(p.glob("*.txt")) + list(p.glob("*.csv")):
+                for el in list(p.glob("*.txt")) + list(p.glob("*.tsv")):
                     el = Path(__file__).parent / "resources" / Path(el)
                     paths[el.parts[-2]].append(el)
 

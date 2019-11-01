@@ -4,10 +4,20 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.6.13](https://github.com/Esukhia/botok/releases/tag/v0.6.13) - 20191101
+### Fixed
+ * changed the order of entry_data files to: "form / pos / lemma / sense / freq", to have mostly used fields on the left
+ * changed "meaning" field in entry_data to "sense"
+ * changed entry_data file extension. from .csv to .tsv (content was already tab-delimited)
+ * removed the frequency folder in the trie data. it is expected that every line in the entry_data files creates a new sense, in case a single word appears more than once.
+### Added
+ * Added a lemma in MergeDagdra: the lemma of the host + the dagdra
+
 ## [0.6.12](https://github.com/Esukhia/botok/releases/tag/v0.6.12) - 20191007
 ### Fixed
  * MergeDagdra (in WordTokenizer) does not jump words to merge anymore
  * "lexica" changed to "words" in the resources' folder to improve readability.
+ * added missing __version__ attribute in package
 
 ## [0.6.11](https://github.com/Esukhia/botok/releases/tag/v0.6.11) - 20191004
 ### Fixed

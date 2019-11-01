@@ -53,7 +53,6 @@ setuptools.setup(
         "botok": [
             "resources/*",
             "resources/words_bo/*",
-            "resources/frequency/*",
             "resources/entry_data/*",
             "resources/words_non_inflected/*",
             "resources/lemmas/*",

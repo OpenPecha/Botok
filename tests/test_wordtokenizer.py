@@ -26,7 +26,7 @@ def test_get_default_lemma():
                                 text_cleaned: "མཐ"
                                 text_unaffixed: "མཐ"
                                 syls: ["མཐ"]
-                                entries: | pos: NOUN, affixed: True |
+                                entries: | pos: NOUN, affixed: True | freq: 45097, affixed: True |
                                 char_types: |CONS|CONS|
                                 chunk_type: TEXT
                                 affix_host: True
@@ -71,7 +71,7 @@ def test_get_default_lemma():
                                 syls: ["མཐ"]
                                 pos: NOUN
                                 lemma: མཐའ་
-                                entries: | pos: NOUN, affixed: True, lemma: མཐའ་ |
+                                entries: | pos: NOUN, affixed: True, lemma: མཐའ་ | freq: 45097, affixed: True |
                                 char_types: |CONS|CONS|
                                 chunk_type: TEXT
                                 affix_host: True

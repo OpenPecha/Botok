@@ -5,6 +5,10 @@ from botok import *
 
 ###########################################
 in_str = "ལེ གས། བཀྲ་ཤིས་མཐའི་ ༆ ཤི་བཀྲ་ཤིས་  tr བདེ་་ལེ གས། བཀྲ་ཤིས་བདེ་ལེགས་༡༢༣ཀཀ། མཐའི་རྒྱ་མཚོར་གནས་པའི་ཉས་ཆུ་འཐུང་།། །།མཁའ།"
+WT = WordTokenizer('GMD')
+tokens = WT.tokenize(in_str)
+print()
+
 in_str = "ལ་པོ་ལ་པོ་ལ་པོ་"
 t = Text(in_str, tok_params={"profile": "POS"})
 tokens = t.tokenize_words_raw_text

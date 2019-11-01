@@ -21,14 +21,13 @@ def test_config():
     assert not len(custom)
     main, custom = config.get_tok_data_paths("POS", modifs=modif_path)
     expected = sorted(
-        ["words_bo", "deactivate", "entry_data", "frequency", "words_skrt"]
+        ["deactivate", "entry_data", "words_bo", "words_skrt"]
     )
     assert expected == sorted([c for c in custom])
     expected1 = [
         "adjustment",
         "deactivate",
         "entry_data",
-        "frequency",
         "words_bo",
         "words_skrt",
     ]
