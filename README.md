@@ -1,5 +1,5 @@
 # botok – Python Tibetan Tokenizer
-[![Build Status](https://travis-ci.org/Esukhia/pybo.svg?branch=master)](https://travis-ci.org/Esukhia/botok)  [![Coverage Status](https://coveralls.io/repos/github/Esukhia/botok/badge.svg?branch=master)](https://coveralls.io/github/Esukhia/botok?branch=master) ![GitHub release](https://img.shields.io/github/release/Esukhia/botok.svg) [![CodeFactor](https://www.codefactor.io/repository/github/esukhia/botok/badge)](https://www.codefactor.io/repository/github/esukhia/botok) [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://black.readthedocs.io/en/stable/)
+[![Build Status](https://travis-ci.org/Esukhia/botok.svg?branch=master)](https://travis-ci.org/Esukhia/botok)  [![Coverage Status](https://coveralls.io/repos/github/Esukhia/botok/badge.svg?branch=master)](https://coveralls.io/github/Esukhia/botok?branch=master) ![GitHub release](https://img.shields.io/github/release/Esukhia/botok.svg) [![CodeFactor](https://www.codefactor.io/repository/github/esukhia/botok/badge)](https://www.codefactor.io/repository/github/esukhia/botok) [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://black.readthedocs.io/en/stable/)
 
 
 ## Overview
