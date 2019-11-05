@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.6.14](https://github.com/Esukhia/botok/releases/tag/v0.6.14) - 20191105
+### Added
+ * add syllable-mode in token_split
+    * expose syllable boundaries from preprocessing into Token objects
+    * update boundaries at token splitting and token merging
+
 ## [0.6.13](https://github.com/Esukhia/botok/releases/tag/v0.6.13) - 20191101
 ### Fixed
  * changed the order of entry_data files to: "form / pos / lemma / sense / freq", to have mostly used fields on the left

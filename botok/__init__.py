@@ -37,4 +37,4 @@ from .utils.rdr_2_replace_matcher import rdr_2_replace_matcher
 from .config import Config
 from .vars import *
 
-__version__ = "0.6.13"
+__version__ = "0.6.14"

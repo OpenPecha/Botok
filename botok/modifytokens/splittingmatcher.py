@@ -14,6 +14,9 @@ class SplittingMatcher:
         self.token_changes = token_changes
 
     def split_on_matches(self, mode="char"):
+        """
+        :param mode: can either be "char" or "syl"
+        """
         split_list = []
 
         i = 0
