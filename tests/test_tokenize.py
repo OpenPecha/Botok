@@ -24,6 +24,7 @@ def test_tokenize():
                         char_types: |CONS|CONS|SUB_CONS|TSEK|CONS|VOW|CONS|
                         chunk_type: TEXT
                         syls_idx: [[0, 1, 2], [4, 5, 6]]
+                        syls_start_end: [{'start': 0, 'end': 4}, {'start': 4, 'end': 7}]
                         start: 5
                         len: 7
                         

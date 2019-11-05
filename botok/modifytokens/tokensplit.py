@@ -24,11 +24,21 @@ class TokenSplit:
         self.token_changes = token_changes
         self.idx = split_idx
 
-    def split(self):
-        self.split_on_idx()
+    def split(self, mode="char"):
+        """
+        :param mode: can either be "syl" or "char" to split on a syllable index or a character index.
+        """
+        if mode != "char" and mode != "syl":
+            raise SyntaxError("splitting mode should either be 'syl' or 'char'. ")
+
+        # in syllable-mode, if there is only one syllable, return the word without splitting it.
+        if mode == "syl" and len(self.token.syls) == 1:
+            return [self.token]
+
+        self.split_on_idx(mode=mode)
         self.replace_attrs()
 
-        return self.first, self.second
+        return [self.first, self.second]
 
     def replace_attrs(self):
         if self.token_changes:
@@ -36,12 +46,17 @@ class TokenSplit:
             replace_token_attributes(tokens, self.token_changes)
             self.first, self.second = tokens
 
-    def split_on_idx(self):
+    def split_on_idx(self, mode):
         self.first = copy.deepcopy(self.token)
         self.second = copy.deepcopy(self.token)
+
+        if mode == "syl":
+            self.idx = self.token.syls_start_end[self.idx - 1]["end"]
+
         self.__split_contents()
         self.__split_indices()
         self.__split_syls_idx()
+        self.__split_syls_start_end(mode)
         self.__split_char_types()
         self.__split_affixation()
 
@@ -59,6 +74,31 @@ class TokenSplit:
         self.first.len = len(self.first.text)
         self.second.len = len(self.second.text)
         self.second.start = self.second.start + self.idx
+
+    def __split_syls_start_end(self, mode):
+        if not self.token.syls_start_end:
+            return
+
+        to_split_idx = 0
+        for num, s in enumerate(self.token.syls_start_end):
+            if s["start"] <= self.idx <= s["end"]:
+                to_split_idx = num
+                break  # ensure to exit on first match
+
+        print()
+        start = self.token.syls_start_end[:to_split_idx]
+        end = self.token.syls_start_end[to_split_idx + 1 :]
+        to_split = self.token.syls_start_end[to_split_idx]
+
+        if mode == "char":
+            start.append({"start": to_split["start"], "end": self.idx})
+            end.append({"start": self.idx, "end": to_split["end"]})
+
+        if mode == "syl":
+            start.append(to_split)
+
+        self.first.syls_start_end = start
+        self.second.syls_start_end = end
 
     def __split_syls_idx(self):
         syls = self.first.syls_idx

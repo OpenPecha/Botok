@@ -13,7 +13,9 @@ assert parse_version(setuptools.__version__) >= parse_version("38.6.0")
 
 def get_version(prop, project):
     project = Path(__file__).parent / project / "__init__.py"
-    result = re.search(r'{}\s*=\s*[\'"]([^\'"]*)[\'"]'.format(prop), project.read_text())
+    result = re.search(
+        r'{}\s*=\s*[\'"]([^\'"]*)[\'"]'.format(prop), project.read_text()
+    )
     return result.group(1)
 
 
@@ -25,7 +27,7 @@ def read(fname):
 
 setuptools.setup(
     name="botok",
-    version=get_version('__version__', 'botok'),  # edit version in botok/__init__.py
+    version=get_version("__version__", "botok"),  # edit version in botok/__init__.py
     author="Esukhia development team",
     author_email="esukhiadev@gmail.com",
     description="Tibetan Word Tokenizer",

@@ -9,7 +9,12 @@ from helpers import gmd_tok
 def test_num_lemmas_missing():
     in_str = "སྟོང་ཕྲག་བརྒྱ་པ་སུམ་བརྒྱ་པ་བཅུ་པ་ལྔ་པ་"
     tokens = gmd_tok.tokenize(in_str)
-    assert [t.lemma for t in tokens] == ['སྟོང་ཕྲག་བརྒྱ་པ་', 'སུམ་བརྒྱ་པ་', 'བཅུ་པ་', 'ལྔ་པ་']
+    assert [t.lemma for t in tokens] == [
+        "སྟོང་ཕྲག་བརྒྱ་པ་",
+        "སུམ་བརྒྱ་པ་",
+        "བཅུ་པ་",
+        "ལྔ་པ་",
+    ]
 
 
 def test_no_shad_syllable():
@@ -45,7 +50,9 @@ def test_segmentation_bug():
     tokens = gmd_tok.tokenize("བདག་པོ་བདག་པོ་བདག་པོ་")
     assert len(tokens) == 3
 
-    tokens = gmd_tok.tokenize("བདག་པོ་བདག་པོ་བདག་པོ་བདག་པོ་བདག་པོ་བདག་པོ་བདག་པོ་བདག་པོ་བདག་པོ་")
+    tokens = gmd_tok.tokenize(
+        "བདག་པོ་བདག་པོ་བདག་པོ་བདག་པོ་བདག་པོ་བདག་པོ་བདག་པོ་བདག་པོ་བདག་པོ་"
+    )
     assert len(tokens) == 9
 
 

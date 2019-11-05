@@ -222,6 +222,12 @@ class Tokenize:
             token_type = self.pre_processed.chunks[syls[0]][1][0]
             token_start = self.pre_processed.chunks[syls[0]][1][1]
             token_length = self.pre_processed.chunks[syls[0]][1][2]
+            syl_start_end = [
+                (
+                    self.pre_processed.chunks[syls[0]][1][1],
+                    self.pre_processed.chunks[syls[0]][1][2],
+                )
+            ]
             if ttype:
                 if "entries" not in data:
                     data["entries"] = [{"pos": ttype}]
@@ -231,15 +237,22 @@ class Tokenize:
                             m["pos"] = ttype
 
             return self.create_token(
-                token_type, token_start, token_length, token_syls, data
+                token_type, token_start, token_length, token_syls, syl_start_end, data
             )
         elif len(syls) > 1:
             token_syls = [self.pre_processed.chunks[idx][0] for idx in syls]
             token_type = self.pre_processed.chunks[syls[-1]][1][0]
             token_start = self.pre_processed.chunks[syls[0]][1][1]
             token_length = 0
+            syl_start_end = []
             for i in syls:
                 token_length += self.pre_processed.chunks[i][1][2]
+                syl_start_end.append(
+                    (
+                        self.pre_processed.chunks[i][1][1],
+                        self.pre_processed.chunks[i][1][2],
+                    )
+                )
             if ttype:
                 if "entries" not in data:
                     data["entries"] = [{"pos": ttype}]
@@ -249,12 +262,12 @@ class Tokenize:
                             m["pos"] = ttype
 
             return self.create_token(
-                token_type, token_start, token_length, token_syls, data
+                token_type, token_start, token_length, token_syls, syl_start_end, data
             )
         else:
             raise ValueError(str(syls) + "should contain at least 1 token")
 
-    def create_token(self, ttype, start, length, syls, data):
+    def create_token(self, ttype, start, length, syls, syl_start_end, data):
         """
         :param ttype: token type
         :param start: start index in input string
@@ -272,6 +285,9 @@ class Tokenize:
         token.len = length
         if syls != [None]:
             token.syls_idx = [[s - start for s in syl] for syl in syls]
+            token.syls_start_end = [
+                {"start": s - start, "end": s - start + l} for s, l in syl_start_end
+            ]
         char_groups = self.pre_processed.bs.export_groups(
             start, length, for_substring=True
         )

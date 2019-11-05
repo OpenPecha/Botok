@@ -10,6 +10,7 @@ main, custom = Config().get_adj_data_paths("basic", rules_path)
 
 input_str = " མཐའི་རྒྱ་མཚོའི་གླིང་། ཤི་བཀྲ་ཤིས་  tr བདེ་་ལེ གས། བཀྲ་ཤིས་བདེ་ལེགས་ཀཀ"
 tokens = pos_tok.tokenize(input_str, split_affixes=False)
+tokens_affix_split = pos_tok.tokenize(input_str)
 
 # IMPORTANT: all the tests have merely been adapted after refactorisation.
 # They should be split in tests per file that also show the expected behaviour of every matcher.
@@ -81,12 +82,12 @@ def test_token_split():
 
 
 def test_token_merge():
-    tm = TokenMerge(tokens[0], tokens[1])
+    tm = TokenMerge(tokens_affix_split[0], tokens_affix_split[1])
     merged = tm.merge()
     assert merged
 
 
-def test_match_split():
+def test_match_split_char():
     match_query = '[pos="NOUN" & text!=""] []'
     replace_idx = 1  # slot number in match query
     split_idx = 1  # char index in token.content where split should occur
@@ -98,15 +99,27 @@ def test_match_split():
     assert len(split_tokens) == 19
 
 
+def test_match_split_syl():
+    match_query = '[pos="NOUN" & text!=""] []'
+    replace_idx = 1  # slot number in match query
+    split_idx = 1  # char index in token.content where split should occur
+    replace = '[chunk_type="XXX" & pos="xxx"] []'
+
+    sm = SplittingMatcher(match_query, replace_idx, split_idx, tokens, replace)
+    split_tokens = sm.split_on_matches(mode="syl")
+    assert len(tokens) == 12
+    assert len(split_tokens) == 17
+
+
 def test_match_merge():
     match_query = '[pos="NOUN" & text!=""] []'
     replace_idx = 1  # slot number in match query
     replace = '[chunk_type="XXX" & pos="xxx"]'
 
-    mm = MergingMatcher(match_query, replace_idx, tokens, replace)
+    mm = MergingMatcher(match_query, replace_idx, tokens_affix_split, replace)
     merged_tokens = mm.merge_on_matches()
     assert len(tokens) == 12
-    assert len(merged_tokens) == 7
+    assert len(merged_tokens) == 8
 
 
 def test_match_replace():

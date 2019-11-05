@@ -31,6 +31,7 @@ def test_get_default_lemma():
                                 chunk_type: TEXT
                                 affix_host: True
                                 syls_idx: [[0, 1]]
+                                syls_start_end: [{'start': 0, 'end': 2}]
                                 start: 18
                                 len: 2
                                 
@@ -49,6 +50,7 @@ def test_get_default_lemma():
                                 chunk_type: TEXT
                                 affix: True
                                 syls_idx: [[0, 1]]
+                                syls_start_end: [{'start': 2, 'end': 5}]
                                 start: 20
                                 len: 3
                                 
@@ -76,6 +78,7 @@ def test_get_default_lemma():
                                 chunk_type: TEXT
                                 affix_host: True
                                 syls_idx: [[0, 1]]
+                                syls_start_end: [{'start': 0, 'end': 2}]
                                 start: 18
                                 len: 2
                                 
@@ -97,6 +100,7 @@ def test_get_default_lemma():
                                 chunk_type: TEXT
                                 affix: True
                                 syls_idx: [[0, 1]]
+                                syls_start_end: [{'start': 2, 'end': 5}]
                                 start: 20
                                 len: 3
                                 

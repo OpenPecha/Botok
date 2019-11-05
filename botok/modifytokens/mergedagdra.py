@@ -47,7 +47,7 @@ class MergeDagdra:
                     merged = self.merge_with_previous_token(token0, token1)
 
                     # replace the original token with the two new ones
-                    tokens[t: t + 2] = [merged]
+                    tokens[t : t + 2] = [merged]
                 t += 1
 
     def merge_with_previous_token(self, token0, token1):

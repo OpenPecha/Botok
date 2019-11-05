@@ -13,7 +13,7 @@ class SplittingMatcher:
         self.split_idx = split_idx
         self.token_changes = token_changes
 
-    def split_on_matches(self):
+    def split_on_matches(self, mode="char"):
         split_list = []
 
         i = 0
@@ -28,7 +28,7 @@ class SplittingMatcher:
                     i += 1
 
                 # split the token and add them to the new list
-                split_list.extend(self.__split(self.token_list[idx]))
+                split_list.extend(self.__split(self.token_list[idx], mode=mode))
 
             else:
                 split_list.append(self.token_list[i])
@@ -41,6 +41,6 @@ class SplittingMatcher:
             self.token_list[i : i + self.span + 1]
         )
 
-    def __split(self, token):
+    def __split(self, token, mode):
         ts = TokenSplit(token, self.split_idx, self.token_changes)
-        return ts.split()
+        return ts.split(mode=mode)

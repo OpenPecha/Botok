@@ -32,6 +32,7 @@ class TokenMerge:
         self.__merge_texts()
         self.__merge_indices()
         self.__merge_syls_idx()
+        self.__merge_syls_start_end()
         self.__del_lemma()
 
     def __merge_texts(self):
@@ -39,6 +40,26 @@ class TokenMerge:
 
     def __merge_indices(self):
         self.merged.len += self.token2.len
+
+    def __merge_syls_start_end(self):
+        # token1 is a host syllable and token2 its affixed syllable
+        if (
+            not self.merged.syls_start_end
+            or not self.token1.syls_start_end
+            or not self.token2.syls_start_end
+        ):
+            return
+
+        if (
+            self.token1.affix_host
+            and not self.token1.affix
+            and not self.token2.affix_host
+            and self.token2.affix
+        ):
+            self.merged.syls_start_end[-1]["end"] = self.token2.syls_start_end[0]["end"]
+            self.merged.syls_start_end.extend(self.token2.syls_start_end[1:])
+        else:
+            self.merged.syls_start_end.extend(self.token2.syls_start_end)
 
     def __merge_syls_idx(self):
         """

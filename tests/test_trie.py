@@ -46,7 +46,7 @@ def test_createtrie():
         "data": {
             "_": {},
             "affixation": {"len": 2, "type": "gi", "aa": True},
-            'entries': [{'freq': 532, 'affixed': True}]
+            "entries": [{"freq": 532, "affixed": True}],
         },
     }  # freq is an int
 

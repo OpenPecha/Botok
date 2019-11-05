@@ -20,17 +20,9 @@ def test_config():
     modif_path = "trie_data/"
     assert not len(custom)
     main, custom = config.get_tok_data_paths("POS", modifs=modif_path)
-    expected = sorted(
-        ["deactivate", "entry_data", "words_bo", "words_skrt"]
-    )
+    expected = sorted(["deactivate", "entry_data", "words_bo", "words_skrt"])
     assert expected == sorted([c for c in custom])
-    expected1 = [
-        "adjustment",
-        "deactivate",
-        "entry_data",
-        "words_bo",
-        "words_skrt",
-    ]
+    expected1 = ["adjustment", "deactivate", "entry_data", "words_bo", "words_skrt"]
     assert expected1 == sorted([t.parts[-1] for t in Path(modif_path).glob("*")])
     # overwriting the main profile
     main, custom = config.get_tok_data_paths(modif_path, mode="custom")

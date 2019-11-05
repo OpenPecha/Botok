@@ -12,6 +12,7 @@ class Token:
         self.start = 0
         self.len = None
         self.syls_idx = None
+        self.syls_start_end = None
         self.pos = ""
         self.affixation = {}
         self.entries = None
@@ -129,6 +130,8 @@ class Token:
             out += "has_merged_dagdra: {}\n".format(self.has_merged_dagdra)
         if self.syls_idx:
             out += "syls_idx: {}\n".format(self.syls_idx)
+        if self.syls_start_end:
+            out += "syls_start_end: {}\n".format(self.syls_start_end)
         out += "start: {}\n".format(self.start)
         out += "len: {}\n".format(self.len)
         if self._:
