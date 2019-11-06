@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.6.15](https://github.com/Esukhia/botok/releases/tag/v0.6.15) - 20191106
+### Added
+ * add expose_data() to copy at a given location the data used by botok
+### Changed
+ * remove rdr_2_replace_matchers from botok (into its own repo)
+
 ## [0.6.14](https://github.com/Esukhia/botok/releases/tag/v0.6.14) - 20191105
 ### Added
  * add syllable-mode in token_split

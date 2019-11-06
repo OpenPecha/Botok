@@ -32,9 +32,9 @@ from .tokenizers.chunktokenizer import ChunkTokenizer
 from .tries.basictrie import BasicTrie
 from .tries.trie import Trie
 
-from .utils.rdr_2_replace_matcher import rdr_2_replace_matcher
+from .utils.expose_data import expose_data
 
 from .config import Config
 from .vars import *
 
-__version__ = "0.6.14"
+__version__ = "0.6.15"

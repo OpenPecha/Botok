@@ -5,7 +5,7 @@ from botok import *
 
 ###########################################
 in_str = "ལེ གས། བཀྲ་ཤིས་མཐའི་ ༆ ཤི་བཀྲ་ཤིས་  tr བདེ་་ལེ གས། བཀྲ་ཤིས་བདེ་ལེགས་༡༢༣ཀཀ། མཐའི་རྒྱ་མཚོར་གནས་པའི་ཉས་ཆུ་འཐུང་།། །།མཁའ།"
-WT = WordTokenizer('GMD')
+WT = WordTokenizer("GMD")
 tokens = WT.tokenize(in_str)
 print()
 
