@@ -799,11 +799,3 @@ t.custom_pipeline("dummy", custom_tokenizer, custom_modifier, custom_formatter)
 t.custom_pipeline("dummy", "word_tok", "words_error_concs", "basic_concs")
 
 t.custom_pipeline("dummy", "word_tok", "words_error_types", "stats_types")
-
-
-##########################################################################################################
-# test_rdr_parser.py
-##########################################################################################################
-
-f_path = Path(Path(__file__).parent / "tests/resources/rdr_rules.txt")
-res = rdr_2_replace_matcher(f_path.read_text())
