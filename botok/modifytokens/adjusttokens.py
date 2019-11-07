@@ -9,10 +9,10 @@ from .replacingmatcher import ReplacingMatcher
 class AdjustTokens:
     def __init__(self, main=None, custom=None):
         self.paths = []
-        if main:
-            self.paths.extend(main)
         if custom:
             self.paths.extend(custom)
+        elif main:
+            self.paths.extend(main)
         self.rules = []
         self.parse_rules()
 
