@@ -79,7 +79,7 @@ class Config:
         """
         self.filename = Path(filename).resolve()
         if conf_path:
-            self.filename = Path(conf_path) / self.filename
+            self.filename = Path(conf_path) / filename
         if self.filename.suffix != ".yaml":
             raise Exception("Unrecognised file extension. It only supports .yaml files")
 
