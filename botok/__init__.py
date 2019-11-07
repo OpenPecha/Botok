@@ -37,4 +37,4 @@ from .utils.expose_data import expose_data
 from .config import Config
 from .vars import *
 
-__version__ = "0.6.15"
+__version__ = "0.6.16"

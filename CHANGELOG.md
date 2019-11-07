@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.6.16](https://github.com/Esukhia/botok/releases/tag/v0.6.16) - 20191107
+### Fixed
+ * bugfix: custom location for pybo.yaml works
+### Added
+ * export either all data, or a profile's data (empty, POS, GMD, tsikchen) in expose_data()
+
 ## [0.6.15](https://github.com/Esukhia/botok/releases/tag/v0.6.15) - 20191106
 ### Added
  * add expose_data() to copy at a given location the data used by botok
