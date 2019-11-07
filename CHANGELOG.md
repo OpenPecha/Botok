@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.6.17](https://github.com/Esukhia/botok/releases/tag/v0.6.17) - 20191107
+### Fixed
+ * fix : when there are custom adjustments, ignore the default adjustments
+
 ## [0.6.16](https://github.com/Esukhia/botok/releases/tag/v0.6.16) - 20191107
 ### Fixed
  * bugfix: custom location for pybo.yaml works
