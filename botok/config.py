@@ -41,7 +41,7 @@ default_config = dedent(
 
     adjustments:
       files:
-        - &rdr adjustment/rdr_basis.yaml
+        - &rdr adjustment/rdr_basis.tsv
       profiles:
         empty: []
         basic: [*rdr]"""
@@ -150,7 +150,7 @@ class Config:
         assert dirpath.is_dir()
         adjs = dirpath / "adjustment"
         if adjs.is_dir():
-            for el in adjs.glob("*.yaml"):
+            for el in adjs.glob("*.tsv"):
                 el = Path(__file__).parent / "resources" / Path(el)
                 paths.append(el)
 

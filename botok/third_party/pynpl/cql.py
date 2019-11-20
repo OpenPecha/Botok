@@ -29,6 +29,7 @@ OPERATORS = ("=", "!=")
 MAXINTERVAL = 99
 DEFAULTFIELD = "text_cleaned"  # pynpl default: "word"
 
+
 class SyntaxError(Exception):
     pass
 

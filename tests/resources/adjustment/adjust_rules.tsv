@@ -1,0 +1,16 @@
+# Syntax for the possible adjustment
+# ===================================
+# - CQL rules: "<text>" can be used without specifying that there is "text_cleaned="
+# - Index format: either "<matching_index>" or "<matching_index>-<splitting-index>"
+# - Adjustment format:
+#		- "+" for merge
+#		- ":" for split (default: syllable mode)
+#		- "::" for split in character mode
+#		- "=" for replace
+# - Constraint: "<matching_index>-<splitting-index>" is only allowed if adjustment is ":" or "::"
+
+["ལ་ལ་"] ["ལ་ལ་"]	1	=	[pos="PART"]
+["ལ་ལ་"] ["ལ་ལ་"]	2	=	[pos="PART"]
+["ལ་ལ་"] ["ལ་ལ་"]	1-2	::	[pos="PART"] [pos="PART"]
+["ལ་"] ["ལ་"] ["ལ་ལ་"]	3-2	::	[pos="PART"] [pos="PART"]
+["ལ་"] ["ལ་"] ["ལ་"] ["ལ་"]	2	+	[pos="PART"]

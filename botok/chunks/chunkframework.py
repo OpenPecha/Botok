@@ -319,9 +319,7 @@ class ChunkFramework(ChunkFrameworkBase):
         :return:
         """
         indices = self.chunk(start, end, self.__is_transparent)
-        truc = self.bs.string[start:end]
         for num, i in enumerate(indices):
-            chunk = self.bs.string[i[1] : i[1] + i[2]]
             if len(indices) - 1 > num > 0 and indices[num][0]:
                 _, s, e = indices[num - 1]
                 text = self.bs.string[s : s + e]

@@ -1,9 +1,10 @@
 # coding: utf-8
-import yaml
+import csv
 
 from .splittingmatcher import SplittingMatcher
 from .mergingmatcher import MergingMatcher
 from .replacingmatcher import ReplacingMatcher
+from ..utils.helpers import decomment_file
 
 
 class AdjustTokens:
@@ -18,25 +19,25 @@ class AdjustTokens:
 
     def adjust(self, token_list):
         for rule in self.rules:
-            operation = list(rule.keys())[0]
-            if operation == "split":
-                match_query, replace_idx, split_idx, replace_query = rule[operation]
+            if rule["operation"] == "split":
                 sm = SplittingMatcher(
-                    match_query, replace_idx, split_idx, token_list, replace_query
+                    rule["matchcql"],
+                    rule["matchidx"],
+                    rule["splitidx"],
+                    token_list,
+                    rule["replacecql"],
                 )
-                token_list = sm.split_on_matches()
-            elif operation == "merge":
-                match_query, replace_idx, replace_query = rule[operation]
-                mm = MergingMatcher(match_query, replace_idx, token_list, replace_query)
+                token_list = sm.split_on_matches(mode=rule["splitmode"])
+            elif rule["operation"] == "merge":
+                mm = MergingMatcher(
+                    rule["matchcql"], rule["matchidx"], token_list, rule["replacecql"]
+                )
                 token_list = mm.merge_on_matches()
-            elif operation == "repla":
-                match_query, replace_idx, replace_query = rule[operation]
+            elif rule["operation"] == "repl":
                 rm = ReplacingMatcher(
-                    match_query, replace_idx, token_list, replace_query
+                    rule["matchcql"], rule["matchidx"], token_list, rule["replacecql"]
                 )
                 rm.replace_on_matches()
-            else:
-                print("rule problem: " + rule)
         return token_list
 
     def parse_rules(self):
@@ -45,4 +46,53 @@ class AdjustTokens:
         :return:
         """
         for rule_file in sorted(self.paths):
-            self.rules.extend(yaml.safe_load(rule_file.read_text(encoding="utf-8-sig")))
+            for rule in csv.reader(decomment_file(rule_file.open(encoding="utf-8-sig")), delimiter="\t"):
+                self.rules.append(self.parse_rule(rule))
+
+    @staticmethod
+    def parse_rule(rule):
+        idx_sep = "-"
+
+        # sanity checks
+        if len(rule) != 4:
+            raise SyntaxError("There can't be more than three columns per rule.")
+        if not rule[1]:
+            raise SyntaxError("There needs to be an index for every rule.")
+        if idx_sep in rule[1] and rule[2] not in [":", "::"]:
+            raise SyntaxError(
+                "The double index in only intended for split adjustments."
+            )
+        if rule[2] not in ["+", "=", ":", "::"]:
+            raise SyntaxError(
+                'The supported operations are either of ["+", "=", ":", "::"].'
+            )
+
+        # parse
+        rule_dict = {
+            "matchcql": None,
+            "matchidx": None,
+            "operation": None,
+            "splitidx": None,
+            "splitmode": None,
+            "replacecql": None,
+        }
+        rule_dict["matchcql"] = rule[0]
+        if idx_sep in rule[1]:
+            match_idx, split_idx = rule[1].split("-")
+            rule_dict["matchidx"] = int(match_idx)
+            rule_dict["splitidx"] = int(split_idx)
+        else:
+            rule_dict["matchidx"] = int(rule[1])
+        if rule[2] == "=":
+            rule_dict["operation"] = "repl"
+        elif rule[2] == "+":
+            rule_dict["operation"] = "merge"
+        elif rule[2] == ":":
+            rule_dict["operation"] = "split"
+            rule_dict["splitmode"] = "syl"
+        elif rule[2] == "::":
+            rule_dict["operation"] = "split"
+            rule_dict["splitmode"] = "char"
+        rule_dict["replacecql"] = rule[3]
+
+        return rule_dict

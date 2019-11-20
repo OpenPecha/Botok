@@ -9,7 +9,9 @@ def expose_data(out_path, profile=None):
     :param out_path: must be an existing empty folder
     """
     if profile not in ["POS", "GMD", "tsikchen", "empty"]:
-        raise SyntaxError('profile should be either one of ["POS", "GMD", "tsikchen", "empty"]')
+        raise SyntaxError(
+            'profile should be either one of ["POS", "GMD", "tsikchen", "empty"]'
+        )
 
     out_path = Path(out_path)
     if not out_path.is_dir() or list(out_path.glob("*")):
@@ -20,14 +22,16 @@ def expose_data(out_path, profile=None):
     res_dirs = [r for r in resources.glob("*") if r.is_dir()]
 
     if profile:
-    # export profile data
+        # export profile data
         for f in Config().config["tokenizers"]["profiles"][profile]:
-            Path(out_path / Path(f).parent).mkdir(parents=True, exist_ok=True)  # create dir
+            Path(out_path / Path(f).parent).mkdir(
+                parents=True, exist_ok=True
+            )  # create dir
             shutil.copy(resources / f, out_path / f)
 
         shutil.copytree(resources / "adjustment", out_path / "adjustment")
 
     else:
-    # export all data
+        # export all data
         for r in res_dirs:
             shutil.copytree(r, out_path / r.name)

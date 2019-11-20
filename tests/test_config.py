@@ -33,5 +33,5 @@ def test_adj_config():
     config = Config()
     modif_path = "trie_data"
     main, custom = config.get_adj_data_paths("basic", modifs=modif_path)
-    assert "rdr_basis.yaml" == "".join([m.name for m in main])
-    assert "test.yaml" == "".join([c.name for c in custom])
+    assert "rdr_basis.tsv" == "".join([m.name for m in main])
+    assert "test.tsv" == "".join([c.name for c in custom])
