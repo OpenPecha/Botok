@@ -27,7 +27,7 @@ import sys
 
 OPERATORS = ("=", "!=")
 MAXINTERVAL = 99
-
+DEFAULTFIELD = "text_cleaned"  # pynpl default: "word"
 
 class SyntaxError(Exception):
     pass
@@ -71,7 +71,7 @@ class AttributeExpression(object):
             i += 1
         if s[i] == '"':
             # no attribute and no operator, use defaults:
-            attribute = "word"
+            attribute = DEFAULTFIELD  # pynpl default: "word"
             operator = "="
         else:
             attribute = ""
