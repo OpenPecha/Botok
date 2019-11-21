@@ -8,6 +8,20 @@ from ..utils.helpers import decomment_file
 
 
 class AdjustTokens:
+    """
+    Syntax for the .tsv adjustment rules
+    ===================================
+    - each rule should be as follows: "<matchcql>\t<index>\t<operation>\t<replacecql>"
+    - comments with # and empty lines are allowed
+    - CQL rules: "<text>" can be used without specifying that there is "text_cleaned="
+    - Index format: either "<matching_index>" or "<matching_index>-<splitting-index>"
+    - Adjustment format:
+            - "+" for merge
+            - ":" for split (default: syllable mode)
+            - "::" for split in character mode
+            - "=" for replace
+    - Constraint: "<matching_index>-<splitting-index>" is only allowed if adjustment is ":" or "::"
+    """
     def __init__(self, main=None, custom=None):
         self.paths = []
         if custom:
