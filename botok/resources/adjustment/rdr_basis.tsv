@@ -1,5 +1,5 @@
 #matchcql	idx	op	replacecql
-
+			
 [pos="DET"] [pos="SCONJ"]	2	=	[pos="ADP"]
 [pos="DET"] ["སྟེ་" & pos="SCONJ"]	2	=	[pos="SCONJ"]
 [pos="DET"] ["ཅིང་" & pos="SCONJ"]	2	=	[pos="SCONJ"]
