@@ -13,7 +13,7 @@ from ..config import Config
 from ..vars import TSEK, AA
 
 part_lemmas = {}
-filename = Path(__file__).parent.parent / "resources" / "entry_data" / "particles.tsv"
+filename = Path(__file__).parent.parent / "resources" / "particles.tsv"
 with filename.open("r", encoding="utf-8-sig") as f:
     reader = csv.reader(f, delimiter="\t")
     for row in list(reader)[1:]:

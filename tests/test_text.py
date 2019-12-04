@@ -146,24 +146,23 @@ def test_simple_usage():
 def test_advanced_features():
     ########################################
     # 1. instanciating with a custom profile
-    t = Text(in_str, tok_params={"profile": "GMD"})
+    t = Text(in_str, tok_params={"profile": "POS"})
     tokens = t.tokenize_words_raw_text
     assert (
         tokens
-        == "ལེ_གས །_ བཀྲ་ཤིས་ མཐ འི་ _༆_ ཤི་ བཀྲ་ཤིས་_ tr_ བདེ་་ལེ_གས །_ བཀྲ་ཤིས་བདེ་ལེགས་ ༡༢༣ ཀཀ །_ མཐ འི་ རྒྱ་མཚོ ར་ གནས་པ འི་ ཉ ས་ ཆུ་ འཐུང་ །།_།། མཁའ །"
+        == "ལེ_གས །_ བཀྲ་ཤིས་ མཐ འི་ _༆_ ཤི་ བཀྲ་ཤིས་_ tr_ བདེ་་ལེ_གས །_ བཀྲ་ཤིས་ བདེ་ལེགས་ ༡༢༣ ཀཀ །_ མཐ འི་ རྒྱ་མཚོ ར་ གནས་པ འི་ ཉ ས་ ཆུ་ འཐུང་ །།_།། མཁའ །"
     )
 
     # instanciating with a custom profile. tok_params can receive all the supported arguments of WordTokenizer
     tt = Text(
         in_str,
-        tok_params={"profile": "GMD", "modifs": Path(__file__).parent / "trie_data"},
+        tok_params={"profile": "POS", "modifs": Path(__file__).parent / "trie_data"},
     )
     ttokens = tt.tokenize_words_raw_text
     assert (
         ttokens
         == "ལེ_གས །_ བཀྲ་ཤིས་ མཐ འི་ _༆_ ཤི་ བཀྲ་ཤིས་_ tr_ བདེ་་ལེ_གས །_ བཀྲ་ཤིས་ བདེ་ལེགས་ ༡༢༣ ཀཀ །_ མཐ འི་ རྒྱ་མཚོ ར་ གནས་པ འི་ ཉ ས་ ཆུ་ འཐུང་ །།_།། མཁའ །"
     )
-    # note that བཀྲ་ཤིས་ བདེ་ལེགས་ is now two tokens instead of 1 as in tokens
 
     #############################
     # 2. adding a custom pipeline

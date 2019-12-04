@@ -33,8 +33,19 @@ from .tries.basictrie import BasicTrie
 from .tries.trie import Trie
 
 from .utils.expose_data import expose_data
+from .utils.get_data import get_data
 
 from .config import Config
 from .vars import *
 
 __version__ = "0.6.18"
+
+from pathlib import Path
+
+
+def cwd():
+    return Path(__file__).parent.resolve()
+
+
+# download trie data from botok-data
+get_data("https://github.com/Esukhia/botok-data/archive/master.zip", Path(__file__).parent / "resources")

@@ -108,7 +108,7 @@ class Text:
 
     @property
     def tokenize_words_raw_lines(self):
-        config = {"profile": "GMD"}
+        config = {"profile": "POS"}
         return self.__process(
             "basic_keeps_lines",
             "word_tok",
@@ -125,7 +125,7 @@ class Text:
 
     @property
     def tokenize_sentences_plaintext(self):
-        config = {"profile": "GMD"}
+        config = {"profile": "POS"}
         return self.__process(
             "basic_cleanup",
             "sentence_tok",
@@ -136,7 +136,7 @@ class Text:
 
     @property
     def tokenize_paragraph_plaintext(self):
-        config = {"profile": "GMD"}
+        config = {"profile": "POS"}
         return self.__process(
             "basic_cleanup",
             "paragraph_tok",
@@ -147,7 +147,7 @@ class Text:
 
     @property
     def list_word_types(self):
-        config = {"profile": "GMD"}
+        config = {"profile": "POS"}
         return self.__process(
             "basic_keeps_lines",
             "word_tok",

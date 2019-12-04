@@ -85,7 +85,6 @@ class TokenSplit:
                 to_split_idx = num
                 break  # ensure to exit on first match
 
-        print()
         start = self.token.syls_start_end[:to_split_idx]
         end = self.token.syls_start_end[to_split_idx + 1 :]
         to_split = self.token.syls_start_end[to_split_idx]

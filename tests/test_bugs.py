@@ -3,14 +3,15 @@ from botok import *
 import sys
 
 sys.path.append("../")
-from helpers import gmd_tok
+from helpers import pos_tok
 
 
 def test_num_lemmas_missing():
     in_str = "སྟོང་ཕྲག་བརྒྱ་པ་སུམ་བརྒྱ་པ་བཅུ་པ་ལྔ་པ་"
-    tokens = gmd_tok.tokenize(in_str)
+    tokens = pos_tok.tokenize(in_str)
     assert [t.lemma for t in tokens] == [
-        "སྟོང་ཕྲག་བརྒྱ་པ་",
+        "སྟོང་ཕྲག་",
+        "བརྒྱ་པ་",
         "སུམ་བརྒྱ་པ་",
         "བཅུ་པ་",
         "ལྔ་པ་",
@@ -35,29 +36,29 @@ def test_no_shad_syllable():
 
 
 def test_segmentation_bug():
-    tokens = gmd_tok.tokenize("ལ་པོ་ལ་པོ་ལ་པོ་")
+    tokens = pos_tok.tokenize("ལ་པོ་ལ་པོ་ལ་པོ་")
     assert len(tokens) == 3
 
-    tokens = gmd_tok.tokenize("ལ་མོ་ལ་མོ་ལ་མོ་")
+    tokens = pos_tok.tokenize("ལ་མོ་ལ་མོ་ལ་མོ་")
     assert len(tokens) == 3
 
-    tokens = gmd_tok.tokenize("གྲོགས་པོ་གྲོགས་པོ་གྲོགས་པོ་")
+    tokens = pos_tok.tokenize("གྲོགས་པོ་གྲོགས་པོ་གྲོགས་པོ་")
     assert len(tokens) == 3
 
-    tokens = gmd_tok.tokenize("བདག་པོ་བདག་པོ་བདག་པོ་དང་")
+    tokens = pos_tok.tokenize("བདག་པོ་བདག་པོ་བདག་པོ་དང་")
     assert len(tokens) == 4
 
-    tokens = gmd_tok.tokenize("བདག་པོ་བདག་པོ་བདག་པོ་")
+    tokens = pos_tok.tokenize("བདག་པོ་བདག་པོ་བདག་པོ་")
     assert len(tokens) == 3
 
-    tokens = gmd_tok.tokenize(
+    tokens = pos_tok.tokenize(
         "བདག་པོ་བདག་པོ་བདག་པོ་བདག་པོ་བདག་པོ་བདག་པོ་བདག་པོ་བདག་པོ་བདག་པོ་"
     )
     assert len(tokens) == 9
 
 
 def test_keyerror_part_lemma():
-    tokens = gmd_tok.tokenize("ཕའིའོ།")
+    tokens = pos_tok.tokenize("ཕའིའོ།")
     assert len(tokens) == 3
 
 
@@ -70,10 +71,10 @@ def test_split_token():
 
 def test_missing_entries_n_bad_unaffixed():
     input_str = "ཤུ་ཀ་ར་"
-    tokens = gmd_tok.tokenize(input_str, split_affixes=False)
-    assert [t.text for t in tokens] == ["ཤུ་ཀ་", "ར་"]
+    tokens = pos_tok.tokenize(input_str, split_affixes=False)
+    assert [t.text for t in tokens] == ["ཤུ་", "ཀ་ར་"]
     assert tokens[0].entries
-    assert tokens[1].text_unaffixed == "ར་"
+    assert tokens[1].text_unaffixed == "ཀ་ར་"
 
 
 def test_multiple_spaces():
@@ -94,7 +95,7 @@ def test_bug1():
 
 def test_bug2():
     string = "བྲ་གྲྀ་"
-    tokens = gmd_tok.tokenize(string, debug=True)
+    tokens = pos_tok.tokenize(string, debug=True)
     assert tokens
 
 

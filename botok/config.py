@@ -17,27 +17,15 @@ default_config = dedent(
         - &uncomp words_bo/uncompound_lexicon.txt
         - &tsikchen words_bo/tsikchen.txt
         - &dagdra words_bo/dagdra.txt
-        - &oral0 words_bo/oral_corpus_0.txt
-        - &oral1 words_bo/oral_corpus_1.txt
-        - &oral2 words_bo/oral_corpus_2.txt
-        - &oral3 words_bo/oral_corpus_3.txt
-        - &oral4 words_bo/recordings_4.txt
-        - &mgd words_bo/mgd.txt
-        - &verbs words_bo/verbs.txt
-      skrt_files:
-        - &skrt words_skrt/sanskrit.txt
       non_inflected:
         - &part words_non_inflected/particles.txt
       lem-pos-sense-freq_files:
         - &lpsf_soas entry_data/TiDC_corpus.tsv
         - &lpsf_part entry_data/particles.tsv
-        - &lpsf_mgd entry_data/mgd.tsv
         - &lpsf_tc entry_data/tc.tsv
       profiles:
         empty: []
-        tsikchen: [*ancient, *except, *uncomp, *tsikchen, *part, *dagdra]
         POS: [*ancient, *except, *uncomp, *tsikchen, *part, *lpsf_soas, *lpsf_part, *lpsf_tc, *dagdra]
-        GMD: [*ancient, *except, *uncomp, *tsikchen, *mgd, *verbs, *skrt, *lpsf_mgd, *part, *lpsf_soas, *lpsf_part, *lpsf_tc, *dagdra]
 
     adjustments:
       files:
