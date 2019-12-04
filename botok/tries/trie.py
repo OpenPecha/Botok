@@ -90,7 +90,7 @@ class Trie(BasicTrie):
                 elif category == "words_skrt":
                     self.inflect_n_modify_trie(l, skrt=True)
 
-                elif category == "deactivate":
+                elif category == "remove":
                     self.inflect_n_modify_trie(l, deactivate=True)
 
                 elif category == "entry_data":

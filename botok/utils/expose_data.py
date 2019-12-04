@@ -8,9 +8,9 @@ def expose_data(out_path, profile=None):
     """ Copies all the trie and adjustment data to out_path
     :param out_path: must be an existing empty folder
     """
-    if profile not in ["POS", "GMD", "tsikchen", "empty"]:
+    if profile not in ["POS", "empty"]:
         raise SyntaxError(
-            'profile should be either one of ["POS", "GMD", "tsikchen", "empty"]'
+            'profile should be either one of ["POS", "empty"]'
         )
 
     out_path = Path(out_path)
