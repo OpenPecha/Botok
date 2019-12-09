@@ -98,8 +98,8 @@ class Trie(BasicTrie):
 
                 else:
                     raise SyntaxError(
-                        "category is one of: words_bo, words_skrt,"
-                        "words_non_inflected, entry_data, deactivate"
+                        "'category' is: '" + category + "'. Valid answers: words_bo, words_skrt,"
+                        "words_non_inflected, entry_data, remove"
                     )
 
     def add_non_inflectible(self, word):

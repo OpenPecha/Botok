@@ -97,7 +97,7 @@ class Text:
 
     @property
     def tokenize_words_raw_text(self):
-        config = {"profile": "GMD"}
+        config = {"profile": "POS"}
         return self.__process(
             "basic_cleanup",
             "word_tok",

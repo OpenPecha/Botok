@@ -765,14 +765,14 @@ print(t.tokenize_paragraph_plaintext)
 # def test_advanced_features():
 ########################################
 # 1. instanciating with a custom profile
-t = Text(in_str, tok_params={"profile": "GMD"})
+t = Text(in_str, tok_params={"profile": "POS"})
 print(t.tokenize_words_raw_text)
 
 # instanciating with a custom profile. tok_params can receive all the supported arguments of WordTokenizer
 tt = Text(
     in_str,
     tok_params={
-        "profile": "GMD",
+        "profile": "POS",
         "modifs": Path(__file__).parent / "tests" / "trie_data",
     },
 )
