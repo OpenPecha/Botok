@@ -26,7 +26,7 @@ def test_get_default_lemma():
                                 text_cleaned: "མཐ"
                                 text_unaffixed: "མཐ"
                                 syls: ["མཐ"]
-                                senses: | pos: NOUN, affixed: True | freq: 45097, affixed: True |
+                                senses: | pos: NOUN, freq: 45097, affixed: True |
                                 char_types: |CONS|CONS|
                                 chunk_type: TEXT
                                 affix_host: True
@@ -73,9 +73,10 @@ def test_get_default_lemma():
                                 syls: ["མཐ"]
                                 pos: NOUN
                                 lemma: མཐའ་
-                                senses: | pos: NOUN, affixed: True, lemma: མཐའ་ | freq: 45097, affixed: True |
+                                senses: | pos: NOUN, freq: 45097, affixed: True, lemma: མཐའ་ |
                                 char_types: |CONS|CONS|
                                 chunk_type: TEXT
+                                freq: 45097
                                 affix_host: True
                                 syls_idx: [[0, 1]]
                                 syls_start_end: [{'start': 0, 'end': 2}]
@@ -128,4 +129,4 @@ def test_spaces_as_punct():
     assert tokens[0].text == "བ"
     assert tokens[1].text == " "
     assert tokens[2].text == "ཀྲ་"
-    assert tokens[7].text == " \n"
+    assert tokens[8].text == " \n"

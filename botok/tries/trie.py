@@ -78,23 +78,28 @@ class Trie(BasicTrie):
         spaces and empty lines are trimmed
         a single space(breaks if more than one), a comma or a tab can be used as separators
         """
+        print(in_file)
         with in_file.open("r", encoding="utf-8-sig") as f:
             lines = self.__clean_lines(f)
             for l in lines:
+                word = l.split("\t", 1)[0]
                 if category == "words_bo":
-                    self.inflect_n_modify_trie(l)
+                    self.inflect_n_modify_trie(word)
+                    self.inflect_n_add_data(l)
 
                 elif category == "words_non_inflected":
-                    self.add_non_inflectible(l)
+                    self.add_non_inflectible(word)
+                    self.inflect_n_add_data(l)
 
                 elif category == "words_skrt":
-                    self.inflect_n_modify_trie(l, skrt=True)
+                    self.inflect_n_modify_trie(word, skrt=True)
+                    self.inflect_n_add_data(l)
 
                 elif category == "remove":
                     self.inflect_n_modify_trie(l, deactivate=True)
 
-                elif category == "entry_data":
-                    self.inflect_n_add_data(l)
+                # elif category == "entry_data":
+                #     self.inflect_n_add_data(l)
 
                 else:
                     raise SyntaxError(

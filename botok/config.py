@@ -12,20 +12,16 @@ default_config = dedent(
     """\
     tokenizers:
       trie_files:
-        - &ancient words_bo/ancient.txt
-        - &except words_bo/exceptions.txt
-        - &uncomp words_bo/uncompound_lexicon.txt
-        - &tsikchen words_bo/tsikchen.txt
-        - &dagdra words_bo/dagdra.txt
+        - &ancient words_bo/ancient.tsv
+        - &except words_bo/exceptions.tsv
+        - &uncomp words_bo/uncompound_lexicon.tsv
+        - &tsikchen words_bo/tsikchen.tsv
+        - &dagdra words_bo/dagdra.tsv
       non_inflected:
-        - &part words_non_inflected/particles.txt
-      lem-pos-sense-freq_files:
-        - &lpsf_soas entry_data/TiDC_corpus.tsv
-        - &lpsf_part entry_data/particles.tsv
-        - &lpsf_tc entry_data/tc.tsv
+        - &part words_non_inflected/particles.tsv
       profiles:
         empty: []
-        POS: [*ancient, *except, *uncomp, *tsikchen, *part, *lpsf_soas, *lpsf_part, *lpsf_tc, *dagdra]
+        POS: [*ancient, *except, *uncomp, *tsikchen, *part, *dagdra]
 
     adjustments:
       files:

@@ -12,17 +12,17 @@ def test_config():
     # paths for trie content
     main, custom = config.get_tok_data_paths("POS")
     # each profile contains one or more sections
-    assert [m for m in main] == ["words_bo", "words_non_inflected", "entry_data"]
+    assert [m for m in main] == ["words_bo", "words_non_inflected"]
     # each element in a Path object leading to a resource file
-    assert isinstance(main["entry_data"][0], Path)
+    assert isinstance(main["words_bo"][0], Path)
 
     # custom files to overwrite the existing trie can be added as follows
     modif_path = "trie_data/"
     assert not len(custom)
     main, custom = config.get_tok_data_paths("POS", modifs=modif_path)
-    expected = sorted(["entry_data", "words_bo", "words_skrt"])
+    expected = sorted(["words_bo", "words_skrt"])
     assert expected == sorted([c for c in custom])
-    expected1 = sorted(["adjustment", "remove", "entry_data", "words_bo", "words_skrt"])
+    expected1 = sorted(["adjustment", "remove", "words_bo", "words_skrt"])
     assert expected1 == sorted([t.parts[-1] for t in Path(modif_path).glob("*")])
     # overwriting the main profile
     main, custom = config.get_tok_data_paths(modif_path, mode="custom")
