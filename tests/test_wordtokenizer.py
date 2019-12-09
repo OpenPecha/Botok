@@ -26,7 +26,7 @@ def test_get_default_lemma():
                                 text_cleaned: "མཐ"
                                 text_unaffixed: "མཐ"
                                 syls: ["མཐ"]
-                                entries: | pos: NOUN, affixed: True | freq: 45097, affixed: True |
+                                senses: | pos: NOUN, affixed: True | freq: 45097, affixed: True |
                                 char_types: |CONS|CONS|
                                 chunk_type: TEXT
                                 affix_host: True
@@ -37,7 +37,7 @@ def test_get_default_lemma():
                                 
                                 """
     )
-    assert "lemma" not in tokens[3]["entries"][0]
+    assert "lemma" not in tokens[3]["senses"][0]
 
     assert str(tokens[4]) == dedent(
         """\
@@ -58,7 +58,7 @@ def test_get_default_lemma():
     )
 
     # regular words also have no lemmas
-    assert "lemma" not in tokens[0]["entries"][0]
+    assert "lemma" not in tokens[0]["senses"][0]
 
     # doing the same thing using WordTokenizer, which will apply its __get_default_lemma() method
     # the profile is the same, so no lemma comes from the trie content files.
@@ -73,7 +73,7 @@ def test_get_default_lemma():
                                 syls: ["མཐ"]
                                 pos: NOUN
                                 lemma: མཐའ་
-                                entries: | pos: NOUN, affixed: True, lemma: མཐའ་ | freq: 45097, affixed: True |
+                                senses: | pos: NOUN, affixed: True, lemma: མཐའ་ | freq: 45097, affixed: True |
                                 char_types: |CONS|CONS|
                                 chunk_type: TEXT
                                 affix_host: True
@@ -84,7 +84,7 @@ def test_get_default_lemma():
                                 
                                 """
     )
-    assert tokens[3]["entries"][0]["lemma"] == "མཐའ་"
+    assert tokens[3]["senses"][0]["lemma"] == "མཐའ་"
 
     # for particles, WordTokenizer reads the lemmas from a file and attributes them
     assert str(tokens[4]) == dedent(
@@ -95,7 +95,7 @@ def test_get_default_lemma():
                                 syls: ["འི"]
                                 pos: PART
                                 lemma: གི་
-                                entries: | lemma: གི་ |
+                                senses: | lemma: གི་ |
                                 char_types: |CONS|VOW|TSEK|
                                 chunk_type: TEXT
                                 affix: True
@@ -108,10 +108,10 @@ def test_get_default_lemma():
     )
 
     # for regular words, Token.text_unaffixed is simply copied
-    assert tokens[0]["entries"][0]["lemma"] == "བཀྲ་ཤིས་"
+    assert tokens[0]["senses"][0]["lemma"] == "བཀྲ་ཤིས་"
 
     # non-words do not have lemmas
-    assert "lemma" not in tokens[10]["entries"][0]
+    assert "lemma" not in tokens[10]["senses"][0]
     assert tokens[10].text_cleaned == "ཀཀ་"
     assert tokens[10].text_unaffixed == "ཀཀ་"
 

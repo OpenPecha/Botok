@@ -116,25 +116,25 @@ class WordTokenizer:
                     else t.text_unaffixed + TSEK
                 )
 
-            for m in t.entries:
+            for m in t.senses:
                 if "lemma" not in m and ("pos" in m and m["pos"] != "NON_WORD"):
                     m["lemma"] = lemma
-            if not t.entries:
-                t.entries.append({"lemma": lemma})
+            if not t.senses:
+                t.senses.append({"lemma": lemma})
 
     @staticmethod
     def _choose_default_entry(token_list):
-        def choose_n_apply(entries, t):
-            s = sorted(entries, key=len, reverse=True)
+        def choose_n_apply(senses, t):
+            s = sorted(senses, key=len, reverse=True)
             for a in ["pos", "lemma", "freq"]:
                 if a in s[0]:
                     t[a] = s[0][a]
 
         for t in token_list:
-            if t.entries:
+            if t.senses:
                 # Categorize all meanings in three groups
                 affixed, non_affixed, no = [], [], []
-                for m in t.entries:
+                for m in t.senses:
                     if "affixed" in m:
                         if m["affixed"]:
                             affixed.append(m)

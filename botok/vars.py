@@ -1,8 +1,7 @@
 # coding: utf-8
 from enum import IntEnum, Enum
 
-OOV = "OOV"
-NON_WORD = "NON_WORD"
+NO_POS = "NOPOS"
 TSEK = "་"
 NAMCHE = "ཿ"
 SHAD = "།"

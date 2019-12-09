@@ -124,9 +124,9 @@ class BasicTrie:
             current_node.data["form_freq"] = data
             added = True
         else:
-            if "entries" not in current_node.data:
-                current_node.data["entries"] = []
-            added = self.add_meaning(current_node.data["entries"], data)
+            if "senses" not in current_node.data:
+                current_node.data["senses"] = []
+            added = self.add_meaning(current_node.data["senses"], data)
         return added
 
     def add_meaning(self, meanings, meaning):

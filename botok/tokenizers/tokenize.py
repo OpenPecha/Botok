@@ -177,8 +177,8 @@ class Tokenize:
             data = match_data[c_idx]
             ttype = (
                 w.OOV.name
-                if "entries" not in data
-                or len([True for m in data["entries"] if "pos" in m]) <= 0
+                if "senses" not in data
+                or len([True for m in data["senses"] if "pos" in m]) <= 0
                 else None
             )
             tokens.append(self.chunks_to_token(syls, data, ttype=ttype))
@@ -191,8 +191,8 @@ class Tokenize:
             data = match_data[non_max_idx]
             ttype = (
                 w.OOV.name
-                if "entries" not in data
-                or len([True for m in data["entries"] if "pos" in m]) <= 0
+                if "senses" not in data
+                or len([True for m in data["senses"] if "pos" in m]) <= 0
                 else None
             )
             tokens.append(self.chunks_to_token(non_max_syls, data, ttype=ttype))
@@ -229,10 +229,10 @@ class Tokenize:
                 )
             ]
             if ttype:
-                if "entries" not in data:
-                    data["entries"] = [{"pos": ttype}]
+                if "senses" not in data:
+                    data["senses"] = [{"pos": ttype}]
                 else:
-                    for m in data["entries"]:
+                    for m in data["senses"]:
                         if "pos" not in m:
                             m["pos"] = ttype
 
@@ -254,10 +254,10 @@ class Tokenize:
                     )
                 )
             if ttype:
-                if "entries" not in data:
-                    data["entries"] = [{"pos": ttype}]
+                if "senses" not in data:
+                    data["senses"] = [{"pos": ttype}]
                 else:
-                    for m in data["entries"]:
+                    for m in data["senses"]:
                         if "pos" not in m:
                             m["pos"] = ttype
 

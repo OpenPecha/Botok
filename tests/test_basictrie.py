@@ -17,14 +17,14 @@ def test_trie():
     trie.add_data("goodbye", {"pos": "NOUN"})
     assert trie.has_word("goodbye") == {
         "exists": True,
-        "data": {"_": {}, "entries": [{"pos": "NOUN"}]},
+        "data": {"_": {}, "senses": [{"pos": "NOUN"}]},
     }
 
     # adding an empty dict to show it does not replace existing content but updates it
     trie.add_data("goodbye", {})
     assert trie.has_word("goodbye") == {
         "exists": True,
-        "data": {"_": {}, "entries": [{"pos": "NOUN"}]},
+        "data": {"_": {}, "senses": [{"pos": "NOUN"}]},
     }
 
     # by default, overwrites existing dict values
@@ -33,7 +33,7 @@ def test_trie():
         "exists": True,
         "data": {
             "_": {},
-            "entries": [{"pos": "NOUN"}, {"pos": "VERB", "lemma": "goodbye"}],
+            "senses": [{"pos": "NOUN"}, {"pos": "VERB", "lemma": "goodbye"}],
         },
     }
 
@@ -43,7 +43,7 @@ def test_trie():
         "exists": False,
         "data": {
             "_": {},
-            "entries": [{"pos": "NOUN"}, {"pos": "VERB", "lemma": "goodbye"}],
+            "senses": [{"pos": "NOUN"}, {"pos": "VERB", "lemma": "goodbye"}],
         },
     }
 
@@ -53,7 +53,7 @@ def test_trie():
         "exists": True,
         "data": {
             "_": {},
-            "entries": [{"pos": "NOUN"}, {"pos": "VERB", "lemma": "goodbye"}],
+            "senses": [{"pos": "NOUN"}, {"pos": "VERB", "lemma": "goodbye"}],
         },
     }
 
@@ -66,5 +66,5 @@ def test_trie():
     assert current_node.leaf is True  # we reached the end of a word
     assert current_node.data == {
         "_": {},
-        "entries": [{"pos": "NOUN"}, {"pos": "VERB", "lemma": "goodbye"}],
+        "senses": [{"pos": "NOUN"}, {"pos": "VERB", "lemma": "goodbye"}],
     }

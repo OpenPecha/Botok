@@ -73,7 +73,7 @@ def test_missing_entries_n_bad_unaffixed():
     input_str = "ཤུ་ཀ་ར་"
     tokens = pos_tok.tokenize(input_str, split_affixes=False)
     assert [t.text for t in tokens] == ["ཤུ་", "ཀ་ར་"]
-    assert tokens[0].entries
+    assert tokens[0].senses
     assert tokens[1].text_unaffixed == "ཀ་ར་"
 
 

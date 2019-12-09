@@ -46,7 +46,7 @@ def test_createtrie():
         "data": {
             "_": {},
             "affixation": {"len": 2, "type": "gi", "aa": True},
-            "entries": [{"freq": 532, "affixed": True}],
+            "senses": [{"freq": 532, "affixed": True}],
         },
     }  # freq is an int
 
@@ -64,8 +64,8 @@ def test_multiple_words_per_entry():
 
     res = bt.has_word("ལྟར་")
     assert {"lemma": "ལྟ་", "pos": "VERB", "freq": 123, "affixed": True} in res["data"][
-        "entries"
+        "senses"
     ]
     assert {"lemma": "ལྟར་", "pos": "ADV", "freq": 456, "affixed": False} in res[
         "data"
-    ]["entries"]
+    ]["senses"]

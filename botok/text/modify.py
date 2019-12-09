@@ -16,11 +16,11 @@ def is_mistake(token):
         if (
             (not token.skrt and not has_skrt_syl(token.text_cleaned))
             and (
-                token.entries
+                token.senses
                 and len(
                     [
                         True
-                        for m in token.entries
+                        for m in token.senses
                         if "pos" in m and (m["pos"] == "OOV" or m["pos"] == "NON_WORD")
                     ]
                 )

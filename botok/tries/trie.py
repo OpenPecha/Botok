@@ -6,7 +6,7 @@ import csv
 
 from .basictrie import BasicTrie, Node
 from ..chunks.chunks import TokChunks
-from ..vars import OOV, TSEK, NAMCHE, HASH
+from ..vars import NO_POS, TSEK, NAMCHE, HASH
 
 
 class Trie(BasicTrie):
@@ -204,7 +204,7 @@ class Trie(BasicTrie):
             sep = ","
         else:
             fields[0] = line
-            fields[2] = OOV
+            fields[2] = NO_POS
             return fields
 
         for num, cell in enumerate(list(csv.reader([line], delimiter=sep))[0]):

@@ -15,7 +15,7 @@ class Token:
         self.syls_start_end = None
         self.pos = ""
         self.affixation = {}
-        self.entries = None
+        self.senses = None
         self.affix = False
         self.affix_host = False
         self.form_freq = None
@@ -73,7 +73,7 @@ class Token:
             self.affixation
             and not self.affix
             and "len" in self.affixation
-            and len([True for m in self.entries if "affixed" in m and m["affixed"]]) > 0
+            and len([True for m in self.senses if "affixed" in m and m["affixed"]]) > 0
         ):
             unaffixed = unaffixed[: -self.affixation["len"]]
 
@@ -101,13 +101,13 @@ class Token:
             out += "pos: {}\n".format(self.pos)
         if self.lemma:
             out += "lemma: {}\n".format(self.lemma)
-        if self.entries:
+        if self.senses:
             out += (
-                "entries: | "
+                "senses: | "
                 + " | ".join(
                     [
                         ", ".join([f"{k}: {v}" for k, v in m.items()])
-                        for m in self.entries
+                        for m in self.senses
                     ]
                 )
                 + " |\n"
