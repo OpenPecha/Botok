@@ -8,6 +8,7 @@ class Token:
         self.char_types = []
         self.has_merged_dagdra = None
         self.lemma = ""
+        self.sense = ""
         self.chunk_type = None
         self.start = 0
         self.len = None
@@ -101,6 +102,8 @@ class Token:
             out += "pos: {}\n".format(self.pos)
         if self.lemma:
             out += "lemma: {}\n".format(self.lemma)
+        if self.sense:
+            out += "sense: {}\n".format(self.sense)
         if self.senses:
             out += (
                 "senses: | "

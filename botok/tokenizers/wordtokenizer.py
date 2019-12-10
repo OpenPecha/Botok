@@ -126,7 +126,7 @@ class WordTokenizer:
     def _choose_default_entry(token_list):
         def choose_n_apply(senses, t):
             s = sorted(senses, key=len, reverse=True)
-            for a in ["pos", "lemma", "freq"]:
+            for a in ["pos", "lemma", "freq", "sense"]:
                 if a in s[0]:
                     t[a] = s[0][a]
 
