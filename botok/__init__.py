@@ -38,7 +38,7 @@ from .utils.get_data import get_data
 from .config import Config
 from .vars import *
 
-__version__ = "0.6.18"
+__version__ = "0.7.0"
 
 from pathlib import Path
 

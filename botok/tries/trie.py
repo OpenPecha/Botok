@@ -98,9 +98,6 @@ class Trie(BasicTrie):
                 elif category == "remove":
                     self.inflect_n_modify_trie(l, deactivate=True)
 
-                # elif category == "entry_data":
-                #     self.inflect_n_add_data(l)
-
                 else:
                     raise SyntaxError(
                         "'category' is: '" + category + "'. Valid answers: words_bo, words_skrt,"

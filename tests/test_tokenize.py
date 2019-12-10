@@ -60,8 +60,6 @@ def test_tokenize():
                         """
     )
     assert str(tokens[2]) == expected
-    print()
-
 
 
 def test_non_max2():

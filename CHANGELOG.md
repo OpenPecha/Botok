@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.7.0](https://github.com/Esukhia/botok/releases/tag/v0.7.0) - 20191210
+### Changed
+ * All trie data previously in botok/resources/ is moved to the botok_data repo
+ The files are automatically downloaded from botok_data if it is not present, or external profiles can also be used.
+ * only the files corresponding to POS profile are kept in botok_data
+ * change from word lists to create the trie + entry_data to word lists containing the data (no more duplication of word lists)
+ * Token.entries changed to Token.senses
+### Added
+ * Token.sense added
+
 ## [0.6.18](https://github.com/Esukhia/botok/releases/tag/v0.6.18) - 20191121
 ### Changed
  * yaml format changed to tsv for adjustment rules files. (See syntax [here](https://github.com/Esukhia/botok/blob/master/botok/modifytokens/adjusttokens.py#L11-L24))
