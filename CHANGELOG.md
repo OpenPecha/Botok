@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.7.1](https://github.com/Esukhia/botok/releases/tag/v0.7.1) - 20191211
+### Added
+ * Automated update of existing compiled tries and config files (version included in trie and .yaml, then checked at load time)
+
 ## [0.7.0](https://github.com/Esukhia/botok/releases/tag/v0.7.0) - 20191210
 ### Changed
  * All trie data previously in botok/resources/ is moved to the botok_data repo
