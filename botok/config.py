@@ -8,6 +8,9 @@ from textwrap import dedent
 import yaml
 from collections import defaultdict
 
+from .vars import __version__
+
+
 default_config = dedent(
     """\
     tokenizers:
@@ -68,10 +71,18 @@ class Config:
         # if the file doesn't exist, write it with the default values
         if not self.filename.is_file():
             with self.filename.open("w", encoding="utf-8-sig") as f:
-                f.write(default_config)
+                f.write(f"{__version__}\n{default_config}")
 
         with self.filename.open("r", encoding="utf-8-sig") as g:
-            self.config = yaml.safe_load(g.read())
+            dump = g.read()
+            version, dump = dump.split("\n", 1)
+            # version = dump[:dump.find("\n")]
+            if __version__ > version:
+                print(f"Updating config file to version {__version__}")
+                with self.filename.open("w", encoding="utf-8-sig") as f:
+                    dump = default_config
+                    f.write(f"{__version__}\n{default_config}")
+            self.config = yaml.safe_load(dump)
 
     def get_tok_data_paths(self, profile, modifs=None, mode="internal"):
         main_profile = defaultdict(list)

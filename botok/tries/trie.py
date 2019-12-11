@@ -6,7 +6,7 @@ import csv
 
 from .basictrie import BasicTrie, Node
 from ..chunks.chunks import TokChunks
-from ..vars import NO_POS, TSEK, NAMCHE, HASH
+from ..vars import NO_POS, TSEK, NAMCHE, HASH, __version__
 
 
 class Trie(BasicTrie):
@@ -44,6 +44,10 @@ class Trie(BasicTrie):
         start = time.time()
         with self.pickled_file.open("rb") as f:
             self.head = pickle.load(f)
+            version = self.head.data["_"]["version"]
+            if version != __version__:
+                print(f"\nThe trie was build for botok {version}. Current version: {__version__}")
+                self._build_trie()
         end = time.time()
         print("({:.0f}s.)".format(end - start), flush=True)
 
@@ -52,6 +56,7 @@ class Trie(BasicTrie):
         """
         print("Building Trie:", flush=True)
         start = time.time()
+        self.head.data["_"]["version"] = __version__  # add version in trie
         self._populate_trie(self.main_data)
 
         with self.pickled_file.open("wb") as f:
