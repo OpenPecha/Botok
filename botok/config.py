@@ -12,16 +12,14 @@ default_config = dedent(
     """\
     tokenizers:
       trie_files:
-        - &ancient words_bo/ancient.tsv
-        - &except words_bo/exceptions.tsv
-        - &uncomp words_bo/uncompound_lexicon.tsv
-        - &tsikchen words_bo/tsikchen.tsv
-        - &dagdra words_bo/dagdra.tsv
-      non_inflected:
-        - &part words_non_inflected/particles.tsv
+        - &ancient words/ancient.tsv
+        - &except words/exceptions.tsv
+        - &uncomp words/uncompound_lexicon.tsv
+        - &tsikchen words/tsikchen.tsv
+        - &dagdra words/dagdra.tsv
       profiles:
         empty: []
-        POS: [*ancient, *except, *uncomp, *tsikchen, *part, *dagdra]
+        POS: [*ancient, *except, *uncomp, *tsikchen, *dagdra]
 
     adjustments:
       files:
@@ -88,6 +86,10 @@ class Config:
         else:
             raise ValueError('mode needs to be either "internal" or "custom".')
 
+        # add non-inflected to the main profile
+        if profile != "empty":
+            main_profile["words_non_inflected"] = [Path(__file__).parent / "resources/particles.tsv"]
+
         user_modifs = defaultdict(list)
         if modifs:
             self.__parse_tok_dir(modifs, user_modifs)
@@ -116,14 +118,11 @@ class Config:
     def __parse_tok_dir(self, dirpath, paths):
         dirpath = Path(dirpath).resolve()
         assert dirpath.is_dir()
-        bo = dirpath / "words_bo"
+        bo = dirpath / "words"
         skrt = dirpath / "words_skrt"
-        non_infl = dirpath / "words_non_inflected"
-        lem_pos_freq = dirpath / "entry_data"
-        freq = dirpath / "frequency"
         deact = dirpath / "deactivate"
 
-        for p in [bo, skrt, non_infl, lem_pos_freq, freq, deact]:
+        for p in [bo, skrt, deact]:
             if p.is_dir():
                 for el in list(p.glob("*.txt")) + list(p.glob("*.tsv")):
                     el = Path(__file__).parent / "resources" / Path(el)

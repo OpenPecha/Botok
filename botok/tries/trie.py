@@ -50,7 +50,7 @@ class Trie(BasicTrie):
     def _build_trie(self):
         """
         """
-        print("Building Trie...", end=" ", flush=True)
+        print("Building Trie:", flush=True)
         start = time.time()
         self._populate_trie(self.main_data)
 
@@ -60,17 +60,9 @@ class Trie(BasicTrie):
         print("({:.0f} s.)".format(end - start), flush=True)
 
     def _populate_trie(self, files):
-        # first populate the trie with words
-        words = (d for d in files if d.startswith("words"))
-        for l in words:
-            for f in files[l]:
+        for l, f_list in files.items():
+            for f in f_list:
                 self._add_one_file(f, l)
-
-        # then add data to the added words
-        rest = (d for d in files if not d.startswith("words"))
-        for r in rest:
-            for f in files[r]:
-                self._add_one_file(f, r)
 
     def _add_one_file(self, in_file, category):
         """
@@ -78,12 +70,12 @@ class Trie(BasicTrie):
         spaces and empty lines are trimmed
         a single space(breaks if more than one), a comma or a tab can be used as separators
         """
-        print(in_file)
+        print("\t" + str(in_file))
         with in_file.open("r", encoding="utf-8-sig") as f:
             lines = self.__clean_lines(f)
             for l in lines:
                 word = l.split("\t", 1)[0]
-                if category == "words_bo":
+                if category == "words":
                     self.inflect_n_modify_trie(word)
                     self.inflect_n_add_data(l)
 

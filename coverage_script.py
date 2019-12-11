@@ -283,7 +283,7 @@ main, custom = config.get_tok_data_paths("POS")
 # each profile contains one or more sections
 print([m for m in main])
 # each element in a Path object leading to a resource file
-isinstance(main["words_bo"][0], Path)
+isinstance(main["words"][0], Path)
 
 # custom files to overwrite the existing trie can be added as follows
 len(custom)
