@@ -14,14 +14,14 @@ assert parse_version(setuptools.__version__) >= parse_version("38.6.0")
 def get_version(prop, project):
     project = Path(__file__).parent / project / "vars.py"
     result = re.search(
-        r'{}\s*=\s*[\'"]([^\'"]*)[\'"]'.format(prop), project.read_text()
+        r'{}\s*=\s*[\'"]([^\'"]*)[\'"]'.format(prop), project.read_text(encoding="utf-8-sig")
     )
     return result.group(1)
 
 
 def read(fname):
     p = Path(__file__).parent / fname
-    with p.open(encoding="utf-8") as f:
+    with p.open(encoding="utf-8-sig") as f:
         return f.read()
 
 
