@@ -37,6 +37,7 @@ from .utils.get_data import get_data
 
 from .config import Config
 from .vars import *
+from .vars import __version__
 
 from pathlib import Path
 
