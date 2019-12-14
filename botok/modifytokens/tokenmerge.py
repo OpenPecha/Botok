@@ -13,6 +13,10 @@ class TokenMerge:
         self.token1 = token1
         self.token2 = token2
         self.merged = copy.deepcopy(token1)
+        if not self.merged.syls_idx:
+            self.merged.syls_idx = []
+        if not self.merged.syls:
+            self.merged.syls = []
         self.token_changes = token_changes
 
     def merge(self):
