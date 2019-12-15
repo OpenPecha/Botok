@@ -40,6 +40,7 @@ CharMarkers = IntEnum(
         # misc
         "OTHER",
         "TRANSPARENT",
+        "NFC",
     ],
     start=1,
 )

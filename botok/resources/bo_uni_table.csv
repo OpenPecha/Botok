@@ -1,5 +1,5 @@
 Char,unicode repr,pybo Category,Name,General Category,Canonical-Combining-Class,Decomposition-Type,Decomposition-Mapping,IndicPositionalCategory,IndicSyllabicCategory,OpenType (from Harfbuzz),Sanskrit
-0F00,—ༀ—,SYMBOL,TIBETAN SYLLABLE OM,Lo,0,unofficial,0F68 0F7C 0F7E,,,,1
+0F00,—ༀ—,NFC,TIBETAN SYLLABLE OM,Lo,0,unofficial,0F68 0F7C 0F7E,,,,1
 0F01,—༁—,SPECIAL_PUNCT,TIBETAN MARK GTER YIG MGO TRUNCATED A,So,0,,,,,,
 0F02,—༂—,SPECIAL_PUNCT,TIBETAN MARK GTER YIG MGO -UM RNAM BCAD MA,So,0,unofficial,0F60 0F74 0F82 0F7F,,,,
 0F03,—༃—,SPECIAL_PUNCT,TIBETAN MARK GTER YIG MGO -UM GTER TSHEG MA,So,0,unofficial,0F60 0F74 0F82 0F14,,,,
@@ -66,31 +66,32 @@ Char,unicode repr,pybo Category,Name,General Category,Canonical-Combining-Class,
 0F40,—ཀ—,CONS,TIBETAN LETTER KA,Lo,0,,,,Consonant,B,
 0F41,—ཁ—,CONS,TIBETAN LETTER KHA,Lo,0,,,,Consonant,B,
 0F42,—ག—,CONS,TIBETAN LETTER GA,Lo,0,,,,Consonant,B,
-0F43,—གྷ—,SKRT_CONS,TIBETAN LETTER GHA,Lo,0,,0F42 0FB7,,Consonant,B,1
+0F43,—གྷ—,NFC,TIBETAN LETTER GHA,Lo,0,,0F42 0FB7,,Consonant,B,1
 0F44,—ང—,CONS,TIBETAN LETTER NGA,Lo,0,,,,Consonant,B,
 0F45,—ཅ—,CONS,TIBETAN LETTER CA,Lo,0,,,,Consonant,B,
 0F46,—ཆ—,CONS,TIBETAN LETTER CHA,Lo,0,,,,Consonant,B,
 0F47,—ཇ—,CONS,TIBETAN LETTER JA,Lo,0,,,,Consonant,B,
+0F48,—཈—,NFC,,,,,,,,,
 0F49,—ཉ—,CONS,TIBETAN LETTER NYA,Lo,0,,,,Consonant,B,
 0F4A,—ཊ—,SKRT_CONS,TIBETAN LETTER TTA,Lo,0,,,,Consonant,B,1
 0F4B,—ཋ—,SKRT_CONS,TIBETAN LETTER TTHA,Lo,0,,,,Consonant,B,1
 0F4C,—ཌ—,SKRT_CONS,TIBETAN LETTER DDA,Lo,0,,,,Consonant,B,1
-0F4D,—ཌྷ—,SKRT_CONS,TIBETAN LETTER DDHA,Lo,0,,0F4C 0FB7,,Consonant,B,1
+0F4D,—ཌྷ—,NFC,TIBETAN LETTER DDHA,Lo,0,,0F4C 0FB7,,Consonant,B,1
 0F4E,—ཎ—,SKRT_CONS,TIBETAN LETTER NNA,Lo,0,,,,Consonant,B,1
 0F4F,—ཏ—,CONS,TIBETAN LETTER TA,Lo,0,,,,Consonant,B,
 0F50,—ཐ—,CONS,TIBETAN LETTER THA,Lo,0,,,,Consonant,B,
 0F51,—ད—,CONS,TIBETAN LETTER DA,Lo,0,,,,Consonant,B,
-0F52,—དྷ—,SKRT_CONS,TIBETAN LETTER DHA,Lo,0,,0F51 0FB7,,Consonant,B,1
+0F52,—དྷ—,NFC,TIBETAN LETTER DHA,Lo,0,,0F51 0FB7,,Consonant,B,1
 0F53,—ན—,CONS,TIBETAN LETTER NA,Lo,0,,,,Consonant,B,
 0F54,—པ—,CONS,TIBETAN LETTER PA,Lo,0,,,,Consonant,B,
 0F55,—ཕ—,CONS,TIBETAN LETTER PHA,Lo,0,,,,Consonant,B,
 0F56,—བ—,CONS,TIBETAN LETTER BA,Lo,0,,,,Consonant,B,
-0F57,—བྷ—,SKRT_CONS,TIBETAN LETTER BHA,Lo,0,,0F56 0FB7,,Consonant,B,1
+0F57,—བྷ—,NFC,TIBETAN LETTER BHA,Lo,0,,0F56 0FB7,,Consonant,B,1
 0F58,—མ—,CONS,TIBETAN LETTER MA,Lo,0,,,,Consonant,B,
 0F59,—ཙ—,CONS,TIBETAN LETTER TSA,Lo,0,,,,Consonant,B,
 0F5A,—ཚ—,CONS,TIBETAN LETTER TSHA,Lo,0,,,,Consonant,B,
 0F5B,—ཛ—,CONS,TIBETAN LETTER DZA,Lo,0,,,,Consonant,B,
-0F5C,—ཛྷ—,SKRT_CONS,TIBETAN LETTER DZHA,Lo,0,,0F5B 0FB7,,Consonant,B,1
+0F5C,—ཛྷ—,NFC,TIBETAN LETTER DZHA,Lo,0,,0F5B 0FB7,,Consonant,B,1
 0F5D,—ཝ—,CONS,TIBETAN LETTER WA,Lo,0,,,,Consonant,B,
 0F5E,—ཞ—,CONS,TIBETAN LETTER ZHA,Lo,0,,,,Consonant,B,
 0F5F,—ཟ—,CONS,TIBETAN LETTER ZA,Lo,0,,,,Consonant,B,
@@ -103,19 +104,19 @@ Char,unicode repr,pybo Category,Name,General Category,Canonical-Combining-Class,
 0F66,—ས—,CONS,TIBETAN LETTER SA,Lo,0,,,,Consonant,B,
 0F67,—ཧ—,CONS,TIBETAN LETTER HA,Lo,0,,,,Consonant,B,
 0F68,—ཨ—,CONS,TIBETAN LETTER A,Lo,0,,,,Consonant,B,
-0F69,—ཀྵ—,SKRT_CONS,TIBETAN LETTER KSSA,Lo,0,,0F40 0FB5,,Consonant,B,1
+0F69,—ཀྵ—,NFC,TIBETAN LETTER KSSA,Lo,0,,0F40 0FB5,,Consonant,B,1
 0F6A,—ཪ—,CONS,TIBETAN LETTER FIXED-FORM RA,Lo,0,,,,Consonant,B,1
 0F6B,—ཫ—,NON_BO_NON_SKRT,TIBETAN LETTER KKA,Lo,0,,,,Consonant,B,
 0F6C,—ཬ—,NON_BO_NON_SKRT,TIBETAN LETTER RRA,Lo,0,,,,Consonant,B,
 0F71,—ཱ—,SKRT_SUB_CONS,TIBETAN VOWEL SIGN AA,Mn,129,,,Bottom,Vowel-Dependent,VBlw,1
 0F72,—ི—,VOW,TIBETAN VOWEL SIGN I,Mn,130,,,Top,Vowel-Dependent,VAbv,
-0F73,—ཱི—,SKRT_VOW,TIBETAN VOWEL SIGN II,Mn,0,,0F71 0F72,Top-And-Bottom,Vowel-Dependent,VAbv,1
+0F73,—ཱི—,NFC,TIBETAN VOWEL SIGN II,Mn,0,,0F71 0F72,Top-And-Bottom,Vowel-Dependent,VAbv,1
 0F74,—ུ—,VOW,TIBETAN VOWEL SIGN U,Mn,132,,,Bottom,Vowel-Dependent,VBlw,
-0F75,—ཱུ—,SKRT_VOW,TIBETAN VOWEL SIGN UU,Mn,0,,0F71 0F74,Bottom,Vowel-Dependent,VBlw,1
-0F76,—ྲྀ—,SKRT_VOW,TIBETAN VOWEL SIGN VOCALIC R,Mn,0,,0FB2 0F80,Top-And-Bottom,Vowel-Dependent,VAbv,1
-0F77,—ཷ—,SKRT_VOW,TIBETAN VOWEL SIGN VOCALIC RR,Mn,0,compat,0FB2 0F81,Top-And-Bottom,Vowel-Dependent,VAbv,1
-0F78,—ླྀ—,SKRT_VOW,TIBETAN VOWEL SIGN VOCALIC L,Mn,0,,0FB3 0F80,Top-And-Bottom,Vowel-Dependent,VAbv,1
-0F79,—ཹ—,SKRT_VOW,TIBETAN VOWEL SIGN VOCALIC LL,Mn,0,compat,0FB3 0F81,Top-And-Bottom,Vowel-Dependent,VAbv,1
+0F75,—ཱུ—,NFC,TIBETAN VOWEL SIGN UU,Mn,0,,0F71 0F74,Bottom,Vowel-Dependent,VBlw,1
+0F76,—ྲྀ—,NFC,TIBETAN VOWEL SIGN VOCALIC R,Mn,0,,0FB2 0F80,Top-And-Bottom,Vowel-Dependent,VAbv,1
+0F77,—ཷ—,NFC,TIBETAN VOWEL SIGN VOCALIC RR,Mn,0,compat,0FB2 0F81,Top-And-Bottom,Vowel-Dependent,VAbv,1
+0F78,—ླྀ—,NFC,TIBETAN VOWEL SIGN VOCALIC L,Mn,0,,0FB3 0F80,Top-And-Bottom,Vowel-Dependent,VAbv,1
+0F79,—ཹ—,NFC,TIBETAN VOWEL SIGN VOCALIC LL,Mn,0,compat,0FB3 0F81,Top-And-Bottom,Vowel-Dependent,VAbv,1
 0F7A,—ེ—,VOW,TIBETAN VOWEL SIGN E,Mn,130,,,Top,Vowel-Dependent,VAbv,
 0F7B,—ཻ—,SKRT_VOW,TIBETAN VOWEL SIGN EE,Mn,130,,,Top,Vowel-Dependent,VAbv,1
 0F7C,—ོ—,VOW,TIBETAN VOWEL SIGN O,Mn,130,,,Top,Vowel-Dependent,VAbv,
@@ -123,7 +124,7 @@ Char,unicode repr,pybo Category,Name,General Category,Canonical-Combining-Class,
 0F7E,—ཾ—,IN_SYL_MARK,TIBETAN SIGN RJES SU NGA RO,Mn,0,,,Top,Bindu,VAbv,1
 0F7F,—ཿ—,SKRT_LONG_VOW,TIBETAN SIGN RNAM BCAD,Mc,0,,,Right,Visarga,VMPst,1
 0F80,—ྀ—,SKRT_VOW,TIBETAN VOWEL SIGN REVERSED I,Mn,130,,,Top,Vowel-Dependent,VAbv,1
-0F81,—ཱྀ—,SKRT_VOW,TIBETAN VOWEL SIGN REVERSED II,Mn,0,,0F71 0F80,Top-And-Bottom,Vowel-Dependent,VAbv,1
+0F81,—ཱྀ—,NFC,TIBETAN VOWEL SIGN REVERSED II,Mn,0,,0F71 0F80,Top-And-Bottom,Vowel-Dependent,VAbv,1
 0F82,—ྂ—,SKRT_VOW,TIBETAN SIGN NYI ZLA NAA DA,Mn,230,,,Top,Bindu,VMAbv,1
 0F83,—ྃ—,SKRT_VOW,TIBETAN SIGN SNA LDAN,Mn,230,,,Top,Bindu,VMAbv,1
 0F84,—྄—,SKRT_VOW,TIBETAN MARK HALANTA,Mn,9,,,Bottom,Pure-Killer,VBlw,1
@@ -141,7 +142,7 @@ Char,unicode repr,pybo Category,Name,General Category,Canonical-Combining-Class,
 0F90,—ྐ—,SUB_CONS,TIBETAN SUBJOINED LETTER KA,Mn,0,,,Bottom,Consonant-Subjoined,SUB,
 0F91,—ྑ—,SKRT_SUB_CONS,TIBETAN SUBJOINED LETTER KHA,Mn,0,,,Bottom,Consonant-Subjoined,SUB,
 0F92,—ྒ—,SUB_CONS,TIBETAN SUBJOINED LETTER GA,Mn,0,,,Bottom,Consonant-Subjoined,SUB,
-0F93,—ྒྷ—,SKRT_SUB_CONS,TIBETAN SUBJOINED LETTER GHA,Mn,0,,0F92 0FB7,Bottom,Consonant-Subjoined,SUB,1
+0F93,—ྒྷ—,NFC,TIBETAN SUBJOINED LETTER GHA,Mn,0,,0F92 0FB7,Bottom,Consonant-Subjoined,SUB,1
 0F94,—ྔ—,SUB_CONS,TIBETAN SUBJOINED LETTER NGA,Mn,0,,,Bottom,Consonant-Subjoined,SUB,
 0F95,—ྕ—,SUB_CONS,TIBETAN SUBJOINED LETTER CA,Mn,0,,,Bottom,Consonant-Subjoined,SUB,
 0F96,—ྖ—,SKRT_SUB_CONS,TIBETAN SUBJOINED LETTER CHA,Mn,0,,,Bottom,Consonant-Subjoined,SUB,
@@ -150,22 +151,22 @@ Char,unicode repr,pybo Category,Name,General Category,Canonical-Combining-Class,
 0F9A,—ྚ—,SKRT_SUB_CONS,TIBETAN SUBJOINED LETTER TTA,Mn,0,,,Bottom,Consonant-Subjoined,SUB,1
 0F9B,—ྛ—,SKRT_SUB_CONS,TIBETAN SUBJOINED LETTER TTHA,Mn,0,,,Bottom,Consonant-Subjoined,SUB,1
 0F9C,—ྜ—,SKRT_SUB_CONS,TIBETAN SUBJOINED LETTER DDA,Mn,0,,,Bottom,Consonant-Subjoined,SUB,1
-0F9D,—ྜྷ—,SKRT_SUB_CONS,TIBETAN SUBJOINED LETTER DDHA,Mn,0,,0F9C 0FB7,Bottom,Consonant-Subjoined,SUB,1
+0F9D,—ྜྷ—,NFC,TIBETAN SUBJOINED LETTER DDHA,Mn,0,,0F9C 0FB7,Bottom,Consonant-Subjoined,SUB,1
 0F9E,—ྞ—,SKRT_SUB_CONS,TIBETAN SUBJOINED LETTER NNA,Mn,0,,,Bottom,Consonant-Subjoined,SUB,1
 0F9F,—ྟ—,SUB_CONS,TIBETAN SUBJOINED LETTER TA,Mn,0,,,Bottom,Consonant-Subjoined,SUB,
 0FA0,—ྠ—,SKRT_SUB_CONS,TIBETAN SUBJOINED LETTER THA,Mn,0,,,Bottom,Consonant-Subjoined,SUB,
 0FA1,—ྡ—,SUB_CONS,TIBETAN SUBJOINED LETTER DA,Mn,0,,,Bottom,Consonant-Subjoined,SUB,
-0FA2,—ྡྷ—,SKRT_SUB_CONS,TIBETAN SUBJOINED LETTER DHA,Mn,0,,0FA1 0FB7,Bottom,Consonant-Subjoined,SUB,1
+0FA2,—ྡྷ—,NFC,TIBETAN SUBJOINED LETTER DHA,Mn,0,,0FA1 0FB7,Bottom,Consonant-Subjoined,SUB,1
 0FA3,—ྣ—,SUB_CONS,TIBETAN SUBJOINED LETTER NA,Mn,0,,,Bottom,Consonant-Subjoined,SUB,
 0FA4,—ྤ—,SUB_CONS,TIBETAN SUBJOINED LETTER PA,Mn,0,,,Bottom,Consonant-Subjoined,SUB,
 0FA5,—ྥ—,SKRT_SUB_CONS,TIBETAN SUBJOINED LETTER PHA,Mn,0,,,Bottom,Consonant-Subjoined,SUB,
 0FA6,—ྦ—,SUB_CONS,TIBETAN SUBJOINED LETTER BA,Mn,0,,,Bottom,Consonant-Subjoined,SUB,
-0FA7,—ྦྷ—,SKRT_SUB_CONS,TIBETAN SUBJOINED LETTER BHA,Mn,0,,0FA6 0FB7,Bottom,Consonant-Subjoined,SUB,1
+0FA7,—ྦྷ—,NFC,TIBETAN SUBJOINED LETTER BHA,Mn,0,,0FA6 0FB7,Bottom,Consonant-Subjoined,SUB,1
 0FA8,—ྨ—,SUB_CONS,TIBETAN SUBJOINED LETTER MA,Mn,0,,,Bottom,Consonant-Subjoined,SUB,
 0FA9,—ྩ—,SUB_CONS,TIBETAN SUBJOINED LETTER TSA,Mn,0,,,Bottom,Consonant-Subjoined,SUB,
 0FAA,—ྪ—,SKRT_SUB_CONS,TIBETAN SUBJOINED LETTER TSHA,Mn,0,,,Bottom,Consonant-Subjoined,SUB,
 0FAB,—ྫ—,SUB_CONS,TIBETAN SUBJOINED LETTER DZA,Mn,0,,,Bottom,Consonant-Subjoined,SUB,
-0FAC,—ྫྷ—,SKRT_SUB_CONS,TIBETAN SUBJOINED LETTER DZHA,Mn,0,,0FAB 0FB7,Bottom,Consonant-Subjoined,SUB,1
+0FAC,—ྫྷ—,NFC,TIBETAN SUBJOINED LETTER DZHA,Mn,0,,0FAB 0FB7,Bottom,Consonant-Subjoined,SUB,1
 0FAD,—ྭ—,SUB_CONS,TIBETAN SUBJOINED LETTER WA,Mn,0,,,Bottom,Consonant-Subjoined,SUB,
 0FAE,—ྮ—,SKRT_SUB_CONS,TIBETAN SUBJOINED LETTER ZHA,Mn,0,,,Bottom,Consonant-Subjoined,SUB,
 0FAF,—ྯ—,SKRT_SUB_CONS,TIBETAN SUBJOINED LETTER ZA,Mn,0,,,Bottom,Consonant-Subjoined,SUB,
@@ -178,7 +179,7 @@ Char,unicode repr,pybo Category,Name,General Category,Canonical-Combining-Class,
 0FB6,—ྶ—,SKRT_SUB_CONS,TIBETAN SUBJOINED LETTER SA,Mn,0,,,Bottom,Consonant-Subjoined,SUB,
 0FB7,—ྷ—,SUB_CONS,TIBETAN SUBJOINED LETTER HA,Mn,0,,,Bottom,Consonant-Subjoined,SUB,
 0FB8,—ྸ—,SKRT_SUB_CONS,TIBETAN SUBJOINED LETTER A,Mn,0,,,Bottom,Consonant-Subjoined,SUB,1
-0FB9,—ྐྵ—,SKRT_SUB_CONS,TIBETAN SUBJOINED LETTER KSSA,Mn,0,,0F90 0FB5,Bottom,Consonant-Subjoined,SUB,1
+0FB9,—ྐྵ—,NFC,TIBETAN SUBJOINED LETTER KSSA,Mn,0,,0F90 0FB5,Bottom,Consonant-Subjoined,SUB,1
 0FBA,—ྺ—,SKRT_SUB_CONS,TIBETAN SUBJOINED LETTER FIXED-FORM WA,Mn,0,,,Bottom,Consonant-Subjoined,SUB,1
 0FBB,—ྻ—,SKRT_SUB_CONS,TIBETAN SUBJOINED LETTER FIXED-FORM YA,Mn,0,,,Bottom,Consonant-Subjoined,SUB,1
 0FBC,—ྼ—,SKRT_SUB_CONS,TIBETAN SUBJOINED LETTER FIXED-FORM RA,Mn,0,,,Bottom,Consonant-Subjoined,SUB,1

@@ -233,10 +233,13 @@ class ChunkFramework(ChunkFrameworkBase):
     def __is_sym(self, char_idx):
         """
         Tests whether the character at the given index is a Tibetan symbols or not.
+        Note: Since 0F00 (ༀ) is categorized in unicode's symbols, all the other NFC characters
+                are also considered to be part of symbol chunks.
         """
         return (
             self.bs.base_structure[char_idx] == a.SYMBOL
             or self.bs.base_structure[char_idx] == a.TRANSPARENT
+            or self.bs.base_structure[char_idx] == a.NFC
         )
 
     def chunk_number(self, start=None, end=None, yes=u.NUM.value, no=u.NON_NUM.value):

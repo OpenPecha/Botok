@@ -1,4 +1,6 @@
 # coding: utf8
+import warnings
+
 from botok import BoString
 from botok import CharMarkers as m
 
@@ -32,3 +34,10 @@ def test_string():
     idx = 17
     assert "就" == bo_str[idx]
     assert m.CJK == bs.base_structure[idx]
+
+
+def test_warning():
+    with warnings.catch_warnings(record=True) as w:
+        BoString("ༀ་པ་ཊུ་")
+        assert len(w) == 1
+        assert str(w[0].message) == 'Beware of unexpected results: input string contains the non-expanded char "ༀ", found in "ༀ་པ་ཊུ".'

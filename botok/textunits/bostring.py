@@ -1,4 +1,6 @@
 # coding: utf-8
+from warnings import warn
+
 from .charcategories import get_char_category
 from ..vars import CharMarkers as a
 from ..vars import char_values
@@ -59,6 +61,7 @@ class BoString:
         for i in range(len(self.string)):
             char = self.string[i]
             cat = get_char_category(char)
+            self.__nfc_check(cat, i)
             if char in self.ignore_chars:
                 self.base_structure[
                     i
@@ -67,6 +70,17 @@ class BoString:
                 )  # spaces chars are allowed anywhere, thus ignored
             else:
                 self.base_structure[i] = cat
+
+    def __nfc_check(self, cat, idx):
+        if cat == a.NFC:
+            slice_start = 10
+            slice_end = 10
+            while idx - slice_start < 0:
+                slice_start -= 1
+            while idx + slice_end >= self.len:
+                slice_end -= 1
+            warn(f'Beware of unexpected results: input string contains the non-expanded char "{self.string[idx]}", '
+                 f'found in "{self.string[slice_start: slice_end]}".')
 
     def export_groups(self, start_idx, slice_len, for_substring=True):
         """

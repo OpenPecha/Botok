@@ -1,8 +1,10 @@
 # coding: utf8
-from botok import *
+import warnings
 from pathlib import Path
 from pytest import raises
 from textwrap import dedent
+
+from botok import *
 
 # all the tests showcasing functionality from the test suite are copied here
 
@@ -82,6 +84,9 @@ print(bs.base_structure[idx])
 idx = 17
 print(bo_str[idx])
 print(bs.base_structure[idx])
+
+with warnings.catch_warnings(record=True) as w:
+    BoString("ༀ་པ་ཊུ་")
 
 ##########################################################################################################
 # test_bosyl.py
