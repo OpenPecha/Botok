@@ -205,5 +205,5 @@ def test_advanced_features():
     # two non-words found
 
     tokens = t.custom_pipeline("dummy", "word_tok", "words_error_types", "stats_types")
-    assert tokens == 'tr \\n	1\nཀཀ	1'
+    assert tokens == "tr \\n	1\nཀཀ	1"
     # the same non-words as before

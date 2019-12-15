@@ -35,7 +35,7 @@ def test_createtrie():
             "_": {},
             "affixation": {"len": 1, "type": "la", "aa": False},
             "skrt": True,
-            "senses": [{"lemma": '', "affixed": True}]
+            "senses": [{"lemma": "", "affixed": True}],
         },
     }  # arrives here because skrt was True
 

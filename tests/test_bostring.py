@@ -40,4 +40,7 @@ def test_warning():
     with warnings.catch_warnings(record=True) as w:
         BoString("ༀ་པ་ཊུ་")
         assert len(w) == 1
-        assert str(w[0].message) == 'Beware of unexpected results: input string contains the non-expanded char "ༀ", found in "ༀ་པ་ཊུ".'
+        assert (
+            str(w[0].message)
+            == 'Beware of unexpected results: input string contains the non-expanded char "ༀ", found in "ༀ་པ་ཊུ".'
+        )
