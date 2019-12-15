@@ -99,7 +99,9 @@ class Config:
 
         # add non-inflected to the main profile
         if profile != "empty":
-            main_profile["words_non_inflected"] = [Path(__file__).parent / "resources/particles.tsv"]
+            main_profile["words_non_inflected"] = [
+                Path(__file__).parent / "resources/particles.tsv"
+            ]
 
         user_modifs = defaultdict(list)
         if modifs:

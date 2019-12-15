@@ -79,8 +79,10 @@ class BoString:
                 slice_start -= 1
             while idx + slice_end >= self.len:
                 slice_end -= 1
-            warn(f'Beware of unexpected results: input string contains the non-expanded char "{self.string[idx]}", '
-                 f'found in "{self.string[slice_start: slice_end]}".')
+            warn(
+                f'Beware of unexpected results: input string contains the non-expanded char "{self.string[idx]}", '
+                f'found in "{self.string[slice_start: slice_end]}".'
+            )
 
     def export_groups(self, start_idx, slice_len, for_substring=True):
         """

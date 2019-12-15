@@ -9,9 +9,7 @@ def expose_data(out_path, profile=None):
     :param out_path: must be an existing empty folder
     """
     if profile not in ["POS", "empty"]:
-        raise SyntaxError(
-            'profile should be either one of ["POS", "empty"]'
-        )
+        raise SyntaxError('profile should be either one of ["POS", "empty"]')
 
     out_path = Path(out_path)
     if not out_path.is_dir() or list(out_path.glob("*")):

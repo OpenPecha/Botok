@@ -16,8 +16,10 @@ def get_data(url, out_path):
                 return
 
         #   exit botok otherwise
-        exit("The data required to run botok is not yet downloaded and there is no connection. "
-             "Please connect first and try again.")
+        exit(
+            "The data required to run botok is not yet downloaded and there is no connection. "
+            "Please connect first and try again."
+        )
 
     # attempt 50 times to download the zip
     check = zipfile.is_zipfile(io.BytesIO(r.content))
@@ -33,7 +35,9 @@ def get_data(url, out_path):
         # extract the zip in the current folder
         z = zipfile.ZipFile(io.BytesIO(r.content))
         tmp = Path(__file__).parent  # / "botok-data-master"
-        z.extractall(path=tmp, members=[a for a in z.namelist() if not a.endswith(".md")])
+        z.extractall(
+            path=tmp, members=[a for a in z.namelist() if not a.endswith(".md")]
+        )
 
         # copy folders in destination
         tmp = tmp / "botok-data-master"

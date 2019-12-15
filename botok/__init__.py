@@ -47,4 +47,7 @@ def cwd():
 
 
 # download trie data from botok-data
-get_data("https://github.com/Esukhia/botok-data/archive/master.zip", Path(__file__).parent / "resources")
+get_data(
+    "https://github.com/Esukhia/botok-data/archive/master.zip",
+    Path(__file__).parent / "resources",
+)

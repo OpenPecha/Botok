@@ -37,7 +37,7 @@ class WordTokenizer:
         adj_modifs=None,
         adj_mode="internal",
         conf_path=None,
-        build_trie=False
+        build_trie=False,
     ):
         """
         :param tok_profile: profile for building the trie. (see config.yaml)
@@ -57,7 +57,7 @@ class WordTokenizer:
                 main_data=main,
                 custom_data=custom,
                 pickle_path=conf_path,
-                build=build_trie
+                build=build_trie,
             )
         )
 

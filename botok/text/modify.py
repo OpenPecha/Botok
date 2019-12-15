@@ -21,7 +21,8 @@ def is_mistake(token):
                     [
                         True
                         for m in token.senses
-                        if "pos" in m and (m["pos"] == "NOPOS" or m["pos"] == "NON_WORD")
+                        if "pos" in m
+                        and (m["pos"] == "NOPOS" or m["pos"] == "NON_WORD")
                     ]
                 )
                 > 0
