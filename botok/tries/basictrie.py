@@ -7,7 +7,7 @@
 class Node:
     def __init__(self, label=None, leaf=False, data=None):
         if data is None:
-            data = {"_": {}}  # the dict in '_' is for user-data
+            data = {'_': {}}  # the dict in '_' is for user-data
         self.label = label
         self.leaf = leaf
         self.data = data
@@ -81,9 +81,9 @@ class BasicTrie:
         # parse the word
         current_node = self.head
         exists = True
-        for letter in word:
-            if letter in current_node.children:
-                current_node = current_node.children[letter]
+        for syl in word:
+            if syl in current_node.children:
+                current_node = current_node.children[syl]
             else:
                 exists = False
                 break
@@ -109,9 +109,9 @@ class BasicTrie:
 
         # parse word
         current_node = self.head
-        for letter in word:
-            if letter in current_node.children:
-                current_node = current_node.children[letter]
+        for syl in word:
+            if syl in current_node.children:
+                current_node = current_node.children[syl]
             else:
                 return False
 

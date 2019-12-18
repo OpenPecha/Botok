@@ -65,9 +65,17 @@ class Trie(BasicTrie):
         print("({:.0f} s.)".format(end - start), flush=True)
 
     def _populate_trie(self, files):
-        for l, f_list in files.items():
-            for f in f_list:
+        # first populate the trie with words
+        lexica = (d for d in files if d.startswith("lexica"))
+        for l in lexica:
+            for f in files[l]:
                 self._add_one_file(f, l)
+
+        # then add data to the added words
+        rest = (d for d in files if not d.startswith("lexica"))
+        for r in rest:
+            for f in files[r]:
+                self._add_one_file(f, r)
 
     def _add_one_file(self, in_file, category):
         """
@@ -169,11 +177,11 @@ class Trie(BasicTrie):
         if not syls:
             return None
 
-        inflected = [(self.__join_syls(syls), None)]
+        inflected = [(syls, None)]
         affixed = self.bosyl.get_all_affixed(syls[-1])
         if affixed:
             for infl, data in affixed:
-                infl_word = self.__join_syls(syls[:-1] + [infl])
+                infl_word = syls[:-1] + [infl]
                 inflected.append((infl_word, {"affixation": data}))
 
         self.tmp_inflected[word] = inflected
@@ -187,7 +195,8 @@ class Trie(BasicTrie):
     def __clean_lines(f):
         # cuts off comments, then strips empty lines
         lines = (
-            line[: line.index(HASH)] if HASH in line else line for line in f.readlines()
+            line[:line.index(HASH)] if HASH in line else line
+            for line in f.readlines()
         )
         return (l for l in lines if l)
 
