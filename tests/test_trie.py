@@ -58,7 +58,7 @@ def test_createtrie():
     # just like add() was not meant to be used directly, deactivate() is not
     # instead, use bt.inflect_n_modify_trie("word", deactivate=True)
     bt.deactivate(syls("ཀ་ར་"))
-    assert bt.has_word(syls("ཀ་རར་"))["exists"] is True  # only 'ཀ་ར་' has been deactivated
+    assert bt.has_word(syls("ཀ་ར་"))["exists"] is False  # since 'ཀ་ར་' has been deactivated
 
 
 def test_multiple_words_per_entry():

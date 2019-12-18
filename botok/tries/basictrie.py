@@ -156,9 +156,9 @@ class BasicTrie:
         :return True if the word exists, False otherwise
         """
         current_node = self.head
-        for letter in word:
-            if letter in current_node.children:
-                current_node = current_node.children[letter]
+        for syl in word:
+            if syl in current_node.children:
+                current_node = current_node.children[syl]
             else:
                 return False
         if isinstance(current_node.data, dict):
