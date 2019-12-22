@@ -26,26 +26,21 @@ class Tokenize:
         """
         self.pre_processed = pre_processed
         tokens = []
-        cur_chunk_idx = 0
-        cur_node = trie.head
         max_match = []
-        match_data = (
-            {}
-        )  # keys: c_idx, values: trie data (for last and second-last matches)
 
-        current_node = None
-        went_to_max = False
+        cur_node = self.trie.head
+        cur_chunk_idx = 0
 
-        while cur_chunk_idx < len(chunks):
+        while cur_chunk_idx < len(self.pre_processed.chunks):
             max_match_walker = cur_chunk_idx
             # >>> WALKING THE TRIE >>>
-            while max_match_walker < len(chunks):
-                cur_syl, cur_chunk = chunks[max_match_walker]
+            while max_match_walker < len(self.pre_processed.chunks):
+                cur_syl, cur_chunk = self.pre_processed.chunks[max_match_walker]
 
                 # 1. CHUNK IS SYLLABLE
                 if cur_syl:
-                    syl = ''.join([tc.bs.string[i] for i in cur_syl])
-                    cur_node = trie.walk(syl, cur_node)
+                    syl = ''.join([self.pre_processed.bs.string[i] for i in cur_syl])
+                    cur_node = self.trie.walk(syl, cur_node)
                     if cur_node:
                         max_match.append(max_match_walker)
                         cur_chunk_idx += 1
@@ -56,17 +51,25 @@ class Tokenize:
                         max_match_walker += 1
                     # OOV
                     else:
-                        cur_node = trie.head
+                        tokens.append(
+                            self.chunks_to_token([max_match_walker], {}, ttype=w.NON_WORD.name)
+                        )
+                        cur_node = self.trie.head
                         cur_chunk_idx += 1
                         break
                 # 2. CHUNK IS NON-SYLLABLE
                 else:
+                    tokens.append(
+                            self.chunks_to_token([max_match_walker], {})
+                        )
                     cur_chunk_idx += 1
                     break
             if max_match:
-                tokens.append(max_match)
-                max_match=[]
-                cur_node = trie.head
+                tokens.append(
+                    self.chunks_to_token(max_match, cur_node.data)
+                )
+                max_match = []
+                cur_node = self.trie.head
 
         self.pre_processed = None
 
