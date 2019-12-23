@@ -6,6 +6,19 @@ sys.path.append("../")
 from helpers import pos_tok
 
 
+def test_syl_tokenize():
+    instr = " མཐའི་རྒྱ་མཚོའི་གླིང་། ཤི་བཀྲ་ཤིས་  tr བདེ་་ལེ གས། བཀྲ་ཤིས་བདེ་ལེགས་ཀཀ"
+    preprocessed = TokChunks(instr)
+    preprocessed.serve_syls_to_trie()
+    tokens = pos_tok.tok.tokenize(preprocessed)
+    texts = [t.text for t in tokens]
+    current = [' མཐའི་', 'རྒྱ་མཚོའི་', 'གླིང་', '། ', 'ཤི་', 'བཀྲ་', 'ཤིས་  ', 'tr ', 'བདེ་་ལེ གས', '། ', 'བཀྲ་ཤིས་',
+               'བདེ་', 'ལེགས་', 'ཀཀ']
+    # current: [' མཐའི་', 'རྒྱ་མཚོའི་', '། ', 'གླིང་', 'བཀྲ་', 'ཤི་', 'tr ', 'ཤིས་  ', 'བདེ་་ལེ གས', '། ', 'བདེ་',
+    #          'བཀྲ་ཤིས་', 'ཀཀ', 'ལེགས་']
+    assert texts == current
+
+
 def test_num_lemmas_missing():
     in_str = "སྟོང་ཕྲག་བརྒྱ་པ་སུམ་བརྒྱ་པ་བཅུ་པ་ལྔ་པ་"
     tokens = pos_tok.tokenize(in_str)
