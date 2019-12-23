@@ -22,6 +22,7 @@ class AdjustTokens:
             - "=" for replace
     - Constraint: "<matching_index>-<splitting-index>" is only allowed if adjustment is ":" or "::"
     """
+
     def __init__(self, main=None, custom=None):
         self.paths = []
         if custom:
@@ -60,7 +61,9 @@ class AdjustTokens:
         :return:
         """
         for rule_file in sorted(self.paths):
-            for rule in csv.reader(decomment_file(rule_file.open(encoding="utf-8-sig")), delimiter="\t"):
+            for rule in csv.reader(
+                decomment_file(rule_file.open(encoding="utf-8-sig")), delimiter="\t"
+            ):
                 self.rules.append(self.parse_rule(rule))
 
     @staticmethod
