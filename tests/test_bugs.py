@@ -10,7 +10,11 @@ def test_syl_tokenize():
     instr = " མཐའི་རྒྱ་མཚོའི་གླིང་། ཤི་བཀྲ་ཤིས་  tr བདེ་་ལེ གས། བཀྲ་ཤིས་བདེ་ལེགས་ཀཀ"
     preprocessed = TokChunks(instr)
     preprocessed.serve_syls_to_trie()
-    tokens = pos_tok.tok.tokenize(preprocessed)
+    profile = "POS"
+    main, custom = Config().get_tok_data_paths(profile)
+    trie = Trie(BoSyl, profile, main, custom)
+    tok = Tokenize(trie)
+    tokens = tok.tokenize(preprocessed)
     texts = [t.text for t in tokens]
     expected = [' མཐའི་', 'རྒྱ་མཚོའི་', 'གླིང་', '། ', 'ཤི་', 'བཀྲ་', 'ཤིས་  ', 'tr ', 'བདེ་་ལེ གས', '། ', 'བཀྲ་ཤིས་',
                'བདེ་', 'ལེགས་', 'ཀཀ']
