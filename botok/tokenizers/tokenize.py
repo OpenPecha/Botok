@@ -47,7 +47,7 @@ class Tokenize:
 
                         # CAN'T CONTINUE WALKING
                         if cur_node.is_match() and not cur_node.can_walk():
-                            break;
+                            break
                         max_match_walker += 1
                     # OOV
                     else:
