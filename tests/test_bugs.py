@@ -12,11 +12,11 @@ def test_syl_tokenize():
     preprocessed.serve_syls_to_trie()
     tokens = pos_tok.tok.tokenize(preprocessed)
     texts = [t.text for t in tokens]
-    current = [' མཐའི་', 'རྒྱ་མཚོའི་', 'གླིང་', '། ', 'ཤི་', 'བཀྲ་', 'ཤིས་  ', 'tr ', 'བདེ་་ལེ གས', '། ', 'བཀྲ་ཤིས་',
+    expected = [' མཐའི་', 'རྒྱ་མཚོའི་', 'གླིང་', '། ', 'ཤི་', 'བཀྲ་', 'ཤིས་  ', 'tr ', 'བདེ་་ལེ གས', '། ', 'བཀྲ་ཤིས་',
                'བདེ་', 'ལེགས་', 'ཀཀ']
     # current: [' མཐའི་', 'རྒྱ་མཚོའི་', '། ', 'གླིང་', 'བཀྲ་', 'ཤི་', 'tr ', 'ཤིས་  ', 'བདེ་་ལེ གས', '། ', 'བདེ་',
     #          'བཀྲ་ཤིས་', 'ཀཀ', 'ལེགས་']
-    assert texts == current
+    assert texts == expected
 
 
 def test_num_lemmas_missing():
