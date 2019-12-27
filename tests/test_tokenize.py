@@ -59,7 +59,7 @@ def test_tokenize():
                         
                         """
     )
-    # assert str(tokens[2]) == expected
+    assert str(tokens[2]) == expected
 
 
 def test_non_max2():

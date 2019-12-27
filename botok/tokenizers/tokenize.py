@@ -27,49 +27,89 @@ class Tokenize:
         self.pre_processed = pre_processed
         tokens = []
         max_match = []
+        match_data = {}
 
-        cur_node = self.trie.head
-        cur_chunk_idx = 0
+        current_node = None
+        found_max_match = False
+        match_found = False
 
-        while cur_chunk_idx < len(self.pre_processed.chunks):
-            max_match_walker = cur_chunk_idx
-            # >>> WALKING THE TRIE >>>
-            while max_match_walker < len(self.pre_processed.chunks):
-                cur_syl, cur_chunk = self.pre_processed.chunks[max_match_walker]
-
-                # 1. CHUNK IS SYLLABLE
+        c_idx = 0
+        while c_idx < len(self.pre_processed.chunks):
+            walker = c_idx
+            syls = []
+            while walker < len(self.pre_processed.chunks):
+                cur_syl = self.pre_processed.chunks[walker][0]
+                # CHUNK IS SYLLABLE
                 if cur_syl:
                     syl = ''.join([self.pre_processed.bs.string[i] for i in cur_syl])
-                    cur_node = self.trie.walk(syl, cur_node)
-                    if cur_node:
-                        max_match.append(max_match_walker)
-                        cur_chunk_idx += 1
-
-                        # CAN'T CONTINUE WALKING
-                        if cur_node.is_match() and not cur_node.can_walk():
-                            break
-                        max_match_walker += 1
-                    # OOV
+                    current_node = self.trie.walk(syl, current_node)
+                    if current_node:
+                        syls.append(walker)
+                        if current_node.is_match():
+                            match_data[walker] = current_node.data
+                            max_match.append(syls[:])
+                            # check if the matched is last
+                            if walker + 1 == len(self.pre_processed.chunks):
+                                found_max_match = True
+                        else:
+                            if walker + 1 == len(self.pre_processed.chunks):
+                                if max_match:
+                                    found_max_match = True
+                                else:
+                                    # OOV syllables are turned into independant tokens
+                                    self.add_found_word_or_non_word(
+                                        walker, match_data, syls, tokens
+                                    )
+                                    c_idx += len(syls)
+                                    break
+                    # CAN'T CONTINUE WALKING
+                    else:
+                        # max_match followed by syllable
+                        if max_match:
+                            found_max_match = True
+                        # non-word syllables are turned into independant tokens
+                        else:
+                            if syls:
+                                # check if syllables is OOV or Non-word
+                                self.add_found_word_or_non_word(
+                                    walker, match_data, syls, tokens
+                                )
+                                c_idx += len(syls)
+                                break
+                            else:
+                                non_word = [walker]
+                                tokens.append(
+                                    self.chunks_to_token(non_word, {}, ttype=w.NON_WORD.name)
+                                )
+                                c_idx += 1
+                                break
+                # CHUNK IS NON-SYLLABLE
+                else:
+                    # max_match followed by non-syllable
+                    if max_match:
+                        found_max_match = True
+                    # non-syllables are turned into independant tokens
                     else:
                         tokens.append(
-                            self.chunks_to_token([max_match_walker], {}, ttype=w.NON_WORD.name)
+                            self.chunks_to_token([c_idx], {})
                         )
-                        cur_node = self.trie.head
-                        cur_chunk_idx += 1
+                        c_idx += 1
                         break
-                # 2. CHUNK IS NON-SYLLABLE
-                else:
-                    tokens.append(
-                            self.chunks_to_token([max_match_walker], {})
-                        )
-                    cur_chunk_idx += 1
+
+                if found_max_match:
+                    self.add_found_word_or_non_word(
+                        c_idx+len(max_match[-1])-1, match_data, max_match[-1], tokens
+                    )
+
+                    c_idx += len(max_match[-1])
+
+                    max_match = []
+                    match_data = {}
+                    current_node = None
+                    found_max_match = False
                     break
-            if max_match:
-                tokens.append(
-                    self.chunks_to_token(max_match, cur_node.data)
-                )
-                max_match = []
-                cur_node = self.trie.head
+
+                walker += 1
 
         self.pre_processed = None
 
