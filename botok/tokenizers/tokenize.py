@@ -37,7 +37,7 @@ class Tokenize:
         while c_idx < len(self.pre_processed.chunks):
             walker = c_idx
             syls = []
-            while walker < len(self.pre_processed.chunks):
+            while True:
                 cur_syl = self.pre_processed.chunks[walker][0]
                 # CHUNK IS SYLLABLE
                 if cur_syl:
@@ -122,7 +122,7 @@ class Tokenize:
         if c_idx in match_data.keys():
             data = match_data[c_idx]
             ttype = (
-                w.OOV.name
+                w.NO_POS.name
                 if "senses" not in data
                 or len([True for m in data["senses"] if "pos" in m]) <= 0
                 else None
@@ -136,7 +136,7 @@ class Tokenize:
                     non_max_syls.append(syl)
             data = match_data[non_max_idx]
             ttype = (
-                w.OOV.name
+                w.NO_POS.name
                 if "senses" not in data
                 or len([True for m in data["senses"] if "pos" in m]) <= 0
                 else None
@@ -145,7 +145,7 @@ class Tokenize:
             c_idx = non_max_idx
         else:
             # add first syl in syls as non-word
-            tokens.append(self.chunks_to_token([syls[0]], {}, ttype=w.OOV.name))
+            tokens.append(self.chunks_to_token([syls[0]], {}, ttype=w.NO_POS.name))
 
             # decrement chunk-idx for a new attempt to find a match
             if syls:

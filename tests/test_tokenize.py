@@ -79,7 +79,7 @@ def test_non_max2():
     assert tokens[1].text == "བདེ་"
     assert tokens[1]["senses"][0]["pos"] == "NON_WORD"
     assert tokens[2].text == "བཀྲ་"
-    assert tokens[2]["senses"][0]["pos"] == "OOV"
+    assert tokens[2]["senses"][0]["pos"] == "NO_POS"
 
 
 def test_non_max_end_of_string():
@@ -95,3 +95,6 @@ def test_non_max_end_of_string():
     tokens = tok.tokenize(preproc)
     assert tokens[0].text == "བཀྲ་ཤིས་"
     assert tokens[1].text == "བདེ་"
+
+if __name__ == "__main__":
+    test_non_max2()

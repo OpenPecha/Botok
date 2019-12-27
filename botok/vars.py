@@ -70,7 +70,7 @@ ChunkMarkers = IntEnum(
 )
 chunk_values = {c.value: c.name for c in ChunkMarkers}
 
-WordMarkers = IntEnum("WordMarkers", ["WORD", "OOV", "NON_WORD"], start=1000)
+WordMarkers = IntEnum("WordMarkers", ["WORD", "NO_POS", "NON_WORD"], start=1000)
 word_values = {w.value: w.name for w in WordMarkers}
 
 Ids = Enum("Ids", ["profile", "prep", "tok", "mod", "form"])

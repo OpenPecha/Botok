@@ -16,8 +16,8 @@ def test_syl_tokenize():
     tok = Tokenize(trie)
     tokens = tok.tokenize(preprocessed)
     texts = [t.text for t in tokens]
-    expected = [' མཐའི་', 'རྒྱ་མཚོའི་', 'གླིང་', '། ', 'ཤི་', 'བཀྲ་', 'ཤིས་  ', 'tr ', 'བདེ་་ལེ གས', '། ', 'བཀྲ་ཤིས་',
-               'བདེ་', 'ལེགས་', 'ཀཀ']
+    expected = [' མཐའི་', 'རྒྱ་མཚོའི་', 'གླིང་', '། ', 'ཤི་', 'བཀྲ་ཤིས་  ', 'tr ', 'བདེ་་ལེ གས', '། ', 'བཀྲ་ཤིས་',
+               'བདེ་ལེགས་', 'ཀཀ']
     # current: [' མཐའི་', 'རྒྱ་མཚོའི་', '། ', 'གླིང་', 'བཀྲ་', 'ཤི་', 'tr ', 'ཤིས་  ', 'བདེ་་ལེ གས', '། ', 'བདེ་',
     #          'བཀྲ་ཤིས་', 'ཀཀ', 'ལེགས་']
     assert texts == expected
@@ -168,3 +168,7 @@ def test_shad_in_syllable():
         ("PUNCT", "། "),
         ("TEXT", "བཀྲ་"),
     ]
+
+
+if __name__ == "__main__":
+    test_syl_tokenize()
