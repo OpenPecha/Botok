@@ -26,17 +26,16 @@ class Tokenize:
         """
         self.pre_processed = pre_processed
         tokens = []
-        max_match = []
-        match_data = {}
-
-        current_node = None
-        found_max_match = False
-        match_found = False
 
         c_idx = 0
         while c_idx < len(self.pre_processed.chunks):
             walker = c_idx
             syls = []
+            max_match = []
+            match_data = {}
+            current_node = None
+            found_max_match = False
+
             while True:
                 cur_syl = self.pre_processed.chunks[walker][0]
                 # CHUNK IS SYLLABLE
@@ -67,15 +66,15 @@ class Tokenize:
                         # max_match followed by syllable
                         if max_match:
                             found_max_match = True
-                        # non-word syllables are turned into independant tokens
                         else:
+                            # check if syllables is NO_POS or Non-word
                             if syls:
-                                # check if syllables is OOV or Non-word
                                 self.add_found_word_or_non_word(
                                     walker, match_data, syls, tokens
                                 )
                                 c_idx += len(syls)
                                 break
+                            # syllabel is not in the dictionary (Trie)
                             else:
                                 non_word = [walker]
                                 tokens.append(
@@ -88,7 +87,14 @@ class Tokenize:
                     # max_match followed by non-syllable
                     if max_match:
                         found_max_match = True
-                    # non-syllables are turned into independant tokens
+                    # check for any syllables left, which are to be turned into independant tokens
+                    elif syls:
+                        self.add_found_word_or_non_word(
+                            walker, match_data, syls, tokens
+                        )
+                        c_idx += len(syls)
+                        break
+                    # non-syllable are turned into independant tokens
                     else:
                         tokens.append(
                             self.chunks_to_token([c_idx], {})
@@ -100,13 +106,7 @@ class Tokenize:
                     self.add_found_word_or_non_word(
                         c_idx+len(max_match[-1])-1, match_data, max_match[-1], tokens
                     )
-
                     c_idx += len(max_match[-1])
-
-                    max_match = []
-                    match_data = {}
-                    current_node = None
-                    found_max_match = False
                     break
 
                 walker += 1
