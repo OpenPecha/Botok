@@ -46,7 +46,9 @@ class Trie(BasicTrie):
             self.head = pickle.load(f)
             version = self.head.data["_"]["version"]
             if version != __version__:
-                print(f"\nThe trie was build for botok {version}. Current version: {__version__}")
+                print(
+                    f"\nThe trie was build for botok {version}. Current version: {__version__}"
+                )
                 self._build_trie()
         end = time.time()
         print("({:.0f}s.)".format(end - start), flush=True)
@@ -105,7 +107,9 @@ class Trie(BasicTrie):
 
                 else:
                     raise SyntaxError(
-                        "'category' is: '" + category + "'. Valid answers: words_bo, words_skrt,"
+                        "'category' is: '"
+                        + category
+                        + "'. Valid answers: words_bo, words_skrt,"
                         "words_non_inflected, entry_data, remove"
                     )
 
