@@ -1,7 +1,7 @@
 # coding: utf-8
 from enum import IntEnum, Enum
 
-__version__ = "0.7.4"
+__version__ = "0.7.5"
 
 NO_POS = "NOPOS"
 TSEK = "་"

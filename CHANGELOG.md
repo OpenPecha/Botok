@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.7.5](https://github.com/Esukhia/botok/releases/tag/v0.7.5) - 20191230
+### Fixed
+ * improved tokenizer to work on syllable based trie
+
 ## [0.7.4](https://github.com/Esukhia/botok/releases/tag/v0.7.4) - 20191215
 ### Fixed
  * now allows to merge tokens with no textual content with tokens containing textual content
