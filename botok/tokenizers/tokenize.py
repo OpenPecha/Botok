@@ -1,4 +1,7 @@
 # coding: utf-8
+from concurrent.futures import ProcessPoolExecutor
+import copy
+
 from .token import Token
 from ..vars import NAMCHE, TSEK
 from ..vars import chunk_values as u
@@ -17,11 +20,39 @@ class Tokenize:
         self.pre_processed = None
         self.trie = trie
 
-    def tokenize(self, pre_processed, debug=False):
+
+    def parallelized_tokenize(self, pre_processed):
+        grouped_pre_processed = []
+        grouped_chunks = []
+        found_group = False
+        for chunk in pre_processed.chunks:
+            if not chunk[0] and chunk[1][0] == 105:
+                found_group = True
+            else:
+                grouped_chunks.append(chunk)
+
+            if found_group:
+                grouped_chunks.append(chunk)
+                dup_pre_processed = copy.deepcopy(pre_processed)
+                dup_pre_processed.chunks = grouped_chunks
+                grouped_pre_processed.append(dup_pre_processed)
+                grouped_chunks = []
+                found_group = False
+        else:
+            if grouped_chunks:
+                dup_pre_processed = copy.deepcopy(pre_processed)
+                dup_pre_processed.chunks = grouped_chunks
+                grouped_pre_processed.append(dup_pre_processed)
+
+        with ProcessPoolExecutor() as executor:
+            tokenized_sents = executor.map(self.tokenize, grouped_pre_processed)
+        return sum(tokenized_sents, [])
+
+
+    def tokenize(self, pre_processed):
         """
 
         :param pre_processed: PyBoTextChunks of the text to be tokenized
-        :param debug: prints debug info in True
         :return: a list of Token objects
         """
         self.pre_processed = pre_processed
@@ -254,8 +285,3 @@ class Tokenize:
             or A.SKRT_CONS in char_groups.values()
             or A.SKRT_SUB_CONS in char_groups.values()
         )
-
-    @staticmethod
-    def debug(debug, to_print):
-        if debug:
-            print(to_print, flush=True)

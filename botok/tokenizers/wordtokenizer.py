@@ -66,18 +66,21 @@ class WordTokenizer:
         )
         self.adj = AdjustTokens(main=adj_main, custom=adj_custom)
 
-    def tokenize(self, string, split_affixes=True, spaces_as_punct=False, debug=False):
+    def tokenize(self, string, split_affixes=True, spaces_as_punct=False, parallelize=False):
         """
         :param string: to be tokenized
         :param split_affixes: separates the affixed particles into seperate tokens if True
-        :param debug: print debug info while parsing
+        :param parallelize: do multiprocessed tokenization
         :return: list of pybo.tokenizers.Token objects
         """
         preprocessed = TokChunks(
             string, ignore_chars=self.ignore_chars, space_as_punct=spaces_as_punct
         )
         preprocessed.serve_syls_to_trie()
-        tokens = self.tok.tokenize(preprocessed, debug=debug)
+        if parallelize:
+            tokens = self.tok.parallelized_tokenize(preprocessed)
+        else:
+            tokens = self.tok.tokenize(preprocessed)
 
         if split_affixes:
             split_affixed(tokens)
