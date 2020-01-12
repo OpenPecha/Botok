@@ -95,7 +95,6 @@ def test_parallized_token():
     assert tokens[2].text == "། "
     assert tokens[2].chunk_type == "PUNCT"
     # add sense to བཀྲ་ཤིས་
-    pos_tok.tok.trie.inflect_n_add_data("བཀྲ་ཤིས་\tNOUN\t\tབཀྲ་ཤིས་\t17500")
     tokens = pos_tok.tokenize(in_str, parallelize=True)
     expected = dedent(
         """\
@@ -187,3 +186,6 @@ def test_parallized_non_max_end_of_string():
     tokens = tok.parallelized_tokenize(preproc)
     assert tokens[0].text == "བཀྲ་ཤིས་"
     assert tokens[1].text == "བདེ་"
+
+if __name__ == "__main__":
+    test_parallized_token()

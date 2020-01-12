@@ -66,6 +66,7 @@ class WordTokenizer:
         )
         self.adj = AdjustTokens(main=adj_main, custom=adj_custom)
 
+    @profile
     def tokenize(self, string, split_affixes=True, spaces_as_punct=False, parallelize=False):
         """
         :param string: to be tokenized

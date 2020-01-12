@@ -106,13 +106,13 @@ def test_multiple_spaces():
 def test_bug1():
     tok = WordTokenizer("POS")
     string = "བ་ཀུ་"
-    tokens = tok.tokenize(string, debug=True)
+    tokens = tok.tokenize(string)
     assert tokens
 
 
 def test_bug2():
     string = "བྲ་གྲྀ་"
-    tokens = pos_tok.tokenize(string, debug=True)
+    tokens = pos_tok.tokenize(string)
     assert tokens
 
 
@@ -168,7 +168,3 @@ def test_shad_in_syllable():
         ("PUNCT", "། "),
         ("TEXT", "བཀྲ་"),
     ]
-
-
-if __name__ == "__main__":
-    test_syl_tokenize()
