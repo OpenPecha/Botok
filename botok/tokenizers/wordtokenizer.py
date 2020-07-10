@@ -1,16 +1,16 @@
 # coding: utf8
-from pathlib import Path
 import csv
+from pathlib import Path
 
-from .tokenize import Tokenize
-from ..modifytokens.splitaffixed import split_affixed
-from ..modifytokens.mergedagdra import MergeDagdra
-from ..modifytokens.adjusttokens import AdjustTokens
-from ..tries.trie import Trie
 from ..chunks.chunks import TokChunks
-from ..textunits.bosyl import BoSyl
 from ..config import Config
-from ..vars import TSEK, AA
+from ..modifytokens.adjusttokens import AdjustTokens
+from ..modifytokens.mergedagdra import MergeDagdra
+from ..modifytokens.splitaffixed import split_affixed
+from ..textunits.bosyl import BoSyl
+from ..tries.trie import Trie
+from ..vars import AA, TSEK
+from .tokenize import Tokenize
 
 part_lemmas = {}
 filename = Path(__file__).parent.parent / "resources" / "particles.tsv"
@@ -66,8 +66,9 @@ class WordTokenizer:
         )
         self.adj = AdjustTokens(main=adj_main, custom=adj_custom)
 
-    @profile
-    def tokenize(self, string, split_affixes=True, spaces_as_punct=False, parallelize=False):
+    def tokenize(
+        self, string, split_affixes=True, spaces_as_punct=False, parallelize=False
+    ):
         """
         :param string: to be tokenized
         :param split_affixes: separates the affixed particles into seperate tokens if True

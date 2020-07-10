@@ -1,6 +1,8 @@
 # coding: utf8
-from botok import *
 from textwrap import dedent
+
+from botok import *
+
 from helpers import pos_tok
 
 
@@ -29,7 +31,7 @@ def test_tokenize():
                         syls_start_end: [{'start': 0, 'end': 4}, {'start': 4, 'end': 7}]
                         start: 5
                         len: 7
-                        
+
                         """
     )
     str(tokens[0])
@@ -56,7 +58,7 @@ def test_tokenize():
                         syls_start_end: [{'start': 0, 'end': 4}, {'start': 4, 'end': 7}]
                         start: 5
                         len: 7
-                        
+
                         """
     )
     assert str(tokens[2]) == expected
@@ -87,7 +89,7 @@ def test_parallized_token():
                         syls_start_end: [{'start': 0, 'end': 4}, {'start': 4, 'end': 7}]
                         start: 5
                         len: 7
-                        
+
                         """
     )
     str(tokens[0])
@@ -113,7 +115,7 @@ def test_parallized_token():
                         syls_start_end: [{'start': 0, 'end': 4}, {'start': 4, 'end': 7}]
                         start: 5
                         len: 7
-                        
+
                         """
     )
     assert str(tokens[2]) == expected
