@@ -2,13 +2,12 @@
 from pathlib import Path
 
 import pytest
-
 from botok import Config
 
 
 @pytest.fixture()
 def base_path():
-    return Path().home() / "Documents" / "pybo"
+    return Path.home() / "Documents" / "pybo"
 
 
 def test_defaults(base_path):
