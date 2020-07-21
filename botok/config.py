@@ -23,7 +23,7 @@ class Config:
             self.dialect_pack_path = dialect_pack_path
         else:
             self.dialect_pack_path = (
-                Path().home() / "Documents" / "pybo" / "bo_general_pack"
+                Path.home() / "Documents" / "pybo" / "bo_general_pack"
             )
         self.dictionary = self._get_tok_data_paths("dictionary")
         self.adjustments = self._get_tok_data_paths("adjustments")
