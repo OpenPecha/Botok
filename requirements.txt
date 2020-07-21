@@ -3,3 +3,4 @@ requests
 PyYAML
 black
 isort
+pytest
