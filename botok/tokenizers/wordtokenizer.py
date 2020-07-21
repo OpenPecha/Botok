@@ -1,16 +1,16 @@
 # coding: utf8
-from pathlib import Path
 import csv
+from pathlib import Path
 
-from .tokenize import Tokenize
-from ..modifytokens.splitaffixed import split_affixed
-from ..modifytokens.mergedagdra import MergeDagdra
-from ..modifytokens.adjusttokens import AdjustTokens
-from ..tries.trie import Trie
 from ..chunks.chunks import TokChunks
-from ..textunits.bosyl import BoSyl
 from ..config import Config
-from ..vars import TSEK, AA
+from ..modifytokens.adjusttokens import AdjustTokens
+from ..modifytokens.mergedagdra import MergeDagdra
+from ..modifytokens.splitaffixed import split_affixed
+from ..textunits.bosyl import BoSyl
+from ..tries.trie import Trie
+from ..vars import AA, TSEK
+from .tokenize import Tokenize
 
 part_lemmas = {}
 filename = Path(__file__).parent.parent / "resources" / "particles.tsv"
@@ -28,43 +28,27 @@ class WordTokenizer:
     """
 
     def __init__(
-        self,
-        tok_profile="POS",
-        tok_modifs=None,
-        tok_mode="internal",
-        ignore_chars=None,
-        adj_profile="basic",
-        adj_modifs=None,
-        adj_mode="internal",
-        conf_path=None,
-        build_trie=False,
+        self, ignore_chars=None, dialect_pack_path=None, build_trie=False,
     ):
         """
         :param tok_profile: profile for building the trie. (see config.yaml)
         """
-        config = Config(conf_path=conf_path)
-        main, custom = config.get_tok_data_paths(
-            tok_profile, modifs=tok_modifs, mode=tok_mode
-        )
+        config = Config(dialect_pack_path)
         self.ignore_chars = ignore_chars
-        tok_profile = (
-            tok_mode if tok_mode == "custom" else tok_profile
-        )  # trie will be named custom if mode is custom
         self.tok = Tokenize(
             Trie(
                 BoSyl,
-                tok_profile,
-                main_data=main,
-                custom_data=custom,
-                pickle_path=conf_path,
+                config.dialect_pack_path.name,
+                main_data=config.dictionary,
+                custom_data=config.adjustments,
+                pickle_path=config.dialect_pack_path.parent,
                 build=build_trie,
             )
         )
 
-        adj_main, adj_custom = config.get_adj_data_paths(
-            adj_profile, modifs=adj_modifs, mode=adj_mode
+        self.adj = AdjustTokens(
+            main=config.dictionary["rules"], custom=config.adjustments["rules"]
         )
-        self.adj = AdjustTokens(main=adj_main, custom=adj_custom)
 
     def tokenize(self, string, split_affixes=True, spaces_as_punct=False, debug=False):
         """
