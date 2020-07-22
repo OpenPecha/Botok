@@ -142,6 +142,12 @@ def test_match_replace(tokens):
 def test_adjust_tokens(wt):
     string = "ལ་ལ་ལ་ལ་ལ་བ་ཡོད།"
     token_list = wt.tokenize(string, split_affixes=False)
+
+    # add test adjust rule to adjustments rules
+    wt.config.adjustments["rules"].append(
+        Path("./tests/data/trie_dialect_pack/adjustments/rules/adjust_rules.tsv")
+    )
+
     at = AdjustTokens(
         main=wt.config.dictionary["rules"], custom=wt.config.adjustments["rules"]
     )
