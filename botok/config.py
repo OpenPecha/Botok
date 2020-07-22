@@ -25,23 +25,29 @@ class Config:
             self.dialect_pack_path = (
                 Path.home() / "Documents" / "pybo" / "bo_general_pack"
             )
-        self.dictionary = self._get_tok_data_paths("dictionary")
-        self.adjustments = self._get_tok_data_paths("adjustments")
+        self.dictionary = self._get_pack_component("dictionary")
+        self.adjustments = self._get_pack_component("adjustments")
 
-    def _get_tok_data_paths(self, pack_component):
+    def _get_pack_component(self, pack_component_name, pack_component=None):
         """Return all the data_paths of the `pack_component.
 
         data_paths stored in python `dict` as per the directory
         structure of the pack component.
         """
-        data_paths = defaultdict(list)
-        for path in (self.dialect_pack_path / pack_component).iterdir():
+        if not pack_component:
+            pack_component = defaultdict(list)
+        for path in (self.dialect_pack_path / pack_component_name).iterdir():
             if not path.is_dir():
                 continue
             data_type = path.name
-            data_paths[data_type] = list(path.iterdir())
-        return data_paths
+            pack_component[data_type].extend(list(path.iterdir()))
+        return pack_component
 
     @property
     def profile(self):
         return self.dialect_pack_path.name
+
+    def add_dialect_pack(self, path):
+        self.dialect_pack_path = path
+        self._get_pack_component("dictionary", self.dictionary)
+        self._get_pack_component("adjustments", self.adjustments)

@@ -1,4 +1,5 @@
 # coding: utf8
+import copy
 from pathlib import Path
 
 import pytest
@@ -53,3 +54,14 @@ def test_empty_config():
 
     assert not config.dictionary
     assert not config.adjustments
+
+
+def test_add_dialect_pack():
+    config = Config()
+    old_dictionary = copy.deepcopy(config.dictionary)
+    old_adjustments = copy.deepcopy(config.adjustments)
+
+    config.add_dialect_pack(Path("./tests/data/trie_dialect_pack"))
+
+    assert config.dictionary != old_dictionary
+    assert config.adjustments != old_adjustments
