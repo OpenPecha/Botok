@@ -5,7 +5,7 @@ import pytest
 from botok import Config, Tokenize, WordTokenizer
 
 
-@pytest.fixture
+@pytest.fixture(scope="session")
 def empty_wt():
     """Return empty word tokenizer."""
     dialect_pack_path = Path("./tests/data/empty_dialect_pack")
@@ -13,7 +13,7 @@ def empty_wt():
     return WordTokenizer(config=config)
 
 
-@pytest.fixture
+@pytest.fixture(scope="session")
 def wt():
     """Return default word tokenizer."""
     return WordTokenizer()
