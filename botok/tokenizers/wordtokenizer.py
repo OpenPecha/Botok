@@ -28,17 +28,21 @@ class WordTokenizer:
     """
 
     def __init__(
-        self, ignore_chars=None, dialect_pack_path=None, build_trie=False,
+        self, config=None, ignore_chars=None, build_trie=False,
     ):
         """
         :param tok_profile: profile for building the trie. (see config.yaml)
         """
-        config = Config(dialect_pack_path)
+        if not config:
+            # if config is not given then use default config
+            config = Config()
+
+        self.config = config
         self.ignore_chars = ignore_chars
         self.tok = Tokenize(
             Trie(
                 BoSyl,
-                config.dialect_pack_path.name,
+                config.profile,
                 main_data=config.dictionary,
                 custom_data=config.adjustments,
                 pickle_path=config.dialect_pack_path.parent,
