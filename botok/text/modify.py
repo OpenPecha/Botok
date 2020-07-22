@@ -1,9 +1,9 @@
 # coding: utf-8
-from typing import List, DefaultDict, NewType, Tuple
 from collections import defaultdict
+from typing import DefaultDict, List, NewType, Tuple
 
-from .tokenize import PyboToken
 from ..third_party.has_skrt_syl import has_skrt_syl
+from .tokenize import BoToken
 
 
 def is_mistake(token):
@@ -39,7 +39,7 @@ def is_mistake(token):
 
 
 def words_error_concs(
-    tokens: List[PyboToken], left=5, right=5
+    tokens: List[BoToken], left=5, right=5
 ) -> DefaultDict[str, List[str]]:
     mistakes = defaultdict(list)
     for num, t in enumerate(tokens):
@@ -60,7 +60,7 @@ def words_error_concs(
     return mistakes
 
 
-def words_error_types(tokens: List[PyboToken]) -> DefaultDict[str, int]:
+def words_error_types(tokens: List[BoToken]) -> DefaultDict[str, int]:
     mistakes = defaultdict(int)
     for num, t in enumerate(tokens):
         if is_mistake(t):
@@ -69,7 +69,7 @@ def words_error_types(tokens: List[PyboToken]) -> DefaultDict[str, int]:
     return mistakes
 
 
-def words_raw_types(tokens: List[PyboToken]) -> DefaultDict[str, int]:
+def words_raw_types(tokens: List[BoToken]) -> DefaultDict[str, int]:
     types = defaultdict(int)
     for t in tokens:
         occ = t.text.replace("\n", "\\n")
@@ -77,7 +77,7 @@ def words_raw_types(tokens: List[PyboToken]) -> DefaultDict[str, int]:
     return types
 
 
-def words_raw_text(tokens: List[PyboToken]) -> List[str]:
+def words_raw_text(tokens: List[BoToken]) -> List[str]:
     return [t.text for t in tokens]
 
 
