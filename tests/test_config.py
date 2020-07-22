@@ -2,6 +2,7 @@
 from pathlib import Path
 
 import pytest
+
 from botok import Config
 
 
@@ -45,3 +46,10 @@ def test_reset(base_path):
     config.reset()
 
     assert config.dialect_pack_path == default_pack_path
+
+
+def test_empty_config():
+    config = Config(Path("./tests/data/empty_dialect_pack"))
+
+    assert not config.dictionary
+    assert not config.adjustments

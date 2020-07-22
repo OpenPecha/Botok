@@ -1,16 +1,22 @@
 # coding: utf8
-from botok import *
 from pathlib import Path
 
-from helpers import pos_tok
+import pytest
 
-rules_path = Path(__file__).parent / "resources"
-main, custom = Config().get_adj_data_paths("basic", rules_path)
-
+from botok import *
 
 input_str = " མཐའི་རྒྱ་མཚོའི་གླིང་། ཤི་བཀྲ་ཤིས་  tr བདེ་་ལེ གས། བཀྲ་ཤིས་བདེ་ལེགས་ཀཀ"
-tokens = pos_tok.tokenize(input_str, split_affixes=False)
-tokens_affix_split = pos_tok.tokenize(input_str)
+
+
+@pytest.fixture
+def tokens_affix_split(wt):
+    return wt.tokenize(input_str)
+
+
+@pytest.fixture
+def tokens(wt):
+    return wt.tokenize(input_str, split_affixes=False)
+
 
 # IMPORTANT: all the tests have merely been adapted after refactorisation.
 # They should be split in tests per file that also show the expected behaviour of every matcher.
@@ -51,7 +57,7 @@ def test_regex_in_cql_query():
     assert expected == ["This", "is"]
 
 
-def test_cql():
+def test_cql(tokens):
     query = '[pos="NOUN" & text!=""] []'
     matcher = CQLMatcher(query)
     slices = matcher.match(tokens)
@@ -70,7 +76,7 @@ def test_cql():
     ]
 
 
-def test_token_split():
+def test_token_split(tokens):
     ts = TokenSplit(
         tokens[3],
         1,
@@ -81,13 +87,13 @@ def test_token_split():
     assert first.pos == "PUNCT"
 
 
-def test_token_merge():
+def test_token_merge(tokens_affix_split):
     tm = TokenMerge(tokens_affix_split[0], tokens_affix_split[1])
     merged = tm.merge()
     assert merged
 
 
-def test_match_split_char():
+def test_match_split_char(tokens):
     match_query = '[pos="NOUN" & text!=""] []'
     replace_idx = 1  # slot number in match query
     split_idx = 1  # char index in token.content where split should occur
@@ -99,7 +105,7 @@ def test_match_split_char():
     assert len(split_tokens) == 19
 
 
-def test_match_split_syl():
+def test_match_split_syl(tokens):
     match_query = '[pos="NOUN" & text!=""] []'
     replace_idx = 1  # slot number in match query
     split_idx = 1  # char index in token.content where split should occur
@@ -111,7 +117,7 @@ def test_match_split_syl():
     assert len(split_tokens) == 17
 
 
-def test_match_merge():
+def test_match_merge(tokens, tokens_affix_split):
     match_query = '[pos="NOUN" & text!=""] []'
     replace_idx = 1  # slot number in match query
     replace = '[chunk_type="XXX" & pos="xxx"]'
@@ -122,7 +128,7 @@ def test_match_merge():
     assert len(merged_tokens) == 8
 
 
-def test_match_replace():
+def test_match_replace(tokens):
     match_query = '[pos="NOUN" & text!=""] []'
     replace_idx = 1
     replace = '[chunk_type="XXX" & pos="xxx"]'
@@ -133,10 +139,12 @@ def test_match_replace():
     assert tokens[4].pos == "VERB"
 
 
-def test_adjust_tokens():
+def test_adjust_tokens(wt):
     string = "ལ་ལ་ལ་ལ་ལ་བ་ཡོད།"
-    token_list = pos_tok.tokenize(string, split_affixes=False)
-    at = AdjustTokens(main=main, custom=custom)
+    token_list = wt.tokenize(string, split_affixes=False)
+    at = AdjustTokens(
+        main=wt.config.dictionary["rules"], custom=wt.config.adjustments["rules"]
+    )
     adjusted = at.adjust(token_list)
     assert token_list[0].text == "ལ་ལ་"
     assert token_list[1].text == "ལ་ལ་"
@@ -165,8 +173,8 @@ def test_last_token():
     assert slices == [(1, 1)]
 
 
-def test_merge_dagdra():
-    token_list = pos_tok.tokenize("བཀྲ་ཤིས་-པ་")
+def test_merge_dagdra(wt):
+    token_list = wt.tokenize("བཀྲ་ཤིས་-པ་")
     token_list = [
         t for t in token_list if t.text != "-"
     ]  # remove the "-" inserted to ensure we have two tokens
@@ -174,7 +182,7 @@ def test_merge_dagdra():
     mp.merge(token_list)
     assert len(token_list) == 1 and token_list[0].text == "བཀྲ་ཤིས་པ་"
 
-    token_list = pos_tok.tokenize("བཀྲ་ཤིས་-པའོ།")
+    token_list = wt.tokenize("བཀྲ་ཤིས་-པའོ།")
     token_list = [
         t for t in token_list if t.text != "-"
     ]  # remove the "-" inserted to ensure we have two tokens

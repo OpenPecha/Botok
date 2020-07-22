@@ -1,6 +1,6 @@
-from botok import WordTokenizer, sentence_tokenizer, paragraph_tokenizer
+import pytest
 
-from helpers import pos_tok
+from botok import WordTokenizer, paragraph_tokenizer, sentence_tokenizer
 
 text = (
     "བཀུར་བར་མི་འགྱུར་ཞིང༌། །བརྙས་བཅོས་མི་སྙན་རྗོད་པར་བྱེད། །དབང་དང་འབྱོར་པ་ལྡན་པ་ཡི། །རྒྱལ་རིགས་ཕལ་ཆེར་བག་མེད་པས། །"
@@ -14,10 +14,14 @@ text = (
     "སྐྱོན་ཡང་ཡོན་ཏན་ལྟར་མཐོང་ལ། །རང་འདོད་ཆེ་ཞིང་རྒྱལ་པོ་བསླུ། །ཆུས་དང་འཁོར་གྱི་བདེ་ཐབས་ལ། །བསམ་གཞིགས་བྱེད་པ་དཀོན་པའི་ཕྱིར། །"
     "རྒྱལ་པོས་ལེགས་པར་དཔྱད་ནས་སུ། །བདེན་པའི་ངག་ལས་"
 )
-tokens = pos_tok.tokenize(text, split_affixes=True)
 
 
-def test_sent_tokenizer():
+@pytest.fixture
+def tokens(wt):
+    return wt.tokenize(text, split_affixes=True)
+
+
+def test_sent_tokenizer(tokens):
     sents = sentence_tokenizer(tokens)
 
     out = ["".join([word.text for word in s[1]]) for s in sents]
@@ -44,7 +48,7 @@ def test_sent_tokenizer():
     assert out == expected
 
 
-def test_par_tokenizer():
+def test_par_tokenizer(tokens):
     pars = paragraph_tokenizer(tokens)
 
     out = ["".join([word.text for word in p[1]]) for p in pars]
