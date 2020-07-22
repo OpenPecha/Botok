@@ -36,6 +36,12 @@ class Config:
         """
         data_paths = defaultdict(list)
         for path in (self.dialect_pack_path / pack_component).iterdir():
+            if not path.is_dir():
+                continue
             data_type = path.name
             data_paths[data_type] = list(path.iterdir())
         return data_paths
+
+    @property
+    def profile(self):
+        return self.dialect_pack_path.name
