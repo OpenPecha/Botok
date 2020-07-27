@@ -1,4 +1,4 @@
 black
 isort
-pytest
+pytest<=5.4.3
 coveralls
