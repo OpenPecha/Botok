@@ -9,7 +9,7 @@ from botok import Config, Tokenize, WordTokenizer
 def empty_wt():
     """Return empty word tokenizer."""
     dialect_pack_path = Path("./tests/data/empty_dialect_pack")
-    config = Config(dialect_pack_path)
+    config = Config(dialect_pack_path=dialect_pack_path)
     return WordTokenizer(config=config)
 
 

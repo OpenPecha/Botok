@@ -1,25 +1,31 @@
 # coding: utf-8
 import io
-import requests
-import zipfile
 import shutil
+import zipfile
 from pathlib import Path
 
+import requests
 
-def get_data(url, out_path):
-    try:
-        r = requests.get(url, stream=True, timeout=50)
-    except:
-        # check if there are previously downloaded files and return if there are any
-        for f in out_path.glob("*"):
-            if f.is_dir():
-                return
 
-        #   exit botok otherwise
-        exit(
-            "The data required to run botok is not yet downloaded and there is no connection. "
-            "Please connect first and try again."
-        )
+def get_dialect_pack_url(dialect_name, version=None):
+    response = requests.get(
+        "https://api.github.com/repos/Esukhia/botok-data/releases/latest"
+    )
+    if not version:
+        version = response.json()["tag_name"]
+    return f"https://github.com/Esukhia/botok-data/releases/download/{version}/{dialect_name}.zip"
+
+
+def download_dialect_pack(dialect_name, out_dir, version=None):
+    out_dir = Path(out_dir)
+    out_dir.mkdir(exist_ok=True, parents=True)
+    dialect_pack_path = out_dir / dialect_name
+    if dialect_pack_path.is_dir():
+        return dialect_pack_path
+
+    # Download the dialect pack
+    url = get_dialect_pack_url(dialect_name, version)
+    r = requests.get(url, stream=True, timeout=50)
 
     # attempt 50 times to download the zip
     check = zipfile.is_zipfile(io.BytesIO(r.content))
@@ -34,18 +40,6 @@ def get_data(url, out_path):
     else:
         # extract the zip in the current folder
         z = zipfile.ZipFile(io.BytesIO(r.content))
-        tmp = Path(__file__).parent  # / "botok-data-master"
-        z.extractall(
-            path=tmp, members=[a for a in z.namelist() if not a.endswith(".md")]
-        )
+        z.extractall(path=str(out_dir))
 
-        # copy folders in destination
-        tmp = tmp / "botok-data-master"
-        for dir in tmp.glob("*"):
-            out_dir = out_path / dir.name
-            if out_dir.is_dir():
-                shutil.rmtree(out_dir, ignore_errors=True)
-            shutil.copytree(dir, out_dir)
-
-        # remove tmp folder
-        shutil.rmtree(tmp, ignore_errors=True)
+    return dialect_pack_path

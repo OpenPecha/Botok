@@ -8,7 +8,7 @@ from botok import *
 
 @pytest.fixture
 def empty_config():
-    return Config(Path("./tests/data/empty_dialect_pack"))
+    return Config(dialect_pack_path=Path("./tests/data/empty_dialect_pack"))
 
 
 def test_tokenize(empty_config, wt):

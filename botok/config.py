@@ -1,6 +1,12 @@
 from collections import defaultdict
 from pathlib import Path
 
+from .utils.get_data import download_dialect_pack
+
+# Defaults
+DEFAULT_BASE_PATH = Path.home() / "Documents" / "pybo" / "dialect_packs"
+DEFAULT_DIALECT_PACK = "general"
+
 
 class Config:
     """botok config for Tibetan dialect pack.
@@ -13,8 +19,15 @@ class Config:
          - Contains all the data required to adjust the text segmentation rules.
     """
 
-    def __init__(self, dialect_pack_path=None):
+    def __init__(
+        self,
+        dialect_name=DEFAULT_DIALECT_PACK,
+        base_path=DEFAULT_BASE_PATH,
+        dialect_pack_path=None,
+    ):
         """Create config for dialect_pack from dialect_pack path."""
+        if not dialect_pack_path:
+            dialect_pack_path = download_dialect_pack(dialect_name, base_path)
         self.reset(dialect_pack_path)
 
     def reset(self, dialect_pack_path=None):
@@ -22,8 +35,8 @@ class Config:
         if dialect_pack_path:
             self.dialect_pack_path = dialect_pack_path
         else:
-            self.dialect_pack_path = (
-                Path.home() / "Documents" / "pybo" / "dialect_packs" / "bo_general"
+            self.dialect_pack_path = download_dialect_pack(
+                DEFAULT_DIALECT_PACK, DEFAULT_BASE_PATH
             )
         self.dictionary = self._get_pack_component("dictionary")
         self.adjustments = self._get_pack_component("adjustments")
