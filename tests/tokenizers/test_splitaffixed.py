@@ -3,7 +3,7 @@ from botok import *
 
 
 def test_split_token():
-    config = Config(dialect_pack_path=Path("./tests/data/empty_dialect_pack"))
+    config = Config.from_path("./tests/data/empty_dialect_pack")
     wt = WordTokenizer(config=config)
     wt.tok.trie.rebuild_trie()
     wt.tok.trie.inflect_n_modify_trie("བདེ་བ་")

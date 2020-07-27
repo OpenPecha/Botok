@@ -1,5 +1,3 @@
-from pathlib import Path
-
 import pytest
 
 from botok import Config, Tokenize, WordTokenizer
@@ -8,8 +6,7 @@ from botok import Config, Tokenize, WordTokenizer
 @pytest.fixture(scope="session")
 def empty_wt():
     """Return empty word tokenizer."""
-    dialect_pack_path = Path("./tests/data/empty_dialect_pack")
-    config = Config(dialect_pack_path=dialect_pack_path)
+    config = Config.from_path("./tests/data/empty_dialect_pack")
     return WordTokenizer(config=config)
 
 

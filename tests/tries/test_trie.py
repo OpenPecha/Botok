@@ -13,7 +13,7 @@ def syls(string):
 
 def test_createtrie():
     profile = "empty"
-    config = Config(dialect_pack_path=Path("./tests/data/trie_dialect_pack"))
+    config = Config.from_path("./tests/data/trie_dialect_pack")
     bt = Trie(BoSyl, profile, config.dictionary, config.adjustments)
 
     # the trie works as expected. but the add() method should never be used directly:
@@ -62,7 +62,7 @@ def test_createtrie():
 
 def test_multiple_words_per_entry():
     profile = "POS"
-    config = Config(dialect_pack_path=Path("./tests/data/trie_dialect_pack"))
+    config = Config.from_path("./tests/data/trie_dialect_pack")
     bt = Trie(BoSyl, profile, config.dictionary, config.adjustments)
 
     res = bt.has_word(syls("ལྟར་"))

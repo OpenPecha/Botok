@@ -6,9 +6,9 @@ import pytest
 from botok import *
 
 
-@pytest.fixture
+@pytest.fixture(scope="module")
 def empty_config():
-    return Config(dialect_pack_path=Path("./tests/data/empty_dialect_pack"))
+    return Config.from_path("./tests/data/empty_dialect_pack")
 
 
 def test_tokenize(empty_config, wt):

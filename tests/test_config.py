@@ -51,7 +51,7 @@ def test_reset(base_path):
 
 
 def test_empty_config():
-    config = Config(dialect_pack_path=Path("./tests/data/empty_dialect_pack"))
+    config = Config.from_path("./tests/data/empty_dialect_pack")
 
     assert not config.dictionary
     assert not config.adjustments
@@ -66,7 +66,3 @@ def test_add_dialect_pack():
 
     assert config.dictionary != old_dictionary
     assert config.adjustments != old_adjustments
-
-
-if __name__ == "__main__":
-    test_defaults(base_path())
