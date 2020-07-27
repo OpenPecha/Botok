@@ -1,6 +1,4 @@
-urllib3
-requests
-PyYAML
 black
 isort
 pytest
+coveralls

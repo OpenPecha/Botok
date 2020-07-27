@@ -13,7 +13,7 @@ install:
 before_script:
  - sleep 1 # this is just a placeholder
 script:
- - coverage run --source=botok ./coverage_script.py
+ - coverage run --source=botok -m pytest tests/
  - cd tests/
  - python3 -m pytest
  - cd ../

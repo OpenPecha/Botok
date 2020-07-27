@@ -9,14 +9,14 @@ from botok import Config
 
 @pytest.fixture()
 def base_path():
-    return Path.home() / "Documents" / "pybo"
+    return Path.home() / "Documents" / "pybo" / "dialect_packs"
 
 
 def test_defaults(base_path):
     config = Config()
 
     # default dialect pach path
-    assert config.dialect_pack_path == base_path / "bo_general_pack"
+    assert config.dialect_pack_path == base_path / "bo_general"
 
     # Trie data should be .tsv file
     for data_type in ["words", "rules"]:
@@ -32,14 +32,14 @@ def test_defaults(base_path):
 
 
 def test_custome_dialect_pack(base_path):
-    pack_path = base_path / "bo_kangyur_pack"
+    pack_path = base_path / "bo_kangyur"
     config = Config(dialect_pack_path=pack_path)
     assert config.dialect_pack_path == pack_path
 
 
 def test_reset(base_path):
-    custome_pack_path = base_path / "bo_kangyur_pack"
-    default_pack_path = base_path / "bo_general_pack"
+    custome_pack_path = base_path / "bo_kangyur"
+    default_pack_path = base_path / "bo_general"
 
     config = Config(dialect_pack_path=custome_pack_path)
     assert config.dialect_pack_path == custome_pack_path
