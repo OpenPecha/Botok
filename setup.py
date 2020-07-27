@@ -66,6 +66,6 @@ setuptools.setup(
         ]
     },
     python_requires=">=3.6",
-    tests_require=["pytest<=5.4.3"],
+    tests_require=["pytest>=5.0.0"],
     install_requires=["pyyaml", "requests"],
 )
