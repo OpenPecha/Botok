@@ -7,6 +7,8 @@ python:
  - '3.6'
 install:
  - pip3 install -r requirements.txt
+ - pip3 show attrs
+ - pip3 show pytest
  - pip3 install -U setuptools
  - python3 setup.py install
  - pip3 install coveralls
