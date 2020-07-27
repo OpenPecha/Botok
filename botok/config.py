@@ -1,11 +1,52 @@
+import io
+import shutil
+import zipfile
 from collections import defaultdict
 from pathlib import Path
 
-from .utils.get_data import download_dialect_pack
+import requests
 
 # Defaults
 DEFAULT_BASE_PATH = Path.home() / "Documents" / "pybo" / "dialect_packs"
 DEFAULT_DIALECT_PACK = "general"
+
+
+def get_dialect_pack_url(dialect_name, version=None):
+    response = requests.get(
+        "https://api.github.com/repos/Esukhia/botok-data/releases/latest"
+    )
+    if not version:
+        version = response.json()["tag_name"]
+    return f"https://github.com/Esukhia/botok-data/releases/download/{version}/{dialect_name}.zip"
+
+
+def get_dialect_pack(dialect_name, out_dir, version=None):
+    out_dir = Path(out_dir)
+    out_dir.mkdir(exist_ok=True, parents=True)
+    dialect_pack_path = out_dir / dialect_name
+    if dialect_pack_path.is_dir():
+        return dialect_pack_path
+
+    # Download the dialect pack
+    url = get_dialect_pack_url(dialect_name, version)
+    r = requests.get(url, stream=True, timeout=50)
+
+    # attempt 50 times to download the zip
+    check = zipfile.is_zipfile(io.BytesIO(r.content))
+    attempts = 0
+    while not check and attempts < 50:
+        r = requests.get(url, stream=True, timeout=50)
+        check = zipfile.is_zipfile(io.BytesIO(r.content))
+        attempts += 1
+
+    if not check:
+        raise IOError("the .zip file couldn't be downloaded.")
+    else:
+        # extract the zip in the current folder
+        z = zipfile.ZipFile(io.BytesIO(r.content))
+        z.extractall(path=str(out_dir))
+
+    return dialect_pack_path
 
 
 class Config:
@@ -19,15 +60,9 @@ class Config:
          - Contains all the data required to adjust the text segmentation rules.
     """
 
-    def __init__(
-        self,
-        dialect_name=DEFAULT_DIALECT_PACK,
-        base_path=DEFAULT_BASE_PATH,
-        dialect_pack_path=None,
-    ):
-        """Create config for dialect_pack from dialect_pack path."""
-        if not dialect_pack_path:
-            dialect_pack_path = download_dialect_pack(dialect_name, base_path)
+    def __init__(self, dialect_name=DEFAULT_DIALECT_PACK, base_path=DEFAULT_BASE_PATH):
+        """Create config for given `dialect_name` and stored in `base_path`"""
+        dialect_pack_path = get_dialect_pack(dialect_name, base_path)
         self.reset(dialect_pack_path)
 
     def reset(self, dialect_pack_path=None):
@@ -35,7 +70,7 @@ class Config:
         if dialect_pack_path:
             self.dialect_pack_path = dialect_pack_path
         else:
-            self.dialect_pack_path = download_dialect_pack(
+            self.dialect_pack_path = get_dialect_pack(
                 DEFAULT_DIALECT_PACK, DEFAULT_BASE_PATH
             )
         self.dictionary = self._get_pack_component("dictionary")
@@ -55,6 +90,13 @@ class Config:
             data_type = path.name
             pack_component[data_type].extend(list(path.iterdir()))
         return pack_component
+
+    @classmethod
+    def from_path(cls, dialect_pack_path):
+        path = Path(dialect_pack_path)
+        dialect_name = path.name
+        base_path = path.parent
+        return cls(dialect_name, base_path)
 
     @property
     def profile(self):
