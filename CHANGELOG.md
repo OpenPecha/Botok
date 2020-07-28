@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.8.1](https://github.com/Esukhia/botok/releases/tag/v0.8.1) - 20200728
+### Refactored
+  * Introduced Dialect pack which includes all the word list and adjust rules.
+  * Config is created using the dialect pack only.
+  * Download the dialect pack when config is initialized instead at the import of botok.
+
 ## [0.7.5](https://github.com/Esukhia/botok/releases/tag/v0.7.5) - 20191230
 ### Fixed
  * improved tokenizer to work on syllable based trie
@@ -171,13 +177,13 @@ meanings that are unaffixed words, meanings that don't have the `affixed` attrib
 
 ## [0.4.2](https://github.com/Esukhia/pybo/releases/tag/v0.4.2) - 20190306
 ### Added
- * BoPipeline now accepts naming custom pipes. a (string, function) is allowed as argument 
+ * BoPipeline now accepts naming custom pipes. a (string, function) is allowed as argument
    (Warning: not thoroughly tested)
  * dummy pipes are added for preprocessing, processing and formatting.
 
 ## [0.4.1](https://github.com/Esukhia/pybo/releases/tag/v0.4.1) - 20190306
 ### Added
- * BoPipeline is now a class with 4 arguments, one for each pipe. 
+ * BoPipeline is now a class with 4 arguments, one for each pipe.
    (Warning: not thoroughly tested)
 
 ## [0.4.0](https://github.com/Esukhia/pybo/releases/tag/v0.4.0) - 20190305
@@ -216,7 +222,7 @@ meanings that are unaffixed words, meanings that don't have the `affixed` attrib
     In this case, if the current chunk is also a space chunk, it couldn't attach to the previous chunk.
 
     Now goes back to the last valid chunk and attaches content to it.
-    
+
 
 ## [0.2.17](https://github.com/Esukhia/pybo/releases/tag/v0.2.17) - 20181026
 ### Added
@@ -233,21 +239,21 @@ meanings that are unaffixed words, meanings that don't have the `affixed` attrib
 ### Changed
  * improve and simplify setup.py
  * improve `Token.__repr__()`
- * if there is a space after a shed, put the space in the punctuation token instead of the next syllable 
+ * if there is a space after a shed, put the space in the punctuation token instead of the next syllable
     and merge into 1 token only the བཞི་ཤད་
-    
+
     ex:
-    
+
     `["།", " བཀྲ་ཤིས་"]` -> `["། ", "བཀྲ་ཤིས་"]` and  `["།། ", "།།"]` -> `["།། །།"]`
 
     Nota: both "༎" (Tibetan Mark Nyis Shad `U+0F0E`) and "།།" (Tibetan Mark Shad x 2 `U+0F0DU+0F0D`) are supported
  * mgd.txt and sanskrit.txt have been cleaned up and updated
 
 ### Fixed
- * when tokenizing without splitting the affixed particles, the unaffixed_word attribute added a འ to words not needing it. 
+ * when tokenizing without splitting the affixed particles, the unaffixed_word attribute added a འ to words not needing it.
    (རྒྱ་མཚོར་ gave རྒྱ་མཚོའ་)
  * missing tseks are now detected after char types 'numbers', 'other' and 'symbols'
- * `long_skrt_vowel` (Tibetan Sign Rnam Bcad `U+0F7F`) is treated as syllable content. It triggers a syllable change, 
+ * `long_skrt_vowel` (Tibetan Sign Rnam Bcad `U+0F7F`) is treated as syllable content. It triggers a syllable change,
     as the tsek already does. (a tsek is not added in the presence of a `long_skrt_vowel`)
  * added mechanism to generate tokens of type `numbers` (previously considered symbols)
 
