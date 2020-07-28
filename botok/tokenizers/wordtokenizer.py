@@ -12,13 +12,17 @@ from ..tries.trie import Trie
 from ..vars import AA, TSEK
 from .tokenize import Tokenize
 
-part_lemmas = {}
-filename = Path(__file__).parent.parent / "resources" / "particles.tsv"
-with filename.open("r", encoding="utf-8-sig") as f:
-    reader = csv.reader(f, delimiter="\t")
-    for row in list(reader)[1:]:
-        form, _, lemma, _, _ = row
-        part_lemmas[form] = lemma
+
+def get_part_lemmas(path):
+    part_lemmas = {}
+    if not path.is_file():
+        return part_lemmas
+    with path.open("r", encoding="utf-8-sig") as f:
+        reader = csv.reader(f, delimiter="\t")
+        for row in list(reader)[1:]:
+            form, _, lemma, _, _ = row
+            part_lemmas[form] = lemma
+    return part_lemmas
 
 
 class WordTokenizer:
@@ -54,6 +58,13 @@ class WordTokenizer:
             main=config.dictionary["rules"], custom=config.adjustments["rules"]
         )
 
+        self.part_lemmas = get_part_lemmas(
+            config.dialect_pack_path
+            / "dictionary"
+            / "words_non_inflected"
+            / "particles.tsv"
+        )
+
     def tokenize(self, string, split_affixes=True, spaces_as_punct=False, debug=False):
         """
         :param string: to be tokenized
@@ -81,8 +92,7 @@ class WordTokenizer:
 
         return tokens
 
-    @staticmethod
-    def _get_default_lemma(token_list):
+    def _get_default_lemma(self, token_list):
         for t in token_list:
             # pass any token that is not a word
             if not t.text_unaffixed:
@@ -91,7 +101,7 @@ class WordTokenizer:
             # otherwise, check whether the aa needs to be added and if a tsek should be added
             if t.affix and not t.affix_host:
                 part = "".join(["".join(syl) for syl in t.syls])
-                lemma = part_lemmas[part] if part in part_lemmas else part
+                lemma = self.part_lemmas[part] if part in self.part_lemmas else part
                 lemma += TSEK
             elif not t.affix and t.affix_host:
                 lemma = (
