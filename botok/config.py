@@ -27,6 +27,7 @@ def get_dialect_pack(dialect_name, out_dir, version=None):
     if dialect_pack_path.is_dir():
         return dialect_pack_path
 
+    print(f"[INFO] Downloading {dialect_name} dialect pack ...")
     # Download the dialect pack
     url = get_dialect_pack_url(dialect_name, version)
     r = requests.get(url, stream=True, timeout=50)
@@ -45,6 +46,8 @@ def get_dialect_pack(dialect_name, out_dir, version=None):
         # extract the zip in the current folder
         z = zipfile.ZipFile(io.BytesIO(r.content))
         z.extractall(path=str(out_dir))
+
+    print(f"[INFO] Download completed!")
 
     return dialect_pack_path
 
@@ -88,7 +91,7 @@ class Config:
             if not path.is_dir():
                 continue
             data_type = path.name
-            pack_component[data_type].extend(list(path.iterdir()))
+            pack_component[data_type].extend(list(path.rglob("*.tsv")))
         return pack_component
 
     @classmethod
