@@ -33,14 +33,3 @@ from .vars import *
 
 # from .utils.get_data import get_data
 from .vars import __version__
-
-
-def cwd():
-    return Path(__file__).parent.resolve()
-
-
-# # download
-# get_data(
-#     "https://github.com/Esukhia/botok-data/archive/master.zip",
-#     Path(__file__).parent / "resources",
-# )
