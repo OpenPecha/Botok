@@ -1,24 +1,28 @@
 # coding: utf8
-from pathlib import Path
 import csv
+from pathlib import Path
 
-from .tokenize import Tokenize
-from ..modifytokens.splitaffixed import split_affixed
-from ..modifytokens.mergedagdra import MergeDagdra
-from ..modifytokens.adjusttokens import AdjustTokens
-from ..tries.trie import Trie
 from ..chunks.chunks import TokChunks
-from ..textunits.bosyl import BoSyl
 from ..config import Config
-from ..vars import TSEK, AA
+from ..modifytokens.adjusttokens import AdjustTokens
+from ..modifytokens.mergedagdra import MergeDagdra
+from ..modifytokens.splitaffixed import split_affixed
+from ..textunits.bosyl import BoSyl
+from ..tries.trie import Trie
+from ..vars import AA, TSEK
+from .tokenize import Tokenize
 
-part_lemmas = {}
-filename = Path(__file__).parent.parent / "resources" / "particles.tsv"
-with filename.open("r", encoding="utf-8-sig") as f:
-    reader = csv.reader(f, delimiter="\t")
-    for row in list(reader)[1:]:
-        form, _, lemma, _, _ = row
-        part_lemmas[form] = lemma
+
+def get_part_lemmas(path):
+    part_lemmas = {}
+    if not path.is_file():
+        return part_lemmas
+    with path.open("r", encoding="utf-8-sig") as f:
+        reader = csv.reader(f, delimiter="\t")
+        for row in list(reader)[1:]:
+            form, _, lemma, _, _ = row
+            part_lemmas[form] = lemma
+    return part_lemmas
 
 
 class WordTokenizer:
@@ -28,43 +32,38 @@ class WordTokenizer:
     """
 
     def __init__(
-        self,
-        tok_profile="POS",
-        tok_modifs=None,
-        tok_mode="internal",
-        ignore_chars=None,
-        adj_profile="basic",
-        adj_modifs=None,
-        adj_mode="internal",
-        conf_path=None,
-        build_trie=False,
+        self, config=None, ignore_chars=None, build_trie=False,
     ):
         """
         :param tok_profile: profile for building the trie. (see config.yaml)
         """
-        config = Config(conf_path=conf_path)
-        main, custom = config.get_tok_data_paths(
-            tok_profile, modifs=tok_modifs, mode=tok_mode
-        )
+        if not config:
+            # if config is not given then use default config
+            config = Config()
+
+        self.config = config
         self.ignore_chars = ignore_chars
-        tok_profile = (
-            tok_mode if tok_mode == "custom" else tok_profile
-        )  # trie will be named custom if mode is custom
         self.tok = Tokenize(
             Trie(
                 BoSyl,
-                tok_profile,
-                main_data=main,
-                custom_data=custom,
-                pickle_path=conf_path,
+                config.profile,
+                main_data=config.dictionary,
+                custom_data=config.adjustments,
+                pickle_path=config.dialect_pack_path.parent,
                 build=build_trie,
             )
         )
 
-        adj_main, adj_custom = config.get_adj_data_paths(
-            adj_profile, modifs=adj_modifs, mode=adj_mode
+        self.adj = AdjustTokens(
+            main=config.dictionary["rules"], custom=config.adjustments["rules"]
         )
-        self.adj = AdjustTokens(main=adj_main, custom=adj_custom)
+
+        self.part_lemmas = get_part_lemmas(
+            config.dialect_pack_path
+            / "dictionary"
+            / "words_non_inflected"
+            / "particles.tsv"
+        )
 
     def tokenize(self, string, split_affixes=True, spaces_as_punct=False, debug=False):
         """
@@ -93,8 +92,7 @@ class WordTokenizer:
 
         return tokens
 
-    @staticmethod
-    def _get_default_lemma(token_list):
+    def _get_default_lemma(self, token_list):
         for t in token_list:
             # pass any token that is not a word
             if not t.text_unaffixed:
@@ -103,7 +101,7 @@ class WordTokenizer:
             # otherwise, check whether the aa needs to be added and if a tsek should be added
             if t.affix and not t.affix_host:
                 part = "".join(["".join(syl) for syl in t.syls])
-                lemma = part_lemmas[part] if part in part_lemmas else part
+                lemma = self.part_lemmas[part] if part in self.part_lemmas else part
                 lemma += TSEK
             elif not t.affix and t.affix_host:
                 lemma = (

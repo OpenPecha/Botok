@@ -3,9 +3,10 @@
 
 from __future__ import print_function
 
-from pathlib import Path
-import setuptools
 import re
+from pathlib import Path
+
+import setuptools
 from pkg_resources import parse_version
 
 assert parse_version(setuptools.__version__) >= parse_version("38.6.0")
@@ -65,6 +66,6 @@ setuptools.setup(
         ]
     },
     python_requires=">=3.6",
-    tests_require=["pytest"],
+    tests_require=["pytest>=5.0.0"],
     install_requires=["pyyaml", "requests"],
 )

@@ -15,8 +15,8 @@ class PipelineBase:
         self.right = 5
         self.tok_params = None
         self.filename = (
-            None
-        )  # for an advanced mode, to show what conc comes from which file
+            None  # for an advanced mode, to show what conc comes from which file
+        )
 
         self.args_list = {
             "prep",
@@ -44,11 +44,7 @@ class PipelineBase:
             )
             and self.tok_params
         ):
-            modifs = self.tok_params["modifs"] if "modifs" in self.tok_params else None
-            mode = self.tok_params["mode"] if "mode" in self.tok_params else "internal"
-            elts = self.pipes["tok"][self.tok](
-                text, self.tok_params["profile"], modifs=modifs, mode=mode
-            )
+            elts = self.pipes["tok"][self.tok](text, config=self.tok_params["config"])
         else:
             elts = self.pipes["tok"][self.tok](text)
 

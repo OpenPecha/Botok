@@ -7,14 +7,13 @@ python:
  - '3.6'
 install:
  - pip3 install -r requirements.txt
+ - pip3 show attrs
+ - pip3 show pytest
  - pip3 install -U setuptools
  - python3 setup.py install
  - pip3 install coveralls
 before_script:
  - sleep 1 # this is just a placeholder
 script:
- - coverage run --source=botok ./coverage_script.py
- - cd tests/
- - python3 -m pytest
- - cd ../
+ - coverage run --source=botok -m pytest tests/
 after_success: coveralls

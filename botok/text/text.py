@@ -1,14 +1,13 @@
 # coding: utf-8
-from types import FunctionType
 from pathlib import Path
+from types import FunctionType
 
-from .pipelinebase import PipelineBase
 from ..vars import Ids
-
+from .format import *
+from .modify import *
+from .pipelinebase import PipelineBase
 from .preprocess import *
 from .tokenize import *
-from .modify import *
-from .format import *
 
 builtin_pipes = {
     # a. Preprocessing
@@ -66,16 +65,7 @@ class Text:
         custom_tok: settings for building the custom tokenizer: see docstring of Config class in config.py
         """
         self.input = input
-        if tok_params is None:
-            self.tok_params = {"profile": "POS", "modifs": None, "mode": "internal"}
-
-        else:
-            # check that provided tok_params is well formatted
-            assert isinstance(tok_params, dict)
-            assert "profile" in list(tok_params)
-            for arg in tok_params:
-                assert arg in ["profile", "modifs", "mode"]
-            self.tok_params = tok_params
+        self.tok_params = tok_params
 
         if isinstance(input, str):
             if out_file:
@@ -97,24 +87,14 @@ class Text:
 
     @property
     def tokenize_words_raw_text(self):
-        config = {"profile": "POS"}
         return self.__process(
-            "basic_cleanup",
-            "word_tok",
-            "words_raw_text",
-            "plaintext",
-            tok_params=config,
+            "basic_cleanup", "word_tok", "words_raw_text", "plaintext",
         )
 
     @property
     def tokenize_words_raw_lines(self):
-        config = {"profile": "POS"}
         return self.__process(
-            "basic_keeps_lines",
-            "word_tok",
-            "words_raw_text",
-            "plaintext",
-            tok_params=config,
+            "basic_keeps_lines", "word_tok", "words_raw_text", "plaintext",
         )
 
     @property
@@ -125,35 +105,20 @@ class Text:
 
     @property
     def tokenize_sentences_plaintext(self):
-        config = {"profile": "POS"}
         return self.__process(
-            "basic_cleanup",
-            "sentence_tok",
-            "dummy",
-            "plaintext_sent_par",
-            tok_params=config,
+            "basic_cleanup", "sentence_tok", "dummy", "plaintext_sent_par",
         )
 
     @property
     def tokenize_paragraph_plaintext(self):
-        config = {"profile": "POS"}
         return self.__process(
-            "basic_cleanup",
-            "paragraph_tok",
-            "dummy",
-            "plaintext_sent_par",
-            tok_params=config,
+            "basic_cleanup", "paragraph_tok", "dummy", "plaintext_sent_par",
         )
 
     @property
     def list_word_types(self):
-        config = {"profile": "POS"}
         return self.__process(
-            "basic_keeps_lines",
-            "word_tok",
-            "words_raw_types",
-            "stats_types",
-            tok_params=config,
+            "basic_keeps_lines", "word_tok", "words_raw_types", "stats_types",
         )
 
     def custom_pipeline(

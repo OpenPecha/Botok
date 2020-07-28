@@ -1,31 +1,44 @@
 # coding: utf8
-from botok import *
 import sys
 
+import pytest
+
+from botok import *
+
 sys.path.append("../")
-from helpers import pos_tok
 
 
 def test_syl_tokenize():
     instr = " མཐའི་རྒྱ་མཚོའི་གླིང་། ཤི་བཀྲ་ཤིས་  tr བདེ་་ལེ གས། བཀྲ་ཤིས་བདེ་ལེགས་ཀཀ"
     preprocessed = TokChunks(instr)
     preprocessed.serve_syls_to_trie()
-    profile = "POS"
-    main, custom = Config().get_tok_data_paths(profile)
-    trie = Trie(BoSyl, profile, main, custom)
+    config = Config()
+    trie = Trie(BoSyl, config.profile, config.dictionary, config.adjustments)
     tok = Tokenize(trie)
     tokens = tok.tokenize(preprocessed)
     texts = [t.text for t in tokens]
-    expected = [' མཐའི་', 'རྒྱ་མཚོའི་', 'གླིང་', '། ', 'ཤི་', 'བཀྲ་ཤིས་  ', 'tr ', 'བདེ་་ལེ གས', '། ', 'བཀྲ་ཤིས་',
-               'བདེ་ལེགས་', 'ཀཀ']
+    expected = [
+        " མཐའི་",
+        "རྒྱ་མཚོའི་",
+        "གླིང་",
+        "། ",
+        "ཤི་",
+        "བཀྲ་ཤིས་  ",
+        "tr ",
+        "བདེ་་ལེ གས",
+        "། ",
+        "བཀྲ་ཤིས་",
+        "བདེ་ལེགས་",
+        "ཀཀ",
+    ]
     # current: [' མཐའི་', 'རྒྱ་མཚོའི་', '། ', 'གླིང་', 'བཀྲ་', 'ཤི་', 'tr ', 'ཤིས་  ', 'བདེ་་ལེ གས', '། ', 'བདེ་',
     #          'བཀྲ་ཤིས་', 'ཀཀ', 'ལེགས་']
     assert texts == expected
 
 
-def test_num_lemmas_missing():
+def test_num_lemmas_missing(wt):
     in_str = "སྟོང་ཕྲག་བརྒྱ་པ་སུམ་བརྒྱ་པ་བཅུ་པ་ལྔ་པ་"
-    tokens = pos_tok.tokenize(in_str)
+    tokens = wt.tokenize(in_str)
     assert [t.lemma for t in tokens] == [
         "སྟོང་ཕྲག་",
         "བརྒྱ་པ་",
@@ -52,43 +65,43 @@ def test_no_shad_syllable():
     ]
 
 
-def test_segmentation_bug():
-    tokens = pos_tok.tokenize("ལ་པོ་ལ་པོ་ལ་པོ་")
+def test_segmentation_bug(wt):
+    tokens = wt.tokenize("ལ་པོ་ལ་པོ་ལ་པོ་")
     assert len(tokens) == 3
 
-    tokens = pos_tok.tokenize("ལ་མོ་ལ་མོ་ལ་མོ་")
+    tokens = wt.tokenize("ལ་མོ་ལ་མོ་ལ་མོ་")
     assert len(tokens) == 3
 
-    tokens = pos_tok.tokenize("གྲོགས་པོ་གྲོགས་པོ་གྲོགས་པོ་")
+    tokens = wt.tokenize("གྲོགས་པོ་གྲོགས་པོ་གྲོགས་པོ་")
     assert len(tokens) == 3
 
-    tokens = pos_tok.tokenize("བདག་པོ་བདག་པོ་བདག་པོ་དང་")
+    tokens = wt.tokenize("བདག་པོ་བདག་པོ་བདག་པོ་དང་")
     assert len(tokens) == 4
 
-    tokens = pos_tok.tokenize("བདག་པོ་བདག་པོ་བདག་པོ་")
+    tokens = wt.tokenize("བདག་པོ་བདག་པོ་བདག་པོ་")
     assert len(tokens) == 3
 
-    tokens = pos_tok.tokenize(
+    tokens = wt.tokenize(
         "བདག་པོ་བདག་པོ་བདག་པོ་བདག་པོ་བདག་པོ་བདག་པོ་བདག་པོ་བདག་པོ་བདག་པོ་"
     )
     assert len(tokens) == 9
 
 
-def test_keyerror_part_lemma():
-    tokens = pos_tok.tokenize("ཕའིའོ།")
+def test_keyerror_part_lemma(wt):
+    tokens = wt.tokenize("ཕའིའོ།")
     assert len(tokens) == 3
 
 
-def test_split_token():
-    wt = WordTokenizer("empty")
+def test_split_token(empty_wt):
+    wt = empty_wt
     wt.tok.trie.rebuild_trie()
     wt.tok.trie.inflect_n_modify_trie("འ་")
     assert not wt.tok.trie.has_word("ར་")["exists"]
 
 
-def test_missing_entries_n_bad_unaffixed():
+def test_missing_entries_n_bad_unaffixed(wt):
     input_str = "ཤུ་ཀ་ར་"
-    tokens = pos_tok.tokenize(input_str, split_affixes=False)
+    tokens = wt.tokenize(input_str, split_affixes=False)
     assert [t.text for t in tokens] == ["ཤུ་", "ཀ་ར་"]
     assert tokens[0].senses
     assert tokens[1].text_unaffixed == "ཀ་ར་"
@@ -103,16 +116,15 @@ def test_multiple_spaces():
     assert len(chunks) == 2
 
 
-def test_bug1():
-    tok = WordTokenizer("POS")
+def test_bug1(wt):
     string = "བ་ཀུ་"
-    tokens = tok.tokenize(string, debug=True)
+    tokens = wt.tokenize(string, debug=True)
     assert tokens
 
 
-def test_bug2():
+def test_bug2(wt):
     string = "བྲ་གྲྀ་"
-    tokens = pos_tok.tokenize(string, debug=True)
+    tokens = wt.tokenize(string, debug=True)
     assert tokens
 
 
@@ -171,4 +183,4 @@ def test_shad_in_syllable():
 
 
 if __name__ == "__main__":
-    test_syl_tokenize()
+    test_split_token()

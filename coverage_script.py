@@ -1,8 +1,9 @@
 # coding: utf8
 import warnings
 from pathlib import Path
-from pytest import raises
 from textwrap import dedent
+
+from pytest import raises
 
 from botok import *
 
@@ -281,7 +282,7 @@ tokens = st.tokenize()
 config = Config()
 
 # default config filename
-print(config.filename.name)
+print(config.dialect_pack_path)
 
 # paths for trie content
 main, custom = config.get_tok_data_paths("POS")
@@ -569,9 +570,10 @@ print(tokens[2].text_cleaned)
 # test_matchers.py
 ##########################################################################################################
 
+from pathlib import Path
+
 # coding: utf8
 from botok import *
-from pathlib import Path
 
 rules_path = Path(__file__).parent / "tests" / "resources"
 main, custom = Config().get_adj_data_paths("basic", rules_path)

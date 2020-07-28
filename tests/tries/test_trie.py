@@ -1,23 +1,20 @@
 # coding: utf8
-from pathlib import Path
 from collections import defaultdict
+from pathlib import Path
 
-from botok import Trie, Config
-from botok import TokChunks
-from botok import BoSyl
+from botok import BoSyl, Config, TokChunks, Trie
 
 config = Config()
 
 
 def syls(string):
-        return TokChunks(string).get_syls()
+    return TokChunks(string).get_syls()
 
 
 def test_createtrie():
     profile = "empty"
-    modifs = Path(__file__).parent / "trie_data"
-    main, custom = config.get_tok_data_paths(profile, modifs=modifs)
-    bt = Trie(BoSyl, profile, main, custom)
+    config = Config.from_path("./tests/data/trie_dialect_pack")
+    bt = Trie(BoSyl, profile, config.dictionary, config.adjustments)
 
     # the trie works as expected. but the add() method should never be used directly:
     # it does not inflect entries, so the tokenizer won't work as expected.
@@ -58,15 +55,20 @@ def test_createtrie():
     # just like add() was not meant to be used directly, deactivate() is not
     # instead, use bt.inflect_n_modify_trie("word", deactivate=True)
     bt.deactivate(syls("ཀ་ར་"))
-    assert bt.has_word(syls("ཀ་ར་"))["exists"] is False  # since 'ཀ་ར་' has been deactivated
+    assert (
+        bt.has_word(syls("ཀ་ར་"))["exists"] is False
+    )  # since 'ཀ་ར་' has been deactivated
 
 
 def test_multiple_words_per_entry():
     profile = "POS"
-    modifs = Path(__file__).parent / "trie_data"
-    main, custom = config.get_tok_data_paths(profile, modifs=modifs)
-    bt = Trie(BoSyl, profile, main, custom)
+    config = Config.from_path("./tests/data/trie_dialect_pack")
+    bt = Trie(BoSyl, profile, config.dictionary, config.adjustments)
 
     res = bt.has_word(syls("ལྟར་"))
-    assert {"lemma": "ལྟ་", "pos": "VERB", "freq": 123, "affixed": True} in res["data"]["senses"]
-    assert {"lemma": "ལྟར་", "pos": "ADV", "freq": 456, "affixed": False} in res["data"]["senses"]
+    assert {"lemma": "ལྟ་", "pos": "VERB", "freq": 123, "affixed": True} in res["data"][
+        "senses"
+    ]
+    assert {"lemma": "ལྟར་", "pos": "ADV", "freq": 456, "affixed": False} in res[
+        "data"
+    ]["senses"]

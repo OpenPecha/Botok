@@ -1,12 +1,12 @@
 # coding: utf-8
-import time
-import pickle
-from pathlib import Path
 import csv
+import pickle
+import time
+from pathlib import Path
 
-from .basictrie import BasicTrie, Node
 from ..chunks.chunks import TokChunks
-from ..vars import NO_POS, TSEK, NAMCHE, HASH, __version__
+from ..vars import HASH, NAMCHE, NO_POS, TSEK, __version__
+from .basictrie import BasicTrie, Node
 
 
 class Trie(BasicTrie):
@@ -74,7 +74,9 @@ class Trie(BasicTrie):
                 self._add_one_file(f, l)
 
         # then add data to the added words
-        rest = (d for d in files if not d.startswith("lexica"))
+        rest = (
+            d for d in files if not d.startswith("lexica") and not d.startswith("rules")
+        )
         for r in rest:
             for f in files[r]:
                 self._add_one_file(f, r)
@@ -199,8 +201,7 @@ class Trie(BasicTrie):
     def __clean_lines(f):
         # cuts off comments, then strips empty lines
         lines = (
-            line[:line.index(HASH)] if HASH in line else line
-            for line in f.readlines()
+            line[: line.index(HASH)] if HASH in line else line for line in f.readlines()
         )
         return (l for l in lines if l)
 

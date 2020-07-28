@@ -3,16 +3,14 @@ from textwrap import dedent
 
 from botok import *
 
-from helpers import pos_tok
 
-
-def test_get_default_lemma():
+def test_get_default_lemma(wt):
     input_str = "བཀྲ་ཤིས་བདེ་ལེགས། མཐའི་རྒྱ་མཚོར་གནས་སོ།། །།ཀཀ"
-    profile = "POS"
+    config = Config()
+    profile = config.dialect_pack_path.name
 
     # reconstitute all the pieces that WordTokenizer gathers
-    main, custom = Config().get_tok_data_paths(profile)
-    tok = Tokenize(Trie(BoSyl, profile, main, custom))
+    tok = Tokenize(Trie(BoSyl, profile, config.dictionary, config.adjustments))
     preproc = TokChunks(input_str)
     preproc.serve_syls_to_trie()
     tokens = tok.tokenize(preproc)
@@ -34,7 +32,7 @@ def test_get_default_lemma():
                                 syls_start_end: [{'start': 0, 'end': 2}]
                                 start: 18
                                 len: 2
-                                
+
                                 """
     )
     assert "lemma" not in tokens[3]["senses"][0]
@@ -53,7 +51,7 @@ def test_get_default_lemma():
                                 syls_start_end: [{'start': 2, 'end': 5}]
                                 start: 20
                                 len: 3
-                                
+
                                 """
     )
 
@@ -62,7 +60,7 @@ def test_get_default_lemma():
 
     # doing the same thing using WordTokenizer, which will apply its __get_default_lemma() method
     # the profile is the same, so no lemma comes from the trie content files.
-    tokens = pos_tok.tokenize(input_str)
+    tokens = wt.tokenize(input_str)
 
     # the lemma is Token.text_unaffixed with an extra འ and/or a tsek where required
     assert str(tokens[3]) == dedent(
@@ -82,7 +80,7 @@ def test_get_default_lemma():
                                 syls_start_end: [{'start': 0, 'end': 2}]
                                 start: 18
                                 len: 2
-                                
+
                                 """
     )
     assert tokens[3]["senses"][0]["lemma"] == "མཐའ་"
@@ -104,7 +102,7 @@ def test_get_default_lemma():
                                 syls_start_end: [{'start': 2, 'end': 5}]
                                 start: 20
                                 len: 3
-                                
+
                                 """
     )
 
@@ -121,10 +119,8 @@ def test_get_default_lemma():
     assert tokens[2].text_unaffixed == "" == tokens[2].text_cleaned
 
 
-def test_spaces_as_punct():
+def test_spaces_as_punct(wt):
     input_str = "བ ཀྲ་ཤིས་ བདེ་ལེགས། \nམཐའི་རྒྱ་མཚོར་ག ནས་སོ།། །།ཀཀ"
-    profile = "POS"
-    wt = WordTokenizer(tok_profile=profile)
     tokens = wt.tokenize(input_str, spaces_as_punct=True)
     assert tokens[0].text == "བ"
     assert tokens[1].text == " "

@@ -1,13 +1,20 @@
 # coding: utf8
-from botok import *
 from textwrap import dedent
-from helpers import pos_tok
+
+import pytest
+
+from botok import *
 
 
-def test_tokenize():
+@pytest.fixture(scope="module")
+def empty_config():
+    return Config.from_path("./tests/data/empty_dialect_pack")
+
+
+def test_tokenize(empty_config, wt):
     profile = "empty"
-    main, custom = Config().get_tok_data_paths(profile)
-    tok = Tokenize(Trie(BoSyl, profile, main, custom))
+    config = empty_config
+    tok = Tokenize(Trie(BoSyl, profile, config.dictionary, config.adjustments))
     tok.trie.inflect_n_modify_trie("བཀྲ་ཤིས་")
     tok.trie.inflect_n_add_data("བཀྲ་ཤིས་\tNOUN\t\tབཀྲ་ཤིས་\t17500")
     tok.trie.inflect_n_modify_trie("མཐའ་")
@@ -29,7 +36,7 @@ def test_tokenize():
                         syls_start_end: [{'start': 0, 'end': 4}, {'start': 4, 'end': 7}]
                         start: 5
                         len: 7
-                        
+
                         """
     )
     str(tokens[0])
@@ -37,8 +44,8 @@ def test_tokenize():
     assert tokens[2].text == "། "
     assert tokens[2].chunk_type == "PUNCT"
     # add sense to བཀྲ་ཤིས་
-    pos_tok.tok.trie.inflect_n_add_data("བཀྲ་ཤིས་\tNOUN\t\tབཀྲ་ཤིས་\t17500")
-    tokens = pos_tok.tokenize(in_str)
+    wt.tok.trie.inflect_n_add_data("བཀྲ་ཤིས་\tNOUN\t\tབཀྲ་ཤིས་\t17500")
+    tokens = wt.tokenize(in_str)
     expected = dedent(
         """\
                         text: "བཀྲ་ཤིས"
@@ -56,16 +63,16 @@ def test_tokenize():
                         syls_start_end: [{'start': 0, 'end': 4}, {'start': 4, 'end': 7}]
                         start: 5
                         len: 7
-                        
+
                         """
     )
     assert str(tokens[2]) == expected
 
 
-def test_non_max2():
+def test_non_max2(empty_config):
     profile = "empty"
-    main, custom = Config().get_tok_data_paths(profile)
-    tok = Tokenize(Trie(BoSyl, profile, main, custom))
+    config = empty_config
+    tok = Tokenize(Trie(BoSyl, profile, config.dictionary, config.adjustments))
     tok.trie.inflect_n_modify_trie("བཀྲ་ཤིས་")
     tok.trie.inflect_n_add_data("བཀྲ་ཤིས་\tNOUN")
     tok.trie.inflect_n_modify_trie(
@@ -82,10 +89,10 @@ def test_non_max2():
     assert tokens[2]["senses"][0]["pos"] == "NO_POS"
 
 
-def test_non_max_end_of_string():
+def test_non_max_end_of_string(empty_config):
     profile = "empty"
-    main, custom = Config().get_tok_data_paths(profile)
-    tok = Tokenize(Trie(BoSyl, profile, main, custom))
+    config = empty_config
+    tok = Tokenize(Trie(BoSyl, profile, config.dictionary, config.adjustments))
     tok.trie.inflect_n_modify_trie("བཀྲ་ཤིས་")
     tok.trie.inflect_n_modify_trie(
         "བཀྲ་ཤིས་བདེ་ལེགས།"
@@ -95,6 +102,7 @@ def test_non_max_end_of_string():
     tokens = tok.tokenize(preproc)
     assert tokens[0].text == "བཀྲ་ཤིས་"
     assert tokens[1].text == "བདེ་"
+
 
 if __name__ == "__main__":
     test_non_max2()

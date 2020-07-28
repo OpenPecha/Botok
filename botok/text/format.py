@@ -1,7 +1,7 @@
 # coding: utf-8
-from typing import List, DefaultDict, Tuple
+from typing import DefaultDict, List, Tuple
 
-from .tokenize import PyboToken
+from .tokenize import BoToken
 
 
 def plaintext(tokens: List[str], sep=" ") -> str:
@@ -9,7 +9,7 @@ def plaintext(tokens: List[str], sep=" ") -> str:
     return sep.join(tokens)
 
 
-def plaintext_sent_par(units: List[Tuple[int, List[PyboToken]]], sep="\n") -> str:
+def plaintext_sent_par(units: List[Tuple[int, List[BoToken]]], sep="\n") -> str:
     out = []
     for u in units:
         unit = "".join([word.text for word in u[1]])
