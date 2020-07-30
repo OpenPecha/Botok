@@ -3,8 +3,12 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to botok's documentation!
-=================================
+Botok
+===================================================================================================
+State-of-the-art tokenizers for Tibetan language.
+
+This is the documentation of our repository `botok <https://github.com/Esukhia/botok/tree/docs>`_.
+
 
 .. toctree::
    :maxdepth: 2
