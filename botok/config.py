@@ -63,8 +63,12 @@ class Config:
          - Contains all the data required to adjust the text segmentation rules.
     """
 
-    def __init__(self, dialect_name=DEFAULT_DIALECT_PACK, base_path=DEFAULT_BASE_PATH):
+    def __init__(self, dialect_name=None, base_path=None):
         """Create config for given `dialect_name` and stored in `base_path`"""
+        if not dialect_name:
+            dialect_name = DEFAULT_DIALECT_PACK
+        if not base_path:
+            base_path = DEFAULT_BASE_PATH
         dialect_pack_path = get_dialect_pack(dialect_name, base_path)
         self.reset(dialect_pack_path)
 
