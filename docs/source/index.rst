@@ -34,3 +34,9 @@ This is the content of botok.
 
     architecture
 
+.. toctree::
+    :maxdepth: 2
+    :caption: Package Reference
+
+    main_classes/configuration
+

@@ -96,6 +96,18 @@ class Config:
 
     @classmethod
     def from_path(cls, dialect_pack_path):
+        """Creates config from ``dialect_pack_path``.
+
+        Returns:
+            :class: `Config`: An instance of a Configuration object
+
+        Examples::
+
+            config = Config.from_path(path_to_dialect_pack)
+            assert config.dictionary == True
+            assert config.adjustments == True
+
+        """
         path = Path(dialect_pack_path)
         dialect_name = path.name
         base_path = path.parent
@@ -103,9 +115,11 @@ class Config:
 
     @property
     def profile(self):
+        """Returns profile name of the dialect_pack."""
         return self.dialect_pack_path.name
 
     def add_dialect_pack(self, path):
+        """"Merge given dialect_pack at `path` to current dialect_pack."""
         self.dialect_pack_path = path
         self._get_pack_component("dictionary", self.dictionary)
         self._get_pack_component("adjustments", self.adjustments)
