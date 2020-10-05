@@ -33,6 +33,7 @@ This is the content of botok.
     :caption: Advanced guides
 
     architecture
+    custom-dialect-pack
 
 .. toctree::
     :maxdepth: 2
