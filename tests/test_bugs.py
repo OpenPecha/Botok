@@ -3,7 +3,7 @@ import sys
 
 import pytest
 
-from botok import *
+from botok import TokChunks, Config, Trie, BoSyl, Tokenize, Chunks, ChunkFramework
 
 sys.path.append("../")
 
