@@ -157,9 +157,9 @@ def test_adjust_tokens(wt):
     assert token_list[1].text == "ལ་ལ་"
 
     assert adjusted[0].text == "ལ་"
-    assert adjusted[0].pos == "PART"
+    assert adjusted[0].pos == "NOUN"
     assert adjusted[1].text == "ལ་ལ་"
-    assert adjusted[1].pos == "PART"
+    assert adjusted[1].pos == "DET"
     assert adjusted[2].text == "ལ་"
     assert adjusted[2].pos == "PART"
 
