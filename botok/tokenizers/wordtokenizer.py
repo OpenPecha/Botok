@@ -88,7 +88,7 @@ class WordTokenizer:
         MergeDagdra().merge(tokens)
 
         # do adjustments
-        self.adj.adjust(tokens)
+        tokens = self.adj.adjust(tokens)
 
         return tokens
 

@@ -5,6 +5,7 @@ import pytest
 
 from botok import *
 
+
 input_str = " མཐའི་རྒྱ་མཚོའི་གླིང་། ཤི་བཀྲ་ཤིས་  tr བདེ་་ལེ གས། བཀྲ་ཤིས་བདེ་ལེགས་ཀཀ"
 
 

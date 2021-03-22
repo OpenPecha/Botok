@@ -1,6 +1,7 @@
 import pytest
 
-from botok import WordTokenizer, paragraph_tokenizer, sentence_tokenizer
+from botok import paragraph_tokenizer, sentence_tokenizer
+
 
 text = (
     "བཀུར་བར་མི་འགྱུར་ཞིང༌། །བརྙས་བཅོས་མི་སྙན་རྗོད་པར་བྱེད། །དབང་དང་འབྱོར་པ་ལྡན་པ་ཡི། །རྒྱལ་རིགས་ཕལ་ཆེར་བག་མེད་པས། །"

@@ -1,6 +1,7 @@
 from botok import *
 
 
+
 def test_missing_token1(wt):
     input_str = "འཐུང་བུད་"
     tokens = wt.tokenize(input_str, split_affixes=False)
