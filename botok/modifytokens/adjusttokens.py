@@ -1,5 +1,6 @@
 # coding: utf-8
 import csv
+import re
 
 from .splittingmatcher import SplittingMatcher
 from .mergingmatcher import MergingMatcher
@@ -32,22 +33,32 @@ class AdjustTokens:
         self.rules = []
         self.parse_rules()
 
+    def no_token_matched(self, matchcql):
+        matched_tokens = [token for token in re.split('(\[.+?\])', matchcql) if token != " " and token != ""]
+        return len(matched_tokens)
+
     def adjust(self, token_list):
         for rule in self.rules:
             if rule["operation"] == "split":
-                sm = SplittingMatcher(
-                    rule["matchcql"],
-                    rule["matchidx"],
-                    rule["splitidx"],
-                    token_list,
-                    rule["replacecql"],
-                )
-                token_list = sm.split_on_matches(mode=rule["splitmode"])
+                if rule["matchidx"] <= self.no_token_matched(rule['matchcql']):
+                    sm = SplittingMatcher(
+                        rule["matchcql"],
+                        rule["matchidx"],
+                        rule["splitidx"],
+                        token_list,
+                        rule["replacecql"],
+                    )
+                    token_list = sm.split_on_matches(mode=rule["splitmode"])
+                else:
+                    print(f'[ERROR]: No token to spilt with token number {rule["matchidx"]} found in rule {"    ".join(rule)}')
             elif rule["operation"] == "merge":
-                mm = MergingMatcher(
-                    rule["matchcql"], rule["matchidx"], token_list, rule["replacecql"]
-                )
-                token_list = mm.merge_on_matches()
+                if rule["matchidx"] < self.no_token_matched(rule['matchcql']):
+                    mm = MergingMatcher(
+                        rule["matchcql"], rule["matchidx"], token_list, rule["replacecql"]
+                    )
+                    token_list = mm.merge_on_matches()
+                else:
+                    print(f'[ERROR]: No token to merge with token number {rule["matchidx"]} found in rule {"    ".join(rule)}')
             elif rule["operation"] == "repl":
                 rm = ReplacingMatcher(
                     rule["matchcql"], rule["matchidx"], token_list, rule["replacecql"]
