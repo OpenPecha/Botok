@@ -127,6 +127,6 @@ class TokenSplit:
 
     def __split_affixation(self):
         if self.token.affixation:
-            del self.first.affixation["len"]
-            del self.first.affixation["type"]
-            del self.second.affixation["aa"]
+            self.first.affixation.pop("len", '')
+            self.first.affixation.pop("type", '')
+            self.second.affixation.pop("aa", '')
