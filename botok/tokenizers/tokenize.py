@@ -69,10 +69,9 @@ class Tokenize:
                         else:
                             # check if syllables is NO_POS or Non-word
                             if syls:
-                                self.add_found_word_or_non_word(
+                                c_idx = self.add_found_word_or_non_word(
                                     walker, match_data, syls, tokens
-                                )
-                                c_idx += len(syls)
+                                )# Unexpected syl skip bug fix if chunk to process is in remove word list
                                 break
                             # syllabel is not in the dictionary (Trie)
                             else:
@@ -148,7 +147,7 @@ class Tokenize:
             tokens.append(self.chunks_to_token([syls[0]], {}, ttype=w.NO_POS.name))
 
             # decrement chunk-idx for a new attempt to find a match
-            if syls:
+            if syls and syls[1:]: # Unexpected syl skip bug fix if chunk to process is in remove word list
                 c_idx -= len(syls[1:]) - 1
             if (
                 has_decremented
