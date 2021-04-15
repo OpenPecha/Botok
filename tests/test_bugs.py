@@ -183,15 +183,19 @@ def test_shad_in_syllable():
     ]
 
 def test_unexpected_skip_syl(wt):
-    input_str = "དེའི་སྒོ་ནས་བསྟན་པ་དང་སེམས་ཅན་ལ་ཕན་ཐོགས་མཛད་ཚུལ།"
+    input_strs = ["དེའི་སྒོ་ནས་བསྟན་པ་དང་སེམས་ཅན་ལ་ཕན་ཐོགས་མཛད་ཚུལ།", "དེ་ཁོ་རང་ཡིན་མོད།"]
     wt.tok.trie.inflect_n_modify_trie("དང་སེམས་", deactivate=True) # To remove དང་སེམས་ from trie
-    wt.tok.trie.inflect_n_modify_trie("ཕན་ཐོགས་") # to add ཕན་ཐོགས་ to trie
-    tokens = wt.tokenize(input_str)
-    result_str = ''
-    for token in tokens:
-        result_str += f'{token.text} '
-    expected_str = "དེ འི་ སྒོ་ ནས་ བསྟན་པ་ དང་ སེམས་ཅན་ ལ་ ཕན་ཐོགས་ མཛད་ ཚུལ ། "
-    assert expected_str == result_str
+    wt.tok.trie.inflect_n_modify_trie("ཡིན་མོད", deactivate=True)
+    wt.tok.trie.inflect_n_modify_trie("ཕན་ཐོགས་")
+    expected_strs = ["དེའི་ སྒོ་ ནས་ བསྟན་པ་ དང་ སེམས་ཅན་ ལ་ ཕན་ཐོགས་ མཛད་ ཚུལ ། ", "དེ་ ཁོ་རང་ ཡིན་ མོད ། "]
+    result_strs = []
+    for input_str in input_strs:
+        tokens = wt.tokenize(input_str, split_affixes = False)
+        result_str = ''
+        for token in tokens:
+            result_str += f'{token.text} '
+        result_strs.append(result_str)
+    assert expected_strs == result_strs
 
 
 if __name__ == "__main__":
