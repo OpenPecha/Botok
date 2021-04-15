@@ -34,7 +34,7 @@ class AdjustTokens:
         self.parse_rules()
 
     def no_token_matched(self, matchcql):
-        matched_tokens = [token for token in re.split('(\[.+?\])', matchcql) if token != " " and token != ""]
+        matched_tokens = [token for token in re.split(r'(\[.+?\])', matchcql) if token != " " and token != ""]
         return len(matched_tokens)
 
     def adjust(self, token_list):

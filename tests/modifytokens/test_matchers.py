@@ -50,7 +50,7 @@ def test_regex_in_cql_query():
         {"word": "it", "lemma": "it", "tag": "Pron"},
         {"word": ".", "lemma": ".", "tag": "Punct"},
     ]
-    q = '[lemma="[^\n\s]+s" & tag="Det"] [tag!="ADJ"]'
+    q = r'[lemma="[^\n\s]+s" & tag="Det"] [tag!="ADJ"]'
 
     matcher = CQLMatcher(q)
     matched = matcher.match(test)
