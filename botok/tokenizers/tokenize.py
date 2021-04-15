@@ -88,10 +88,12 @@ class Tokenize:
                         found_max_match = True
                     # check for any syllables left, which are to be turned into independant tokens
                     elif syls:
-                        self.add_found_word_or_non_word(
+                        c_idx = self.add_found_word_or_non_word(
                             walker, match_data, syls, tokens
                         )
-                        c_idx += len(syls)
+                        if len(syls) == 1:
+                            c_idx += 1
+                        # c_idx += len(syls)
                         break
                     # non-syllable are turned into independant tokens
                     else:
