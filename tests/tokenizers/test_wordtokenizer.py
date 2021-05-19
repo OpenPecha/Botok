@@ -126,3 +126,8 @@ def test_spaces_as_punct(wt):
     assert tokens[1].text == " "
     assert tokens[2].text == "ཀྲ་"
     assert tokens[8].text == " \n"
+
+def test_particle_bug(wt):
+    input_str = "བོད་གིས"
+    tokens = wt.tokenize(input_str)
+    assert tokens[1].pos == "PART"

@@ -120,8 +120,8 @@ class Trie(BasicTrie):
         if not syls:
             return None
 
-        infl = self.__join_syls(syls)
-        self.add(infl)
+        # infl = self.__join_syls(syls)
+        self.add(syls)
 
     def inflect_n_modify_trie(self, word, deactivate=False, skrt=False):
         """
