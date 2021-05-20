@@ -2,3 +2,4 @@ black
 isort
 pytest>=5.0.0
 coveralls
+covdefaults
