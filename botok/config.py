@@ -42,10 +42,10 @@ def get_dialect_pack(dialect_name, out_dir, version=None):
 
     if not check:
         raise IOError("the .zip file couldn't be downloaded.")
-    else:
-        # extract the zip in the current folder
-        z = zipfile.ZipFile(io.BytesIO(r.content))
-        z.extractall(path=str(out_dir))
+
+    # extract the zip in the current folder
+    z = zipfile.ZipFile(io.BytesIO(r.content))
+    z.extractall(path=str(out_dir))
 
     print(f"[INFO] Download completed!")
 
