@@ -1,5 +1,5 @@
 # coding: utf8
-
+import re
 # variables used in the tests
 ending_particles = [
     "གོ་",
@@ -34,17 +34,47 @@ te_particles = [
 clause_boundaries = te_particles + ["ནས་", "ན་"]
 dagdra = ["པ་", "བ་", "པོ་", "བོ་"]
 
+normalization_patterns = [(' <utt>', ''),
+            ('༑', '།'), 
+            ('\s\s+', ' '), 
+            ('ln\d ', ''), 
+            ('([^༅།་ ]) །', '\g<1>་ །'), 
+            ('༅ །', '༅།'), 
+            ('([^་།\d] )', '\g<1>-'), 
+            ('([\s\n་།][གདབམའ][ཀཁགངཅཆཇཉཊཋཌཎཏཐདནཔཕབམཙཚཛཝཞཟའཡརལཤཥསཧཨཪ]) ', '\g<1>འ་ '), 
+            ('([^་།])\s-', '\g<1>་ -'), 
+            ('ཁྱད་པ་ -ར་', 'ཁྱད་པར་'), 
+            ('སངས་ རྒྱ་ -ས་', 'སངས་རྒྱས་'), 
+            ('བྱང་ཆུབ་སེམས་ དཔའ་', 'བྱང་ཆུབ་སེམས་དཔའ་'), 
+            ('ལ་ -ས་', 'ལས་'),
+            ('༌་', '་')]
+
+def get_normalized_sentence(tokens):
+    sentence = ''
+    for token in tokens:
+        sentence += f'{token.text} '
+    sentence = sentence.strip()
+    normalized_sentence = sentence
+    for pattern in normalization_patterns:
+        normalized_sentence = re.sub(pattern[0], pattern[1], normalized_sentence)
+    return normalized_sentence
 
 # Turn sentences as indices into sentences as follows:
-# (<sent_length>, [token1, token2, ..., tokenn]) where tokens are Token objects
+# { 'length':<sent_length>, 'tokens':[token1, token2, ..., tokenn], 'norm_sent':<normalized sentence>} where tokens are Token objects
 ############################################################
 def sentence_tokenizer(tokens):
     sent_indices = get_sentence_indices(tokens)
-    # get tokens for each sentence
     sentences = []
     for sentence in sent_indices:
+        cur_sentence = {}
         start, end, l = sentence["start"], sentence["end"], sentence["len"]
-        sentences.append((l, tokens[start : end + 1]))
+        norm_sentence = get_normalized_sentence(tokens[start : end + 1])
+        cur_sentence = {
+            'length': l,
+            'tokens': tokens[start : end + 1],
+            'norm_sent': norm_sentence
+        }
+        sentences.append(cur_sentence)
 
     return sentences
 
