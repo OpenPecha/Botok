@@ -67,3 +67,31 @@ Now in ‘tokens’ you have an iterable where each token consist of several met
     len: 2
     tag: punct
     pos: punc
+    
+    
+Custom dialect pack:
+
+In order to use custom dialect pack:
+
+1. You need to prepare your dialect pack in same folder structure like [general dialect pack](https://github.com/Esukhia/botok-data/tree/master/dialect_packs/general)
+2. Then you need to instaintiate a config object where you will pass dialect name and path
+3. You can instaintiate your tokenizer object using that config object
+4. Your tokenizer will be using your custom dialect pack and it will be using trie pickled file in future to build the custom trie.
+
+.. code-block::
+
+    from botok import WordTokenizer
+    from botok.config import Config
+    from pathlib import Path
+
+    def get_tokens(wt, text):
+        tokens = wt.tokenize(text, split_affixes=False)
+        return tokens
+
+    if __name__ == "__main__":
+        config = Config(dialect_name="custom", base_path= Path.home())
+        wt = WordTokenizer(config=config)
+        text = "བཀྲ་ཤིས་བདེ་ལེགས་ཞུས་རྒྱུ་ཡིན་ སེམས་པ་སྐྱིད་པོ་འདུག།"
+        tokens = get_tokens(wt, text)
+        for token in tokens:
+            print(token)
