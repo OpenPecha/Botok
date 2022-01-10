@@ -96,6 +96,39 @@ tr \n	1
 །	1
 ```
 
+##### Custom dialect pack:
+
+In order to use custom dialect pack:
+
+- You need to prepare your dialect pack in same folder structure like [general dialect pack](https://github.com/Esukhia/botok-data/tree/master/dialect_packs/general)
+- Then you need to instaintiate a config object where you will pass dialect name and path
+- You can instaintiate your tokenizer object using that config object
+- Your tokenizer will be using your custom dialect pack and it will be using trie pickled file in future to build the custom trie.
+
+###### Example
+```
+from botok import WordTokenizer
+from botok.config import Config
+from pathlib import Path
+
+def get_tokens(wt, text):
+    tokens = wt.tokenize(text, split_affixes=False)
+    return tokens
+
+if __name__ == "__main__":
+    config = Config(dialect_name="custom", base_path= Path.home())
+    wt = WordTokenizer(config=config)
+    text = "བཀྲ་ཤིས་བདེ་ལེགས་ཞུས་རྒྱུ་ཡིན་ སེམས་པ་སྐྱིད་པོ་འདུག།"
+    tokens = get_tokens(wt, text)
+    for token in tokens:
+        print(token)
+```
+
+
+https://user-images.githubusercontent.com/24893704/148767959-31cc0a69-4c83-4841-8a1d-028d376e4677.mp4
+
+
+
 ## Acknowledgements
 
 **botok** is an open source library for Tibetan NLP.
