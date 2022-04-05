@@ -12,7 +12,7 @@ def plaintext(tokens: List[str], sep=" ") -> str:
 def plaintext_sent_par(units: List[Tuple[int, List[BoToken]]], sep="\n") -> str:
     out = []
     for u in units:
-        unit = "".join([word.text for word in u[1]])
+        unit = "".join([word.text for word in u['tokens']])
         out.append(unit)
     return sep.join(out)
 
