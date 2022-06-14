@@ -18,9 +18,14 @@
 
 <p align="center">
   <a href="#description">Description</a> •
+  <a href="#install">Install</a> •
+  <a href="#example">Example</a> •
+  <a href="#commentedexample">Commented Example</a> •
+  <a href="#docs">Docs</a> •
   <a href="#owner">Owner</a> •
-  <a href="#integrations">Integrations</a> •
-  <a href="#docs">Docs</a>
+  <a href="#Acknowledgements">Acknowledgements</a> •
+  <a href="#Maintainance">Maintainance</a> •
+  <a href="#License">License</a>
 </p>
 <hr>
 
@@ -53,10 +58,9 @@ if __name__ == "__main__":
         print(token)
 ```
 
-
 https://user-images.githubusercontent.com/24893704/148767959-31cc0a69-4c83-4841-8a1d-028d376e4677.mp4
 
-## Mansplaining the example
+## Commented Example
 
 ```python
 >>> from botok import Text
