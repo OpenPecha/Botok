@@ -1,5 +1,35 @@
-# botok – Python Tibetan Tokenizer
-![GitHub release](https://img.shields.io/github/release/Esukhia/botok.svg) [![Documentation Status](https://readthedocs.org/projects/botok/badge/?version=latest)](https://botok.readthedocs.io/en/latest/?badge=latest) [![Build Status](https://travis-ci.org/Esukhia/botok.svg?branch=master)](https://travis-ci.org/Esukhia/botok) [![Coverage Status](https://coveralls.io/repos/github/Esukhia/botok/badge.svg?branch=master)](https://coveralls.io/github/Esukhia/botok?branch=master)   [![CodeFactor](https://www.codefactor.io/repository/github/esukhia/botok/badge)](https://www.codefactor.io/repository/github/esukhia/botok) [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://black.readthedocs.io/en/stable/)
+<h1 align="center">
+  <br>
+  <a href="https://openpecha.org"><img src="https://avatars.githubusercontent.com/u/82142807?s=400&u=19e108a15566f3a1449bafb03b8dd706a72aebcd&v=4" alt="OpenPecha" width="150"></a>
+  <br>
+</h1>
+
+<h3 align="center">Botok – Python Tibetan Tokenizer</h3>
+
+<!-- Replace the title of the repository -->
+
+<p align="center">
+    <a><img src="https://img.shields.io/github/release/Esukhia/botok.svg" alt="GitHub release"></a> 
+    <a href="https://botok.readthedocs.io/en/latest/?badge=latest"><img src="https://readthedocs.org/projects/botok/badge/?version=latest" alt="Documentation Status"></a> 
+    <a href="https://travis-ci.org/Esukhia/botok"><img src="https://travis-ci.org/Esukhia/botok.svg?branch=master" alt="Build Status"></a> 
+    <a href="https://coveralls.io/github/Esukhia/botok?branch=master"><img src="https://coveralls.io/repos/github/Esukhia/botok/badge.svg?branch=master" alt="Coverage Status"></a> 
+    <a href="https://black.readthedocs.io/en/stable/"><img src="https://img.shields.io/badge/code%20style-black-000000.svg" alt="Code style: black"></a> 
+  <br>
+  <a href="#description">Description</a> •
+  <a href="#owner">Owner</a> •
+  <a href="#integrations">Integrations</a> •
+  <a href="#docs">Docs</a>
+</p>
+<hr>
+
+## Description
+
+The template repo to be used across all repos.
+
+<!-- This section provides a high-level overview for the repo -->
+
+
+
 
 
 ## Overview
