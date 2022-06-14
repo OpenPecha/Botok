@@ -22,7 +22,7 @@
   <a href="#example">Example</a> •
   <a href="#commentedexample">Commented Example</a> •
   <a href="#docs">Docs</a> •
-  <a href="#owner">Owner</a> •
+  <a href="#owners">Owners</a> •
   <a href="#Acknowledgements">Acknowledgements</a> •
   <a href="#Maintainance">Maintainance</a> •
   <a href="#License">License</a>
