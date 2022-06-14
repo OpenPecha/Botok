@@ -14,7 +14,9 @@
     <a href="https://travis-ci.org/Esukhia/botok"><img src="https://travis-ci.org/Esukhia/botok.svg?branch=master" alt="Build Status"></a> 
     <a href="https://coveralls.io/github/Esukhia/botok?branch=master"><img src="https://coveralls.io/repos/github/Esukhia/botok/badge.svg?branch=master" alt="Coverage Status"></a> 
     <a href="https://black.readthedocs.io/en/stable/"><img src="https://img.shields.io/badge/code%20style-black-000000.svg" alt="Code style: black"></a> 
-  <br>
+</p>
+
+<p align="center">
   <a href="#description">Description</a> •
   <a href="#owner">Owner</a> •
   <a href="#integrations">Integrations</a> •
@@ -24,24 +26,37 @@
 
 ## Description
 
-The template repo to be used across all repos.
+Botok tokenizes Tibetan text into words with optional attributes such as lemma, POS, clean form.
 
-<!-- This section provides a high-level overview for the repo -->
-
-
-
-
-
-## Overview
-
-botok tokenizes Tibetan text into words.
-
-### Basic usage
-
-#### Getting started
+## Install
 Requires to have Python3 installed.
 
     pip3 install botok
+
+## Example
+
+```
+from botok import WordTokenizer
+from botok.config import Config
+from pathlib import Path
+
+def get_tokens(wt, text):
+    tokens = wt.tokenize(text, split_affixes=False)
+    return tokens
+
+if __name__ == "__main__":
+    config = Config(dialect_name="custom", base_path= Path.home())
+    wt = WordTokenizer(config=config)
+    text = "བཀྲ་ཤིས་བདེ་ལེགས་ཞུས་རྒྱུ་ཡིན་ སེམས་པ་སྐྱིད་པོ་འདུག།"
+    tokens = get_tokens(wt, text)
+    for token in tokens:
+        print(token)
+```
+
+
+https://user-images.githubusercontent.com/24893704/148767959-31cc0a69-4c83-4841-8a1d-028d376e4677.mp4
+
+## Mansplaining the example
 
 ```python
 >>> from botok import Text
@@ -135,28 +150,22 @@ In order to use custom dialect pack:
 - You can instaintiate your tokenizer object using that config object
 - Your tokenizer will be using your custom dialect pack and it will be using trie pickled file in future to build the custom trie.
 
-###### Example
-```
-from botok import WordTokenizer
-from botok.config import Config
-from pathlib import Path
+## Docs
 
-def get_tokens(wt, text):
-    tokens = wt.tokenize(text, split_affixes=False)
-    return tokens
+No documentations.
 
-if __name__ == "__main__":
-    config = Config(dialect_name="custom", base_path= Path.home())
-    wt = WordTokenizer(config=config)
-    text = "བཀྲ་ཤིས་བདེ་ལེགས་ཞུས་རྒྱུ་ཡིན་ སེམས་པ་སྐྱིད་པོ་འདུག།"
-    tokens = get_tokens(wt, text)
-    for token in tokens:
-        print(token)
-```
+<!-- This section must link to the docs which are in the root of the repository in /docs -->
 
 
-https://user-images.githubusercontent.com/24893704/148767959-31cc0a69-4c83-4841-8a1d-028d376e4677.mp4
+## Owners
 
+- [@drupchen](https://github.com/drupchen)
+- [@eroux](https://github.com/eroux)
+- [@ngawangtrinley](https://github.com/ngawangtrinley)
+- [@10zinten](https://github.com/10zinten)
+- [@kaldan007](https://github.com/kaldan007)
+
+<!-- This section lists the owners of the repo -->
 
 
 ## Acknowledgements
