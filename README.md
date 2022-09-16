@@ -50,7 +50,7 @@ def get_tokens(wt, text):
     return tokens
 
 if __name__ == "__main__":
-    config = Config(dialect_name="custom", base_path= Path.home())
+    config = Config(dialect_name="general", base_path= Path.home())
     wt = WordTokenizer(config=config)
     text = "བཀྲ་ཤིས་བདེ་ལེགས་ཞུས་རྒྱུ་ཡིན་ སེམས་པ་སྐྱིད་པོ་འདུག།"
     tokens = get_tokens(wt, text)
