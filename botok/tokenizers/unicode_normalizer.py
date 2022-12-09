@@ -25,6 +25,7 @@ def normalize_unicode(s, normalization_type="graphical"):
     s = s.replace("\u0fb9", "\u0f90\u0fb5")
     if normalization_type == "graphical":
         s = s.replace("\u0f0c", "\u0f0b")
+        s = s.replace("\u0f38", "\u0f27")
         s = s.replace("\u0f0e", "\u0f0d\u0f0d")
     # ra does't transform into a small rago before nya
     s = s.replace("\u0f65\u0f99", "\u0f62\u0f99")
