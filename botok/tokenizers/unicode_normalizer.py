@@ -48,7 +48,9 @@ class Cats(Enum):
     TopMark = 7
     RightMark = 8
 
-CATEGORIES =  ([Cats.Other] * 53     # 0F00-0F34
+CATEGORIES =  ([Cats.Other]          # 0F00
+             + [Cats.Base]           # 0F01, kind of cheating for diacritics
+             + [Cats.Other] * 51     # 0F02-0F34
              + [Cats.BottomMark]     # 0F35
              + [Cats.Other]          # 0F36
              + [Cats.BottomMark]     # OF37
