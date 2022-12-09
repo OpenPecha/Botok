@@ -33,8 +33,8 @@ def normalize_unicode(s, normalization_type="graphical"):
     # no full a at the end of stacks, only achung
     s = re.sub(r"[\u0fb0]([^\u0f8d-\u0fbc]|$)", "\u0f71\\1", s)
     # reorder
-    s = reorder_bo(s)
-    return s
+    s, valid = reorder_bo(s)
+    return s, valid
 
 class Cats(Enum):
     Other = 0
@@ -96,9 +96,12 @@ def reorder_bo(txt):
     # find subranges of base+non other and sort components in the subrange
     i = 0
     res = []
+    valid = True
     while i < len(charcats):
         c = charcats[i]
         if c != Cats.Base:
+            if c.value > Cats.Base.value:
+                valid = False
             res.append(txt[i])
             i += 1
             continue
@@ -112,7 +115,7 @@ def reorder_bo(txt):
         replaces = "".join(txt[n] for n in newindices)
         res.append(replaces)
         i = j
-    return "".join(res)
+    return "".join(res), valid
 
 def debug_to_unicode(s):
     res = ""
@@ -120,11 +123,19 @@ def debug_to_unicode(s):
         res += "\\u%x " % ord(c)
     return res
 
+def assert_conv(orig, expected, expectedValid = True):
+    resultStr, resultValid = normalize_unicode(orig)
+    assert(resultStr == expected)
+    assert(resultValid == expectedValid)
+
 def test_normalize_unicode():
-    assert(normalize_unicode("\u0f77") == "\u0fb2\u0f71\u0f80")
-    assert(normalize_unicode("\u0f40\u0f7e\u0f7c\u0f74\u0f71") == "\u0f40\u0f71\u0f74\u0f7c\u0f7e")
-    #assert(normalize_unicode("\u0f66\u0f71\u0fb1") == "\u0f66\u0fb1\u0f71")
-    assert(normalize_unicode("\u0f58\u0f74\u0fb0\u0f83") == "\u0f58\u0f71\u0f74\u0f83")
+    assert_conv("\u0f77", "\u0fb2\u0f71\u0f80", False)
+    assert_conv("\u0f40\u0f7e\u0f7c\u0f74\u0f71", "\u0f40\u0f71\u0f74\u0f7c\u0f7e")
+    #assert_conv("\u0f66\u0f71\u0fb1", "\u0f66\u0fb1\u0f71")
+    assert_conv("\u0f58\u0f74\u0fb0\u0f83", "\u0f58\u0f71\u0f74\u0f83")
+    assert_conv("\u0F51\u0FB7\u0F74\u0FB0", "\u0F51\u0FB7\u0f71\u0F74")
+    assert_conv("\u0F66\u0F7C\u0FB1", "\u0F66\u0FB1\u0F7C")
+    assert_conv("\u0F0B\u0F7E", "\u0F0B\u0F7E", False)
 
 if __name__ == "__main__":
     test_normalize_unicode()
