@@ -31,7 +31,7 @@ def normalize_unicode(s, normalization_type="graphical"):
     # no achung in the middle of stacks, only full a
     s = re.sub(r"[\u0f71]([\u0f8d-\u0fbc])", "\u0fb0\\1", s)
     # no full a at the end of stacks, only achung
-    s = re.sub(r"[\u0fb0]([^\u0f8d-\u0fbc])", "\u0f71\\1", s)
+    s = re.sub(r"[\u0fb0]([^\u0f8d-\u0fbc]|$)", "\u0f71\\1", s)
     # reorder
     s = reorder_bo(s)
     return s
