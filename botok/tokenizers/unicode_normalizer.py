@@ -1,91 +1,6 @@
 import re
 from enum import Enum
 
-def normalize_unicode(s, form="nfd", normalize_graphical = True, normalize_typography = False):
-    # first, unify Unicode form:
-    # http://www.unicode.org/faq/normalization.html
-    # https://unicode.org/reports/tr15/
-    # https://unicode.org/charts/normalization/chart_Tibetan.html
-    # although for some reason this chart considers 0f0c -> 0f0b in NFD
-    if form == "nfd":
-        s = s.replace("\u0f43", "\u0f42\u0fb7")
-        s = s.replace("\u0f4d", "\u0f4c\u0fb7")
-        s = s.replace("\u0f52", "\u0f51\u0fb7")
-        s = s.replace("\u0f57", "\u0f56\u0fb7")
-        s = s.replace("\u0f5c", "\u0f5b\u0fb7")
-        s = s.replace("\u0f69", "\u0f40\u0fb5")
-        s = s.replace("\u0f73", "\u0f71\u0f72") # use is discouraged
-        s = s.replace("\u0f75", "\u0f71\u0f74") # use is discouraged
-        s = s.replace("\u0f76", "\u0fb2\u0f80")
-        s = s.replace("\u0f77", "\u0fb2\u0f71\u0f80") # deprecated
-        s = s.replace("\u0f78", "\u0fb3\u0f80")
-        s = s.replace("\u0f79", "\u0fb3\u0f71\u0f80") # deprecated
-        s = s.replace("\u0f81", "\u0f71\u0f80") # use is discouraged
-        s = s.replace("\u0f93", "\u0f92\u0fb7")
-        s = s.replace("\u0f9d", "\u0f9c\u0fb7")
-        s = s.replace("\u0fa2", "\u0fa1\u0fb7")
-        s = s.replace("\u0fa7", "\u0fa6\u0fb7")
-        s = s.replace("\u0fac", "\u0fab\u0fb7")
-        s = s.replace("\u0fb9", "\u0f90\u0fb5")
-    else:
-        s = s.replace("\u0f42\u0fb7", "\u0f43")
-        s = s.replace("\u0f4c\u0fb7", "\u0f4d")
-        s = s.replace("\u0f51\u0fb7", "\u0f52")
-        s = s.replace("\u0f56\u0fb7", "\u0f57")
-        s = s.replace("\u0f5b\u0fb7", "\u0f5c")
-        s = s.replace("\u0f40\u0fb5", "\u0f69")
-        s = s.replace("\u0f73", "\u0f71\u0f72") # use is discouraged
-        s = s.replace("\u0f75", "\u0f71\u0f74") # use is discouraged
-        s = s.replace("\u0fb2\u0f80", "\u0f76")
-        s = s.replace("\u0f77", "\u0fb2\u0f71\u0f80") # deprecated
-        s = s.replace("\u0fb3\u0f80", "\u0f78")
-        s = s.replace("\u0f79", "\u0fb3\u0f71\u0f80") # deprecated
-        s = s.replace("\u0f81", "\u0f71\u0f80") # use is discouraged
-        s = s.replace("\u0f92\u0fb7", "\u0f93")
-        s = s.replace("\u0f9c\u0fb7", "\u0f9d")
-        s = s.replace("\u0fa1\u0fb7", "\u0fa2")
-        s = s.replace("\u0fa6\u0fb7", "\u0fa7")
-        s = s.replace("\u0fab\u0fb7", "\u0fac")
-        s = s.replace("\u0f90\u0fb5", "\u0fb9")
-    if normalize_graphical:
-        # These substitutions normalize things that have the same
-        # graphical representation
-        #
-        # no graphical distinction between 0f0b and 0f0c
-        s = s.replace("\u0f0c", "\u0f0b")
-        # double shad is just two shad
-        s = s.replace("\u0f0e", "\u0f0d\u0f0d")
-        # the distinction between 0f38 and 0f27 is semantic but rarely
-        # distinguished graphically and often completely missed by inputters
-        s = s.replace("\u0f38", "\u0f27")
-        # 0f00 has not been marked as a composed character in Unicode
-        # This is something that they now admit is a mistake, but it cannot be
-        # changed because of Unicode change policies.
-        s = s.replace("\u0f00", "\u0f68\u0f7c\u0f7e")
-        # /!\ some fonts don't display these combinations in the exact same way
-        # but since there's no semantic distinction and the graphical variation
-        # is unclear, it seems safe
-        s = s.replace("\u0f7a\u0f7a", "\u0f7b")
-        s = s.replace("\u0f7c\u0f7c", "\u0f7d")
-        # ra does't transform into a small rago before nya, so using 0f65
-        # does not change its graphical representation in that case
-        s = s.replace("\u0f65\u0f99", "\u0f62\u0f99")
-        # the diference between 0f71 and 0fb0 is often very ambiguous when
-        # looking at original sources. We normalize them in order to
-        # make the data coherent:
-        # no 0f71 in the middle of stacks, only 0fb0
-        s = re.sub(r"[\u0f71]([\u0f8d-\u0fac\u0fae\u0fb0\u0fb3-\u0fbc])", "\u0fb0\\1", s)
-        # no 0fb0 at the end of stacks, only 0f71
-        s = re.sub(r"[\u0fb0]([^\u0f8d-\u0fac\u0fae\u0fb0\u0fb3-\u0fbc]|$)", "\u0f71\\1", s)
-        # things we do not normalize:
-        # 0f74+0f71 -> 0f71+0f74, because the combination appears sometimes in the sources
-        # for instance སུྰ in https://adarsha.dharma-treasure.org/kdbs/jiangkangyur/pbs/2618229
-        # same for 0fb1+0f71 since the combination also appears
-        # for instance སཱྱ on https://adarsha.dharma-treasure.org/kdbs/jiangkangyur?pbId=2627013
-        # 0f05 must follow a 0f04, otherwise transform into 0f04? (same for 0fd4 0fd3)
-    s, valid = reorder_bo(s)
-    return s, valid
-
 class Cats(Enum):
     Other = 0
     Base = 1
@@ -143,11 +58,11 @@ def charcat(c):
 #for i, c in enumerate(CATEGORIES):
 #    print("%x : %d" % (0x0F00 + i , c.value))
 
-# inpired from code for Khmer Unicode provided by SIL
-def reorder_bo(txt):
+def unicode_reorder(txt):
+    # inpired from code for Khmer Unicode provided by SIL
+    # https://docs.microsoft.com/en-us/typography/script-development/tibetan#reor
+    # https://docs.microsoft.com/en-us/typography/script-development/use#glyph-reordering
     charcats = [charcat(c) for c in txt]
-    #print(["%x" % ord(c) for c in txt])
-    #print(charcats)
     # find subranges of base+non other and sort components in the subrange
     i = 0
     res = []
@@ -171,6 +86,150 @@ def reorder_bo(txt):
         res.append(replaces)
         i = j
     return "".join(res), valid
+
+def normalize_unicode(s, form="nfd", graphical_normalization = True):
+    # first, unify Unicode form:
+    # http://www.unicode.org/faq/normalization.html
+    # https://unicode.org/reports/tr15/
+    # https://unicode.org/charts/normalization/chart_Tibetan.html
+    # although for some reason this chart considers 0f0c -> 0f0b in NFD
+    #
+    # deprecated or discouraged characters
+    s = s.replace("\u0f73", "\u0f71\u0f72") # use is discouraged
+    s = s.replace("\u0f75", "\u0f71\u0f74") # use is discouraged
+    s = s.replace("\u0f77", "\u0fb2\u0f71\u0f80") # deprecated
+    s = s.replace("\u0f79", "\u0fb3\u0f71\u0f80") # deprecated
+    s = s.replace("\u0f81", "\u0f71\u0f80") # use is discouraged
+    if form == "nfd":
+        s = s.replace("\u0f43", "\u0f42\u0fb7")
+        s = s.replace("\u0f4d", "\u0f4c\u0fb7")
+        s = s.replace("\u0f52", "\u0f51\u0fb7")
+        s = s.replace("\u0f57", "\u0f56\u0fb7")
+        s = s.replace("\u0f5c", "\u0f5b\u0fb7")
+        s = s.replace("\u0f69", "\u0f40\u0fb5")
+        s = s.replace("\u0f76", "\u0fb2\u0f80")
+        s = s.replace("\u0f78", "\u0fb3\u0f80")
+        s = s.replace("\u0f93", "\u0f92\u0fb7")
+        s = s.replace("\u0f9d", "\u0f9c\u0fb7")
+        s = s.replace("\u0fa2", "\u0fa1\u0fb7")
+        s = s.replace("\u0fa7", "\u0fa6\u0fb7")
+        s = s.replace("\u0fac", "\u0fab\u0fb7")
+        s = s.replace("\u0fb9", "\u0f90\u0fb5")
+    else:
+        s = s.replace("\u0f42\u0fb7", "\u0f43")
+        s = s.replace("\u0f4c\u0fb7", "\u0f4d")
+        s = s.replace("\u0f51\u0fb7", "\u0f52")
+        s = s.replace("\u0f56\u0fb7", "\u0f57")
+        s = s.replace("\u0f5b\u0fb7", "\u0f5c")
+        s = s.replace("\u0f40\u0fb5", "\u0f69")
+        s = s.replace("\u0fb2\u0f80", "\u0f76")
+        s = s.replace("\u0fb3\u0f80", "\u0f78")
+        s = s.replace("\u0f92\u0fb7", "\u0f93")
+        s = s.replace("\u0f9c\u0fb7", "\u0f9d")
+        s = s.replace("\u0fa1\u0fb7", "\u0fa2")
+        s = s.replace("\u0fa6\u0fb7", "\u0fa7")
+        s = s.replace("\u0fab\u0fb7", "\u0fac")
+        s = s.replace("\u0f90\u0fb5", "\u0fb9")
+    # 0f00 has not been marked as a composed character in Unicode
+    # This is something that is now seen as a mistake, but it cannot be
+    # changed because of Unicode change policies.
+    s = s.replace("\u0f00", "\u0f68\u0f7c\u0f7e")
+    # ra does't transform into a small rago before nya, so using 0f65
+    # does not change its graphical representation in that case
+    s = s.replace("\u0f65\u0f99", "\u0f62\u0f99")
+    if graphical_normalization:
+        s = normalize_graphical(s)
+    s, valid = unicode_reorder(s)
+    return s, valid
+
+def normalize_graphical(s):
+    """
+    These substitutions normalize things that have the same
+    graphical representation
+    """
+    # no graphical distinction between 0f0b and 0f0c
+    s = s.replace("\u0f0c", "\u0f0b")
+    # double shad is just two shad
+    s = s.replace("\u0f0e", "\u0f0d\u0f0d")
+    # the distinction between 0f38 and 0f27 is semantic but rarely
+    # distinguished graphically and often completely missed by inputters
+    s = s.replace("\u0f38", "\u0f27")
+    # /!\ some fonts don't display these combinations in the exact same way
+    # but since there's no semantic distinction and the graphical variation
+    # is unclear, it seems safe
+    s = s.replace("\u0f7a\u0f7a", "\u0f7b")
+    s = s.replace("\u0f7c\u0f7c", "\u0f7d")
+    # the diference between 0f71 and 0fb0 is often very ambiguous when
+    # looking at original sources. We normalize them in order to
+    # make the data coherent:
+    # no 0f71 in the middle of stacks, only 0fb0
+    s = re.sub(r"[\u0f71]([\u0f8d-\u0fac\u0fae\u0fb0\u0fb3-\u0fbc])", "\u0fb0\\1", s)
+    # no 0fb0 at the end of stacks, only 0f71
+    s = re.sub(r"[\u0fb0]([^\u0f8d-\u0fac\u0fae\u0fb0\u0fb3-\u0fbc]|$)", "\u0f71\\1", s)
+    # things we do not normalize:
+    # 0f74+0f71 -> 0f71+0f74, because the combination appears sometimes in the sources
+    # for instance སུྰ in https://adarsha.dharma-treasure.org/kdbs/jiangkangyur/pbs/2618229
+    # same for 0fb1+0f71 since the combination also appears
+    # for instance སཱྱ on https://adarsha.dharma-treasure.org/kdbs/jiangkangyur?pbId=2627013
+    return s
+
+def normalize_typography(s, use_gter_shad=False, original_eol=True):
+    if original_eol:
+        # remove all punctuation at beginning of line
+        # TODO
+        # ensure punctuation at end of line:
+        # TODO
+        # remove line breaks and surrounding punctuation
+        s = re.sub(r"\s*(?:\r\n|\n|\r)\s*", "", s)
+    # normalize spaces
+    s = re.sub(r"\s+", " ", s)
+    # no graphical distinction between 0f0b and 0f0c
+    s = s.replace("\u0f0c", "\u0f0b")
+    # double shad is just two shad
+    s = s.replace("\u0f0e", "\u0f0d\u0f0d")
+    # 0f11 is just a normal shad that appears in some cases at the beginning of a page,
+    # mostly when there is just one syllable before the shad on the first line, but it
+    # has no semantic significance, it should be turned into a normal shad when combining
+    # multiple texts
+    s = s.replace("\u0f11", "\u0f0d")
+    # we don't want to keep double tshegs (I suppose)
+    s = s.replace("\u0fd2", "\u0f0b")
+    # tshegs are sometimes used as padding, no need to keep it
+    s = re.sub(r"[\u0f0b][\u0f0b]+", "\u0f0b", s)
+    # remove all yig mgo: 0f01+diacritic?, 0f02-0f07, 0fd0-0fd1, 0fd3-0fd4
+    # as well as their surrounding punctuation: space, 0f0d-0f11, 0f14
+    # TODO
+    # replace shads with surrounding spaces by a simple shad with a space after
+    # TODO
+    # remove tshegs before punctuation, including shad (no tsheg before gter shad)
+    # TODO
+    # ensure space around 
+    if use_gter_shad:
+        s = s.replace("\u0f0d", "\u0f14")
+    else:
+        s = s.replace("\u0f14", "\u0f0d")
+        # add tshegs before shad in some circumstances
+        # TODO
+    # normalize non-Tibetan punctuation into Chinese punctuation or Western punctuation (option?)
+    # 〈〈?, 〈〈, 《, «, 〉〉?, », 》, 〉〉, ( ), ;, comma, dot, etc.
+    # TODO
+    return s
+
+def normalize_unusual(s):
+    #
+    # some symbols are not doubled outside of exceptional shorthands. See
+    # A Handbook of Abbreviations by the Dzongkha Development Commission:
+    # https://www.dzongkha.gov.bt/uploads/files/publications/A_handbook_of_Dzongkha_and_Ch%C3%B6k%C3%A9_abbreviations_e78335551931b7bb0ea4666213f57824.pdf
+    # these characters are 0f71-0f87, 0f35, 0f37, 0f39 0fad, 0fb1 and 0fb2
+    # TODO
+    #
+    # tsheg + vowel should be vowel + tsheg in most cases, although this
+    # heuristic can fail
+    # TODO
+    #
+    # remove tsheg and diacritics at beginning of lines
+    # TODO
+    return s
 
 def debug_to_unicode(s):
     res = ""
