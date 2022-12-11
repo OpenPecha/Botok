@@ -173,14 +173,7 @@ def normalize_graphical(s):
     # for instance སཱྱ on https://adarsha.dharma-treasure.org/kdbs/jiangkangyur?pbId=2627013
     return s
 
-def normalize_typography(s, use_gter_shad=False, original_eol=True):
-    if original_eol:
-        # remove all punctuation at beginning of line
-        # TODO
-        # ensure punctuation at end of line:
-        # TODO
-        # remove line breaks and surrounding punctuation
-        s = re.sub(r"\s*(?:\r\n|\n|\r)\s*", "", s)
+def normalize_punctuation(s, use_gter_shad=False, original_eol=True):
     # normalize spaces
     s = re.sub(r"\s+", " ", s)
     # no graphical distinction between 0f0b and 0f0c
@@ -194,24 +187,37 @@ def normalize_typography(s, use_gter_shad=False, original_eol=True):
     s = s.replace("\u0f11", "\u0f0d")
     # we don't want to keep double tshegs (I suppose)
     s = s.replace("\u0fd2", "\u0f0b")
+    # normalize end of line characters
+    s = re.sub(r"(?:\r\n|\n)", "\n", s)
+    if original_eol:
+        # remove all yig mgo: 0f01+diacritic?, 0f02-0f07, 0fd0-0fd1, 0fd3-0fd4
+        # as well as their surrounding punctuation: space, 0f0d-0f11, 0f14
+        s = re.sub(r"[ \u0f0d-\u0f11\u0f14]*[\u0f01-\u0f07\u0fd0\u0fd1\u0fd3\u0fd4]+[ \u0f0d-\u0f11\u0f14]*", "", s)
+        # remove all punctuation at beginning of line
+        s = re.sub(r"(^|[\n])[\u0f0b-\u0f14]+", "\\1", s)
+        # ensure tsheg at end of line after normal letters, except after ཀ, ག and ཤ
+        # (where the absence of a tsheg should be interpreted as the presence of a shad)
+        s = re.sub(r"([\u0f41\u0f43-\u0f63\u0f65-\u0f6c][\u0f71-\u0fbc]*) *($|[\n])", "\\1\u0f0b\\2", s)
+        # remove line breaks and spaces at beginning of lines
+        s = re.sub(r"(?:\n) *", "", s)
+    s = s.replace("\u0f14", "\u0f0d")
+    # replace shads with surrounding spaces by a simple shad with a space after
+    s = re.sub(r"[ \u0f0d]+", "\u0f0d ", s)
     # tshegs are sometimes used as padding, no need to keep it
     s = re.sub(r"[\u0f0b][\u0f0b]+", "\u0f0b", s)
-    # remove all yig mgo: 0f01+diacritic?, 0f02-0f07, 0fd0-0fd1, 0fd3-0fd4
-    # as well as their surrounding punctuation: space, 0f0d-0f11, 0f14
-    # TODO
-    # replace shads with surrounding spaces by a simple shad with a space after
-    # TODO
     # remove tshegs before punctuation, including shad (no tsheg before gter shad)
-    # TODO
-    # ensure space around 
+    s = re.sub(r"[\u0f0b]([\u0f0d-\u0f14])", "\\1", s)
     if use_gter_shad:
         s = s.replace("\u0f0d", "\u0f14")
     else:
-        s = s.replace("\u0f14", "\u0f0d")
-        # add tshegs before shad in some circumstances
-        # TODO
+        # add tshegs before shad in some circumstances (after ང)
+        s = re.sub(r"(ང[\u0f71-\u0f87]*)[\u0f0d]", "\\1\u0f0b\u0f0d", s)
+        # remove shad after ཀ, ག and ཤ
+        s = re.sub(r"([ཀགཤ][\u0f71-\u0f87]*)[\u0f0d]", "\\1", s)
     # normalize non-Tibetan punctuation into Chinese punctuation or Western punctuation (option?)
     # 〈〈?, 〈〈, 《, «, 〉〉?, », 》, 〉〉, ( ), ;, comma, dot, etc.
+    # TODO
+    # remove spaces: NO_SPACE_AFTER_PATTERN = re.compile(r"(?:\s|[༌་])$")
     # TODO
     return s
 
