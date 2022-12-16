@@ -154,6 +154,8 @@ def normalize_graphical(s):
     # the distinction between 0f38 and 0f27 is semantic but rarely
     # distinguished graphically and often completely missed by inputters
     s = s.replace("\u0f38", "\u0f27")
+    # Zero-width characters have no graphical impact on Tibetan:
+    s = re.sub("([\u0f00-\u0fda])[\u200b-\u200d\u2060\ufeff]", r"\1", s)
     # /!\ some fonts don't display these combinations in the exact same way
     # but since there's no semantic distinction and the graphical variation
     # is unclear, it seems safe
@@ -192,13 +194,15 @@ def normalize_punctuation(s, use_gter_shad=False, original_eol=True):
     if original_eol:
         # remove all yig mgo: 0f01+diacritic?, 0f02-0f07, 0fd0-0fd1, 0fd3-0fd4
         # as well as their surrounding punctuation: space, 0f0d-0f11, 0f14
-        s = re.sub(r"[ \u0f0d-\u0f11\u0f14]*[\u0f01-\u0f07\u0fd0\u0fd1\u0fd3\u0fd4]+[ \u0f0d-\u0f11\u0f14]*", "", s)
+        s = re.sub(r"[ \u0f0d-\u0f11\u0f14]*[\u0f01-\u0f07\u0fd0\u0fd1\u0fd3\u0fd4]+[ \u0f0d-\u0f11\u0f14\u0f71-\u0f87]*", "", s)
         # remove all punctuation at beginning of line
         s = re.sub(r"(^|[\n])[\u0f0b-\u0f14]+", "\\1", s)
         # ensure tsheg at end of line after normal letters, except after ཀ, ག and ཤ
         # (where the absence of a tsheg should be interpreted as the presence of a shad)
         s = re.sub(r"([\u0f41\u0f43-\u0f63\u0f65-\u0f6c][\u0f71-\u0fbc]*) *($|[\n])", "\\1\u0f0b\\2", s)
+        # ensure space after ཀ, ག and ཤ at end of line so that it merges well with the following one
         # remove line breaks and spaces at beginning of lines
+        s = re.sub(r"([ཀགཤ][\u0f71-\u0f87]*)\n", "\\1 \n", s)
         s = re.sub(r"(?:\n) *", "", s)
     s = s.replace("\u0f14", "\u0f0d")
     # replace shads with surrounding spaces by a simple shad with a space after
@@ -207,6 +211,10 @@ def normalize_punctuation(s, use_gter_shad=False, original_eol=True):
     s = re.sub(r"[\u0f0b][\u0f0b]+", "\u0f0b", s)
     # remove tshegs before punctuation, including shad (no tsheg before gter shad)
     s = re.sub(r"[\u0f0b]([\u0f0d-\u0f14])", "\\1", s)
+    # ensure space after shad
+    s = re.sub(r"[\u0f0d]([^ ])", "\u0f0d \\1", s)
+    # no tsheg after visarga
+    s = s.replace("\u0f7f\u0f0b", "\u0f7f")
     if use_gter_shad:
         s = s.replace("\u0f0d", "\u0f14")
     else:
