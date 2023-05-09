@@ -150,7 +150,7 @@ def normalize_unicode(s, form="nfd"):
     s = s.replace("\u0f65\u0f99", "\u0f62\u0f99")
     s = s.replace("\u0f65\u0fb3", "\u0f62\u0fb3")
     s, valid = unicode_reorder(s)
-    #s = normalize_invalid_start_string(s)
+    s = normalize_invalid_start_string(s)
     return s
 
 def debug_to_unicode(s):
@@ -183,15 +183,17 @@ def is_suffix(char):
 
 
 def normalize_invalid_start_string(s):
-    if is_vowel(s[0]):
-        return s[1:]
+    # we put the vowel in second place if the string starts with a vowel
+    if is_vowel(s[0]) and not is_vowel(s[1]) and not is_suffix(s[1]):
+        return s[1] + s[0] + (s[2:] if len(s) > 2 else "")
     if is_suffix(s[0]):
         return s[1:]
     return s
 
 
 def test_normalize_unicode():
-    assert_conv("\u0f77", "\u0fb2\u0f71\u0f80", False)
+    assert_conv("\u0F7B\u0F56", "\u0F56\u0F7B", False)
+    assert_conv("\u0f40\u0f77", "\u0f40\u0fb2\u0f71\u0f80", False)
     assert_conv("\u0f40\u0f7e\u0f7c\u0f74\u0f71", "\u0f40\u0f74\u0f71\u0f7c\u0f7e")
     assert_conv("\u0f58\u0f74\u0fb0\u0f83", "\u0f58\u0fb0\u0f74\u0f83")
     assert_conv("\u0F51\u0FB7\u0F74\u0FB0", "\u0F51\u0FB7\u0fb0\u0F74")
