@@ -23,15 +23,15 @@ from .third_party.cqlparser import Query, parse_cql_query, replace_token_attribu
 from .tokenizers.chunktokenizer import ChunkTokenizer
 from .tokenizers.paragraphtokenizer import paragraph_tokenizer
 from .tokenizers.sentencetokenizer import sentence_tokenizer
+from .tokenizers.stacktokenizer import tokenize_in_stacks
 from .tokenizers.token import Token
 from .tokenizers.tokenize import Tokenize
 from .tokenizers.wordtokenizer import WordTokenizer
-from .tokenizers.unicode_normalizer import normalize_unicode
-from .tokenizers.stacktokenizer import tokenize_in_stacks
 from .tries.basictrie import BasicTrie
 from .tries.trie import Trie
 from .utils.expose_data import expose_data
-from .vars import *
+from .utils.unicode_normalization import normalize_unicode
 
 # from .utils.get_data import get_data
+from .vars import *
 from .vars import __version__
