@@ -25,14 +25,15 @@ ending_verbs = [
     "བགྱི་",
     "བྱ་",
     "བཞུགས་",
-    "འདུག",
+    "འདུག་",
+    "སོང་",
 ]
 te_particles = [
     "སྟེ་",
     "ཏེ་",
     "དེ་",
 ]  # separated because these seem to cut long sentences
-clause_boundaries = te_particles + ["ནས་", "ན་"]
+clause_boundaries = te_particles + ["ནས་", "ན་", "ལ་"]
 dagdra = ["པ་", "བ་", "པོ་", "བོ་"]
 
 normalization_patterns = [(' <utt>', ''),
