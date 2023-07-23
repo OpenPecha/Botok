@@ -40,8 +40,6 @@ class Trie(BasicTrie):
         self.tmp_inflected = dict()
 
     def _load_trie(self):
-        print("Loading Trie...", end=" ", flush=True)
-        start = time.time()
         with self.pickled_file.open("rb") as f:
             self.head = pickle.load(f)
             version = self.head.data["_"]["version"]
@@ -50,8 +48,6 @@ class Trie(BasicTrie):
                     f"\nThe trie was build for botok {version}. Current version: {__version__}"
                 )
                 self._build_trie()
-        end = time.time()
-        print("({:.0f}s.)".format(end - start), flush=True)
 
     def _build_trie(self):
         """
