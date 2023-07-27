@@ -33,7 +33,7 @@ te_particles = [
     "ཏེ་",
     "དེ་",
 ]  # separated because these seem to cut long sentences
-clause_boundaries = te_particles + ["ནས་", "ན་", "ལ་"]
+clause_boundaries = te_particles + ["ནས་", "ན་", "ལ་", "ཞིང་"]
 dagdra = ["པ་", "བ་", "པོ་", "བོ་"]
 
 normalization_patterns = [(' <utt>', ''),
