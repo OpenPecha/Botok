@@ -145,12 +145,10 @@ def normalize_unicode(s, form="nfd"):
     # This is something that is now seen as a mistake, but it cannot be
     # changed because of Unicode change policies.
     s = s.replace("\u0f00", "\u0f68\u0f7c\u0f7e")
-    # ra does't transform into a small rago before nya, ya or la, so using 0f65
-    # does not change its graphical representation in that case
-    s = s.replace("\u0f65\u0f99", "\u0f62\u0f99")
-    s = s.replace("\u0f65\u0fb3", "\u0f62\u0fb3")
-    s = s.replace("\u0f65\u0fb1", "\u0f62\u0fb1")
     s, valid = unicode_reorder(s)
+    # ra doesn't transform into a small rago before anything else than (most) subjoined,
+    # so 0f65 should be replaced with 0f62 in that case
+    s = re.sub("\u0f65([^\u0f90-\u0f97\u0f9a-\u0fac\u0fae\u0faf\u0fb4-\u0fbc])", r"ར\1", s)
     s = normalize_invalid_start_string(s)
     return s
 
