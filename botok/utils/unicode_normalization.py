@@ -182,6 +182,8 @@ def is_suffix(char):
 
 
 def normalize_invalid_start_string(s):
+    if len(s) < 2:
+        return s
     # we put the vowel in second place if the string starts with a vowel
     if is_vowel(s[0]) and not is_vowel(s[1]) and not is_suffix(s[1]):
         return s[1] + s[0] + (s[2:] if len(s) > 2 else "")
