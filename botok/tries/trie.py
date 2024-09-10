@@ -3,6 +3,7 @@ import csv
 import pickle
 import time
 from pathlib import Path
+import logging
 
 from ..chunks.chunks import TokChunks
 from ..vars import HASH, NAMCHE, NO_POS, TSEK, __version__
@@ -52,7 +53,7 @@ class Trie(BasicTrie):
     def _build_trie(self):
         """
         """
-        print("Building Trie:", flush=True)
+        logging.debug("Building Trie:")
         start = time.time()
         self.head.data["_"]["version"] = __version__  # add version in trie
         self._populate_trie(self.main_data)
@@ -60,7 +61,7 @@ class Trie(BasicTrie):
         with self.pickled_file.open("wb") as f:
             pickle.dump(self.head, f, pickle.HIGHEST_PROTOCOL)
         end = time.time()
-        print("({:.0f} s.)".format(end - start), flush=True)
+        logging.debug("({:.0f} s.)".format(end - start))
 
     def _populate_trie(self, files):
         # first populate the trie with words
@@ -83,7 +84,7 @@ class Trie(BasicTrie):
         spaces and empty lines are trimmed
         a single space(breaks if more than one), a comma or a tab can be used as separators
         """
-        print("\t" + str(in_file))
+        logging.debug("\t" + str(in_file))
         with in_file.open("r", encoding="utf-8-sig") as f:
             lines = self.__clean_lines(f)
             for l in lines:
