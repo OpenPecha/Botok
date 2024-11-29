@@ -1,5 +1,4 @@
 import io
-import shutil
 import zipfile
 from collections import defaultdict
 from pathlib import Path
@@ -12,11 +11,21 @@ DEFAULT_DIALECT_PACK = "general"
 
 
 def get_dialect_pack_url(dialect_name, version=None):
-    response = requests.get(
-        "https://api.github.com/repos/Esukhia/botok-data/releases/latest"
-    )
-    if not version:
-        version = response.json()["tag_name"]
+    # Try 50 times
+    attempts = 0
+
+    while not version and attempts < 50:
+        try:
+            response = requests.get(
+                "https://api.github.com/repos/Esukhia/botok-data/releases/latest",
+                timeout=50
+            )
+            version = response.json()["tag_name"]
+        except (requests.RequestException, KeyError):
+            pass
+
+        attempts += 1
+
     return f"https://github.com/Esukhia/botok-data/releases/download/{version}/{dialect_name}.zip"
 
 
@@ -44,10 +53,10 @@ def get_dialect_pack(dialect_name, out_dir, version=None):
         raise IOError("the .zip file couldn't be downloaded.")
 
     # extract the zip in the current folder
-    z = zipfile.ZipFile(io.BytesIO(r.content))
-    z.extractall(path=str(out_dir))
+    with zipfile.ZipFile(io.BytesIO(r.content)) as z:
+        z.extractall(path=str(out_dir))
 
-    print(f"[INFO] Download completed!")
+    print("[INFO] Download completed!")
 
     return dialect_pack_path
 
