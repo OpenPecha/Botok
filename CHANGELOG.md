@@ -1,318 +1,335 @@
-# Change Log
-
-All notable changes to this project will be documented in this file.
-
-The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
-
-## [0.8.1](https://github.com/Esukhia/botok/releases/tag/v0.8.1) - 20200728
-### Refactored
-  * Introduced Dialect pack which includes all the word list and adjust rules.
-  * Config is created using the dialect pack only.
-  * Download the dialect pack when config is initialized instead at the import of botok.
-
-## [0.7.5](https://github.com/Esukhia/botok/releases/tag/v0.7.5) - 20191230
-### Fixed
- * improved tokenizer to work on syllable based trie
-
-## [0.7.4](https://github.com/Esukhia/botok/releases/tag/v0.7.4) - 20191215
-### Fixed
- * now allows to merge tokens with no textual content with tokens containing textual content
-### Added
- * NFC char detection in BoString. now prints a warning if input contains NFC
-
-## [0.7.3](https://github.com/Esukhia/botok/releases/tag/v0.7.3) - 20191212
-### Fixed
- * `botok.__version__` was not available
-
-## [0.7.2](https://github.com/Esukhia/botok/releases/tag/v0.7.2) - 20191212
-### Fixed
- * install not working on Windows (encoding not declared in setup.py)
-
-## [0.7.1](https://github.com/Esukhia/botok/releases/tag/v0.7.1) - 20191211
-### Added
- * Automated update of existing compiled tries and config files (version included in trie and .yaml, then checked at load time)
-
-## [0.7.0](https://github.com/Esukhia/botok/releases/tag/v0.7.0) - 20191210
-### Changed
- * All trie data previously in botok/resources/ is moved to the botok_data repo
- The files are automatically downloaded from botok_data if it is not present, or external profiles can also be used.
- * only the files corresponding to POS profile are kept in botok_data
- * change from word lists to create the trie + entry_data to word lists containing the data (no more duplication of word lists)
- * Token.entries changed to Token.senses
-### Added
- * Token.sense added
-
-## [0.6.18](https://github.com/Esukhia/botok/releases/tag/v0.6.18) - 20191121
-### Changed
- * yaml format changed to tsv for adjustment rules files. (See syntax [here](https://github.com/Esukhia/botok/blob/master/botok/modifytokens/adjusttokens.py#L11-L24))
- * changed default text field (previously "word", now "text_cleaned") in third_party/pynpl/cql.py
-
-## [0.6.17](https://github.com/Esukhia/botok/releases/tag/v0.6.17) - 20191107
-### Fixed
- * fix : when there are custom adjustments, ignore the default adjustments
-
-## [0.6.16](https://github.com/Esukhia/botok/releases/tag/v0.6.16) - 20191107
-### Fixed
- * bugfix: custom location for pybo.yaml works
-### Added
- * export either all data, or a profile's data (empty, POS, GMD, tsikchen) in expose_data()
-
-## [0.6.15](https://github.com/Esukhia/botok/releases/tag/v0.6.15) - 20191106
-### Added
- * add expose_data() to copy at a given location the data used by botok
-### Changed
- * remove rdr_2_replace_matchers from botok (into its own repo)
-
-## [0.6.14](https://github.com/Esukhia/botok/releases/tag/v0.6.14) - 20191105
-### Added
- * add syllable-mode in token_split
-    * expose syllable boundaries from preprocessing into Token objects
-    * update boundaries at token splitting and token merging
-
-## [0.6.13](https://github.com/Esukhia/botok/releases/tag/v0.6.13) - 20191101
-### Fixed
- * changed the order of entry_data files to: "form / pos / lemma / sense / freq", to have mostly used fields on the left
- * changed "meaning" field in entry_data to "sense"
- * changed entry_data file extension. from .csv to .tsv (content was already tab-delimited)
- * removed the frequency folder in the trie data. it is expected that every line in the entry_data files creates a new sense, in case a single word appears more than once.
-### Added
- * Added a lemma in MergeDagdra: the lemma of the host + the dagdra
-
-## [0.6.12](https://github.com/Esukhia/botok/releases/tag/v0.6.12) - 20191007
-### Fixed
- * MergeDagdra (in WordTokenizer) does not jump words to merge anymore
- * "lexica" changed to "words" in the resources' folder to improve readability.
- * added missing __version__ attribute in package
-
-## [0.6.11](https://github.com/Esukhia/botok/releases/tag/v0.6.11) - 20191004
-### Fixed
- * before a space, ཀ ག ཤ eventually followed by a vowel is now treated as a syllable break
-### Added
- * spaces_as_punct optional argument in WordTokenizer.tokenize().
- Dakje Editor required to have spaces and \n in separate tokens instead of having them as transparent chars.
-
-## [0.6.10](https://github.com/Esukhia/botok/releases/tag/v0.6.10) - 20190912
-### Added
- * custom path for config files and pickle files
-
-## [0.6.9](https://github.com/Esukhia/botok/releases/tag/v0.6.9) - 20190901
-### Added
- * only the tokenizer's codebase is kept in botok repo. everything else is moved to the new pybo repo.
-
-## [0.6.8](https://github.com/Esukhia/pybo/releases/tag/v0.6.8) - 20190826
-### Fixed
- * ../ in Path freezing on Mac
-
-## [0.6.7](https://github.com/Esukhia/pybo/releases/tag/v0.6.7) - 20190821
-### Added
- * batch regex from file + cli
-
-## [0.6.6](https://github.com/Esukhia/pybo/releases/tag/v0.6.6) - 20190820
-### Added
- * RDR rules parser to convert them into pybo's CQL ReplaceMatcher format
- * integrate it in WordTokenizer and Config (same options as for the trie data and profiles)
- * add a CLI option using parse_rdr_rules().
-
-## [0.6.5](https://github.com/Esukhia/pybo/releases/tag/v0.6.5) - 20190816
-### Fixed
- * particles not in the list were bugging
-
-## [0.6.4](https://github.com/Esukhia/pybo/releases/tag/v0.6.4) - 20190815
-### Added
- * CLI interface for basic tokenization of strings and files
-
-## [0.6.3](https://github.com/Esukhia/pybo/releases/tag/v0.6.3) - 20190814
-### Fixed
- * remove print() that was executed at every added word
-
-## [0.6.2](https://github.com/Esukhia/pybo/releases/tag/v0.6.2) - 20190814
-### Added
- * implemented sentence and paragraph tokenizers + Text properties
- * meaning field in the entries attribute of Token objects
-### Changed
- * reduced the amount of times WordTokenizers were loaded in the test suite (for Travis)
- * improve names for higher consistency
-### Fixed
- * a few remaining bugs from previous release
-
-## [0.6.1](https://github.com/Esukhia/pybo/releases/tag/v0.6.1) - 20190813
-### Fixed
- * affixed particles were inflected
- * pos, lemma and frequency are brought together: a single inflected form can be two different words, thus different POS and different frequency.
- * various bugs related to the refactoring
-### Added
- * support for more than one meaning for every trie entry (inflected form)
-
-A `meanings` attribute is added in the Token objects. They hold as many meanings as found in the trie data.
-A default meaning is chosen, then the `pos`, `lemma` and `freq` fields are copied from the `meanings` attribute to the attributes bearing these names.
-When only one meaning is available, it is chosen, otherwise, the meaning with the highest amount of attributes is chosen from the following groups, in this order:
-meanings that are unaffixed words, meanings that don't have the `affixed` attribute, meanings that are affixed words.
-
- * adjustments required by the above in the different parts of pybo
-
-## [0.6.0](https://github.com/Esukhia/pybo/releases/tag/v0.6.0) - 20190701
-### Changed
- * refactoring the Pipeline class into the Text class. check test_text.py to have an overview of what it does.
-
-## [0.5.1](https://github.com/Esukhia/pybo/releases/tag/v0.5.1) - 20190629
-### Added
- * Added a default profile to WordTokenizer so the end user can simply import it and run it without thinking about anything else.
-
-## [0.5.0](https://github.com/Esukhia/pybo/releases/tag/v0.5.0) - 20190627
-### Changed
- * Whole refactorisation of pybo's existing features. (Pipeline is not yet refactored)
- * A lot of renaming to clarify things
- * General cleanup of all files and re-organization into folders each containing the files
- * Attribute names of Token objects are changed
-### Fixed
- * various bugs, like the how many transparent chars(spaces and tseks) can be inside a syllable
-### Added
- * Tests for each file showcasing the expected behaviour (tests for matchers are still the same as before)
-
-## [0.4.3](https://github.com/Esukhia/pybo/releases/tag/v0.4.3) - 20190517
-### Fixed
- * bugfix: the yaml warning is fixed
- * bugfix: an infinite loop is fixed
- * bugfix: papomerge is fixed
-
-## [0.4.2](https://github.com/Esukhia/pybo/releases/tag/v0.4.2) - 20190306
-### Added
- * BoPipeline now accepts naming custom pipes. a (string, function) is allowed as argument
-   (Warning: not thoroughly tested)
- * dummy pipes are added for preprocessing, processing and formatting.
-
-## [0.4.1](https://github.com/Esukhia/pybo/releases/tag/v0.4.1) - 20190306
-### Added
- * BoPipeline is now a class with 4 arguments, one for each pipe.
-   (Warning: not thoroughly tested)
-
-## [0.4.0](https://github.com/Esukhia/pybo/releases/tag/v0.4.0) - 20190305
-### Added
- * MergePaPo class. Any token containing པ་/པོ་/བ་/བོ་ in Token.clean_content is by default merged to the previous one
-### Changed
- * SplitAffixed was moved from Tokenizer to BoTokenizer, meaning that Tokenizer outputs tokens as they come out from the trie.
-   BoTokenizer also hosts LemmatizeTokens.
- * A bit of cleanup
-
-## [0.3.0](https://github.com/Esukhia/pybo/releases/tag/v0.3.0) - 20190201
-### Added
- * BoPipeline class. This allows to easily establish a custom pipeline that includes the BoTokenizer
-   The tests are limited to the intended functionality. The default pipes should be cleaned and rethought.
-
-## [0.2.21](https://github.com/Esukhia/pybo/releases/tag/v0.2.21) - 20191301
-### Fixed
- * CQL matcher didn't match last token
-
-## [0.2.20](https://github.com/Esukhia/pybo/releases/tag/v0.2.20) - 20181221
-### Fixed
- * didn't install well on Windows.
-
-## [0.2.19](https://github.com/Esukhia/pybo/releases/tag/v0.2.19) - 20181207
-### Fixed
- * files to delete didn't get deleted (wrong variable name)
-
-### Added
- * Deletes all the inflected variants of a given word in the trie instead of just the given (uninflected) variant
-
-## [0.2.18](https://github.com/Esukhia/pybo/releases/tag/v0.2.18) - 20181026
-### Fixed
- * bugfix: couldn't attach the content of second chunk of spaces in case two chunks in a row contain only spaces
-
-    While attaching the content of space chunks to the previous chunk, if the previous chunk was a space chunk and its content already attached, the only thing remaining is a bool False as space-holder.
-    In this case, if the current chunk is also a space chunk, it couldn't attach to the previous chunk.
-
-    Now goes back to the last valid chunk and attaches content to it.
-
-
-## [0.2.17](https://github.com/Esukhia/pybo/releases/tag/v0.2.17) - 20181026
-### Added
- * `deactivate_wordlist()` method to `pybotrie`. This dynamically deactivates lists of words in the trie
-
-## [0.2.16](https://github.com/Esukhia/pybo/releases/tag/v0.2.16) - 20181023
-### Added
- * new affix combinations (see [#25](https://github.com/Esukhia/pybo/issues/25))
- * externalized trie profiles in config files
- * added `\t` to the space list in BoSyl (sometimes used instead of a space)
- * added tibetan-verbs-database to MGD trie profile
- * added frequency info to the trie
-
-### Changed
- * improve and simplify setup.py
- * improve `Token.__repr__()`
- * if there is a space after a shed, put the space in the punctuation token instead of the next syllable
-    and merge into 1 token only the བཞི་ཤད་
-
-    ex:
-
-    `["།", " བཀྲ་ཤིས་"]` -> `["། ", "བཀྲ་ཤིས་"]` and  `["།། ", "།།"]` -> `["།། །།"]`
-
-    Nota: both "༎" (Tibetan Mark Nyis Shad `U+0F0E`) and "།།" (Tibetan Mark Shad x 2 `U+0F0DU+0F0D`) are supported
- * mgd.txt and sanskrit.txt have been cleaned up and updated
-
-### Fixed
- * when tokenizing without splitting the affixed particles, the unaffixed_word attribute added a འ to words not needing it.
-   (རྒྱ་མཚོར་ gave རྒྱ་མཚོའ་)
- * missing tseks are now detected after char types 'numbers', 'other' and 'symbols'
- * `long_skrt_vowel` (Tibetan Sign Rnam Bcad `U+0F7F`) is treated as syllable content. It triggers a syllable change,
-    as the tsek already does. (a tsek is not added in the presence of a `long_skrt_vowel`)
- * added mechanism to generate tokens of type `numbers` (previously considered symbols)
-
----
-
-## [0.2.2](https://github.com/Esukhia/pybo/releases/tag/v0.2.2) - 20180711
-### Added
- * two new tests in order to check the frequency of a token and if a syllable is sanskrit
-
-### Fixed
- * [The resources for the frequency is not in the package #23](https://github.com/Esukhia/pybo/issues/23)
-
----
-
-## [0.2.1](https://github.com/Esukhia/pybo/releases/tag/v0.2.1) - 20180711
-### Added
- * two new attibrutes on the tokens: `char_types` (type of characters in a syllable) and `type` (type of the token)
-
-### Changed
- * token.lenght is now renamed to **token.len**
- * `char types` (print-out attribute of a token) is now renamed to `char_types`
- * `start in input` (print-out attribute of a token) is now renamed to `start`
- * `syl chars in conten` (print-out attribute of a token) is now renamed to `syls`
- * `POS` (print-out attribute of a token) is now renamed to `pos`
-
-### Fixed
- * [symbol considered as token content #19](https://github.com/Esukhia/pybo/issues/19)
- * [suggestion for token conventions #12](https://github.com/Esukhia/pybo/issues/12)
-
----
-
-## [0.2.0](https://github.com/Esukhia/pybo/releases/tag/v0.2.0) - 20180709
-### Added
- * two new attibrutes on the tokens: `freq` (the word/syllable frequency) and `skrt` (test the syllable composition if it's a sanskrit syllable or not)
- * mgd (the Monlam Grand Dictionary) and two frequency files (mgd and tc) - See the [README file](https://github.com/Esukhia/pybo/blob/master/pybo/resources/README.md) in ressource for more informations
- * MGD profile which uses mgd in trie along with its frequency file
-
-### Changed
- * POS profile now uses the mdg frequency file
- * clear distinction between "OOV" (is in the trie but does not have any POS tag informations) and "non-word" (the syllable is not part of the trie)
-
-### Fixed
- * [Missing syllable and punctuations issue #21](https://github.com/Esukhia/pybo/issues/21)
- * invalid PATH in some test files
-
----
-
-## [0.1.4](https://github.com/Esukhia/pybo/releases/tag/v0.1.4) - 20180425
-### Added
- * Changelog
-
-### Changed
- * improve setup.py readability
-
-### Fixed
- * missing argument to add POS tags in POS profile
-
----
-
-## [0.1.3](https://github.com/Esukhia/pybo/releases/tag/v0.1.3) - 20180425
-### Added
- * initial release
+# CHANGELOG
+
+
+## v0.8.13 (2025-01-24)
+
+### Bug Fixes
+
+- Sentence normalizer test case updated
+  ([`9d0af85`](https://github.com/OpenPecha/Botok/commit/9d0af851917f6067141fff4c3923a08c4903f577))
+
+- Versin bump from 8.12 to 8.13
+  ([`249b667`](https://github.com/OpenPecha/Botok/commit/249b6674e6d10a08db7c6bc8dd70bb3550be2bc1))
+
+- **normalization**: Fix for short strings
+  ([`85a3155`](https://github.com/OpenPecha/Botok/commit/85a3155cbeac35c324477f5e2d922f3d454ad139))
+
+
+## v0.8.12 (2023-05-17)
+
+### Bug Fixes
+
+- Imports
+  ([`986ce4b`](https://github.com/OpenPecha/Botok/commit/986ce4bd050e482e1163ca9e265ecb1051375c88))
+
+
+## v0.8.11 (2023-05-11)
+
+### Bug Fixes
+
+- Better handling of invalid start of string
+  ([`27128fd`](https://github.com/OpenPecha/Botok/commit/27128fd5f5a852b021b237f50583fd178ebb9aaa))
+
+- Create new release manually
+  ([`8cef179`](https://github.com/OpenPecha/Botok/commit/8cef179ab92dbb388232bca7ffd92a2011e5c6d2))
+
+- Create new release manually
+  ([`e1ed718`](https://github.com/OpenPecha/Botok/commit/e1ed7183aead4ba790070584170c75d23fe66872))
+
+
+## v0.8.10 (2022-04-05)
+
+
+## v0.8.8 (2021-10-12)
+
+### Bug Fixes
+
+- **sent-tokenizer**: Normalised sentence is included in sentence tokens
+  ([`7cf455d`](https://github.com/OpenPecha/Botok/commit/7cf455dc1f809e155a1b573a623fcb1e22670963))
+
+
+## v0.8.7 (2021-06-21)
+
+### Bug Fixes
+
+- No_pos typos
+  ([`5d521a8`](https://github.com/OpenPecha/Botok/commit/5d521a8635f01aef41bce4877375594432de51cf))
+
+
+## v0.8.6 (2021-05-20)
+
+### Bug Fixes
+
+- Auto release
+  ([`65b0931`](https://github.com/OpenPecha/Botok/commit/65b09318e865ec08d1bd9bff9c11f49d973c640a))
+
+- Auto release
+  ([`159d39e`](https://github.com/OpenPecha/Botok/commit/159d39e478029315df51ab82eb99e0fd2c61b98a))
+
+- Auto release
+  ([`c961147`](https://github.com/OpenPecha/Botok/commit/c9611479e95544daf8e4c7868eba412ad58dc7aa))
+
+- Auto release
+  ([`1d56341`](https://github.com/OpenPecha/Botok/commit/1d563419cabb16817631aec2646d66f61125ae87))
+
+- Auto release
+  ([`ab9cf0a`](https://github.com/OpenPecha/Botok/commit/ab9cf0ae1fc6677efadc44b66ca640102daf857c))
+
+- Auto release
+  ([`b48e017`](https://github.com/OpenPecha/Botok/commit/b48e0174ab4b357bc32dda42f5d95a3fdfeb7626))
+
+- **trie**: Non inflectible word type error bug fix
+  ([`36ad9ca`](https://github.com/OpenPecha/Botok/commit/36ad9ca09e7c5799df499c1225d752a66d2df850))
+
+
+## v0.8.5 (2021-04-15)
+
+
+## v0.8.4 (2021-04-14)
+
+### Bug Fixes
+
+- **tokenize**: Another case of unexpected skip of syl
+  ([`deacd59`](https://github.com/OpenPecha/Botok/commit/deacd59f27fcc8dfa42b08b21a9b74093f5ec8eb))
+
+- **tokenize**: Syl of remove word getting skipped unexpectly
+  ([`161445e`](https://github.com/OpenPecha/Botok/commit/161445e01399cb38e40fcc3b2e6f1a21a2e5d021))
+
+
+## v0.8.3 (2021-03-29)
+
+### Bug Fixes
+
+- **adjusttoken**: Rules having invalid index are not considered and error msg is shown in that case
+  ([`bfe6218`](https://github.com/OpenPecha/Botok/commit/bfe621800a4ccb728f960c625d34ad417c653523))
+
+- **split_affixztion**: Keyerror bug fix by using pop method to delete items
+  ([`a981693`](https://github.com/OpenPecha/Botok/commit/a981693d6e05f10015e8035298c94524e8a34785))
+
+
+## v0.8.2 (2021-03-22)
+
+### Bug Fixes
+
+- Set config kwargs to None
+  ([`04eaa9f`](https://github.com/OpenPecha/Botok/commit/04eaa9f5aa186ed3da8a13e10b727a2e1d8e94e1))
+
+- **WordTokenizer**: Adjusted token list assigned to token list returned by tokenize method
+  ([`dc898a9`](https://github.com/OpenPecha/Botok/commit/dc898a9786a7576992e4d08f9e87feee47e33030))
+
+### Documentation
+
+- Add architecture dg & workflow of botok
+  ([`fda2025`](https://github.com/OpenPecha/Botok/commit/fda2025fa26c22320bc863034d5093002fe7631a))
+
+- Add config class
+  ([`f5c2242`](https://github.com/OpenPecha/Botok/commit/f5c224203f9cb7b2bc42fb6b6545b5b618f3db54))
+
+- Add title and description
+  ([`a019ca9`](https://github.com/OpenPecha/Botok/commit/a019ca9a3785b41761cf04b140efeb70181709a7))
+
+- Custome dialect pack usage
+  ([`802cbef`](https://github.com/OpenPecha/Botok/commit/802cbef84123807751a4719d09199277c8ec2869))
+
+- Setup the docs
+  ([`c6c4229`](https://github.com/OpenPecha/Botok/commit/c6c422934fd6fd085ea1b5a0cd730ae9eec01ad3))
+
+
+## v0.8.1 (2020-07-28)
+
+### Bug Fixes
+
+- Running test under coverage
+  ([`69b2334`](https://github.com/OpenPecha/Botok/commit/69b2334d7889eb4b3508f9397db94b00a8ebdb6b))
+
+- Select on .tsv files in dialect pack
+  ([`e24369a`](https://github.com/OpenPecha/Botok/commit/e24369aec29412165ffd917645c03b90284c88e0))
+
+- Set part_lemmas attr to WordTokenizer
+  ([`56734a1`](https://github.com/OpenPecha/Botok/commit/56734a16ea14389e8a10729ba4e806e2811f0f3e))
+
+- Skip rules when populating trie
+  ([`a16ef54`](https://github.com/OpenPecha/Botok/commit/a16ef549f2952a106b1a28126226f5fbd1e64ada))
+
+- Use full directory base config
+  ([`38107fe`](https://github.com/OpenPecha/Botok/commit/38107fe5a63bbef514f327319dca06192bb01ad4))
+
+- Use fully directory base config
+  ([`b292077`](https://github.com/OpenPecha/Botok/commit/b29207735819c2582c8915043d1cab6e90eca8d7))
+
+### Documentation
+
+- Update the usage
+  ([`046747b`](https://github.com/OpenPecha/Botok/commit/046747b4995fc6f7b4702829494d69a74949e50d))
+
+### Refactoring
+
+- Add factory method to create config from path
+  ([`395a4f8`](https://github.com/OpenPecha/Botok/commit/395a4f8be75a500668b54f4fcf6085735dec8bae))
+
+- Download dialect pack with config
+  ([`709b6c4`](https://github.com/OpenPecha/Botok/commit/709b6c4a78b5a67fb60148a0c31ad94c88b25e80))
+
+- Remove unwnated code
+  ([`9b8ee0f`](https://github.com/OpenPecha/Botok/commit/9b8ee0f3f6a40243516d09791b8f564c5c767633))
+
+### Testing
+
+- Add test adjust rules
+  ([`039e628`](https://github.com/OpenPecha/Botok/commit/039e6287ead3c5b84995187ed183d38c21e415ff))
+
+- Check attrs and pytest version
+  ([`0c33b61`](https://github.com/OpenPecha/Botok/commit/0c33b61881336d970d4250ba66e0eb7ff135fba2))
+
+- Fix pytest version
+  ([`e47a166`](https://github.com/OpenPecha/Botok/commit/e47a1666af421bd06674beb6659771c1f411e12a))
+
+- Improve test speed with session scope
+  ([`fe56d63`](https://github.com/OpenPecha/Botok/commit/fe56d63843b1056db8ff97c4dcf7fac3ab4cfe1e))
+
+- Recfactor test suits
+  ([`7d7fd40`](https://github.com/OpenPecha/Botok/commit/7d7fd4002ee0399305b51f1af3622435f55fdd77))
+
+- Run coverage on tests
+  ([`f5a394c`](https://github.com/OpenPecha/Botok/commit/f5a394c41ca43b299a37c79bba01a132a4042a2e))
+
+- Specify pytest version
+  ([`ec9bcb2`](https://github.com/OpenPecha/Botok/commit/ec9bcb2be48bb59bdaa7f6fa22aa4b7ac220287b))
+
+- Specify pytest version in setup.py
+  ([`0c2a379`](https://github.com/OpenPecha/Botok/commit/0c2a37979dee35f78d570fe1d5bd183a96e66608))
+
+- Update test with refactored config
+  ([`5d21710`](https://github.com/OpenPecha/Botok/commit/5d217106403c99e5b9ff039d87e5693b8ee574b2))
+
+- Use new config system + rm whitespaces
+  ([`cd7ac1a`](https://github.com/OpenPecha/Botok/commit/cd7ac1a67ea3de34fc941dbf6e827b6e6f23f27b))
+
+
+## v0.7.5 (2019-12-30)
+
+
+## v0.7.4 (2019-12-15)
+
+
+## v0.7.3 (2019-12-12)
+
+
+## v0.7.2 (2019-12-12)
+
+
+## v0.7.1 (2019-12-11)
+
+
+## v0.7.0 (2019-12-10)
+
+
+## v0.6.18 (2019-11-21)
+
+
+## v0.6.16 (2019-11-07)
+
+
+## v0.6.15 (2019-11-06)
+
+
+## v0.6.14 (2019-11-05)
+
+
+## v0.6.13 (2019-11-01)
+
+
+## v0.6.12 (2019-10-07)
+
+
+## v0.6.11 (2019-10-04)
+
+
+## v0.6.10 (2019-09-12)
+
+
+## v0.6.9 (2019-09-02)
+
+
+## v0.6.8 (2019-08-26)
+
+
+## v0.6.7 (2019-08-21)
+
+
+## v0.6.6 (2019-08-20)
+
+
+## v0.6.5 (2019-08-16)
+
+
+## v0.6.4 (2019-08-15)
+
+
+## v0.6.3 (2019-08-15)
+
+
+## v0.6.2 (2019-08-15)
+
+
+## v0.6.1 (2019-08-13)
+
+
+## v0.6.0 (2019-07-01)
+
+
+## v0.5.1 (2019-06-29)
+
+
+## v0.5.0 (2019-06-27)
+
+
+## v0.4.3 (2019-05-17)
+
+
+## v0.4.2 (2019-03-06)
+
+
+## v0.4.1 (2019-03-05)
+
+
+## v0.4.0 (2019-03-05)
+
+
+## v0.3.0 (2019-02-01)
+
+
+## v0.2.21 (2019-01-13)
+
+
+## v0.2.20 (2018-12-21)
+
+
+## v0.2.19 (2018-12-07)
+
+
+## v0.2.18 (2018-10-26)
+
+
+## v0.2.17 (2018-10-26)
+
+
+## v0.2.16 (2018-10-23)
+
+
+## v0.2.2 (2018-07-11)
+
+
+## v0.2.1 (2018-07-11)
+
+
+## v0.2.0 (2018-07-09)
+
+
+## v0.1.5 (2018-04-28)
+
+
+## v0.1.4 (2018-04-25)
+
+
+## v0.1.3 (2018-04-25)
