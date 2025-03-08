@@ -7,12 +7,11 @@
 <h3 align="center">Botok – Python Tibetan Tokenizer</h3>
 
 <p align="center">
-    <a href="https://github.com/Esukhia/botok/releases"><img src="https://img.shields.io/github/release/Esukhia/botok.svg" alt="GitHub release"></a> 
+    <a href="https://github.com/OpenPecha/botok/releases"><img src="https://img.shields.io/github/release/OpenPecha/botok.svg" alt="GitHub release"></a> 
     <a href="https://botok.readthedocs.io/en/latest/?badge=latest"><img src="https://readthedocs.org/projects/botok/badge/?version=latest" alt="Documentation Status"></a> 
-    <a href="https://travis-ci.com/Esukhia/botok"><img src="https://travis-ci.com/Esukhia/botok.svg?branch=master" alt="Build Status"></a> 
-    <a href="https://coveralls.io/github/Esukhia/botok?branch=master"><img src="https://coveralls.io/repos/github/Esukhia/botok/badge.svg?branch=master" alt="Coverage Status"></a> 
+    <a href="https://coveralls.io/github/OpenPecha/botok?branch=master"><img src="https://coveralls.io/repos/github/OpenPecha/botok/badge.svg?branch=master" alt="Coverage Status"></a> 
     <a href="https://black.readthedocs.io/en/stable/"><img src="https://img.shields.io/badge/code%20style-black-000000.svg" alt="Code style: black"></a>
-    <a href="https://github.com/Esukhia/botok/blob/master/LICENSE"><img src="https://img.shields.io/github/license/Esukhia/botok.svg" alt="License"></a>
+    <a href="https://github.com/OpenPecha/botok/blob/master/LICENSE"><img src="https://img.shields.io/github/license/OpenPecha/botok.svg" alt="License"></a>
 </p>
 
 <p align="center">
@@ -64,7 +63,7 @@ pip install botok
 ### Development Installation
 
 ```bash
-git clone https://github.com/Esukhia/botok.git
+git clone https://github.com/OpenPecha/botok.git
 cd botok
 pip install -e .
 ```
@@ -153,8 +152,8 @@ spaces = t.tokenize_on_spaces
 
 For comprehensive documentation, visit:
 - [ReadTheDocs](https://botok.readthedocs.io/) - Full API documentation
-- [Wiki](https://github.com/Esukhia/botok/wiki) - Guides and tutorials
-- [Examples](https://github.com/Esukhia/botok/tree/master/examples) - Code examples
+- [Wiki](https://github.com/OpenPecha/botok/wiki) - Guides and tutorials
+- [Examples](https://github.com/OpenPecha/botok/tree/master/examples) - Code examples
 
 ## Development
 
@@ -222,4 +221,4 @@ Please ensure your PR adheres to:
 
 ## License
 
-Copyright (C) 2019-2025 Esukhia. Licensed under [Apache 2.0](LICENSE).
+Copyright (C) 2019-2025 OpenPecha. Licensed under [Apache 2.0](LICENSE).
