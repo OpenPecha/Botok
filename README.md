@@ -6,115 +6,157 @@
 
 <h3 align="center">Botok – Python Tibetan Tokenizer</h3>
 
-<!-- Replace the title of the repository -->
-
 <p align="center">
-    <a><img src="https://img.shields.io/github/release/Esukhia/botok.svg" alt="GitHub release"></a> 
+    <a href="https://github.com/Esukhia/botok/releases"><img src="https://img.shields.io/github/release/Esukhia/botok.svg" alt="GitHub release"></a> 
     <a href="https://botok.readthedocs.io/en/latest/?badge=latest"><img src="https://readthedocs.org/projects/botok/badge/?version=latest" alt="Documentation Status"></a> 
     <a href="https://travis-ci.org/Esukhia/botok"><img src="https://travis-ci.org/Esukhia/botok.svg?branch=master" alt="Build Status"></a> 
     <a href="https://coveralls.io/github/Esukhia/botok?branch=master"><img src="https://coveralls.io/repos/github/Esukhia/botok/badge.svg?branch=master" alt="Coverage Status"></a> 
-    <a href="https://black.readthedocs.io/en/stable/"><img src="https://img.shields.io/badge/code%20style-black-000000.svg" alt="Code style: black"></a> 
+    <a href="https://black.readthedocs.io/en/stable/"><img src="https://img.shields.io/badge/code%20style-black-000000.svg" alt="Code style: black"></a>
+    <a href="https://github.com/Esukhia/botok/blob/master/LICENSE"><img src="https://img.shields.io/github/license/Esukhia/botok.svg" alt="License"></a>
 </p>
 
 <p align="center">
   <a href="#description">Description</a> •
-  <a href="#install">Install</a> •
-  <a href="#example">Example</a> •
-  <a href="#commentedexample">Commented Example</a> •
-  <a href="#docs">Docs</a> •
-  <a href="#owners">Owners</a> •
-  <a href="#Acknowledgements">Acknowledgements</a> •
-  <a href="#Maintainance">Maintainance</a> •
-  <a href="#License">License</a>
+  <a href="#key-features">Key Features</a> •
+  <a href="#installation">Installation</a> •
+  <a href="#basic-usage">Basic Usage</a> •
+  <a href="#advanced-usage">Advanced Usage</a> •
+  <a href="#documentation">Documentation</a> •
+  <a href="#development">Development</a> •
+  <a href="#contributing">Contributing</a> •
+  <a href="#acknowledgements">Acknowledgements</a>
 </p>
+
 <hr>
 
 ## Description
 
-Botok tokenizes Tibetan text into words with optional attributes such as lemma, POS, clean form.
+Botok is a powerful Python library for tokenizing Tibetan text. It segments text into words with high accuracy and provides optional attributes such as lemma, part-of-speech (POS) tags, and clean forms. The library supports various text formats, custom dialects, and multiple tokenization modes, making it a versatile tool for Tibetan Natural Language Processing (NLP).
 
-## Install
-Requires to have Python3 installed.
+## Key Features
 
-## Requirements
+- **Word Segmentation**: Accurate word segmentation with support for affixed particles
+- **Multiple Tokenization Modes**: 
+  - Word tokenization
+  - Chunk tokenization (groups of meaningful characters)
+  - Space-based tokenization
+- **Rich Token Attributes**:
+  - Lemmatization
+  - POS tagging
+  - Clean form generation
+- **Custom Dialect Support**: Use pre-configured dialects or create your own
+- **File Processing**: Process both strings and files with automatic output generation
+- **Robust Handling**: Manages complex cases like double tseks and spaces within words
+
+## Installation
+
+### Requirements
 
 - Python 3.6 or higher
 - pip package manager
 
-## Installation
+### Basic Installation
 
 ```bash
 pip install botok
 ```
 
-## Quick Start
+### Development Installation
 
-## Example
-
+```bash
+git clone https://github.com/Esukhia/botok.git
+cd botok
+pip install -e .
 ```
+
+## Basic Usage
+
+### Simple Word Tokenization
+
+```python
 from botok import WordTokenizer
 from botok.config import Config
 from pathlib import Path
 
-def get_tokens(wt, text):
-    tokens = wt.tokenize(text, split_affixes=False)
-    return tokens
+# Initialize tokenizer with default configuration
+config = Config(dialect_name="general", base_path=Path.home())
+wt = WordTokenizer(config=config)
 
-if __name__ == "__main__":
-    config = Config(dialect_name="general", base_path= Path.home())
-    wt = WordTokenizer(config=config)
-    text = "བཀྲ་ཤིས་བདེ་ལེགས་ཞུས་རྒྱུ་ཡིན་ སེམས་པ་སྐྱིད་པོ་འདུག།"
-    tokens = get_tokens(wt, text)
-    for token in tokens:
-        print(token)
+# Tokenize text
+text = "བཀྲ་ཤིས་བདེ་ལེགས་ཞུས་རྒྱུ་ཡིན་ སེམས་པ་སྐྱིད་པོ་འདུག།"
+tokens = wt.tokenize(text, split_affixes=False)
+
+# Print each token
+for token in tokens:
+    print(token)
 ```
 
-https://user-images.githubusercontent.com/24893704/148767959-31cc0a69-4c83-4841-8a1d-028d376e4677.mp4
-
-## Commented Example
+### File Processing
 
 ```python
 from botok import Text
-
-# Process a string
-text = "བཀྲ་ཤིས་བདེ་ལེགས།"
-t = Text(text)
-tokens = t.tokenize_words_raw_text
-print(tokens)
+from pathlib import Path
 
 # Process a file
-from pathlib import Path
-file_path = Path("input.txt")
-t = Text(file_path)
-t.tokenize_chunks_plaintext  # Outputs to input_pybo.txt
+input_file = Path("input.txt")
+t = Text(input_file)
+t.tokenize_chunks_plaintext  # Creates input_pybo.txt with tokenized output
 ```
 
-## Usage Modes
+## Advanced Usage
 
-### 1. Basic Tokenization
+### Custom Dialect Configuration
+
+```python
+from botok import WordTokenizer
+from botok.config import Config
+from pathlib import Path
+
+# Configure custom dialect
+config = Config(
+    dialect_name="custom",
+    base_path=Path.home() / "my_dialects"
+)
+
+# Initialize tokenizer with custom config
+wt = WordTokenizer(config=config)
+
+# Process text with custom settings
+text = "བཀྲ་ཤིས་བདེ་ལེགས།"
+tokens = wt.tokenize(
+    text,
+    split_affixes=True,
+    pos_tagging=True,
+    lemmatize=True
+)
+```
+
+### Different Tokenization Modes
+
 ```python
 from botok import Text
 
 text = """ལེ གས། བཀྲ་ཤིས་མཐའི་ ༆ ཤི་བཀྲ་ཤིས་"""
 t = Text(text)
 
-## Docs
+# 1. Word tokenization
+words = t.tokenize_words_raw_text
 
-No documentations.
+# 2. Chunk tokenization (groups of meaningful characters)
+chunks = t.tokenize_chunks_plaintext
 
-<!-- This section must link to the docs which are in the root of the repository in /docs -->
+# 3. Space-based tokenization
+spaces = t.tokenize_on_spaces
+```
 
 ## Documentation
 
-## Owners
+For comprehensive documentation, visit:
+- [ReadTheDocs](https://botok.readthedocs.io/) - Full API documentation
+- [Wiki](https://github.com/Esukhia/botok/wiki) - Guides and tutorials
+- [Examples](https://github.com/Esukhia/botok/tree/master/examples) - Code examples
 
-- [@drupchen](https://github.com/drupchen)
-- [@eroux](https://github.com/eroux)
-- [@ngawangtrinley](https://github.com/ngawangtrinley)
-- [@10zinten](https://github.com/10zinten)
-- [@kaldan007](https://github.com/kaldan007)
-
-<!-- This section lists the owners of the repo -->
+## Development
 
 ### Building from Source
 
@@ -129,30 +171,55 @@ python setup.py clean sdist
 twine upload dist/*
 ```
 
+### Running Tests
+
+```bash
+pytest tests/
+```
+
 ## Contributing
 
-We welcome contributions! Please feel free to submit a Pull Request.
+We welcome contributions! Here's how you can help:
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+Please ensure your PR adheres to:
+- [Code style guidelines](https://black.readthedocs.io/en/stable/)
+- Test coverage requirements
+- Documentation standards
+
+## Project Owners
+
+- [@drupchen](https://github.com/drupchen)
+- [@eroux](https://github.com/eroux)
+- [@ngawangtrinley](https://github.com/ngawangtrinley)
+- [@10zinten](https://github.com/10zinten)
+- [@kaldan007](https://github.com/kaldan007)
 
 ## Acknowledgements
 
-**botok** is an open source library for Tibetan NLP.
+**botok** is an open source library for Tibetan NLP. We are grateful to our sponsors and contributors:
 
-Special thanks to our sponsors:
+### Sponsors
 
 * [Khyentse Foundation](https://khyentsefoundation.org) - USD22,000 initial funding
 * [Barom/Esukhia canon project](http://www.barom.org) - Training data curation
 * [BDRC](https://tbrc.org) - Staff contribution for data curation
 
-## Contributors
+### Contributors
 
-* [Drupchen](https://github.com/drupchen)
-* [Élie Roux](https://github.com/eroux)
-* [Ngawang Trinley](https://github.com/ngawangtrinley)
-* [Mikko Kotila](https://github.com/mikkokotila)
-* [Thubten Rinzin](https://github.com/thubtenrigzin)
-* [Tenzin](https://github.com/10zinten)
+* [Drupchen](https://github.com/drupchen) - Core development
+* [Élie Roux](https://github.com/eroux) - Architecture and development
+* [Ngawang Trinley](https://github.com/ngawangtrinley) - Project management
+* [Mikko Kotila](https://github.com/mikkokotila) - Development
+* [Thubten Rinzin](https://github.com/thubtenrigzin) - Testing and documentation
+* [Tenzin](https://github.com/10zinten) - Development
 * Joyce Mackzenzie - Logo design
 
 ## License
 
-Copyright (C) 2019 Esukhia. Licensed under [Apache 2.0](LICENSE).
+Copyright (C) 2019-2025 Esukhia. Licensed under [Apache 2.0](LICENSE).
