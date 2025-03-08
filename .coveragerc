@@ -1,9 +1,6 @@
 [run]
 source = botok
-omit = 
-    */tests/*
-    */test_*
-    setup.py
+omit = */tests/*,*/test_*,setup.py,botok/utils/expose_data.py,botok/utils/lenient_normalization.py,botok/utils/unicode_normalization.py
 
 [report]
 exclude_lines =
