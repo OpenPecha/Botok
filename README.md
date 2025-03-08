@@ -1,19 +1,40 @@
-# botok – Python Tibetan Tokenizer
+<h1 align="center">
+  <br>
+  <a href="https://openpecha.org"><img src="https://avatars.githubusercontent.com/u/82142807?s=400&u=19e108a15566f3a1449bafb03b8dd706a72aebcd&v=4" alt="OpenPecha" width="150"></a>
+  <br>
+</h1>
 
-![GitHub release](https://img.shields.io/github/release/Esukhia/botok.svg) [![Documentation Status](https://readthedocs.org/projects/botok/badge/?version=latest)](https://botok.readthedocs.io/en/latest/?badge=latest) [![Build Status](https://travis-ci.org/Esukhia/botok.svg?branch=master)](https://travis-ci.org/Esukhia/botok) [![Coverage Status](https://coveralls.io/repos/github/Esukhia/botok/badge.svg?branch=master)](https://coveralls.io/github/Esukhia/botok?branch=master) [![CodeFactor](https://www.codefactor.io/repository/github/esukhia/botok/badge)](https://www.codefactor.io/repository/github/esukhia/botok) [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://black.readthedocs.io/en/stable/)
+<h3 align="center">Botok – Python Tibetan Tokenizer</h3>
 
-## Overview
+<!-- Replace the title of the repository -->
 
-Botok is a powerful Tibetan text tokenizer that segments Tibetan text into words with high accuracy. It handles various text formats, supports custom dialects, and provides multiple tokenization modes.
+<p align="center">
+    <a><img src="https://img.shields.io/github/release/Esukhia/botok.svg" alt="GitHub release"></a> 
+    <a href="https://botok.readthedocs.io/en/latest/?badge=latest"><img src="https://readthedocs.org/projects/botok/badge/?version=latest" alt="Documentation Status"></a> 
+    <a href="https://travis-ci.org/Esukhia/botok"><img src="https://travis-ci.org/Esukhia/botok.svg?branch=master" alt="Build Status"></a> 
+    <a href="https://coveralls.io/github/Esukhia/botok?branch=master"><img src="https://coveralls.io/repos/github/Esukhia/botok/badge.svg?branch=master" alt="Coverage Status"></a> 
+    <a href="https://black.readthedocs.io/en/stable/"><img src="https://img.shields.io/badge/code%20style-black-000000.svg" alt="Code style: black"></a> 
+</p>
 
-### Features
+<p align="center">
+  <a href="#description">Description</a> •
+  <a href="#install">Install</a> •
+  <a href="#example">Example</a> •
+  <a href="#commentedexample">Commented Example</a> •
+  <a href="#docs">Docs</a> •
+  <a href="#owners">Owners</a> •
+  <a href="#Acknowledgements">Acknowledgements</a> •
+  <a href="#Maintainance">Maintainance</a> •
+  <a href="#License">License</a>
+</p>
+<hr>
 
-- Word segmentation with support for affixed particles
-- Multiple tokenization modes (chunks, spaces, words)
-- Custom dialect support
-- File and string input processing
-- Word frequency counting
-- Handles complex cases like double tseks and spaces within words
+## Description
+
+Botok tokenizes Tibetan text into words with optional attributes such as lemma, POS, clean form.
+
+## Install
+Requires to have Python3 installed.
 
 ## Requirements
 
@@ -27,6 +48,30 @@ pip install botok
 ```
 
 ## Quick Start
+
+## Example
+
+```
+from botok import WordTokenizer
+from botok.config import Config
+from pathlib import Path
+
+def get_tokens(wt, text):
+    tokens = wt.tokenize(text, split_affixes=False)
+    return tokens
+
+if __name__ == "__main__":
+    config = Config(dialect_name="general", base_path= Path.home())
+    wt = WordTokenizer(config=config)
+    text = "བཀྲ་ཤིས་བདེ་ལེགས་ཞུས་རྒྱུ་ཡིན་ སེམས་པ་སྐྱིད་པོ་འདུག།"
+    tokens = get_tokens(wt, text)
+    for token in tokens:
+        print(token)
+```
+
+https://user-images.githubusercontent.com/24893704/148767959-31cc0a69-4c83-4841-8a1d-028d376e4677.mp4
+
+## Commented Example
 
 ```python
 from botok import Text
@@ -53,42 +98,23 @@ from botok import Text
 text = """ལེ གས། བཀྲ་ཤིས་མཐའི་ ༆ ཤི་བཀྲ་ཤིས་"""
 t = Text(text)
 
-# Get word tokens
-tokens = t.tokenize_words_raw_text
+## Docs
 
-# Get chunks (meaningful groups of characters)
-chunks = t.tokenize_chunks_plaintext
+No documentations.
 
-# Split on spaces
-spaces = t.tokenize_on_spaces
-```
-
-### 2. Custom Dialect Support
-
-```python
-from botok import WordTokenizer
-from botok.config import Config
-from pathlib import Path
-
-# Configure custom dialect
-config = Config(
-    dialect_name="custom",
-    base_path=Path.home()
-)
-
-# Initialize tokenizer
-wt = WordTokenizer(config=config)
-
-# Process text
-text = "བཀྲ་ཤིས་བདེ་ལེགས།"
-tokens = wt.tokenize(text, split_affixes=False)
-```
+<!-- This section must link to the docs which are in the root of the repository in /docs -->
 
 ## Documentation
 
-For detailed documentation, visit our [ReadTheDocs page](https://botok.readthedocs.io/).
+## Owners
 
-## Development
+- [@drupchen](https://github.com/drupchen)
+- [@eroux](https://github.com/eroux)
+- [@ngawangtrinley](https://github.com/ngawangtrinley)
+- [@10zinten](https://github.com/10zinten)
+- [@kaldan007](https://github.com/kaldan007)
+
+<!-- This section lists the owners of the repo -->
 
 ### Building from Source
 
