@@ -7,19 +7,21 @@ Botok
 ===================================================================================================
 State-of-the-art tokenizers for Tibetan language.
 
-This is the documentation of our repository `botok <https://github.com/Esukhia/botok/tree/docs>`_.
+This is the documentation of our repository `botok <https://github.com/OpenPecha/botok>`_.
 
 Features
 --------------------------------
 
-- Support various dialects.
-- Fully customizable to world list and adjustments rules.
-- Allows adjusting word list and rules with Adjustments component of the Dialect Pack.
+- Support various dialects
+- Word segmentation with support for affixed particles
+- Multiple tokenization modes (chunks, spaces, words)
+- Rich token attributes (lemma, POS, clean form)
+- File and string input processing
+- Word frequency counting
+- Handles complex cases like double tseks and spaces within words
 
 Contents
 ----------------------------------
-
-This is the content of botok.
 
 .. toctree::
     :maxdepth: 2
@@ -40,4 +42,3 @@ This is the content of botok.
     :caption: Package Reference
 
     main_classes/configuration
-

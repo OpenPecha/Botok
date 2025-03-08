@@ -1,10 +1,12 @@
 Architecture
 ============
 
+This document explains the architecture of botok.
+
 WordTokenizer architecture
 --------------------------
 
-Following is the architecture diagram of the `WordTokenizer <ihttps://github.com/Esukhia/botok/blob/a019ca9a3785b41761cf04b140efeb70181709a7/botok/tokenizers/wordtokenizer.py#L28>`_ class
+Following is the architecture diagram of the `WordTokenizer <https://github.com/OpenPecha/botok/blob/master/botok/tokenizers/wordtokenizer.py>`_ class
 
 .. image:: imgs/botok_architecture.svg
     :align: center
