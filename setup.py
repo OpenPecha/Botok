@@ -36,7 +36,7 @@ setuptools.setup(
     license="Apache2",
     keywords="nlp computational_linguistics tibetan tokenizer token",
     url="https://github.com/OpenPecha/botok",
-    packages=setuptools.find_packages(),
+    packages=setuptools.find_packages(exclude=["tests"]),
     long_description=read("README.md"),
     long_description_content_type="text/markdown",
     project_urls={
