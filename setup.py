@@ -30,8 +30,8 @@ def read(fname):
 setuptools.setup(
     name="botok",
     version=get_version("__version__", "botok"),  # edit version in botok/vars.py
-    author="Esukhia development team",
-    author_email="esukhiadev@gmail.com",
+    author="OpenPecha development team",
+    author_email="openpecha@gmail.com",
     description="Tibetan Word Tokenizer",
     license="Apache2",
     keywords="nlp computational_linguistics tibetan tokenizer token",
@@ -40,8 +40,8 @@ setuptools.setup(
     long_description=read("README.md"),
     long_description_content_type="text/markdown",
     project_urls={
-        "Source": "https://github.com/Esukhia/botok",
-        "Tracker": "https://github.com/Esukhia/botok/issues",
+        "Source": "https://github.com/OpenPecha/botok",
+        "Tracker": "https://github.com/OpenPecha/botok/issues",
     },
     classifiers=[
         "Development Status :: 3 - Alpha",
@@ -65,7 +65,7 @@ setuptools.setup(
             "resources/adjustment/*",
         ]
     },
-    python_requires=">=3.6",
+    python_requires=">=3.7",
     tests_require=["pytest>=5.0.0"],
     install_requires=["pyyaml", "requests"],
 )

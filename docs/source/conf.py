@@ -19,8 +19,8 @@ sys.path.insert(0, os.path.abspath("../../"))
 # -- Project information -----------------------------------------------------
 
 project = "botok"
-copyright = "2020, Esukhia"
-author = "Esukhia"
+copyright = "2020-2025, OpenPecha"
+author = "OpenPecha"
 
 
 # -- General configuration ---------------------------------------------------
@@ -75,9 +75,29 @@ html_theme_options = {"analytics_id": "UA-83738774-2"}
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ["_static"]
 
-
 # This must be the name of an image file (path relative to the configuration
 # directory) that is the favicon of the docs. Modern browsers use this as
 # the icon for tabs, windows and bookmarks. It should be a Windows-style
 # icon file (.ico).
 # html_favicon = "favicon.ico"
+
+# -- Autodoc configuration --------------------------------------------------
+
+# Autodoc settings
+autodoc_member_order = 'bysource'
+autoclass_content = 'both'
+autodoc_typehints = 'description'
+
+# Napoleon settings
+napoleon_google_docstring = True
+napoleon_numpy_docstring = False
+napoleon_include_init_with_doc = True
+napoleon_include_private_with_doc = False
+napoleon_include_special_with_doc = True
+napoleon_use_admonition_for_examples = False
+napoleon_use_admonition_for_notes = False
+napoleon_use_admonition_for_references = False
+napoleon_use_ivar = False
+napoleon_use_param = True
+napoleon_use_rtype = True
+napoleon_type_aliases = None

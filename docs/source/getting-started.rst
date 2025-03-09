@@ -6,40 +6,40 @@ Installation
 
 .. Caution::
 
-    Pybo only support python3
+    Botok only supports Python 3.6 or higher
 
-Install pre-built pybo with pip:
+Install pre-built botok with pip:
 
 .. code-block::
 
     $ pip install botok
 
-Install from the latest Master branch of pybo with pip:
+Install from the latest Master branch of botok with pip:
 
 .. code-block::
 
-    $ pip install git+https://github.com/Esukhia/botok.git
+    $ pip install git+https://github.com/OpenPecha/botok.git
 
-Install for developer, build pybo from source:
+Install for developers, build botok from source:
 
 .. code-block::
 
-    $ git clone https://github.com/Esukhia/botok.git
+    $ git clone https://github.com/OpenPecha/botok.git
     $ cd botok
-    $ python3 -m venv .env
-    $ activate .env/bin/activate
-    $ python setup.py clean sdist
+    $ python -m venv .env
+    $ source .env/bin/activate  # On Windows: .env\Scripts\activate
+    $ pip install -e .
 
 Usage
 -----
 
-Here is the simple usage of botok to tokenize the sentence
+Here is the simple usage of botok to tokenize Tibetan text:
 
 Import the botok tokenizer called WordTokenizer:
 
 .. code-block::
 
-    >>> from pybo import WordTokenizer
+    >>> from botok import WordTokenizer
     >>>
     >>> tokenizer = WordTokenizer()
     Building Trie... (12 s.)
@@ -53,9 +53,9 @@ Tokenize the given text:
     >>> print(f'The output is a {type(tokens)}')
     The output is a <class 'list'>
     >>> print(f'The constituting elements are {type(tokens[0])}')
-    The constituting elements are <class 'pybo.token.Token'>
+    The constituting elements are <class 'botok.token.Token'>
 
-Now in ‘tokens’ you have an iterable where each token consist of several meta-data in attributes of Token Object:
+Now in 'tokens' you have an iterable where each token consists of several meta-data in attributes of Token Object:
 
 .. code-block::
 
@@ -69,14 +69,15 @@ Now in ‘tokens’ you have an iterable where each token consist of several met
     pos: punc
     
     
-Custom dialect pack:
+Custom dialect pack
+------------------
 
-In order to use custom dialect pack:
+In order to use a custom dialect pack:
 
-1. You need to prepare your dialect pack in same folder structure like [general dialect pack](https://github.com/Esukhia/botok-data/tree/master/dialect_packs/general)
-2. Then you need to instaintiate a config object where you will pass dialect name and path
-3. You can instaintiate your tokenizer object using that config object
-4. Your tokenizer will be using your custom dialect pack and it will be using trie pickled file in future to build the custom trie.
+1. Prepare your dialect pack in the same folder structure as the `general dialect pack <https://github.com/OpenPecha/botok-data/tree/master/dialect_packs/general>`_
+2. Instantiate a config object where you pass the dialect name and path
+3. Instantiate your tokenizer object using that config object
+4. Your tokenizer will use your custom dialect pack and will use a trie pickled file in the future to build the custom trie
 
 .. code-block::
 
@@ -89,9 +90,14 @@ In order to use custom dialect pack:
         return tokens
 
     if __name__ == "__main__":
-        config = Config(dialect_name="custom", base_path= Path.home())
+        config = Config(dialect_name="custom", base_path=Path.home())
         wt = WordTokenizer(config=config)
         text = "བཀྲ་ཤིས་བདེ་ལེགས་ཞུས་རྒྱུ་ཡིན་ སེམས་པ་སྐྱིད་པོ་འདུག།"
         tokens = get_tokens(wt, text)
         for token in tokens:
             print(token)
+
+Advanced Usage
+-------------
+
+For more advanced usage, including POS tagging and lemmatization, see the :doc:`advanced guides <architecture>`.

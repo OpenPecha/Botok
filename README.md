@@ -6,162 +6,226 @@
 
 <h3 align="center">Botok – Python Tibetan Tokenizer</h3>
 
-<!-- Replace the title of the repository -->
-
 <p align="center">
-    <a><img src="https://img.shields.io/github/release/Esukhia/botok.svg" alt="GitHub release"></a> 
+    <a href="https://github.com/OpenPecha/botok/releases"><img src="https://img.shields.io/github/release/OpenPecha/botok.svg" alt="GitHub release"></a> 
     <a href="https://botok.readthedocs.io/en/latest/?badge=latest"><img src="https://readthedocs.org/projects/botok/badge/?version=latest" alt="Documentation Status"></a> 
-    <a href="https://travis-ci.org/Esukhia/botok"><img src="https://travis-ci.org/Esukhia/botok.svg?branch=master" alt="Build Status"></a> 
-    <a href="https://coveralls.io/github/Esukhia/botok?branch=master"><img src="https://coveralls.io/repos/github/Esukhia/botok/badge.svg?branch=master" alt="Coverage Status"></a> 
-    <a href="https://black.readthedocs.io/en/stable/"><img src="https://img.shields.io/badge/code%20style-black-000000.svg" alt="Code style: black"></a> 
+    <a href="https://coveralls.io/github/OpenPecha/botok?branch=master"><img src="https://coveralls.io/repos/github/OpenPecha/botok/badge.svg?branch=master" alt="Coverage Status"></a> 
+    <a href="https://black.readthedocs.io/en/stable/"><img src="https://img.shields.io/badge/code%20style-black-000000.svg" alt="Code style: black"></a>
+    <a href="https://github.com/OpenPecha/botok/blob/master/LICENSE"><img src="https://img.shields.io/github/license/OpenPecha/botok.svg" alt="License"></a>
 </p>
 
 <p align="center">
   <a href="#description">Description</a> •
-  <a href="#install">Install</a> •
-  <a href="#example">Example</a> •
-  <a href="#commentedexample">Commented Example</a> •
-  <a href="#docs">Docs</a> •
-  <a href="#owners">Owners</a> •
-  <a href="#Acknowledgements">Acknowledgements</a> •
-  <a href="#Maintainance">Maintainance</a> •
-  <a href="#License">License</a>
+  <a href="#key-features">Key Features</a> •
+  <a href="#installation">Installation</a> •
+  <a href="#basic-usage">Basic Usage</a> •
+  <a href="#advanced-usage">Advanced Usage</a> •
+  <a href="#documentation">Documentation</a> •
+  <a href="#development">Development</a> •
+  <a href="#contributing">Contributing</a> •
+  <a href="#acknowledgements">Acknowledgements</a>
 </p>
+
 <hr>
 
 ## Description
 
-Botok tokenizes Tibetan text into words with optional attributes such as lemma, POS, clean form.
+Botok is a powerful Python library for tokenizing Tibetan text. It segments text into words with high accuracy and provides optional attributes such as lemma, part-of-speech (POS) tags, and clean forms. The library supports various text formats, custom dialects, and multiple tokenization modes, making it a versatile tool for Tibetan Natural Language Processing (NLP).
 
-## Install
-Requires to have Python3 installed.
+## Key Features
+- **Word Segmentation**: Accurate word segmentation with support for affixed particles
+- **Multiple Tokenization Modes**: 
+  - Word tokenization
+  - Chunk tokenization (groups of meaningful characters)
+  - Space-based tokenization
+- **Rich Token Attributes**:
+  - Lemmatization
+  - POS tagging
+  - Clean form generation
+- **Custom Dialect Support**: Use pre-configured dialects or create your own
+- **File Processing**: Process both strings and files with automatic output generation
+- **Robust Handling**: Manages complex cases like double tseks and spaces within words
 
-    pip3 install botok
+## Installation
 
-## Example
+### Requirements
 
+- Python 3.6 or higher
+- pip package manager
+
+### Basic Installation
+
+```bash
+pip install botok
 ```
+
+### Development Installation
+
+```bash
+git clone https://github.com/OpenPecha/botok.git
+cd botok
+pip install -e .
+```
+
+
+## Basic Usage
+
+### Simple Word Tokenization
+
+```python
 from botok import WordTokenizer
 from botok.config import Config
 from pathlib import Path
 
-def get_tokens(wt, text):
-    tokens = wt.tokenize(text, split_affixes=False)
-    return tokens
+# Initialize tokenizer with default configuration
+config = Config(dialect_name="general", base_path=Path.home())
+wt = WordTokenizer(config=config)
 
-if __name__ == "__main__":
-    config = Config(dialect_name="general", base_path= Path.home())
-    wt = WordTokenizer(config=config)
-    text = "བཀྲ་ཤིས་བདེ་ལེགས་ཞུས་རྒྱུ་ཡིན་ སེམས་པ་སྐྱིད་པོ་འདུག།"
-    tokens = get_tokens(wt, text)
-    for token in tokens:
-        print(token)
+# Tokenize text
+text = "བཀྲ་ཤིས་བདེ་ལེགས་ཞུས་རྒྱུ་ཡིན་ སེམས་པ་སྐྱིད་པོ་འདུག།"
+tokens = wt.tokenize(text, split_affixes=False)
+
+# Print each token
+for token in tokens:
+    print(token)
 ```
 
-https://user-images.githubusercontent.com/24893704/148767959-31cc0a69-4c83-4841-8a1d-028d376e4677.mp4
-
-## Commented Example
+### File Processing
 
 ```python
->>> from botok import Text
+from botok import Text
+from pathlib import Path
 
->>> # input is a multi-line input string
->>> in_str = """ལེ གས། བཀྲ་ཤིས་མཐའི་ ༆ ཤི་བཀྲ་ཤིས་  tr 
-... བདེ་་ལེ གས། བཀྲ་ཤིས་བདེ་ལེགས་༡༢༣ཀཀ། 
-... མཐའི་རྒྱ་མཚོར་གནས་པའི་ཉས་ཆུ་འཐུང་།། །།མཁའ།"""
-
-
-### STEP1: instanciating Text
-
->>> # A. on a string
->>> t = Text(in_str)
-
->>> # B. on a file
-... # note all following operations can be applied to files in this way.
->>> from pathlib import Path
->>> in_file = Path.cwd() / 'test.txt'
-
->>> # file content:
->>> in_file.read_text()
-'བཀྲ་ཤིས་བདེ་ལེགས།།\n'
-
->>> t = Text(in_file)
->>> t.tokenize_chunks_plaintext
-
->>> # checking an output file has been written:
-... # BOM is added by default so that notepad in Windows doesn't scramble the line breaks
->>> out_file = Path.cwd() / 'test_pybo.txt'
->>> out_file.read_text()
-'\ufeffབཀྲ་ ཤིས་ བདེ་ ལེགས །།'
-
-### STEP2: properties will perform actions on the input string:
-### note: original spaces are replaced by underscores.
-
->>> # OUTPUT1: chunks are meaningful groups of chars from the input string.
-... # see how punctuations, numerals, non-bo and syllables are all neatly grouped.
->>> t.tokenize_chunks_plaintext
-'ལེ_གས །_ བཀྲ་ ཤིས་ མཐའི་ _༆_ ཤི་ བཀྲ་ ཤིས་__ tr_\n བདེ་་ ལེ_གས །_ བཀྲ་ ཤིས་ བདེ་ ལེགས་ ༡༢༣ ཀཀ །_\n མཐའི་ རྒྱ་ མཚོར་ གནས་ པའི་ ཉས་ ཆུ་ འཐུང་ །།_།། མཁའ །'
-
->>> # OUTPUT2: could as well be acheived by in_str.split(' ')
->>> t.tokenize_on_spaces
-'ལེ གས། བཀྲ་ཤིས་མཐའི་ ༆ ཤི་བཀྲ་ཤིས་ tr བདེ་་ལེ གས། བཀྲ་ཤིས་བདེ་ལེགས་༡༢༣ཀཀ། མཐའི་རྒྱ་མཚོར་གནས་པའི་ཉས་ཆུ་འཐུང་།། །།མཁའ།'
-
->>> # OUTPUT3: segments in words.
-... # see how བདེ་་ལེ_གས was still recognized as a single word, even with the space and the double tsek.
-... # the affixed particles are separated from the hosting word: མཐ འི་ རྒྱ་མཚོ ར་ གནས་པ འི་ ཉ ས་
->>> t.tokenize_words_raw_text
-Loading Trie... (2s.)
-'ལེ_གས །_ བཀྲ་ཤིས་ མཐ འི་ _༆_ ཤི་ བཀྲ་ཤིས་_ tr_ བདེ་་ལེ_གས །_ བཀྲ་ཤིས་ བདེ་ལེགས་ ༡༢༣ ཀཀ །_ མཐ འི་ རྒྱ་མཚོ ར་ གནས་པ འི་ ཉ ས་ ཆུ་ འཐུང་ །།_།། མཁའ །'
->>> t.tokenize_words_raw_lines
-'ལེ_གས །_ བཀྲ་ཤིས་ མཐ འི་ _༆_ ཤི་ བཀྲ་ཤིས་__ tr_\n བདེ་་ལེ_གས །_ བཀྲ་ཤིས་ བདེ་ལེགས་ ༡༢༣ ཀཀ །_\n མཐ འི་ རྒྱ་མཚོ ར་ གནས་པ འི་ ཉ ས་ ཆུ་ འཐུང་ །།_།། མཁའ །'
-
->>> # OUTPUT4: segments in words, then calculates the number of occurences of each word found
-... # by default, it counts in_str's substrings in the output, which is why we have བདེ་་ལེ གས	1, བདེ་ལེགས་	1
-... # this behaviour can easily be modified to take into account the words that pybo recognized instead (see advanced usage)
->>> print(t.list_word_types)
-འི་	3
-། 	2
-བཀྲ་ཤིས་	2
-མཐ	2
-ལེ གས	1
- ༆ 	1
-ཤི་	1
-བཀྲ་ཤིས་  	1
-tr \n	1
-བདེ་་ལེ གས	1
-བདེ་ལེགས་	1
-༡༢༣	1
-ཀཀ	1
-། \n	1
-རྒྱ་མཚོ	1
-ར་	1
-གནས་པ	1
-ཉ	1
-ས་	1
-ཆུ་	1
-འཐུང་	1
-།། །།	1
-མཁའ	1
-།	1
+# Process a file
+input_file = Path("input.txt")
+t = Text(input_file)
+t.tokenize_chunks_plaintext  # Creates input_pybo.txt with tokenized output
 ```
 
-##### Custom dialect pack:
+## Advanced Usage
 
-In order to use custom dialect pack:
+### Custom Dialect Configuration
 
-- You need to prepare your dialect pack in same folder structure like [general dialect pack](https://github.com/Esukhia/botok-data/tree/master/dialect_packs/general)
-- Then you need to instaintiate a config object where you will pass dialect name and path
-- You can instaintiate your tokenizer object using that config object
-- Your tokenizer will be using your custom dialect pack and it will be using trie pickled file in future to build the custom trie.
+```python
+from botok import WordTokenizer
+from botok.config import Config
+from pathlib import Path
 
-## Docs
+# Configure custom dialect
+config = Config(
+    dialect_name="custom",
+    base_path=Path.home() / "my_dialects"
+)
 
-No documentations.
+# Initialize tokenizer with custom config
+wt = WordTokenizer(config=config)
 
-<!-- This section must link to the docs which are in the root of the repository in /docs -->
+# Process text with custom settings
+text = "བཀྲ་ཤིས་བདེ་ལེགས།"
+tokens = wt.tokenize(
+    text,
+    split_affixes=True,
+    pos_tagging=True,
+    lemmatize=True
+)
+```
 
+### Different Tokenization Modes
 
-## Owners
+```python
+from botok import Text
+
+text = """ལེ གས། བཀྲ་ཤིས་མཐའི་ ༆ ཤི་བཀྲ་ཤིས་"""
+t = Text(text)
+
+# 1. Word tokenization
+words = t.tokenize_words_raw_text
+
+# 2. Chunk tokenization (groups of meaningful characters)
+chunks = t.tokenize_chunks_plaintext
+
+# 3. Space-based tokenization
+spaces = t.tokenize_on_spaces
+```
+
+## Documentation
+
+For comprehensive documentation, visit:
+- [ReadTheDocs](https://botok.readthedocs.io/) - Full API documentation
+- [Wiki](https://github.com/OpenPecha/botok/wiki) - Guides and tutorials
+- [Examples](https://github.com/OpenPecha/botok/tree/master/examples) - Code examples
+
+## Development
+
+### Building from Source
+
+```bash
+rm -rf dist/
+python setup.py clean sdist
+```
+
+### Publishing to PyPI
+
+#### Automated Publishing with Semantic Versioning
+
+The repository is configured with GitHub Actions to automatically handle version bumping and publishing to PyPI when changes are pushed to the master branch. The workflow uses semantic versioning based on commit messages:
+
+1. Use the following commit message formats:
+   - `fix: your message` - For bug fixes (triggers PATCH version bump)
+   - `feat: your message` - For new features (triggers MINOR version bump)
+   - Add `BREAKING CHANGE: description` in the commit body for breaking changes (triggers MAJOR version bump)
+
+   Examples:
+   ```
+   # This will trigger a PATCH version bump (e.g., 0.8.12 → 0.8.13)
+   fix: improve test coverage to 90% and fix Python 3.12 compatibility
+   
+   # This will trigger a MINOR version bump (e.g., 0.8.12 → 0.9.0)
+   feat: add new sentence tokenization mode for complex Tibetan sentences
+   
+   # This will trigger a MAJOR version bump (e.g., 0.8.12 → 1.0.0)
+   feat: refactor token attributes structure
+   
+   BREAKING CHANGE: Token.attributes now uses a dictionary format instead of properties, requiring changes to code that accesses token attributes directly
+   ```
+
+2. When you push to the master branch, the CI workflow will:
+   - Run all tests across multiple Python versions
+   - Analyze commit messages to determine the next version number
+   - Update version numbers in the code
+   - Create a new release on GitHub
+   - Publish the package to PyPI
+
+#### Manual Publishing
+
+For manual publishing (if needed):
+
+```bash
+twine upload dist/*
+```
+
+### Running Tests
+
+```bash
+pytest tests/
+```
+
+## Contributing
+
+We welcome contributions! Here's how you can help:
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+Please ensure your PR adheres to:
+- [Code style guidelines](https://black.readthedocs.io/en/stable/)
+- Test coverage requirements
+- Documentation standards
+
+## Project Owners
 
 - [@drupchen](https://github.com/drupchen)
 - [@eroux](https://github.com/eroux)
@@ -169,46 +233,26 @@ No documentations.
 - [@10zinten](https://github.com/10zinten)
 - [@kaldan007](https://github.com/kaldan007)
 
-<!-- This section lists the owners of the repo -->
-
-
 ## Acknowledgements
 
-**botok** is an open source library for Tibetan NLP.
+**botok** is an open source library for Tibetan NLP. We are grateful to our sponsors and contributors:
 
-We are always open to cooperation in introducing new features, tool integrations and testing solutions.
+### Sponsors
 
-Many thanks to the companies and organizations who have supported botok's development, especially:
+* [Khyentse Foundation](https://khyentsefoundation.org) - USD22,000 initial funding
+* [Barom/Esukhia canon project](http://www.barom.org) - Training data curation
+* [BDRC](https://tbrc.org) - Staff contribution for data curation
 
-* [Khyentse Foundation](https://khyentsefoundation.org) for contributing USD22,000 to kickstart the project 
-* The [Barom/Esukhia canon project](http://www.barom.org) for sponsoring training data curation
-* [BDRC](https://tbrc.org) for contributing 2 staff for 6 months for data curation
+### Contributors
 
-## Maintainance
-
-Build the source dist:
-
-```
-rm -rf dist/
-python3 setup.py clean sdist
-```
-
-and upload on twine (version >= `1.11.0`) with:
-
-```
-twine upload dist/*
-```
+* [Drupchen](https://github.com/drupchen) - Core development
+* [Élie Roux](https://github.com/eroux) - Architecture and development
+* [Ngawang Trinley](https://github.com/ngawangtrinley) - Project management
+* [Mikko Kotila](https://github.com/mikkokotila) - Development
+* [Thubten Rinzin](https://github.com/thubtenrigzin) - Testing and documentation
+* [Tenzin](https://github.com/10zinten) - Development
+* Joyce Mackzenzie - Logo design
 
 ## License
 
-The Python code is Copyright (C) 2019 Esukhia, provided under [Apache 2](LICENSE). 
-
-contributors:
- * [Drupchen](https://github.com/drupchen)
- * [Élie Roux](https://github.com/eroux)
- * [Ngawang Trinley](https://github.com/ngawangtrinley)
- * [Mikko Kotila](https://github.com/mikkokotila)
- * [Thubten Rinzin](https://github.com/thubtenrigzin)
-
- * [Tenzin](https://github.com/10zinten)
- * Joyce Mackzenzie for reworking the logo
+Copyright (C) 2019-2025 OpenPecha. Licensed under [Apache 2.0](LICENSE).
