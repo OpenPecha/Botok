@@ -166,6 +166,40 @@ python setup.py clean sdist
 
 ### Publishing to PyPI
 
+#### Automated Publishing with Semantic Versioning
+
+The repository is configured with GitHub Actions to automatically handle version bumping and publishing to PyPI when changes are pushed to the master branch. The workflow uses semantic versioning based on commit messages:
+
+1. Use the following commit message formats:
+   - `fix: your message` - For bug fixes (triggers PATCH version bump)
+   - `feat: your message` - For new features (triggers MINOR version bump)
+   - Add `BREAKING CHANGE: description` in the commit body for breaking changes (triggers MAJOR version bump)
+
+   Examples:
+   ```
+   # This will trigger a PATCH version bump (e.g., 0.8.12 → 0.8.13)
+   fix: improve test coverage to 90% and fix Python 3.12 compatibility
+   
+   # This will trigger a MINOR version bump (e.g., 0.8.12 → 0.9.0)
+   feat: add new sentence tokenization mode for complex Tibetan sentences
+   
+   # This will trigger a MAJOR version bump (e.g., 0.8.12 → 1.0.0)
+   feat: refactor token attributes structure
+   
+   BREAKING CHANGE: Token.attributes now uses a dictionary format instead of properties, requiring changes to code that accesses token attributes directly
+   ```
+
+2. When you push to the master branch, the CI workflow will:
+   - Run all tests across multiple Python versions
+   - Analyze commit messages to determine the next version number
+   - Update version numbers in the code
+   - Create a new release on GitHub
+   - Publish the package to PyPI
+
+#### Manual Publishing
+
+For manual publishing (if needed):
+
 ```bash
 twine upload dist/*
 ```
