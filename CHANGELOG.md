@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.8.14 (2025-03-09)
+
+### Bug Fixes
+
+- Improve test coverage to 90% and fix Python 3.12 compatibility
+  ([`8170f40`](https://github.com/OpenPecha/Botok/commit/8170f400c8a66c5f3ed76859f5929f73bb416a32))
+
+
 ## v0.8.13 (2025-01-24)
 
 ### Bug Fixes
