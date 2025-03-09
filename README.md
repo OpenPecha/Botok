@@ -32,7 +32,6 @@
 
 Botok is a powerful Python library for tokenizing Tibetan text. It segments text into words with high accuracy and provides optional attributes such as lemma, part-of-speech (POS) tags, and clean forms. The library supports various text formats, custom dialects, and multiple tokenization modes, making it a versatile tool for Tibetan Natural Language Processing (NLP).
 
-
 ## Key Features
 - **Word Segmentation**: Accurate word segmentation with support for affixed particles
 - **Multiple Tokenization Modes**: 
