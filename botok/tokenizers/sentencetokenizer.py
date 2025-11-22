@@ -107,9 +107,9 @@ def get_sentence_indices(tokens):
     sentence_idx = piped_sentencify(sentence_idx, tokens, is_verb_n_punct)
 
     # 4. find verbs followed by clause boundaries
-    sentence_idx = piped_sentencify(
-        sentence_idx, tokens, is_verb_n_clause_boundary, threshold=30
-    )  # max size to check
+    # sentence_idx = piped_sentencify(
+    #     sentence_idx, tokens, is_verb_n_clause_boundary, threshold=30
+    # )  # max size to check
 
     # joining the sentences without verbs to either the one preceding them or following them
     sentence_idx = join_no_verb_sentences(sentence_idx, tokens)
