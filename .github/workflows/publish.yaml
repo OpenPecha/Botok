@@ -53,6 +53,20 @@ jobs:
         with:
           python-version: '3.10'
       
+      - name: Sync version in botok/vars.py to release tag
+        if: steps.psr.outputs.released == 'true'
+        run: |
+          set -euo pipefail
+          git fetch --tags --force
+          TAG="${{ steps.psr.outputs.tag }}"
+          if [ -z "${TAG}" ]; then
+            TAG="$(git describe --tags --abbrev=0)"
+          fi
+          VERSION="${TAG#v}"
+          echo "Using version: ${VERSION}"
+          sed -i -E "s/^(__version__\s*=\s*\").*(\")/\1${VERSION}\2/" botok/vars.py
+          grep -n "__version__" botok/vars.py
+      
       - name: Build package
         if: steps.psr.outputs.released == 'true'
         run: |
