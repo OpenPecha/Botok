@@ -147,8 +147,10 @@ def normalize_unicode(s, form="nfd"):
     s = s.replace("\u0f00", "\u0f68\u0f7c\u0f7e")
     s, valid = unicode_reorder(s)
     # ra doesn't transform into a small rago before anything else than (most) subjoined,
-    # so 0f65 should be replaced with 0f62 in that case
-    s = re.sub("\u0f65([^\u0f90-\u0f97\u0f9a-\u0fac\u0fae\u0faf\u0fb4-\u0fbc])", r"ར\1", s)
+    # so 0f6a should be replaced with 0f62 in that case
+    # Use negative lookahead to also handle end-of-string cases
+    # we consider that the non-small rago is only above the subjoined 0F99 (nya) 0FAD (wasur), A, ya, ra, la
+    s = re.sub("\u0f6a(?![\u0f90-\u0f97\u0f9a-\u0fac\u0fae\u0faf\u0fb4-\u0fbc])", "ར", s)
     s = normalize_invalid_start_string(s)
     return s
 
@@ -195,12 +197,15 @@ def normalize_invalid_start_string(s):
 def test_normalize_unicode():
     assert_conv("\u0F7B\u0F56", "\u0F56\u0F7B", False)
     assert_conv("\u0f40\u0f77", "\u0f40\u0fb2\u0f71\u0f80", False)
-    assert_conv("\u0f40\u0f7e\u0f7c\u0f74\u0f71", "\u0f40\u0f74\u0f71\u0f7c\u0f7e")
+    # k M o A u = k A u o M
+    assert_conv("\u0f40\u0f7e\u0f7c\u0f71\u0f74", "\u0f40\u0f71\u0f74\u0f7c\u0f7e")
     assert_conv("\u0f58\u0f74\u0fb0\u0f83", "\u0f58\u0fb0\u0f74\u0f83")
     assert_conv("\u0F51\u0FB7\u0F74\u0FB0", "\u0F51\u0FB7\u0fb0\u0F74")
     assert_conv("\u0F66\u0F7C\u0FB1", "\u0F66\u0FB1\u0F7C")
     assert_conv("\u0F0B\u0F7E", "\u0F0B\u0F7E", False)
-    assert_conv("\u0f65\u0f99\u0f7a\u0f7a", "\u0f62\u0f99\u0f7a\u0f7a")
+    assert_conv("\u0f6a\u0f99\u0f7a\u0f7a", "\u0f62\u0f99\u0f7a\u0f7a")
+    assert_conv("\u0f6a\u0f72", "\u0f62\u0f72")
+    assert_conv("\u0f6a\u0f90", "\u0f6a\u0f90")
     assert_conv("\u0f01\u0f83", "\u0f01\u0f83") # should be valid
 
 
