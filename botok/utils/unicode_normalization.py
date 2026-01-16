@@ -209,5 +209,6 @@ def test_normalize_unicode():
     assert_conv("\u0f01\u0f83", "\u0f01\u0f83") # should be valid
 
 
+
 if __name__ == "__main__":
     test_normalize_unicode()
