@@ -267,6 +267,7 @@ def normalize_graphical(s):
     # is unclear, it seems safe
     s = s.replace("\u0f7a\u0f7a", "\u0f7b")
     s = s.replace("\u0f7c\u0f7c", "\u0f7d")
+    s = s.replace("༇", "࿓།࿒།")
     # the diference between 0f71 and 0fb0 is often very ambiguous when
     # looking at original sources. We normalize them in order to
     # make the data coherent:
