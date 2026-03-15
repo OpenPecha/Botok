@@ -50,6 +50,10 @@ def normalize_spaces(
 
     s = text
 
+    # 0) Map Unicode line endings to '\n', Unicode spaces/tabs to ASCII space
+    s = _LINEBREAKS_RE.sub("\n", s)
+    s = s.translate(_SPACE_TO_ASCII)
+
     # 1) Collapse multiple newlines
     s = re.sub(r"\n{2,}", "\n", s)
 
