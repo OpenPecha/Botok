@@ -7,9 +7,6 @@ import re
 from pathlib import Path
 
 import setuptools
-from pkg_resources import parse_version
-
-assert parse_version(setuptools.__version__) >= parse_version("38.6.0")
 
 
 def get_version(prop, project):
