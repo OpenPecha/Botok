@@ -52,6 +52,7 @@ def normalize_spaces(
 
     # 0) Map Unicode line endings to '\n', Unicode spaces/tabs to ASCII space
     s = _LINEBREAKS_RE.sub("\n", s)
+    s = s.translate(_ZERO_WIDTH_STRIP)
     s = s.translate(_SPACE_TO_ASCII)
 
     # 1) Collapse multiple newlines
@@ -99,15 +100,6 @@ def normalize_corpus(
     # 1) NFC normalization
     s = unicodedata.normalize("NFC", text)
 
-    # 2) Normalize line breaks
-    s = _LINEBREAKS_RE.sub("\n", s)
-
-    # 3) Remove zero-width & BOM
-    s = s.translate(_ZERO_WIDTH_STRIP)
-
-    # 4) Normalize spaces to ASCII space
-    s = s.translate(_SPACE_TO_ASCII)
-
     # 5) Optionally strip control characters (but keep newline)
     if strip_control:
         s = "".join(
@@ -127,6 +119,84 @@ def normalize_corpus(
 
     return s
 
+# U+0FD2 is excluded (NYIS TSHEG → converted to U+0F0B earlier).
+# U+0FD5-U+0FD8 are svasti/auspicious signs, structurally identical to yig-mgo.
+_YIG_MGO_START = r"\u0F01-\u0F07\u0F09\u0F0A\u0FD0\u0FD1\u0FD3-\u0FD8"
+_PUNCT        = r"\u0F0D-\u0F14"
+_LETTER       = r"\u0F40-\u0FBC"
+
+# Compiled patterns for normalize_for_perplexity
+_MULTI_TSHEG_RE      = re.compile(r"\u0F0B{2,}")
+_LETTER_BEFORE_NL_RE = re.compile(rf"([{_LETTER}])\n")
+_YIG_MGO_RE          = re.compile(rf"[{_YIG_MGO_START}]+[{_PUNCT}]*")
+# Tibetan digits U+0F20-U+0F33, ASCII digits, comma as thousands-separator
+_DIGIT_RUN_RE        = re.compile(r"[0-9\u0F20-\u0F33][0-9\u0F20-\u0F33,]*")
+# Keep only Tibetan block (U+0F00-U+0FFF), ASCII space, and the digit placeholder D
+_NON_TIBETAN_RE      = re.compile(r"[^\u0F00-\u0FFF D]")
+_PUNCT_OR_SPACE_RE   = re.compile(rf"[{_PUNCT} ]+")
+_LETTER_SPACE_RE     = re.compile(rf"([{_LETTER}]) ")
+
+
+def normalize_for_perplexity(text: str) -> str:
+    """
+    Normalize Tibetan text for perplexity calculation.
+
+    Steps applied after ``normalize_corpus``:
+      1.  Replace NYIS TSHEG (U+0FD2) with TSHEG (U+0F0B); fold runs of
+          consecutive TSHEGs to one.
+      2.  Remove honorific particles U+0F35 / U+0F37 and TSA-PHRU (U+0F39).
+      3.  Normalize nasalization marks: NYI ZLA (U+0F82) and SNA LDAN
+          (U+0F83) → RJES SU NGA RO (U+0F7E).
+      4.  Where a Tibetan letter (U+0F40-U+0FBC) is followed by a newline,
+          insert a space to preserve the syllable boundary.
+      5.  Remove all remaining newlines.
+      6.  Remove yig-mgo opening marks (U+0F01-U+0F07, U+0F09, U+0F0A,
+          U+0FD0, U+0FD1, U+0FD3-U+0FD8 incl. svasti signs) together with
+          any trailing punctuation (U+0F0D-U+0F14).
+      7.  Replace runs of digits (Tibetan U+0F20-U+0F33 and ASCII 0-9,
+          with commas) with the placeholder ``D``.
+      8.  Strip any character outside the Tibetan Unicode block (U+0F00-
+          U+0FFF), keeping spaces and the ``D`` placeholder.
+      9.  Collapse any run of punctuation (U+0F0D-U+0F14) and/or spaces
+          to a single space.
+      10. Ensure every letter before a space is followed by a TSHEG:
+          letter + space → letter + U+0F0B + space.
+      11. Strip leading/trailing whitespace.
+    """
+    text = normalize_corpus(text)
+
+    # 1) NYIS TSHEG → TSHEG, then collapse runs of TSHEG to one
+    text = text.replace("\u0FD2", "\u0F0B")
+    text = _MULTI_TSHEG_RE.sub("\u0F0B", text)
+
+    # 2) Remove honorific particles flourish
+    text = text.translate({ord("\u0F35"): None, ord("\u0F37"): None})
+
+    # 3) Normalize nasalization marks to RJES SU NGA RO (U+0F7E)
+    text = text.replace("\u0F82", "\u0F7E").replace("\u0F83", "\u0F7E")
+
+    # 4) Letter before newline → letter + space + newline
+    text = _LETTER_BEFORE_NL_RE.sub(r"\1 \n", text)
+
+    # 5) Drop all newlines
+    text = text.replace("\n", "")
+
+    # 6) Drop yig-mgo / svasti opening marks (+ optional trailing punctuation)
+    text = _YIG_MGO_RE.sub("", text)
+
+    # 7) Replace digit runs (Tibetan + ASCII, with commas) → placeholder D
+    text = _DIGIT_RUN_RE.sub("D", text)
+
+    # 8) Strip characters outside the Tibetan block (keep D placeholder and spaces)
+    text = _NON_TIBETAN_RE.sub(" ", text)
+
+    # 9) Collapse punctuation / space runs to a single space
+    text = _PUNCT_OR_SPACE_RE.sub(" ", text)
+
+    # 10) Ensure syllable-final letters carry a TSHEG before any space
+    text = _LETTER_SPACE_RE.sub(r"\1\u0F0B ", text)
+
+    return text.strip()
 
 def _run_sanity_checks() -> None:
     """Lightweight checks exercising each normalization rule."""
