@@ -135,8 +135,6 @@ _DIGIT_RUN_RE        = re.compile(r"[0-9\u0F20-\u0F33][0-9\u0F20-\u0F33, ]*")
 # Keep only Tibetan block (U+0F00-U+0FFF), ASCII space, and the digit placeholder D
 _NON_TIBETAN_RE      = re.compile(r"[^\u0F00-\u0FFF D]")
 _PUNCT_OR_SPACE_RE   = re.compile(rf"[{_PUNCT} ]+")
-# space_after_tshegs: any punct-containing run → single shad surrounded by spaces
-_PUNCT_RUN_RE        = re.compile(rf"[ ]*[{_PUNCT}][{_PUNCT} ]*")
 _MULTI_SPACE_RE      = re.compile(r" {2,}")
 # Split on tsheg or space while capturing the delimiter
 _TSHEG_OR_SPACE_RE   = re.compile(r"(\u0F0B| )")
@@ -222,25 +220,26 @@ def _process_sskt(text: str, space_sskt: bool, fold_sskt: bool) -> str:
 
 def normalize_for_perplexity(
     text: str,
-    space_after_tshegs: bool = False,
-    space_sskt: bool = False,
+    space_sskt: bool = True,
     fold_sskt: bool = False,
 ) -> str:
     """
     Normalize Tibetan text for perplexity calculation.
 
+    Every sentence boundary — whether marked by Tibetan punctuation
+    (U+0F0D–U+0F14) or a plain space in the source — is rendered as a shad
+    token (`` ། ``) surrounded by spaces.  Syllables within a sentence are
+    separated by plain spaces (tshegs are removed).  The result uses space
+    as the sole token delimiter and ``།`` as an explicit sentence-boundary
+    marker.
+
     Parameters
     ----------
     text:
         Input text.
-    space_after_tshegs:
-        If ``True``, punctuation sequences are replaced by a shad (``།``)
-        surrounded by spaces instead of a plain space, making sentence
-        boundaries explicit.
     space_sskt:
         If ``True``, non-standard (Sanskrit) syllables are split into their
-        constituent stacks, each separated by a space.  Recommended
-        together with ``space_after_tshegs``.
+        constituent stacks, each separated by a space.
     fold_sskt:
         If ``True``, consecutive runs of non-standard (Sanskrit) syllables
         are collapsed to the single placeholder token ``S``.  Takes
@@ -263,10 +262,8 @@ def normalize_for_perplexity(
           with commas) with the placeholder ``D``.
       8.  Strip any character outside the Tibetan Unicode block (U+0F00-
           U+0FFF), keeping spaces and the ``D`` placeholder.
-      9.  Collapse punctuation / space runs:
-            - default: to a single space.
-            - space_after_tshegs: punct-containing runs → `` ། ``
-              (shad surrounded by spaces); remaining space runs collapsed.
+      9.  Any run of punctuation and/or spaces → shad token `` ། ``
+          surrounded by spaces.
       9b. (space_sskt / fold_sskt) Process non-standard syllable tokens.
       10. Replace every remaining tsheg (U+0F0B) with a space; collapse
           multiple spaces.  Space is now the sole token delimiter.
@@ -299,12 +296,8 @@ def normalize_for_perplexity(
     # 8) Strip characters outside the Tibetan block (keep D placeholder and spaces)
     text = _NON_TIBETAN_RE.sub(" ", text)
 
-    # 9) Collapse punctuation / space runs
-    if space_after_tshegs:
-        text = _PUNCT_RUN_RE.sub(" \u0F0D ", text)
-        text = _MULTI_SPACE_RE.sub(" ", text)
-    else:
-        text = _PUNCT_OR_SPACE_RE.sub(" ", text)
+    # 9) Any run of punctuation and/or spaces → shad token surrounded by spaces
+    text = _PUNCT_OR_SPACE_RE.sub(" \u0F0D ", text)
 
     # 9b) Sanskrit syllable handling
     if space_sskt or fold_sskt:
