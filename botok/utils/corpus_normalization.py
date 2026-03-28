@@ -2,6 +2,7 @@ import re
 import unicodedata
 from enum import Enum
 from .unicode_normalization import normalize_unicode
+from .standard_tibetan import is_standard_tibetan, split_into_stacks
 
 # Normalize all line breaks to '\n'
 _LINEBREAKS_RE = re.compile(r"\r\n?|\u0085|\u2028|\u2029")
@@ -135,11 +136,120 @@ _DIGIT_RUN_RE        = re.compile(r"[0-9\u0F20-\u0F33][0-9\u0F20-\u0F33,]*")
 _NON_TIBETAN_RE      = re.compile(r"[^\u0F00-\u0FFF D]")
 _PUNCT_OR_SPACE_RE   = re.compile(rf"[{_PUNCT} ]+")
 _LETTER_SPACE_RE     = re.compile(rf"([{_LETTER}]) ")
+_LETTER_SPACE_REPL   = r"\1" + "\u0F0B "  # backreference + literal tsheg + space
+# space_after_tshegs: any punct-containing run → single shad surrounded by spaces
+_PUNCT_RUN_RE        = re.compile(rf"[ ]*[{_PUNCT}][{_PUNCT} ]*")
+_MULTI_SPACE_RE      = re.compile(r" {2,}")
+# Split on tsheg or space while capturing the delimiter
+_TSHEG_OR_SPACE_RE   = re.compile(r"(\u0F0B| )")
+# space_after_tshegs: insert a space after any tsheg not already followed by one
+_TSHEG_NO_SPACE_RE   = re.compile(r"\u0F0B(?! )")
 
 
-def normalize_for_perplexity(text: str) -> str:
+def _process_sskt(text: str, space_sskt: bool, fold_sskt: bool) -> str:
+    """Process non-standard (Sanskrit) syllables at the tsheg-delimited level.
+
+    Tshegs (U+0F0B) are the syllable separators within a sentence; spaces
+    mark sentence/clause boundaries.  The function walks each tsheg-delimited
+    piece and, for non-standard syllables:
+
+    * ``space_sskt``: expands the syllable into its constituent stacks, each
+      followed by a tsheg, with spaces between stacks.
+    * ``fold_sskt``: accumulates consecutive non-standard syllables and
+      replaces the whole run with the placeholder ``S``.
+    """
+    parts = _TSHEG_OR_SPACE_RE.split(text)
+    # parts alternates: [content₀, delim₀, content₁, delim₁, …, contentₙ]
+    out: list[str] = []
+    in_sskt_run = False
+
+    def flush_sskt() -> None:
+        nonlocal in_sskt_run
+        if in_sskt_run:
+            out.append(" S")
+            in_sskt_run = False
+
+    n = len(parts)
+    for i in range(0, n, 2):
+        content = parts[i]
+        delim   = parts[i + 1] if i + 1 < n else ""
+
+        if not content:
+            if delim == " " and fold_sskt:
+                flush_sskt()
+            if delim:
+                out.append(delim)
+            continue
+
+        has_tibetan = any(0x0F40 <= ord(c) <= 0x0FBC for c in content)
+
+        if not has_tibetan:
+            if fold_sskt:
+                flush_sskt()
+            out.append(content)
+            if delim:
+                out.append(delim)
+            continue
+
+        std = is_standard_tibetan(content)
+
+        if std:
+            if fold_sskt and in_sskt_run:
+                flush_sskt()
+                out.append(" ")
+            out.append(content)
+            if delim:
+                out.append(delim)
+        else:
+            if fold_sskt:
+                in_sskt_run = True
+                if delim == " ":
+                    flush_sskt()
+                    out.append(delim)
+            elif space_sskt:
+                stacks = split_into_stacks(content)
+                out.append(" ".join(s + "\u0F0B" for s in stacks))
+                if delim == " ":
+                    out.append(delim)
+                # tsheg delimiter absorbed as the tsheg of the last stack
+            else:
+                out.append(content)
+                if delim:
+                    out.append(delim)
+
+    if fold_sskt:
+        flush_sskt()
+
+    result = "".join(out)
+    return _MULTI_SPACE_RE.sub(" ", result)
+
+
+def normalize_for_perplexity(
+    text: str,
+    space_after_tshegs: bool = False,
+    space_sskt: bool = False,
+    fold_sskt: bool = False,
+) -> str:
     """
     Normalize Tibetan text for perplexity calculation.
+
+    Parameters
+    ----------
+    text:
+        Input text.
+    space_after_tshegs:
+        If ``True``, punctuation sequences are replaced by a shad (``།``)
+        surrounded by spaces instead of a plain space, making sentence
+        boundaries explicit.  Each syllable then ends with ``་ `` (tsheg +
+        space).
+    space_sskt:
+        If ``True``, non-standard (Sanskrit) syllables are split into their
+        constituent stacks, each receiving its own tsheg.  Recommended
+        together with ``space_after_tshegs``.
+    fold_sskt:
+        If ``True``, consecutive runs of non-standard (Sanskrit) syllables
+        are collapsed to the single placeholder token ``S``.  Takes
+        precedence over ``space_sskt`` when both are set.
 
     Steps applied after ``normalize_corpus``:
       1.  Replace NYIS TSHEG (U+0FD2) with TSHEG (U+0F0B); fold runs of
@@ -157,9 +267,12 @@ def normalize_for_perplexity(text: str) -> str:
           with commas) with the placeholder ``D``.
       8.  Strip any character outside the Tibetan Unicode block (U+0F00-
           U+0FFF), keeping spaces and the ``D`` placeholder.
-      9.  Collapse any run of punctuation (U+0F0D-U+0F14) and/or spaces
-          to a single space.
-      10. Ensure every letter before a space is followed by a TSHEG:
+      9.  Collapse punctuation / space runs:
+            - default: to a single space.
+            - space_after_tshegs: punct-containing runs → `` ། ``
+              (shad surrounded by spaces); remaining space runs collapsed.
+      9b. (space_sskt / fold_sskt) Process non-standard syllable tokens.
+      10. Ensure every syllable-final letter before a space carries a TSHEG:
           letter + space → letter + U+0F0B + space.
       11. Strip leading/trailing whitespace.
     """
@@ -169,8 +282,8 @@ def normalize_for_perplexity(text: str) -> str:
     text = text.replace("\u0FD2", "\u0F0B")
     text = _MULTI_TSHEG_RE.sub("\u0F0B", text)
 
-    # 2) Remove honorific particles flourish
-    text = text.translate({ord("\u0F35"): None, ord("\u0F37"): None})
+    # 2) Remove honorific particles and TSA-PHRU flourish
+    text = text.translate({ord("\u0F35"): None, ord("\u0F37"): None, ord("\u0F39"): None})
 
     # 3) Normalize nasalization marks to RJES SU NGA RO (U+0F7E)
     text = text.replace("\u0F82", "\u0F7E").replace("\u0F83", "\u0F7E")
@@ -190,11 +303,23 @@ def normalize_for_perplexity(text: str) -> str:
     # 8) Strip characters outside the Tibetan block (keep D placeholder and spaces)
     text = _NON_TIBETAN_RE.sub(" ", text)
 
-    # 9) Collapse punctuation / space runs to a single space
-    text = _PUNCT_OR_SPACE_RE.sub(" ", text)
+    # 9) Collapse punctuation / space runs
+    if space_after_tshegs:
+        text = _PUNCT_RUN_RE.sub(" \u0F0D ", text)
+        text = _MULTI_SPACE_RE.sub(" ", text)
+    else:
+        text = _PUNCT_OR_SPACE_RE.sub(" ", text)
+
+    # 9b) Sanskrit syllable handling
+    if space_sskt or fold_sskt:
+        text = _process_sskt(text, space_sskt, fold_sskt)
+
+    # 9c) In space_after_tshegs mode, guarantee a space follows every tsheg
+    if space_after_tshegs:
+        text = _TSHEG_NO_SPACE_RE.sub("\u0F0B ", text)
 
     # 10) Ensure syllable-final letters carry a TSHEG before any space
-    text = _LETTER_SPACE_RE.sub(r"\1\u0F0B ", text)
+    text = _LETTER_SPACE_RE.sub(_LETTER_SPACE_REPL, text)
 
     return text.strip()
 
