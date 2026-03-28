@@ -131,19 +131,15 @@ _MULTI_TSHEG_RE      = re.compile(r"\u0F0B{2,}")
 _LETTER_BEFORE_NL_RE = re.compile(rf"([{_LETTER}])\n")
 _YIG_MGO_RE          = re.compile(rf"[{_YIG_MGO_START}]+[{_PUNCT}]*")
 # Tibetan digits U+0F20-U+0F33, ASCII digits, comma as thousands-separator
-_DIGIT_RUN_RE        = re.compile(r"[0-9\u0F20-\u0F33][0-9\u0F20-\u0F33,]*")
+_DIGIT_RUN_RE        = re.compile(r"[0-9\u0F20-\u0F33][0-9\u0F20-\u0F33, ]*")
 # Keep only Tibetan block (U+0F00-U+0FFF), ASCII space, and the digit placeholder D
 _NON_TIBETAN_RE      = re.compile(r"[^\u0F00-\u0FFF D]")
 _PUNCT_OR_SPACE_RE   = re.compile(rf"[{_PUNCT} ]+")
-_LETTER_SPACE_RE     = re.compile(rf"([{_LETTER}]) ")
-_LETTER_SPACE_REPL   = r"\1" + "\u0F0B "  # backreference + literal tsheg + space
 # space_after_tshegs: any punct-containing run → single shad surrounded by spaces
 _PUNCT_RUN_RE        = re.compile(rf"[ ]*[{_PUNCT}][{_PUNCT} ]*")
 _MULTI_SPACE_RE      = re.compile(r" {2,}")
 # Split on tsheg or space while capturing the delimiter
 _TSHEG_OR_SPACE_RE   = re.compile(r"(\u0F0B| )")
-# space_after_tshegs: insert a space after any tsheg not already followed by one
-_TSHEG_NO_SPACE_RE   = re.compile(r"\u0F0B(?! )")
 
 
 def _process_sskt(text: str, space_sskt: bool, fold_sskt: bool) -> str:
@@ -153,8 +149,8 @@ def _process_sskt(text: str, space_sskt: bool, fold_sskt: bool) -> str:
     mark sentence/clause boundaries.  The function walks each tsheg-delimited
     piece and, for non-standard syllables:
 
-    * ``space_sskt``: expands the syllable into its constituent stacks, each
-      followed by a tsheg, with spaces between stacks.
+    * ``space_sskt``: expands the syllable into its constituent stacks,
+      separated by spaces.
     * ``fold_sskt``: accumulates consecutive non-standard syllables and
       replaces the whole run with the placeholder ``S``.
     """
@@ -208,10 +204,10 @@ def _process_sskt(text: str, space_sskt: bool, fold_sskt: bool) -> str:
                     out.append(delim)
             elif space_sskt:
                 stacks = split_into_stacks(content)
-                out.append(" ".join(s + "\u0F0B" for s in stacks))
+                out.append(" ".join(stacks))
                 if delim == " ":
                     out.append(delim)
-                # tsheg delimiter absorbed as the tsheg of the last stack
+                # tsheg delimiter absorbed (tshegs are stripped at end of pipeline)
             else:
                 out.append(content)
                 if delim:
@@ -240,11 +236,10 @@ def normalize_for_perplexity(
     space_after_tshegs:
         If ``True``, punctuation sequences are replaced by a shad (``།``)
         surrounded by spaces instead of a plain space, making sentence
-        boundaries explicit.  Each syllable then ends with ``་ `` (tsheg +
-        space).
+        boundaries explicit.
     space_sskt:
         If ``True``, non-standard (Sanskrit) syllables are split into their
-        constituent stacks, each receiving its own tsheg.  Recommended
+        constituent stacks, each separated by a space.  Recommended
         together with ``space_after_tshegs``.
     fold_sskt:
         If ``True``, consecutive runs of non-standard (Sanskrit) syllables
@@ -253,7 +248,8 @@ def normalize_for_perplexity(
 
     Steps applied after ``normalize_corpus``:
       1.  Replace NYIS TSHEG (U+0FD2) with TSHEG (U+0F0B); fold runs of
-          consecutive TSHEGs to one.
+          consecutive TSHEGs to one.  Tshegs serve as syllable delimiters
+          throughout intermediate processing and are removed in step 10.
       2.  Remove honorific particles U+0F35 / U+0F37 and TSA-PHRU (U+0F39).
       3.  Normalize nasalization marks: NYI ZLA (U+0F82) and SNA LDAN
           (U+0F83) → RJES SU NGA RO (U+0F7E).
@@ -272,8 +268,8 @@ def normalize_for_perplexity(
             - space_after_tshegs: punct-containing runs → `` ། ``
               (shad surrounded by spaces); remaining space runs collapsed.
       9b. (space_sskt / fold_sskt) Process non-standard syllable tokens.
-      10. Ensure every syllable-final letter before a space carries a TSHEG:
-          letter + space → letter + U+0F0B + space.
+      10. Replace every remaining tsheg (U+0F0B) with a space; collapse
+          multiple spaces.  Space is now the sole token delimiter.
       11. Strip leading/trailing whitespace.
     """
     text = normalize_corpus(text)
@@ -314,12 +310,9 @@ def normalize_for_perplexity(
     if space_sskt or fold_sskt:
         text = _process_sskt(text, space_sskt, fold_sskt)
 
-    # 9c) In space_after_tshegs mode, guarantee a space follows every tsheg
-    if space_after_tshegs:
-        text = _TSHEG_NO_SPACE_RE.sub("\u0F0B ", text)
-
-    # 10) Ensure syllable-final letters carry a TSHEG before any space
-    text = _LETTER_SPACE_RE.sub(_LETTER_SPACE_REPL, text)
+    # 10) Replace all tshegs with spaces; space is the sole token delimiter
+    text = text.replace("\u0F0B", " ")
+    text = _MULTI_SPACE_RE.sub(" ", text)
 
     return text.strip()
 
