@@ -120,6 +120,52 @@ def normalize_corpus(
 
     return s
 
+
+# ---------------------------------------------------------------------------
+# merge_lines helpers
+# ---------------------------------------------------------------------------
+
+# Fold consecutive tshegs that are immediately before / after a newline.
+_MULTI_TSHEG_BEFORE_NL_RE = re.compile(r"\u0F0B{2,}(?=\n)")
+_MULTI_TSHEG_AFTER_NL_RE  = re.compile(r"(?<=\n)\u0F0B{2,}")
+
+
+def merge_lines(text: str) -> str:
+    """Merge a multi-line Tibetan string into a single continuous line.
+
+    Designed for word-wrapped or page-OCR'd text where newlines are
+    typographic artefacts rather than sentence boundaries.
+
+    Steps:
+      1. Normalize line-break sequences (CRLF, CR, NEL, LS, PS) to LF.
+      2. Remove ASCII spaces / tabs immediately before or after each LF.
+      3. Fold runs of two or more tshegs (U+0F0B) that sit at the very end
+         or very beginning of a line down to a single tsheg.
+      4. When a Tibetan letter (U+0F40-U+0FBC) ends a line with no trailing
+         tsheg, insert a space between it and the LF so the syllable
+         boundary is preserved after the LF is removed.
+      5. Remove all remaining LF characters.
+    """
+    # 1) Normalize line endings
+    text = _LINEBREAKS_RE.sub("\n", text)
+
+    # 2) Remove spaces/tabs around newlines
+    text = re.sub(r"[ \t]+\n", "\n", text)
+    text = re.sub(r"\n[ \t]+", "\n", text)
+
+    # 3) Fold tsheg runs at line boundaries to one tsheg
+    text = _MULTI_TSHEG_BEFORE_NL_RE.sub("\u0F0B", text)
+    text = _MULTI_TSHEG_AFTER_NL_RE.sub("\u0F0B", text)
+
+    # 4) Letter at line-end without trailing tsheg → insert space
+    text = _LETTER_BEFORE_NL_RE.sub(r"\1 \n", text)
+
+    # 5) Drop all newlines
+    text = text.replace("\n", "")
+
+    return text
+
+
 # U+0FD2 is excluded (NYIS TSHEG → converted to U+0F0B earlier).
 # U+0FD5-U+0FD8 are svasti/auspicious signs, structurally identical to yig-mgo.
 _YIG_MGO_START = r"\u0F01-\u0F07\u0F09\u0F0A\u0FD0\u0FD1\u0FD3-\u0FD8"
@@ -128,6 +174,17 @@ _LETTER       = r"\u0F40-\u0FBC"
 
 # Compiled patterns for normalize_for_perplexity
 _MULTI_TSHEG_RE      = re.compile(r"\u0F0B{2,}")
+# Tibetan vowel signs (U+0F71-U+0F84).
+_VOWEL               = r"\u0F71-\u0F84"
+# ག (U+0F42), ཤ (U+0F64), ཀ (U+0F40): their right-side vertical bar is
+# typographically shared with the shad mark.  When one of these ends a line
+# with no preceding tsheg the shad is implicit and must be made explicit.
+_GA_SHA_KA_NL_RE     = re.compile(rf"([གཤཀ][{_VOWEL}]?)\n")
+# Any other Tibetan letter before a newline gets a tsheg (syllable boundary)
+# so the syllables are not merged when the newline is removed.  We use a
+# tsheg rather than a space so that step 9 does NOT promote the boundary to
+# a shad token (only explicit ། in the source should become sentence
+# boundaries).
 _LETTER_BEFORE_NL_RE = re.compile(rf"([{_LETTER}])\n")
 _YIG_MGO_RE          = re.compile(rf"[{_YIG_MGO_START}]+[{_PUNCT}]*")
 # Tibetan digits U+0F20-U+0F33, ASCII digits, comma as thousands-separator
@@ -138,6 +195,51 @@ _PUNCT_OR_SPACE_RE   = re.compile(rf"[{_PUNCT} ]+")
 _MULTI_SPACE_RE      = re.compile(r" {2,}")
 # Split on tsheg or space while capturing the delimiter
 _TSHEG_OR_SPACE_RE   = re.compile(r"(\u0F0B| )")
+# Tibetan brackets (ANG KHANG KHEPA open/close) must be isolated tokens
+_BRACKET_RE          = re.compile(r"([\u0F3C\u0F3D])")
+# Case affixes: always start with འ (U+0F60) followed by a specific letter.
+# Longest alternative (འིས) must precede the prefix it shares (འི).
+_AFFIX_RE            = re.compile(rf"^([{_LETTER}]+)(འིས|འི|འོ|འམ|འང|འས|འད|འར)$")
+
+
+def _split_syllable_affixes(syllable: str) -> str:
+    """Recursively split Tibetan case affixes from a syllable body.
+
+    Affixes (འི, འོ, འམ, འང, འིས, འར, འད, འས) always start with འ
+    followed by a specific letter.  The function peels off one affix per
+    call and recurses on the remaining stem, joining parts with spaces.
+
+    Special case: a syllable ending in ``འུར`` has its final ``ར`` split
+    off as a separate token (the ``འུ`` oblique marker stays with the
+    stem).
+
+    Examples::
+
+        _split_syllable_affixes("རྒྱལའི")  → "རྒྱལ འི"
+        _split_syllable_affixes("པའིའོ")   → "པ འི འོ"
+        _split_syllable_affixes("བཀའུར")   → "བཀའུ ར"
+    """
+    # *འུར: split off the allative ར, keep the oblique འུ with the stem
+    if syllable.endswith("\u0F60\u0F74\u0F62") and len(syllable) > 3:
+        return _split_syllable_affixes(syllable[:-1]) + " \u0F62"
+    m = _AFFIX_RE.match(syllable)
+    if not m:
+        return syllable
+    stem, affix = m.group(1), m.group(2)
+    return _split_syllable_affixes(stem) + " " + affix
+
+
+def _apply_affix_splits(text: str) -> str:
+    """Apply :func:`_split_syllable_affixes` to every syllable token in *text*.
+
+    Tokens are delimited by tshegs (U+0F0B) or spaces; only tokens that
+    contain at least one Tibetan letter are processed.
+    """
+    parts = _TSHEG_OR_SPACE_RE.split(text)
+    for i in range(0, len(parts), 2):
+        if any(0x0F40 <= ord(c) <= 0x0FBC for c in parts[i]):
+            parts[i] = _split_syllable_affixes(parts[i])
+    return "".join(parts)
 
 
 def _process_sskt(text: str, space_sskt: bool, fold_sskt: bool) -> str:
@@ -203,9 +305,8 @@ def _process_sskt(text: str, space_sskt: bool, fold_sskt: bool) -> str:
             elif space_sskt:
                 stacks = split_into_stacks(content)
                 out.append(" ".join(stacks))
-                if delim == " ":
-                    out.append(delim)
-                # tsheg delimiter absorbed (tshegs are stripped at end of pipeline)
+                if delim:
+                    out.append(delim)  # tsheg → space in step 10; space stays
             else:
                 out.append(content)
                 if delim:
@@ -252,8 +353,15 @@ def normalize_for_perplexity(
       2.  Remove honorific particles U+0F35 / U+0F37 and TSA-PHRU (U+0F39).
       3.  Normalize nasalization marks: NYI ZLA (U+0F82) and SNA LDAN
           (U+0F83) → RJES SU NGA RO (U+0F7E).
-      4.  Where a Tibetan letter (U+0F40-U+0FBC) is followed by a newline,
-          insert a space to preserve the syllable boundary.
+      3.5 Typographic shad: ག (U+0F42), ཤ (U+0F64), or ཀ (U+0F40) whose
+          right-side vertical bar is visually shared with the shad mark.
+          When such a consonant (+ optional vowel) ends a line without a
+          preceding tsheg, the shad is implicit; make it explicit by
+          inserting U+0F0D before the newline.
+      4.  Where any other Tibetan letter (U+0F40-U+0FBC) is followed by a
+          newline, insert a tsheg (U+0F0B) to preserve the syllable
+          boundary without creating a sentence boundary.  (A space here
+          would be promoted to ། by step 9 — incorrect.)
       5.  Remove all remaining newlines.
       6.  Remove yig-mgo opening marks (U+0F01-U+0F07, U+0F09, U+0F0A,
           U+0FD0, U+0FD1, U+0FD3-U+0FD8 incl. svasti signs) together with
@@ -264,7 +372,13 @@ def normalize_for_perplexity(
           U+0FFF), keeping spaces and the ``D`` placeholder.
       9.  Any run of punctuation and/or spaces → shad token `` ། ``
           surrounded by spaces.
-      9b. (space_sskt / fold_sskt) Process non-standard syllable tokens.
+      9b. Surround Tibetan brackets ༼ (U+0F3C) and ༽ (U+0F3D) with spaces
+          so they become standalone tokens.
+      9c. Split case affixes (འི, འོ, འམ, འང, འིས, འར, འད, འས) from
+          syllable bodies by inserting a space before each affix.  Stacked
+          affixes (e.g. འིའོ) are split one at a time, yielding separate
+          tokens.  Syllables ending in འུར have the final ར split off.
+      9d. (space_sskt / fold_sskt) Process non-standard syllable tokens.
       10. Replace every remaining tsheg (U+0F0B) with a space; collapse
           multiple spaces.  Space is now the sole token delimiter.
       11. Strip leading/trailing whitespace.
@@ -281,8 +395,13 @@ def normalize_for_perplexity(
     # 3) Normalize nasalization marks to RJES SU NGA RO (U+0F7E)
     text = text.replace("\u0F82", "\u0F7E").replace("\u0F83", "\u0F7E")
 
-    # 4) Letter before newline → letter + space + newline
-    text = _LETTER_BEFORE_NL_RE.sub(r"\1 \n", text)
+    # 3.5) Typographic shad: ག/ཤ/ཀ (+ optional vowel) at line end → add ། before \n
+    text = _GA_SHA_KA_NL_RE.sub(r"\1" + "\u0F0D\n", text)
+
+    # 4) Any remaining Tibetan letter before \n → letter + tsheg + \n
+    #    (tsheg = syllable delimiter; will become a space in step 10, but
+    #    will NOT be promoted to a sentence boundary by step 9)
+    text = _LETTER_BEFORE_NL_RE.sub(r"\1" + "\u0F0B\n", text)
 
     # 5) Drop all newlines
     text = text.replace("\n", "")
@@ -299,7 +418,13 @@ def normalize_for_perplexity(
     # 9) Any run of punctuation and/or spaces → shad token surrounded by spaces
     text = _PUNCT_OR_SPACE_RE.sub(" \u0F0D ", text)
 
-    # 9b) Sanskrit syllable handling
+    # 9b) Isolate Tibetan brackets so they are not absorbed into adjacent syllables
+    text = _BRACKET_RE.sub(r" \1 ", text)
+
+    # 9c) Split case affixes from syllable bodies
+    text = _apply_affix_splits(text)
+
+    # 9d) Sanskrit syllable handling
     if space_sskt or fold_sskt:
         text = _process_sskt(text, space_sskt, fold_sskt)
 
