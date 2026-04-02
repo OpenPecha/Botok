@@ -1,87 +1,110 @@
-# Botok – Python Tibetan Tokenizer
+<h1 align="center">
+  <br>
+  <a href="https://buddhistai.tools/"><img src="https://raw.githubusercontent.com/WeBuddhist/visual-assets/refs/heads/main/logo/WB-logo-purple.png" alt="OpenPecha" width="150"></a>
+  <br>
+</h1>
 
-[![GitHub release](https://img.shields.io/github/release/OpenPecha/botok.svg)](https://github.com/OpenPecha/botok/releases)
-[![Documentation Status](https://readthedocs.org/projects/botok/badge/?version=latest)](https://botok.readthedocs.io/en/latest/?badge=latest)
-[![Coverage Status](https://coveralls.io/repos/github/OpenPecha/botok/badge.svg?branch=master)](https://coveralls.io/github/OpenPecha/botok?branch=master)
-[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://black.readthedocs.io/en/stable/)
-[![License](https://img.shields.io/github/license/OpenPecha/botok.svg)](https://github.com/OpenPecha/botok/blob/master/LICENSE)
-[![Stars](https://img.shields.io/github/stars/OpenPecha/botok)](https://github.com/OpenPecha/Botok)
+<h1 align="center">Botok</h1>
 
-## Project Description
+<p align="center">
+  |Apache-2.0| |Python| |NLP|
+</p>
 
-Botok is a powerful Python library for tokenizing Tibetan text. It segments text into words with high accuracy and provides optional attributes such as lemma, part-of-speech (POS) tags, and clean forms. The library supports various text formats, custom dialects, and multiple tokenization modes, making it a versatile tool for Tibetan Natural Language Processing (NLP).
+🏷 བོད་ཏོག [pʰøtɔk̚] Tibetan word tokenizer in Python
 
-## Who This Project Is For
+## Table of Contents
 
-This project is intended for developers and researchers working with Tibetan language text processing who need accurate word segmentation and tokenization.
+- [Features](#features)
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
+- [Configuration](#configuration)
+- [Usage](#usage)
+- [Development](#development)
+- [Testing](#testing)
+- [Contributing](#contributing)
+- [How to get help](#how-to-get-help)
+- [Terms of use](#terms-of-use)
 
-## Project Dependencies
+## Features
 
-Before using Botok, ensure you have:
+- Tibetan word tokenization using statistical and rule-based methods
+- Support for both classical and modern Tibetan
+- Integration with PyBo (Python Buddhist)
+- Customizable segmentation rules
+-字典-based word lookup
 
-* Python 3.7+
-* pip (Python package installer)
+## Prerequisites
 
-## Instructions for Installing Botok
+- Python 3.8+
+- pip
 
-### Install Botok
+## Installation
 
-1. **Install via pip:**
+```bash
+# Clone the repository
+git clone https://github.com/OpenPecha/Botok.git
+cd Botok
 
-   ```bash
-   pip install botok
-   ```
+# Install dependencies
+pip install -r requirements.txt
 
-2. **Install from source:**
+# Install the package
+pip install -e .
+```
 
-   ```bash
-   git clone https://github.com/OpenPecha/Botok.git
-   cd Botok
-   pip install -e .
-   ```
+## Configuration
 
-### Run Botok
+Botok can be configured via:
+- Environment variables
+- YAML configuration files in `config/`
+- Python API
+
+## Usage
 
 ```python
-from botok import Botok
+import botok
 
-botok = Botok()
-text = "བོད་ཡིག"
-tokens = botok.tokenize(text)
+# Create a tokenizer instance
+tokenizer = botok.Tok()
+
+# Tokenize Tibetan text
+text = "བོད་ཡིག་གི་དཔེ་ཆ་"
+tokens = tokenizer.tokenize(text)
 print(tokens)
 ```
 
-## Directory Structure
+## Development
 
-```
-Botok/
-├── .github/          # GitHub configuration
-├── botok/            # Main package source code
-├── docs/             # Documentation
-├── tests/            # Test suite
-├── requirements.txt  # Development dependencies
-├── setup.py          # Package setup configuration
-├── setup.cfg         # Package metadata
-├── README.md         # Project documentation
-├── CHANGELOG.md      # Release history
-├── LICENSE           # License file
-└── usage.py          # Usage examples
+```bash
+# Install dev dependencies
+pip install -e .[dev]
+
+# Run tests
+pytest
+
+# Lint
+flake8 botok/
 ```
 
-## Contributing Guidelines
+## Testing
 
-Contributions are welcome! Please read the [contributing guidelines](https://github.com/OpenPecha/Botok/blob/master/README.md#contributing) for details on how to submit pull requests.
+```bash
+pytest tests/
+```
 
-## Additional Documentation
+## Contributing
 
-* [Full Documentation](https://botok.readthedocs.io/)
-* [API Reference](https://botok.readthedocs.io/en/latest/)
+1. Fork the repository
+2. Create a feature branch
+3. Commit your changes
+4. Push to the branch
+5. Open a Pull Request
 
-## How to Get Help
+Please read [CONTRIBUTING.md](https://github.com/OpenPecha/.github/blob/main/CONTRIBUTING.md) for details.
 
-* [GitHub Issues](https://github.com/OpenPecha/Botok/issues)
-* [OpenPecha Community](https://openpecha.org)
+## How to get help
+* File an issue.
+* Join our [discord](https://discord.com/invite/7GFpPFSTeA).
 
-## Terms of Use
-
-Botok is licensed under the MIT License.
+## Terms of use
+Botok is licensed under the [Apache-2.0 License](/LICENSE).
