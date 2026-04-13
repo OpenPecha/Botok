@@ -1,0 +1,63 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "botok"
+dynamic = ["version"]
+description = "Tibetan Word Tokenizer"
+readme = "README.md"
+license = {text = "Apache-2.0"}
+requires-python = ">=3.8"
+authors = [
+    {name = "OpenPecha development team", email = "openpecha@gmail.com"},
+]
+keywords = ["nlp", "computational_linguistics", "tibetan", "tokenizer", "token"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Topic :: Text Processing :: Linguistic",
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: Apache Software License",
+    "Natural Language :: Tibetan",
+]
+dependencies = [
+    "pyyaml",
+    "requests",
+]
+
+[project.urls]
+Homepage = "https://github.com/OpenPecha/botok"
+Source = "https://github.com/OpenPecha/botok"
+Tracker = "https://github.com/OpenPecha/botok/issues"
+
+[tool.setuptools.dynamic]
+version = {attr = "botok.vars.__version__"}
+
+[tool.setuptools.packages.find]
+exclude = ["tests*"]
+
+[tool.setuptools.package-data]
+botok = [
+    "resources/*",
+    "resources/words_bo/*",
+    "resources/entry_data/*",
+    "resources/words_non_inflected/*",
+    "resources/lemmas/*",
+    "resources/rules/*",
+    "resources/words_skrt/*",
+    "resources/adjustment/*",
+]
+
+[tool.coverage.run]
+plugins = ["covdefaults"]
+omit = [
+    ".env/*",
+    "botok/third_party/pynpl/cql.py",
+    "botok/third_party/pynpl/fsa.py",
+]
+
+[tool.semantic_release]
+version_variable = "botok/vars.py:__version__"

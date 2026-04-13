@@ -4,8 +4,6 @@ from pathlib import Path
 
 from botok import BoSyl, Config, TokChunks, Trie
 
-config = Config()
-
 
 def syls(string):
     return TokChunks(string).get_syls()
