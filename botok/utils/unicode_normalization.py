@@ -113,6 +113,7 @@ def normalize_unicode(s, form="nfd"):
     s = s.replace("\u0f81", "\u0f71\u0f80")  # use is discouraged
     if form == "nfd":
         s = s.replace("\u0f43", "\u0f42\u0fb7")
+        s = s.replace("\u0f48", "\u0f47\u0fb7")
         s = s.replace("\u0f4d", "\u0f4c\u0fb7")
         s = s.replace("\u0f52", "\u0f51\u0fb7")
         s = s.replace("\u0f57", "\u0f56\u0fb7")
@@ -121,6 +122,7 @@ def normalize_unicode(s, form="nfd"):
         s = s.replace("\u0f76", "\u0fb2\u0f80")
         s = s.replace("\u0f78", "\u0fb3\u0f80")
         s = s.replace("\u0f93", "\u0f92\u0fb7")
+        s = s.replace("\u0f98", "\u0f97\u0fb7")
         s = s.replace("\u0f9d", "\u0f9c\u0fb7")
         s = s.replace("\u0fa2", "\u0fa1\u0fb7")
         s = s.replace("\u0fa7", "\u0fa6\u0fb7")
