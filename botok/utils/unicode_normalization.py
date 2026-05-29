@@ -147,6 +147,9 @@ def normalize_unicode(s, form="nfd"):
     # This is something that is now seen as a mistake, but it cannot be
     # changed because of Unicode change policies.
     s = s.replace("\u0f00", "\u0f68\u0f7c\u0f7e")
+    # not sure this happens in the wild but:
+    s = s.replace("ཅ༹", "ཙ")
+    s = s.replace("ཆ༹", "ཚ")
     s, valid = unicode_reorder(s)
     # ra doesn't transform into a small rago before anything else than (most) subjoined,
     # so 0f6a should be replaced with 0f62 in that case
