@@ -30,7 +30,7 @@ _SPACE_TO_ASCII = {ord(ch): " " for ch in _UNICODE_SPACES}
 def normalize_spaces(
     text: str,
     collapse_internal_spaces: bool = True,
-    tibetan_specific: bool = True,
+    tibetan_specific: bool = False,
 ) -> str:
     """
     Normalize spaces in text.
