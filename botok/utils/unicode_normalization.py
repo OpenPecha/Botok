@@ -150,6 +150,7 @@ def normalize_unicode(s, form="nfd"):
     # not sure this happens in the wild but:
     s = s.replace("ཅ༹", "ཙ")
     s = s.replace("ཆ༹", "ཚ")
+    s = s.replace("ཇ༹", "ཛ")
     s, valid = unicode_reorder(s)
     # ra doesn't transform into a small rago before anything else than (most) subjoined,
     # so 0f6a should be replaced with 0f62 in that case
