@@ -1,4 +1,5 @@
 import re
+from bisect import bisect_left
 
 NEEDS_A = {
     "ག": {
@@ -283,63 +284,145 @@ def normalize_graphical(s):
     return s
 
 
-def normalize_punctuation(s, use_gter_shad=False, original_eol=True):
-    # normalize spaces
-    s = re.sub(r"\s+", " ", s)
-    # we don't want to keep double tshegs (I suppose)
-    s = s.replace("\u0fd2", "\u0f0b")
-    # normalize end of line characters
-    s = re.sub(r"(?:\r\n|\n)", "\n", s)
+# Punctuation normalization
+#
+# The output follows modern Tibetan typography, see
+# https://www.w3.org/TR/tlreq/ (§7.1.2), https://www.unicode.org/L2/L2025/25207-shay.pdf
+# and https://digitaltibetan.github.io/DigitalTibetan/docs/tibetan_formatting.html :
+#   - single shad followed by a space (X། Y), double shad followed by the text (X། །Y)
+#   - a final ཀ, ག or ཤ (also with a vowel, not with a subscript or superscript) carries
+#     the first shad: ག Y (single), ག །Y (double)
+#   - tsheg before a shad only after ང (ང་།)
+#   - yig mgo only at the beginning of the text (༄༅། །)
+# Every rule is a regex substitution; positions are tracked so that offsets in the
+# original string can be mapped to the normalized one (see remap_offsets()).
+
+_P_LETTER = "\u0f40-\u0fbc"
+_P_ROOT = "\u0f40-\u0f6c"
+_P_VOWELS = "\u0f71-\u0f87"
+_P_VOWELS_NO_VISARGA = "\u0f71-\u0f7e\u0f80-\u0f87"
+_P_YIG_MGO = "\u0f01-\u0f08\u0f09\u0f0a\u0fd0\u0fd1\u0fd3\u0fd4"  # includes sbrul shad 0f08
+_P_OPENING = "\u0f04\u0f05\u0f0d \u0f0d"
+
+
+def _p_at_eol(m):
+    return m.end() == len(m.string) or m.string[m.end()] == "\n"
+
+
+def _p_yig_mgo(m):
+    return _P_OPENING if m.group(1) is not None else ""
+
+
+def _p_join_lines(m):
+    # used when original_eol=False: a line ending in ཀ/ག/ཤ without tsheg carries a shad,
+    # a line ending in another letter is closed by a tsheg
+    prev = m.string[m.start() - 1] if m.start() else ""
+    nxt = m.string[m.end()] if m.end() < len(m.string) else ""
+    if m.group(1):
+        return m.group(1) + (" " if nxt else "")
+    if re.match(f"[{_P_LETTER}]", prev) and re.match(f"[{_P_ROOT}]", nxt):
+        return "\u0f0b"
+    return ""
+
+
+def _p_gter_shad(m):
+    # the shads of the opening ༄༅། ། stay
+    return m.group(0) if m.string.startswith(_P_OPENING) and m.start() < len(_P_OPENING) else "\u0f14"
+
+
+def _p_shad_cluster(m):
+    ka_ga_sha, space, shads = m.group(1), m.group(2), m.group(3)
+    n = 1 if shads == "\u0f0d" else 2
+    if ka_ga_sha:
+        # the stroke of ཀ/ག/ཤ is the first shad: ག། and ག་། are a single shad, ག ། a double
+        n = min(2, n + bool(space))
+        return ka_ga_sha + (" \u0f0d" if n == 2 else "" if _p_at_eol(m) else " ")
+    return shads + (" " if n == 1 and not _p_at_eol(m) else "")
+
+
+# (name, pattern, replacement). Order matters.
+_PUNCT_RULES_START = (
+    ("tsheg_variants", "[\u0f0c\u0fd2]", "\u0f0b"),
+    ("shad_variants", "[\u0f0f\u0f10\u0f11\u0f12]", "\u0f0d"),
+    ("nyis_shad", "\u0f0e", "\u0f0d\u0f0d"),
+    ("line_breaks", r"\r\n?", "\n"),
+    ("spaces", r"[ \t\u00a0\u2000-\u200b\u3000]+", " "),
+    ("space_around_newline", r" *\n *", "\n"),
+    ("tsheg_runs", "\u0f0b{2,}", "\u0f0b"),
+    ("space_after_tsheg", f"\u0f0b +(?=[{_P_LETTER}\u0f0d])", "\u0f0b"),
+    ("space_before_tsheg", f"(?<=[{_P_LETTER}]) +\u0f0b", "\u0f0b"),
+    ("yig_mgo", f"(\\A\\s*)?(?:[{_P_YIG_MGO}][{_P_YIG_MGO}{_P_VOWELS}]*[ \u0f0b\u0f0d]*)+", _p_yig_mgo),
+)
+_PUNCT_RULE_JOIN = ("join_lines", f"([ཀགཤ][{_P_VOWELS_NO_VISARGA}]*)?\n+", _p_join_lines)
+_PUNCT_RULE_GTER = ("gter_shad", "(?<=[^\\s\u0f0d]) *\u0f0d(?: \u0f0d)?", _p_gter_shad)
+_PUNCT_RULES_END = (
+    ("double_shad", "\u0f0d(?: *\u0f0d)+", "\u0f0d \u0f0d"),
+    ("tsheg_before_shad",
+     f"(?<!ང)(?<!ང[{_P_VOWELS_NO_VISARGA}])\u0f0b+(?=\u0f0d)|\u0f0b+(?=\u0f14)", ""),
+    ("shad_spacing",
+     f"(?:([ཀགཤ][{_P_VOWELS_NO_VISARGA}]*)|(?<=[^\\s\u0f0d]))( *)(\u0f0d(?: \u0f0d)?) *",
+     _p_shad_cluster),
+    ("nga_tsheg_shad", f"(ང[{_P_VOWELS_NO_VISARGA}]*)(?=\u0f0d)", "\\1\u0f0b"),
+    ("gter_tsheg", "\u0f14(?: *\u0f14)* *", "\u0f14 "),
+    ("visarga_tsheg", "\u0f7f\u0f0b", "\u0f7f"),
+    ("trailing_space", r" +(?=\n|\Z)", ""),
+)
+
+
+def _punct_rules(use_gter_shad, original_eol):
+    rules = list(_PUNCT_RULES_START)
     if not original_eol:
-        # 0f11 is just a normal shad that appears in some cases at the beginning of a page,
-        # mostly when there is just one syllable before the shad on the first line, but it
-        # has no semantic significance, it should be turned into a normal shad when combining
-        # multiple texts
-        s = s.replace("\u0f11", "\u0f0d")
-        # remove all yig mgo: 0f01+diacritic?, 0f02-0f07, 0fd0-0fd1, 0fd3-0fd4
-        # as well as their surrounding punctuation: space, 0f0d-0f11, 0f14
-        s = re.sub(
-            r"[ \u0f0d-\u0f11\u0f14]*[\u0f01-\u0f07\u0fd0\u0fd1\u0fd3\u0fd4]+[ \u0f0d-\u0f11\u0f14\u0f71-\u0f87]*",
-            "",
-            s,
-        )
-        # remove all punctuation at beginning of line
-        s = re.sub(r"(^|[\n])[\u0f0b-\u0f14]+", "\\1", s)
-        # ensure tsheg at end of line after normal letters, except after ཀ, ག and ཤ
-        # (where the absence of a tsheg should be interpreted as the presence of a shad)
-        s = re.sub(
-            r"([\u0f41\u0f43-\u0f63\u0f65-\u0f6c][\u0f71-\u0fbc]*) *($|[\n])",
-            "\\1\u0f0b\\2",
-            s,
-        )
-        # ensure space after ཀ, ག and ཤ at end of line so that it merges well with the following one
-        # remove line breaks and spaces at beginning of lines
-        s = re.sub(r"([ཀགཤ][\u0f71-\u0f87]*)\n", "\\1 \n", s)
-        s = re.sub(r"(?:\n) *", "", s)
-    s = s.replace("\u0f14", "\u0f0d")
-    # replace shads with surrounding spaces by a simple shad with a space after
-    s = re.sub(r"[ \u0f0d]+", "\u0f0d ", s)
-    # tshegs are sometimes used as padding, no need to keep it
-    s = re.sub(r"[\u0f0b][\u0f0b]+", "\u0f0b", s)
-    # remove tshegs before punctuation, including shad (no tsheg before gter shad)
-    s = re.sub(r"[\u0f0b]([\u0f0d-\u0f14])", "\\1", s)
-    # ensure space after shad
-    s = re.sub(r"[\u0f0d]([^ ])", "\u0f0d \\1", s)
-    # no tsheg after visarga
-    s = s.replace("\u0f7f\u0f0b", "\u0f7f")
+        rules.append(_PUNCT_RULE_JOIN)
+    rules += _PUNCT_RULES_END[:1]  # double_shad
     if use_gter_shad:
-        s = s.replace("\u0f0d", "\u0f14")
-    else:
-        # add tshegs before shad in some circumstances (after ང)
-        s = re.sub(r"(ང[\u0f71-\u0f87]*)[\u0f0d]", "\\1\u0f0b\u0f0d", s)
-        # remove shad after ཀ, ག and ཤ
-        s = re.sub(r"([ཀགཤ][\u0f71-\u0f87]*)[\u0f0d]", "\\1", s)
-    # normalize non-Tibetan punctuation into Chinese punctuation or Western punctuation (option?)
-    # 〈〈?, 〈〈, 《, «, 〉〉?, », 》, 〉〉, ( ), ;, comma, dot, etc.
-    # TODO
-    # remove spaces: NO_SPACE_AFTER_PATTERN = re.compile(r"(?:\s|[༌་])$")
-    # TODO
+        rules.append(_PUNCT_RULE_GTER)
+    rules += _PUNCT_RULES_END[1:]
+    return [(name, re.compile(p), r) for name, p, r in rules]
+
+
+_PUNCT_COMPILED = {(g, e): _punct_rules(g, e) for g in (False, True) for e in (False, True)}
+
+
+def normalize_punctuation(s, use_gter_shad=False, original_eol=True, return_positions=False):
+    """
+    Normalize Tibetan punctuation (see the rules above).
+
+    - original_eol: keep line breaks (default); if False, lines are joined
+    - use_gter_shad: write shads as gter tsheg ༔ (no ཀ/ག/ཤ convention then)
+    - return_positions: return (text, pos, counts) where pos[j] is the offset in s
+      that produced character j of text (with a final sentinel len(s), non-decreasing)
+      and counts the number of changes made by each rule
+    """
+    pos = list(range(len(s) + 1))
+    counts = {}
+    for name, rx, repl in _PUNCT_COMPILED[(use_gter_shad, original_eol)]:
+        out, new_pos, last, n = [], [], 0, 0
+        for m in rx.finditer(s):
+            r = repl(m) if callable(repl) else m.expand(repl)
+            if r == m.group(0):
+                continue
+            out.append(s[last:m.start()])
+            new_pos.extend(pos[last:m.start()])
+            out.append(r)
+            new_pos.extend([pos[m.start()]] * len(r))
+            last = m.end()
+            n += 1
+        if n:
+            out.append(s[last:])
+            new_pos.extend(pos[last:len(s)])
+            new_pos.append(pos[len(s)])
+            s, pos = "".join(out), new_pos
+            counts[name] = n
+    if return_positions:
+        return s, pos, counts
     return s
+
+
+def remap_offsets(offsets, pos):
+    """Map offsets in the original string to offsets in the normalized string,
+    using the pos list returned by normalize_punctuation(..., return_positions=True)."""
+    n = len(pos) - 1
+    return [min(bisect_left(pos, o, 0, n), n) for o in offsets]
 
 def test_normalize_old_tib(s):
     assert normalize_old_tib("དྲངསྟེ") == "དྲངས་ཏེ"
