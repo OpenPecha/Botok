@@ -194,6 +194,19 @@ class TestGterTsheg:
         assert norm("ཧོ༔༔རང") == "ཧོ༔ རང"
         assert norm("གྲུབ༔༔ རང") == "གྲུབ༔ རང"
 
+    @pytest.mark.parametrize("kw", [{}, {"original_eol": False}])
+    @pytest.mark.parametrize("s", [
+        "ཧཱུྃ༔ དངོས་གྲུབ༔ ཤོག༔",
+        "ཨ་ཧོ་༔ ། ཀ༔།ཁ",
+        "ཐུག༔ ཕྱག ཀ༔ ཁ",
+        "ཧཱུྃ༔\n༄༅། །ཨོཾ༔",
+        "སྐུ༔\nགསུང༔ ཐུགས",
+    ])
+    def test_never_folded_into_shad(self, s, kw):
+        out = norm(s, **kw)
+        assert out.count("\u0f14") == s.count("\u0f14")
+        assert out.count("\u0f0d") <= s.count("\u0f0d")
+
     def test_use_gter_shad(self):
         assert norm("ཡིན་ནོ། །ཡང་། ཐུག།ཕྱག", use_gter_shad=True) == "ཡིན་ནོ༔ ཡང༔ ཐུག༔ ཕྱག"
         assert norm("༄༅། །དང ། ཐུག ། །ཕྱག", use_gter_shad=True) == "༄༅། །དང༔ ཐུག༔ ཕྱག"
